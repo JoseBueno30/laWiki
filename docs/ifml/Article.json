@@ -1,0 +1,39 @@
+[
+  {
+    "id": "0",
+    "author": "duty",
+    "body": "",
+    "creation_date": "17/12/2020",
+    "title": "Jotaro Kujo",
+    "comments": "",
+    "tags": ["jojo", "star platinum", "jotaro kujo"]
+  },
+  {
+    "id": "1",
+    "author": "duty",
+    "body": "",
+    "creation_date": "17/12/2020",
+    "title": "Josuke Higashikata",
+    "comments": "",
+    "tags": ["jojo", "crazy diamond", "josuke higashikata"]
+    
+  },
+  {
+    "id": "2",
+    "author": "duty",
+    "body": "",
+    "creation_date": "17/12/2020",
+    "title": "Giorno Giovanna",
+    "comments": "",
+    "tags": ["jojo", "gold experience", "giorno giovanna"]
+  },
+  {
+    "id": "3",
+    "author": "duty",
+    "body": "",
+    "creation_date": "17/12/2020",
+    "title": "Jolyne Cujoh",
+    "comments": "",
+    "tags": ["jojo", "stone free", "jolyne cujoh"]
+    }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "0",
+    "author": "duty",
+    "description": "Wiki de los jojos",
+    "name": "JojoPedia",
+    "url": "lawiki/jojopedia"
+  },
+  {
+    "id": "1",
+    "author": "rukai",
+    "description": "Información sobre Outer Wilds",
+    "name": "OuterWilds Ventures",
+    "url": "lawiki/outerwildsventures"
+  }
+]
