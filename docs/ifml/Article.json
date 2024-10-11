@@ -6,7 +6,8 @@
     "creation_date": "17/12/2020",
     "title": "Jotaro Kujo",
     "comments": "",
-    "tags": ["jojo", "character"]
+    "tags": ["jojo", "character"],
+    "rating": "4.8"
   },
   {
     "id": "1",
@@ -15,8 +16,8 @@
     "creation_date": "30/'05'/2020",
     "title": "Josuke Higashikata",
     "comments": "",
-    "tags": ["jojo", "character"]
-    
+    "tags": ["jojo", "character"],
+    "rating": "4.6"
   },
   {
     "id": "2",
@@ -25,7 +26,8 @@
     "creation_date": "16/07/2024",
     "title": "Giorno Giovanna",
     "comments": "",
-    "tags": ["jojo", "character"]
+    "tags": ["jojo", "character"],
+    "rating": "5"
   },
   {
     "id": "3",
@@ -34,6 +36,7 @@
     "creation_date": "20/4/2023",
     "title": "Jolyne Cujoh",
     "comments": "",
-    "tags": ["jojo", "character"]
-    }
+    "tags": ["jojo", "character"],
+    "rating": "3.2"
+  }
 ]
