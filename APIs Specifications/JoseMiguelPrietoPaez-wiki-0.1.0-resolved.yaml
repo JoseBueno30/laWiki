@@ -1,0 +1,246 @@
+openapi: 3.0.0
+info:
+  title: laWiki Wiki Microservice API
+  description: This API is used to perform operations on the wikis of laWiki
+  version: 0.1.0
+servers:
+- url: https://virtserver.swaggerhub.com/JoseMiguelPrietoPaez/wiki/0.1.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /wikis:
+    get:
+      summary: Get all wikis
+      operationId: getAllWikis
+      responses:
+        "200":
+          description: Succesful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki_search'
+        "4XX":
+          description: Bad Request.
+        "418":
+          description: "The server refused to brew coffee. <br/> *Yes, this is a joke. Yes, this is a reserved HTTP response code since 1998.* <br/> *See [RFC 2324](https://datatracker.ietf.org/doc/html/rfc2324) for more information. Actually, do not.*"
+    put:
+      summary: Not allowed.
+      operationId: updateAllWikis
+      responses:
+        "405":
+          description: Cannot use PUT method on /wikis. Must update singular wikis.
+          content:
+            text/plain:
+              example: |-
+                Cannot use PUT on /wikis.
+
+                Use wikis/{id_name} by ID or name.
+    delete:
+      summary: Not allowed.
+      operationId: deleteAllWikis
+      responses:
+        "405":
+          description: Cannot use DELETE metho on /wikis. Must delete by name or id.
+          content:
+            text/plain:
+              example: |-
+                Cannot use DELETE on /wikis.
+
+                Use wikis/{id_name} by ID or name.
+  /wikis/{id_name}:
+    get:
+      summary: Get wiki with the matching identifier. May be its name or its ID.
+      operationId: getOneWikiByIdentifier
+      parameters:
+      - name: id_name
+        in: path
+        description: "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Wiki_identifier_type'
+      responses:
+        "200":
+          description: Succesful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki'
+        "4XX":
+          description: Bad Request.
+        "404":
+          description: Bad Request. Wiki not found.
+    put:
+      summary: Update wiki with the matching identifier. May be its name or its ID.
+      operationId: putOneWikiByIdentifier
+      parameters:
+      - name: id_name
+        in: path
+        description: "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Wiki_identifier_type'
+      responses:
+        "200":
+          description: Succesful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki'
+        "4XX":
+          description: Bad Request.
+        "403":
+          description: Forbidden. User is not authorized to edit wiki the requested wiki.
+        "404":
+          description: Bad Request. Wiki not found.
+    delete:
+      summary: Remove the specified wiki.
+      parameters:
+      - name: id_name
+        in: path
+        description: "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Wiki_identifier_type'
+      responses:
+        "200":
+          description: Removed successfully. Returned deleted item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki'
+        "400":
+          description: Bad Request.
+        "403":
+          description: Forbidden. User is not authorized to delete wikis.
+        "404":
+          description: Wiki not found.
+  /wikis/search:
+    description: Search for wikis using the below query parameters.
+    get:
+      summary: Get wikis matching the query parameters.
+      operationId: getWikisBySearch
+      parameters:
+      - name: name
+        in: query
+        description: String to be searched within the wiki's name.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum amount of results to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          example: 20
+          default: 20
+      - name: offset
+        in: query
+        description: The index of the first result to return. Use with limit to get the next page of search results.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          example: 10
+          default: 0
+      responses:
+        "200":
+          description: Succesful operation. Returned results.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wiki_search'
+        "4XX":
+          description: Bad Request.
+components:
+  schemas:
+    Wiki:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the wiki.
+        name:
+          type: string
+          description: Name of the wiki.
+        description:
+          type: string
+          description: Details of the wiki set by its editors.
+        author:
+          type: string
+          description: Creator of the wiki. Should not remain a string.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+      example:
+        id: "1"
+        name: Example wiki
+        description: This is an example of a response when getting a wiki
+        author: "Someone, change when user return is finalized"
+        tags:
+        - $ref: '#/components/schemas/Tag/example'
+    Wiki_search:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the wiki.
+        name:
+          type: string
+          description: Name of the wiki.
+        description:
+          type: string
+          description: Details of the wiki set by its editors.
+        author:
+          $ref: '#/components/schemas/User'
+      example:
+        id: "1"
+        name: Example wiki
+        description: This is an example of a response when getting a wiki
+        author: "Someone, change when user return is finalized"
+    Tag:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the tag.
+        name:
+          type: string
+          description: Name of the tag.
+        wiki_id:
+          type: string
+          description: Unique identifier for the wiki that uses the tag.
+      example:
+        id: "1"
+        name: Gift cards
+        wiki_id: "1"
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user.
+        name:
+          type: string
+          description: Name of the user.
+      description: "Schema for the user, temporary as we do not know how the user will be modelled."
+    Wiki_identifier_type:
+      oneOf:
+      - type: integer
+      - type: string
