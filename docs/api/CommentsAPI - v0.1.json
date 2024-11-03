@@ -18,34 +18,75 @@
     }
   ],
   "paths": {
-    "/articles/comments": {
+    "/comments/users/{user_id}": {
       "get": {
-        "tags": [
-          "default"
-        ],
-        "summary": "searches articles comments",
-        "description": "Retrieves all comments from an articles",
-        "operationId": "get_article_comments",
+        "tags": [],
+        "summary": "get an user's comments",
+        "description": "Retrieves all comments from an user",
+        "operationId": "get-users-comments",
         "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The unique ID of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
           {
             "name": "article_id",
             "in": "query",
-            "required": true,
+            "description": "Fillters the results by the article's ID",
+            "required": false,
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
             "name": "order",
             "in": "query",
-            "description": "Set the order of the response entites according to the comment's creation_date",
+            "description": "Set the order the comments will be shown. It is determined by date",
             "required": false,
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "oldest",
+              "default": "recent"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum amount of responses to be returned",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offet",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
             }
           }
         ],
@@ -55,7 +96,92 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CommentsList"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/comments/articles/{article_id}": {
+      "get": {
+        "tags": [
+          "default"
+        ],
+        "summary": "get an article's comments",
+        "description": "Retrieves all comments from an articles",
+        "operationId": "get_article_comments",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "path",
+            "description": "The unique ID of the article",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Set the order the comments will be shown. It is determined by date",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "oldest",
+              "default": "recent"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum amount of responses to be returned",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
                 }
               }
             }
@@ -70,8 +196,22 @@
         "summary": "post a comment",
         "description": "Posts a new comment in an article",
         "operationId": "post_comment",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "path",
+            "description": "The unique ID of the article",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "requestBody": {
-          "description": "Required parameters to post a new comment",
+          "description": "JSON object that contains the author and content of the comment",
           "content": {
             "application/json": {
               "schema": {
@@ -90,90 +230,42 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request, wrong content structure"
           }
         }
-      },
+      }
+    },
+    "/comments": {
       "delete": {
         "tags": [],
-        "summary": "comment delete",
+        "summary": "delete a comment",
         "description": "Deletes an article's comment",
         "operationId": "delete_comment",
         "parameters": [
           {
             "name": "comment_id",
             "in": "query",
-            "description": "Comment's ID",
+            "description": "The unique ID of the comment",
             "required": true,
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "204": {
-            "description": "Comment deleted successfully"
+            "description": "No Content, comment deleted succesfully"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "404": {
             "description": "Comment not found"
-          }
-        }
-      }
-    },
-    "/users/comments": {
-      "get": {
-        "tags": [],
-        "summary": "searches an user's comments",
-        "description": "Retrieves all comments from an user",
-        "operationId": "get-users-comments",
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "query",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "article_id",
-            "in": "query",
-            "description": "filter user comments by an article",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "description": "Set the order of the response entites according to the comment's creation_date",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommentsList"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       }
@@ -181,40 +273,6 @@
   },
   "components": {
     "schemas": {
-      "CommentsList": {
-        "title": "CommentsList",
-        "type": "array",
-        "description": "List of comment entities used when retrieving several comments",
-        "items": {
-          "$ref": "#/components/schemas/Comment"
-        },
-        "x-examples": {
-          "Example 1": [
-            {
-              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f034",
-              "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
-              "author": {
-                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                "name": "string",
-                "image": "http://example.com"
-              },
-              "body": "comment1",
-              "creation_date": "2019-08-24"
-            },
-            {
-              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-              "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
-              "author": {
-                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                "name": "string",
-                "image": "http://example.com"
-              },
-              "body": "comment2",
-              "creation_date": "2019-08-24"
-            }
-          ]
-        }
-      },
       "Comment": {
         "title": "CommentResponse",
         "required": [
@@ -309,16 +367,11 @@
       "NewComment": {
         "title": "NewComment",
         "required": [
-          "article_id",
           "author_id",
           "body"
         ],
         "type": "object",
         "properties": {
-          "article_id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "author_id": {
             "type": "string",
             "format": "uuid",
