@@ -50,7 +50,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Wiki_search'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wiki_search'
         "4XX":
           description: Bad Request.
         "418":
@@ -314,8 +316,7 @@ components:
           type: string
           description: Details of the wiki set by its editors.
         author:
-          type: string
-          description: Creator of the wiki. Should not remain a string.
+          $ref: '#/components/schemas/User'
         tags:
           type: array
           items:
