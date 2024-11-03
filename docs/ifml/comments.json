@@ -1,0 +1,9 @@
+[
+    {
+        "id" : "string",
+        "article_id" : "string",
+        "author" : "string",
+        "body" : "string",
+        "creation_date" : "date",
+    }
+]

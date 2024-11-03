@@ -1,0 +1,349 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CommentsAPI",
+    "description": "API for the Comments microservice of laWiki web appplication. It provides all endpoints related to CRUD operatios for articles comments.",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/CommentsAPI/0.1",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "default",
+      "description": "Operations available for all authenticated users"
+    }
+  ],
+  "paths": {
+    "/articles/comments": {
+      "get": {
+        "tags": [
+          "default"
+        ],
+        "summary": "searches articles comments",
+        "description": "Retrieves all comments from an articles",
+        "operationId": "get_article_comments",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Set the order of the response entites according to the comment's creation_date",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentsList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "post a comment",
+        "description": "Posts a new comment in an article",
+        "operationId": "post_comment",
+        "requestBody": {
+          "description": "Required parameters to post a new comment",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewComment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "summary": "comment delete",
+        "description": "Deletes an article's comment",
+        "operationId": "delete_comment",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "query",
+            "description": "Comment's ID",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Comment deleted successfully"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      }
+    },
+    "/users/comments": {
+      "get": {
+        "tags": [],
+        "summary": "searches an user's comments",
+        "description": "Retrieves all comments from an user",
+        "operationId": "get-users-comments",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "article_id",
+            "in": "query",
+            "description": "filter user comments by an article",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Set the order of the response entites according to the comment's creation_date",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentsList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommentsList": {
+        "title": "CommentsList",
+        "type": "array",
+        "description": "List of comment entities used when retrieving several comments",
+        "items": {
+          "$ref": "#/components/schemas/Comment"
+        },
+        "x-examples": {
+          "Example 1": [
+            {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f034",
+              "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+              "author": {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string",
+                "image": "http://example.com"
+              },
+              "body": "comment1",
+              "creation_date": "2019-08-24"
+            },
+            {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+              "author": {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string",
+                "image": "http://example.com"
+              },
+              "body": "comment2",
+              "creation_date": "2019-08-24"
+            }
+          ]
+        }
+      },
+      "Comment": {
+        "title": "CommentResponse",
+        "required": [
+          "article_id",
+          "author",
+          "body",
+          "creation_date",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "article_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "mey6f99yvxfp2"
+            }
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          },
+          "body": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "bi45nhz9oxg6k"
+            }
+          },
+          "creation_date": {
+            "type": "string",
+            "format": "date",
+            "x-stoplight": {
+              "id": "4h2c96nqmlraq"
+            }
+          }
+        },
+        "description": "Comment entity response",
+        "x-internal": false,
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string",
+              "image": "http://example.com"
+            },
+            "body": "string",
+            "creation_date": "2019-08-24"
+          }
+        }
+      },
+      "Author": {
+        "title": "Author",
+        "required": [
+          "id",
+          "image",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "x4btzoftqh54q"
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "l0rfzjtnhrem5"
+            }
+          }
+        },
+        "description": "Author object contained in a comment response",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "username",
+            "image": "http://example.com"
+          }
+        }
+      },
+      "NewComment": {
+        "title": "NewComment",
+        "required": [
+          "article_id",
+          "author_id",
+          "body"
+        ],
+        "type": "object",
+        "properties": {
+          "article_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "author_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "r0fl6y1rs0hck"
+            }
+          },
+          "body": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "ax8pi9hleeuof"
+            }
+          }
+        },
+        "description": "New comment info for creating a new entry in the database",
+        "x-examples": {
+          "Example 1": {
+            "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+            "author_id": "78424c75-5c41-4b25-9735-3c9f7d05c59e",
+            "body": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {}
+  },
+  "x-internal": false
+}
