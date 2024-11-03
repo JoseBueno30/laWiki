@@ -8,9 +8,42 @@ servers:
   description: SwaggerHub API Auto Mocking
 paths:
   /wikis:
+    description: Search for wikis using the below query parameters.
     get:
-      summary: Get all wikis
-      operationId: getAllWikis
+      summary: Search for wikis.
+      operationId: searchWikis
+      parameters:
+      - name: name
+        in: query
+        description: String to be searched within the wiki's name.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum amount of results to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          example: 20
+          default: 20
+      - name: offset
+        in: query
+        description: The index of the first result to return. Use with limit to get the next page of search results.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          example: 10
+          default: 0
       responses:
         "200":
           description: Succesful operation.
@@ -25,6 +58,38 @@ paths:
     put:
       summary: Not allowed.
       operationId: updateAllWikis
+      parameters:
+      - name: name
+        in: query
+        description: String to be searched within the wiki's name.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum amount of results to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          example: 20
+          default: 20
+      - name: offset
+        in: query
+        description: The index of the first result to return. Use with limit to get the next page of search results.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          example: 10
+          default: 0
       responses:
         "405":
           description: Cannot use PUT method on /wikis. Must update singular wikis.
@@ -33,10 +98,88 @@ paths:
               example: |-
                 Cannot use PUT on /wikis.
 
-                Use wikis/{id_name} by ID or name.
+                Use /wikis/{id_name} by ID or name.
+    post:
+      summary: Create new wiki.
+      operationId: postNewWikis
+      parameters:
+      - name: name
+        in: query
+        description: String to be searched within the wiki's name.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum amount of results to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          example: 20
+          default: 20
+      - name: offset
+        in: query
+        description: The index of the first result to return. Use with limit to get the next page of search results.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          example: 10
+          default: 0
+      requestBody:
+        $ref: '#/components/requestBodies/Wiki_Post'
+      responses:
+        "201":
+          description: Created succesfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki'
+        "4XX":
+          description: Bad Request.
     delete:
       summary: Not allowed.
       operationId: deleteAllWikis
+      parameters:
+      - name: name
+        in: query
+        description: String to be searched within the wiki's name.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum amount of results to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          example: 20
+          default: 20
+      - name: offset
+        in: query
+        description: The index of the first result to return. Use with limit to get the next page of search results.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          example: 10
+          default: 0
       responses:
         "405":
           description: Cannot use DELETE metho on /wikis. Must delete by name or id.
@@ -45,7 +188,7 @@ paths:
               example: |-
                 Cannot use DELETE on /wikis.
 
-                Use wikis/{id_name} by ID or name.
+                Use /wikis/{id_name} by ID or name.
   /wikis/{id_name}:
     get:
       summary: Get wiki with the matching identifier. May be its name or its ID.
@@ -95,6 +238,27 @@ paths:
           description: Forbidden. User is not authorized to edit wiki the requested wiki.
         "404":
           description: Bad Request. Wiki not found.
+    post:
+      summary: Not allowed.
+      operationId: postSpecificWiki
+      parameters:
+      - name: id_name
+        in: path
+        description: "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Wiki_identifier_type'
+      responses:
+        "405":
+          description: "Cannot use POST method on /wikis/{id_name}. Must update singular wikis."
+          content:
+            text/plain:
+              example: |-
+                Cannot use POST on /wikis.
+
+                Use POST on /wikis or use PUT for existing wikis.
     delete:
       summary: Remove the specified wiki.
       parameters:
@@ -119,56 +283,24 @@ paths:
           description: Forbidden. User is not authorized to delete wikis.
         "404":
           description: Wiki not found.
-  /wikis/search:
-    description: Search for wikis using the below query parameters.
-    get:
-      summary: Get wikis matching the query parameters.
-      operationId: getWikisBySearch
-      parameters:
-      - name: name
-        in: query
-        description: String to be searched within the wiki's name.
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: limit
-        in: query
-        description: Maximum amount of results to be returned.
-        required: false
-        style: form
-        explode: true
-        schema:
-          maximum: 100
-          minimum: 1
-          type: integer
-          example: 20
-          default: 20
-      - name: offset
-        in: query
-        description: The index of the first result to return. Use with limit to get the next page of search results.
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          example: 10
-          default: 0
-      responses:
-        "200":
-          description: Succesful operation. Returned results.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Wiki_search'
-        "4XX":
-          description: Bad Request.
 components:
   schemas:
+    Wiki_unsaved:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the wiki.
+        description:
+          type: string
+          description: Details of the wiki set by its editors.
+        author:
+          type: string
+          description: Creator of the wiki. Should not remain a string.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag_unsaved'
     Wiki:
       type: object
       properties:
@@ -194,7 +326,12 @@ components:
         description: This is an example of a response when getting a wiki
         author: "Someone, change when user return is finalized"
         tags:
-        - $ref: '#/components/schemas/Tag/example'
+        - id: "1"
+          name: Gift cards
+          wiki_id: "1"
+        - id: "2"
+          name: Stores
+          wiki_id: "1"
     Wiki_search:
       type: object
       properties:
@@ -227,9 +364,26 @@ components:
           type: string
           description: Unique identifier for the wiki that uses the tag.
       example:
-        id: "1"
+      - id: "1"
         name: Gift cards
         wiki_id: "1"
+      - id: "2"
+        name: Stores
+        wiki_id: "1"
+      - id: "1"
+        name: Sports cars
+        wiki_id: "2"
+    Tag_unsaved:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the tag.
+      example:
+      - name: Gift cards
+      - name: Cars
+      - name: Skills
+      - name: Stances
     User:
       type: object
       properties:
@@ -244,3 +398,11 @@ components:
       oneOf:
       - type: integer
       - type: string
+  requestBodies:
+    Wiki_Post:
+      description: Body of a post request to upload a new wiki.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Wiki_unsaved'
+      required: true
