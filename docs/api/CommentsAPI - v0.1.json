@@ -58,7 +58,7 @@
             "explode": true,
             "schema": {
               "type": "string",
-              "example": "oldest",
+              "example": "recent - oldest",
               "default": "recent"
             }
           },
@@ -96,9 +96,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Comment"
+                  "$ref": "#/components/schemas/CommentListResponse"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "comments": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string",
+                            "image": "http://example.com"
+                          },
+                          "body": "string",
+                          "creation_date": "2019-08-24"
+                        }
+                      ],
+                      "limit": 20,
+                      "offset": 1,
+                      "total": 100,
+                      "next": "http://example.com",
+                      "previous": "http://example.com"
+                    }
                   }
                 }
               }
@@ -140,7 +161,7 @@
             "explode": true,
             "schema": {
               "type": "string",
-              "example": "oldest",
+              "example": "recent - oldest",
               "default": "recent"
             }
           },
@@ -178,9 +199,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Comment"
+                  "$ref": "#/components/schemas/CommentListResponse"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "comments": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string",
+                            "image": "http://example.com"
+                          },
+                          "body": "string",
+                          "creation_date": "2019-08-24"
+                        }
+                      ],
+                      "limit": 20,
+                      "offset": 0,
+                      "total": 100,
+                      "next": "http://example.com",
+                      "previous": "http://example.com"
+                    }
                   }
                 }
               }
@@ -237,7 +279,7 @@
         }
       }
     },
-    "/comments": {
+    "/comments/{comment_id}": {
       "delete": {
         "tags": [],
         "summary": "delete a comment",
@@ -246,11 +288,11 @@
         "parameters": [
           {
             "name": "comment_id",
-            "in": "query",
-            "description": "The unique ID of the comment",
+            "in": "path",
+            "description": "The unique ID of the article",
             "required": true,
-            "style": "form",
-            "explode": true,
+            "style": "simple",
+            "explode": false,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -274,7 +316,7 @@
   "components": {
     "schemas": {
       "Comment": {
-        "title": "CommentResponse",
+        "title": "Comment",
         "required": [
           "article_id",
           "author",
@@ -392,6 +434,87 @@
             "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
             "author_id": "78424c75-5c41-4b25-9735-3c9f7d05c59e",
             "body": "string"
+          }
+        }
+      },
+      "CommentListResponse": {
+        "title": "CommentListResponse",
+        "required": [
+          "comments",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Comment"
+            }
+          },
+          "limit": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer",
+            "example": 20,
+            "default": 20,
+            "x-stoplight": {
+              "id": "ni4x3zmmfzw10"
+            }
+          },
+          "offset": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 0,
+            "x-stoplight": {
+              "id": "w4f7vrojx5mi8"
+            }
+          },
+          "total": {
+            "minimum": 0,
+            "type": "integer",
+            "example": 100,
+            "x-stoplight": {
+              "id": "m9i5ksjg4zx3v"
+            }
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "gtd0na0za72eu"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "auv9fi5lbur9r"
+            }
+          }
+        },
+        "description": "Response entity that returns the comments and the pagination info.",
+        "x-examples": {
+          "Example 1": {
+            "comments": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                "author": {
+                  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                  "name": "string",
+                  "image": "http://example.com"
+                },
+                "body": "string",
+                "creation_date": "2019-08-24"
+              }
+            ],
+            "limit": 20,
+            "offset": 0,
+            "total": 100,
+            "next": "http://example.com",
+            "previous": "http://example.com"
           }
         }
       }
