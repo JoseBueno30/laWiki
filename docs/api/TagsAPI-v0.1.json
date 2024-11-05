@@ -1,0 +1,399 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TagAPI",
+    "description": "API for the tags microservice of laWiki web appplication. It provides all endpoints related to CRUD operatios for wiki tags.",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/ez3/tags-api/0.1",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/tags/{tag_id}": {
+      "delete": {
+        "tags": [],
+        "summary": "delete a tag",
+        "description": "Delete a wiki tag.",
+        "operationId": "delete-tag",
+        "parameters": [
+          {
+            "name": "tag_id",
+            "in": "path",
+            "description": "The unique ID of the tag.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content, tag deleted succesfully"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Tag not found"
+          }
+        }
+      }
+    },
+    "/tags/wikis/{wiki_id}": {
+      "get": {
+        "tags": [],
+        "summary": "get a wiki's tags",
+        "description": "Retrieve all the tags from a wiki.",
+        "operationId": "get-wiki-tags",
+        "parameters": [
+          {
+            "name": "wiki_id",
+            "in": "path",
+            "description": "The unique ID of the wiki.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Wiki not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "create a new wiki tag",
+        "description": "Create a new wiki tag.",
+        "operationId": "post-wiki-tag",
+        "parameters": [
+          {
+            "name": "wiki_id",
+            "in": "path",
+            "description": "The unique ID of the wiki.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/wikis_wiki_id_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, wrong content structure"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/tags/articles/{article_id}": {
+      "get": {
+        "tags": [],
+        "summary": "get an article's tags",
+        "description": "Retrieves all the tags from an article.",
+        "operationId": "get-articles-tags",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "path",
+            "description": "The unique ID of the article.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Article not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "assign a tag to an article",
+        "description": "Assigns a tag to an article.",
+        "operationId": "assign-article-tag",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "path",
+            "description": "The unique ID of the article.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/articles_article_id_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Article or tag not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Tag": {
+        "title": "Tag",
+        "required": [
+          "articles",
+          "id",
+          "tag",
+          "wiki_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the tag.",
+            "format": "uuid"
+          },
+          "tag": {
+            "type": "string",
+            "description": "The name of the tag.",
+            "x-stoplight": {
+              "id": "g3ziz7fieuzmb"
+            }
+          },
+          "wiki_id": {
+            "type": "string",
+            "description": "The ID corresponding to the wiki the tag belongs to.",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "ynzgbowu7wnwm"
+            }
+          },
+          "articles": {
+            "type": "array",
+            "description": "Array of articles that have the tag.",
+            "items": {
+              "$ref": "#/components/schemas/Article"
+            },
+            "x-stoplight": {
+              "id": "3qq291kyraib9"
+            }
+          }
+        },
+        "description": "Tag entity."
+      },
+      "Wiki": {
+        "title": "Wiki",
+        "required": [
+          "author",
+          "description",
+          "id",
+          "name",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the wiki.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the wiki.",
+            "x-stoplight": {
+              "id": "jt72jmf5kam9m"
+            }
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the wiki.",
+            "x-stoplight": {
+              "id": "z2qk3iw35ab67"
+            }
+          },
+          "author": {
+            "type": "string",
+            "description": "The creator of the wiki.",
+            "x-stoplight": {
+              "id": "z2lm8d92lt920"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          }
+        },
+        "description": "Wiki entity."
+      },
+      "Article": {
+        "title": "Article",
+        "required": [
+          "author",
+          "creation_date",
+          "id",
+          "tags",
+          "title",
+          "versions",
+          "wiki"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the article.",
+            "format": "uuid"
+          },
+          "wiki": {
+            "type": "string",
+            "description": "The ID corresponding to the wiki the article belongs to.",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "ais1ocf34nkbb"
+            }
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the article.",
+            "x-stoplight": {
+              "id": "7riv8a15yswa9"
+            }
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "The creation date of the article.",
+            "format": "date-time",
+            "x-stoplight": {
+              "id": "4jnc806q0dvsy"
+            }
+          },
+          "author": {
+            "type": "string",
+            "description": "The creator of the article.",
+            "x-stoplight": {
+              "id": "qalp42ifgzq55"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "x-stoplight": {
+              "id": "kmbf4o0dq57hq"
+            }
+          },
+          "versions": {
+            "type": "array",
+            "description": "Array of simplified articleversions.",
+            "items": {},
+            "x-stoplight": {
+              "id": "liz12jacewjau"
+            }
+          }
+        },
+        "description": "Article entity."
+      },
+      "wikis_wiki_id_body": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string",
+            "description": "The name of the tag.",
+            "x-stoplight": {
+              "id": "yfh5p42q7b13x"
+            }
+          }
+        }
+      },
+      "articles_article_id_body": {
+        "required": [
+          "tag_id"
+        ],
+        "type": "object",
+        "properties": {
+          "tag_id": {
+            "type": "string",
+            "description": "The unique ID of the tag.",
+            "x-stoplight": {
+              "id": "weftd895b0dfe"
+            }
+          }
+        }
+      }
+    }
+  }
+}
