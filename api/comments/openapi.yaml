@@ -1,0 +1,469 @@
+openapi: 3.0.0
+info:
+  description: API for the Comments microservice of laWiki web appplication. It provides
+    all endpoints related to CRUD operatios for articles comments.
+  title: CommentsAPI
+  version: "0.1"
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/CommentsAPI/0.1
+tags:
+- description: Operations available for all authenticated users
+  name: default
+paths:
+  /comments/users/{user_id}:
+    get:
+      description: Retrieves all comments from an user
+      operationId: get-users-comments
+      parameters:
+      - description: The unique ID of the user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Fillters the results by the article's ID
+        explode: true
+        in: query
+        name: article_id
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      - description: Set the order the comments will be shown. It is determined by
+          date
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: recent
+          example: recent - oldest
+          type: string
+        style: form
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offet
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    comments:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      body: string
+                      creation_date: 2019-08-24
+                    limit: 20
+                    offset: 1
+                    total: 100
+                    next: http://example.com
+                    previous: http://example.com
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+          description: OK
+        "404":
+          description: Not Found
+      summary: get an user's comments
+      tags: []
+  /comments/articles/{article_id}:
+    get:
+      description: Retrieves all comments from an articles
+      operationId: get_article_comments
+      parameters:
+      - description: The unique ID of the article
+        explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Set the order the comments will be shown. It is determined by
+          date
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: recent
+          example: recent - oldest
+          type: string
+        style: form
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    comments:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      body: string
+                      creation_date: 2019-08-24
+                    limit: 20
+                    offset: 0
+                    total: 100
+                    next: http://example.com
+                    previous: http://example.com
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+          description: OK
+        "404":
+          description: Not Found
+      summary: get an article's comments
+      tags:
+      - default
+    post:
+      description: Posts a new comment in an article
+      operationId: post_comment
+      parameters:
+      - description: The unique ID of the article
+        explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewComment'
+        description: JSON object that contains the author and content of the comment
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: OK
+        "400":
+          description: "Bad Request, wrong content structure"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or Author not found
+      summary: post a comment
+      tags: []
+  /comments/{comment_id}:
+    delete:
+      description: Deletes an article's comment
+      operationId: delete_comment
+      parameters:
+      - description: The unique ID of the article
+        explode: false
+        in: path
+        name: comment_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, comment deleted succesfully"
+        "403":
+          description: Forbidden
+        "404":
+          description: Comment not found
+      summary: delete a comment
+      tags: []
+components:
+  schemas:
+    Comment:
+      description: Comment entity response
+      example:
+        article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        creation_date: 2000-01-23
+        body: body
+      properties:
+        id:
+          description: The unique ID of the comment
+          format: uuid
+          title: id
+          type: string
+        article_id:
+          description: The unique ID of the article
+          format: uuid
+          title: article_id
+          type: string
+          x-stoplight:
+            id: mey6f99yvxfp2
+        author:
+          $ref: '#/components/schemas/Author'
+        body:
+          description: The content of the comment
+          title: body
+          type: string
+          x-stoplight:
+            id: bi45nhz9oxg6k
+        creation_date:
+          description: The date of creation of the comment
+          format: date
+          title: creation_date
+          type: string
+          x-stoplight:
+            id: 4h2c96nqmlraq
+      required:
+      - article_id
+      - author
+      - body
+      - creation_date
+      - id
+      title: Comment
+      type: object
+      x-internal: false
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          article_id: e4aad634-3311-4e79-b165-3911549b3b29
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          body: string
+          creation_date: 2019-08-24
+    Author:
+      description: Author object contained in a comment response
+      example:
+        image: https://openapi-generator.tech
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The unique ID of the user author
+          format: uuid
+          title: id
+          type: string
+        name:
+          description: The username of the user
+          title: name
+          type: string
+          x-stoplight:
+            id: x4btzoftqh54q
+        image:
+          description: The avatar image of the user
+          format: uri
+          title: image
+          type: string
+          x-stoplight:
+            id: l0rfzjtnhrem5
+      required:
+      - id
+      - image
+      - name
+      title: Author
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: username
+          image: http://example.com
+    NewComment:
+      description: New comment info for creating a new entry in the database
+      example:
+        author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        body: body
+      properties:
+        author_id:
+          description: The unique ID of the user author
+          format: uuid
+          title: author_id
+          type: string
+          x-stoplight:
+            id: r0fl6y1rs0hck
+        body:
+          description: The content of the commment
+          title: body
+          type: string
+          x-stoplight:
+            id: ax8pi9hleeuof
+      required:
+      - author_id
+      - body
+      title: NewComment
+      type: object
+      x-examples:
+        Example 1:
+          author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
+          body: string
+    CommentListResponse:
+      description: Response entity that returns the comments and the pagination info.
+      example:
+        next: https://openapi-generator.tech
+        total: 100
+        comments:
+        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23
+          body: body
+        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23
+          body: body
+        offset: 0
+        previous: https://openapi-generator.tech
+        limit: 20
+      properties:
+        comments:
+          items:
+            $ref: '#/components/schemas/Comment'
+          title: comments
+          type: array
+        limit:
+          default: 20
+          description: The maximum of responses to be returned
+          example: 20
+          maximum: 100
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: ni4x3zmmfzw10
+        offset:
+          default: 0
+          description: The index of the first result to return. Use with limit to
+            get the next page of search results.
+          minimum: 0
+          title: offset
+          type: integer
+          x-stoplight:
+            id: w4f7vrojx5mi8
+        total:
+          description: The total number of results of the query
+          example: 100
+          minimum: 0
+          title: total
+          type: integer
+          x-stoplight:
+            id: m9i5ksjg4zx3v
+        next:
+          description: The url to request the next batch of results
+          format: uri
+          title: next
+          type: string
+          x-stoplight:
+            id: gtd0na0za72eu
+        previous:
+          description: The url to request the previous batch of results
+          format: uri
+          title: previous
+          type: string
+          x-stoplight:
+            id: auv9fi5lbur9r
+      required:
+      - comments
+      - limit
+      - offset
+      - total
+      title: CommentListResponse
+      type: object
+      x-examples:
+        Example 1:
+          comments:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            article_id: e4aad634-3311-4e79-b165-3911549b3b29
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            body: string
+            creation_date: 2019-08-24
+          limit: 20
+          offset: 0
+          total: 100
+          next: http://example.com
+          previous: http://example.com
+  securitySchemes: {}
+x-internal: false

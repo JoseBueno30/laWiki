@@ -1,0 +1,524 @@
+openapi: 3.0.0
+info:
+  description: lawiki Ratings Api
+  title: Ratings
+  version: "0.1"
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/DAVIDBUENOCARMONA_1/RatingsAPI/0.1
+paths:
+  /ratings/{id}:
+    delete:
+      description: Delete the rating associated with the selected ID
+      operationId: delete-ratings-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted successfully
+        "403":
+          description: No permissions to delete
+        "404":
+          description: Rating Not Found
+      summary: Delete rating by ID
+      tags: []
+    get:
+      operationId: get-ratings-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    Author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    value: 0
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Rating found and returned
+        "404":
+          description: Rating Not Found
+      summary: Get rating by ID
+      tags: []
+  /ratings/articles/{id}:
+    get:
+      operationId: get-ratings-article-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    ratings:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                      Author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      value: 0
+                      creation_date: 2019-08-24
+                    limit: 0
+                    offset: 0
+                    total: 0
+                    next: http://example.com
+                    previous: http://example.com
+              schema:
+                $ref: '#/components/schemas/RatingList'
+          description: OK
+        "404":
+          description: Not Found
+      summary: Get all ratings of an article
+      tags: []
+    post:
+      operationId: post-ratings-article-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRating'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: "Create a new rating related with an article, this MUST change\
+            \ the author's rating"
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      summary: Create rating on article
+      tags: []
+    put:
+      description: This endpoint must do the same as Post but editting the value instead
+        of creating a new one
+      operationId: put-ratings-article-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                  Author:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: string
+                    image: http://example.com
+                  value: 0
+                  creation_date: 2019-08-24
+            schema:
+              $ref: '#/components/schemas/Rating'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    Author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    value: 0
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Edited rating
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      summary: Edit rating of an article
+      tags: []
+  /ratings/users/{id}:
+    get:
+      operationId: get-ratings-user-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: number
+          description: Return the user rating
+        "404":
+          description: Not Found
+      summary: Get the rating from an user
+      tags: []
+  /ratings/articles/{id}/average:
+    get:
+      operationId: get-ratings-article-id-average
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: OK
+      summary: Get average rating on selected Article
+      tags: []
+components:
+  schemas:
+    NewRating:
+      description: "New Rating, created by one user associated with one article (Article\
+        \ ID is obtained in path)"
+      example:
+        author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        value: 0.8008281904610115
+      properties:
+        author_id:
+          description: "Author ID: ID of the person who publish the rating"
+          format: uuid
+          title: author_id
+          type: string
+          x-stoplight:
+            id: q4bc1zm0v0tt4
+        value:
+          description: "Value: The value of the rating published"
+          title: value
+          type: number
+          x-stoplight:
+            id: b3wl5oq26a7ik
+      required:
+      - author_id
+      - value
+      title: NewRating
+      type: object
+      x-examples:
+        Example 1:
+          author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
+          rating: 5
+    Rating:
+      description: "Rating object, which content is obtained from the data base"
+      example:
+        article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        Author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        creation_date: 2000-01-23
+        value: 0.8008281904610115
+      properties:
+        id:
+          description: "Rating ID\r\n"
+          format: uuid
+          title: id
+          type: string
+        article_id:
+          description: Article ID where the rating is published
+          format: uuid
+          title: article_id
+          type: string
+          x-stoplight:
+            id: uzi095sjp0udm
+        Author:
+          $ref: '#/components/schemas/Author'
+        value:
+          description: Rating's value
+          title: value
+          type: number
+          x-stoplight:
+            id: 2n2knofgepww9
+        creation_date:
+          description: Date where the rating was published
+          format: date
+          title: creation_date
+          type: string
+          x-stoplight:
+            id: s2jphmehddzvv
+      required:
+      - Author
+      - article_id
+      - creation_date
+      - id
+      - value
+      title: Rating
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          article_id: e4aad634-3311-4e79-b165-3911549b3b29
+          Author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          value: 0
+          creation_date: 2019-08-24
+    Author:
+      example:
+        image: https://openapi-generator.tech
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: Author's ID on database
+          format: uuid
+          title: id
+          type: string
+        name:
+          description: 'Author''s name '
+          title: name
+          type: string
+          x-stoplight:
+            id: qb0c3tnhxfrd2
+        image:
+          description: Author's profile image
+          format: uri
+          title: image
+          type: string
+          x-stoplight:
+            id: nhj8lampltfr6
+      required:
+      - id
+      - image
+      - name
+      title: Author
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: string
+          image: http://example.com
+    RatingList:
+      example:
+        next: https://openapi-generator.tech
+        total: 1
+        offset: 6
+        previous: https://openapi-generator.tech
+        ratings:
+        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          Author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23
+          value: 0.8008281904610115
+        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          Author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23
+          value: 0.8008281904610115
+        limit: 0
+      properties:
+        ratings:
+          items:
+            $ref: '#/components/schemas/Rating'
+          title: ratings
+          type: array
+          x-stoplight:
+            id: d5eh6v2k20xgj
+        limit:
+          title: limit
+          type: integer
+          x-stoplight:
+            id: 3zrcx11uhb527
+        offset:
+          title: offset
+          type: integer
+          x-stoplight:
+            id: qdopqbxi79y5p
+        total:
+          title: total
+          type: integer
+          x-stoplight:
+            id: 72gdqe1ngz9hq
+        next:
+          format: uri
+          title: next
+          type: string
+          x-stoplight:
+            id: no5svtesm8hk2
+        previous:
+          format: uri
+          title: previous
+          type: string
+          x-stoplight:
+            id: lu2ppdfowvavf
+      title: RatingList
+      type: object
+      x-examples:
+        Example 1:
+          ratings:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            article_id: e4aad634-3311-4e79-b165-3911549b3b29
+            Author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            value: 0
+            creation_date: 2019-08-24
+          limit: 0
+          offset: 0
+          total: 0
+          next: http://example.com
+          previous: http://example.com
+    AverageRating:
+      properties:
+        average:
+          type: number
+          x-stoplight:
+            id: xc8d4rg2zmeoe
+        five_count:
+          type: integer
+          x-stoplight:
+            id: tgwuumk1xy9rq
+        four_count:
+          type: integer
+          x-stoplight:
+            id: v5hqxo4zght6z
+        three_count:
+          type: integer
+          x-stoplight:
+            id: q3vgda4tu3qrf
+        two_count:
+          type: integer
+          x-stoplight:
+            id: yt0gl4isfgmc8
+        one_count:
+          type: integer
+          x-stoplight:
+            id: 4rssmlpes2jtm
+      title: AverageRating
+      type: object
+    inline_response_200:
+      example:
+        one_count: 2
+        average: 0.8008281904610115
+        total: 7
+        four_count: 1
+        two_count: 5
+        five_count: 6
+        three_count: 5
+      properties:
+        average:
+          title: average
+          type: number
+          x-stoplight:
+            id: 0lnb4hf0vj6c9
+        five_count:
+          title: five_count
+          type: integer
+          x-stoplight:
+            id: xcnox0bx4b03p
+        four_count:
+          title: four_count
+          type: integer
+          x-stoplight:
+            id: psuaku1zueqhs
+        three_count:
+          title: three_count
+          type: integer
+          x-stoplight:
+            id: lcgwh2iq6eq7s
+        two_count:
+          title: two_count
+          type: integer
+          x-stoplight:
+            id: zucmrlvui19x1
+        one_count:
+          title: one_count
+          type: integer
+          x-stoplight:
+            id: q8s6fm622clq8
+        total:
+          title: total
+          type: integer
+          x-stoplight:
+            id: hlnqh9g8o1tnx
+      title: inline_response_200
+      type: object

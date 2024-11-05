@@ -97,10 +97,13 @@ paths:
           description: Cannot use PUT method on /wikis. Must update singular wikis.
           content:
             text/plain:
-              example: |-
-                Cannot use PUT on /wikis.
+              schema:
+                type: string
+                enum:
+                - |-
+                  Cannot use PUT on /wikis.
 
-                Use /wikis/{id_name} by ID or name.
+                  Use /wikis/{id_name} by ID or name.
     post:
       summary: Create new wiki.
       operationId: postNewWikis
@@ -187,10 +190,12 @@ paths:
           description: Cannot use DELETE metho on /wikis. Must delete by name or id.
           content:
             text/plain:
-              example: |-
-                Cannot use DELETE on /wikis.
-
-                Use /wikis/{id_name} by ID or name.
+              schema:
+                type: string
+                enum:
+                - |-
+                  Cannot use DELETE on /wikis.
+                  Use /wikis/{id_name} by ID or name.
   /wikis/{id_name}:
     get:
       summary: Get wiki with the matching identifier. May be its name or its ID.
@@ -257,10 +262,13 @@ paths:
           description: "Cannot use POST method on /wikis/{id_name}. Must update singular wikis."
           content:
             text/plain:
-              example: |-
-                Cannot use POST on /wikis.
+              schema:
+                type: string
+                enum:
+                - |-
+                  Cannot use POST on /wikis/{id_name}.
 
-                Use POST on /wikis or use PUT for existing wikis.
+                  Use POST on /wikis or use PUT for existing wikis.
     delete:
       summary: Remove the specified wiki.
       parameters:
