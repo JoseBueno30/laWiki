@@ -1,0 +1,454 @@
+openapi: 3.0.0
+info:
+  description: API for the tags microservice of laWiki web appplication. It provides
+    all endpoints related to CRUD operatios for wiki tags.
+  title: TagAPI
+  version: "1.0"
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/ez3/tags-api/0.1
+paths:
+  /tags/{id}:
+    delete:
+      description: Delete a wiki tag.
+      operationId: delete-tag
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, tag deleted succesfully"
+        "400":
+          description: "Bad Request, invalid ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+      summary: Delete Tag
+      tags: []
+    get:
+      description: 'Get a tag by ID. '
+      operationId: get-tag
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: OK
+        "400":
+          description: "Bad Request, invalid Tag ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+      summary: Get Tag
+      tags: []
+  /tags/wikis/{id}:
+    get:
+      description: Retrieve all the tags from a wiki.
+      operationId: get-wiki-tags
+      parameters:
+      - description: The unique ID of the wiki.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagList'
+          description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
+        "404":
+          description: Wiki not found
+      summary: Get Wikis Tags
+      tags: []
+    post:
+      description: Create a new tag in a given wiki.
+      operationId: post-wiki-tag
+      parameters:
+      - description: The unique ID of the wiki.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTag'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: OK
+        "400":
+          description: "Bad Request, wrong content structure"
+        "403":
+          description: Forbidden
+      summary: Create Tag
+      tags: []
+  /tags/articles/{id}:
+    get:
+      description: Retrieves all the tags from an article.
+      operationId: get-articles-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Tag'
+                type: array
+          description: OK
+        "404":
+          description: Article not found
+      summary: Get Articles Tag
+      tags: []
+    post:
+      description: "Assigns a list of tags, given their IDs, to an article."
+      operationId: assign-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagIDList'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Bad Request, invalid Tag ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Assign Tags
+      tags: []
+    put:
+      description: "Unassigns a list of tags, given their IDs to an article."
+      operationId: unassign-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagIDList'
+      responses:
+        "204":
+          description: "No Content, tag unassigned succesfully"
+        "400":
+          description: "Bad Request, invalid Tag ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Unassign Tags
+      tags: []
+components:
+  schemas:
+    Tag:
+      description: Tag entity.
+      example:
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        tag: tag
+        wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        articles:
+        - name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The ID of the tag.
+          format: uuid
+          title: id
+          type: string
+        tag:
+          description: The name of the tag.
+          title: tag
+          type: string
+          x-stoplight:
+            id: g3ziz7fieuzmb
+        wiki_id:
+          description: The ID corresponding to the wiki the tag belongs to.
+          format: uuid
+          title: wiki_id
+          type: string
+          x-stoplight:
+            id: ynzgbowu7wnwm
+        articles:
+          description: Array of articles that have the tag.
+          items:
+            $ref: '#/components/schemas/Article'
+          title: articles
+          type: array
+          x-stoplight:
+            id: 3qq291kyraib9
+      required:
+      - articles
+      - id
+      - tag
+      - wiki_id
+      title: Tag
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          tag: string
+          wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+          articles:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+    Article:
+      description: Article entity.
+      example:
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The ID of the article.
+          format: uuid
+          title: id
+          type: string
+        name:
+          description: The name of the article.
+          title: name
+          type: string
+          x-stoplight:
+            id: 7riv8a15yswa9
+      required:
+      - id
+      - name
+      title: Article
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: string
+    NewTag:
+      description: Model for a new Tag
+      example:
+        tag: tag
+      properties:
+        tag:
+          description: The name of the tag.
+          title: tag
+          type: string
+          x-stoplight:
+            id: yfh5p42q7b13x
+      title: NewTag
+      type: object
+      x-examples:
+        Example 1:
+          tag: string
+    TagIDList:
+      example:
+        tag_ids:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        tag_ids:
+          description: List of Tag IDs
+          items:
+            format: uuid
+            type: string
+          title: tag_ids
+          type: array
+          x-stoplight:
+            id: kmi9kpdl1ztoh
+      title: TagIDsList
+      type: object
+      x-examples:
+        Example 1:
+          tag_ids:
+          - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+    TagList:
+      description: List of Tags. Supports pagination.
+      example:
+        next: https://openapi-generator.tech
+        total: 0
+        offset: 6
+        previous: https://openapi-generator.tech
+        limit: 0
+        articles:
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: tag
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: tag
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        articles:
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: articles
+          type: array
+          x-stoplight:
+            id: qmckelb8p9agh
+        total:
+          description: The total number of items available to return.
+          title: total
+          type: integer
+          x-stoplight:
+            id: ceyp9h3u6pq3t
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          title: offset
+          type: integer
+          x-stoplight:
+            id: y8f5uy4secbdp
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          example: 0
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: mli08w7p9m5ct
+        previous:
+          description: Request to the previous page of items. ( null if none)
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: fr352m14ihvc7
+        next:
+          description: 'Request to the next page of items. ( null if none) '
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: d6rwzi2d4o45u
+      required:
+      - articles
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      title: TagList
+      type: object
+      x-examples:
+        Example 1:
+          articles:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: string
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+            articles:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
