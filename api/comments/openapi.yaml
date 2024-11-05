@@ -3,10 +3,10 @@ info:
   description: API for the Comments microservice of laWiki web appplication. It provides
     all endpoints related to CRUD operatios for articles comments.
   title: CommentsAPI
-  version: "0.1"
+  version: "1.0"
 servers:
 - description: SwaggerHub API Auto Mocking
-  url: https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/CommentsAPI/0.1
+  url: https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/CommentsAPI/1.0
 tags:
 - description: Operations available for all authenticated users
   name: default
@@ -100,9 +100,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommentListResponse'
           description: OK
+        "400":
+          description: "Bad Request, invalid User ID format"
         "404":
           description: Not Found
-      summary: get an user's comments
+      summary: Get Users Comments
       tags: []
   /comments/articles/{article_id}:
     get:
@@ -184,9 +186,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommentListResponse'
           description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
         "404":
           description: Not Found
-      summary: get an article's comments
+      summary: Get Articles Comments
       tags:
       - default
     post:
@@ -209,19 +213,19 @@ paths:
               $ref: '#/components/schemas/NewComment'
         description: JSON object that contains the author and content of the comment
       responses:
-        "200":
+        "201":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
-          description: OK
+          description: Comment successufully created
         "400":
           description: "Bad Request, wrong content structure"
         "403":
           description: Forbidden
         "404":
           description: Article or Author not found
-      summary: post a comment
+      summary: Post Comment
       tags: []
   /comments/{comment_id}:
     delete:
@@ -240,11 +244,13 @@ paths:
       responses:
         "204":
           description: "No Content, comment deleted succesfully"
+        "400":
+          description: "Bad Request, invalid Comment ID format"
         "403":
           description: Forbidden
         "404":
           description: Comment not found
-      summary: delete a comment
+      summary: Delete Comment
       tags: []
 components:
   schemas:
@@ -431,6 +437,7 @@ components:
         next:
           description: The url to request the next batch of results
           format: uri
+          nullable: true
           title: next
           type: string
           x-stoplight:
@@ -438,6 +445,7 @@ components:
         previous:
           description: The url to request the previous batch of results
           format: uri
+          nullable: true
           title: previous
           type: string
           x-stoplight:
@@ -445,7 +453,9 @@ components:
       required:
       - comments
       - limit
+      - next
       - offset
+      - previous
       - total
       title: CommentListResponse
       type: object
