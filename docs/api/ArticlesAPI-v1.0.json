@@ -203,7 +203,7 @@
             "name": "wiki_id",
             "in": "query",
             "description": "The ID of the wiki where the serch will be made",
-            "required": true,
+            "required": false,
             "style": "form",
             "explode": true,
             "schema": {
@@ -215,7 +215,7 @@
             "name": "name",
             "in": "query",
             "description": "Search query for the name of the article",
-            "required": true,
+            "required": false,
             "style": "form",
             "explode": true,
             "schema": {
@@ -282,6 +282,40 @@
               "type": "string",
               "example": "recent, oldest, popular, unpopular",
               "default": "none"
+            }
+          },
+          {
+            "name": "creation_date",
+            "in": "query",
+            "description": "Single date or range",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "2024/01/01, 2023/01/01-2024/01/01"
+            }
+          },
+          {
+            "name": "author_name",
+            "in": "query",
+            "description": "Filter for the author of the Article",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "editor_name",
+            "in": "query",
+            "description": "Filter for the editors of the Article",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -666,6 +700,66 @@
           }
         }
       }
+    },
+    "/articles/commented_by/{id}": {
+      "get": {
+        "tags": [],
+        "summary": "Get Articles commented by User",
+        "description": "Get a list of the Articles commented by a given user.",
+        "operationId": "getArticlesCommentedByUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, inavalid User ID format"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -719,7 +813,7 @@
             }
           }
         },
-        "description": "Article of a wiki",
+        "description": "Article of a Wiki",
         "x-examples": {
           "Example 1": {
             "id": "670eb0bb7a55b98db9cc12d8",
@@ -749,8 +843,8 @@
       "ArticleVersion": {
         "required": [
           "article_id",
+          "author",
           "body",
-          "editors",
           "id",
           "modification_date",
           "tags",
@@ -768,6 +862,9 @@
             "description": "The ID of the article.",
             "format": "uuid"
           },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          },
           "title": {
             "type": "string",
             "description": "The title of the version of the article."
@@ -780,13 +877,6 @@
           "body": {
             "type": "string",
             "description": "The body of the version."
-          },
-          "editors": {
-            "type": "array",
-            "description": "Array of all the editors of the article.",
-            "items": {
-              "$ref": "#/components/schemas/Editor"
-            }
           },
           "tags": {
             "type": "array",
@@ -836,6 +926,9 @@
           "title": {
             "type": "string",
             "description": "The title of the article version."
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
           },
           "modification_date": {
             "type": "string",
@@ -917,23 +1010,26 @@
               "id": "mli08w7p9m5ct"
             }
           },
-          "next": {
-            "type": "string",
-            "description": "Request to the next page of items. ( null if none) ",
-            "nullable": true,
-            "x-stoplight": {
-              "id": "d6rwzi2d4o45u"
-            }
-          },
           "previous": {
             "type": "string",
             "description": "Request to the previous page of items. ( null if none)",
+            "format": "uri",
             "nullable": true,
             "x-stoplight": {
               "id": "fr352m14ihvc7"
             }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "d6rwzi2d4o45u"
+            }
           }
-        }
+        },
+        "description": "List of Articles. Supports pagination."
       },
       "ArticleVersionList": {
         "required": [
@@ -964,7 +1060,7 @@
           },
           "offset": {
             "type": "integer",
-            "description": "The offset of the items returned (as set in the query or 0 by default)",
+            "description": "The offset of the items returned (as set in the query or by default)",
             "x-stoplight": {
               "id": "cy8nldi2is9br"
             }
@@ -979,6 +1075,8 @@
           "previous": {
             "type": "string",
             "description": "Request to the next page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
             "x-stoplight": {
               "id": "tlbg5auyullr7"
             }
@@ -986,15 +1084,17 @@
           "next": {
             "type": "string",
             "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
             "x-stoplight": {
               "id": "rc3t7xs8w8yr3"
             }
           }
-        }
+        },
+        "description": "List of ArticleVersions. Supports pagination."
       },
       "NewArticleVersion": {
         "required": [
-          "article_id",
           "author",
           "body",
           "tags",
@@ -1002,14 +1102,6 @@
         ],
         "type": "object",
         "properties": {
-          "article_id": {
-            "type": "string",
-            "description": "The ID of the article.",
-            "format": "uuid",
-            "x-stoplight": {
-              "id": "zdhzxnaxgad57"
-            }
-          },
           "title": {
             "type": "string",
             "description": "The title of the version of the article.",
@@ -1036,7 +1128,8 @@
               "id": "sdqsmbl8khsan"
             }
           }
-        }
+        },
+        "description": "Data required to the user to create a new ArticleVersion of an Article (given in the path of the endpoint)"
       },
       "Author": {
         "required": [
@@ -1055,31 +1148,7 @@
             "description": "The name of the author."
           }
         },
-        "description": "The author of an article or version."
-      },
-      "Editor": {
-        "required": [
-          "edition_date",
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The ID of the editor.",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the editor."
-          },
-          "edition_date": {
-            "type": "string",
-            "description": "The date of edition of the editor.",
-            "format": "date-time"
-          }
-        }
+        "description": "The author of an Article or ArticleVersion."
       }
     }
   }

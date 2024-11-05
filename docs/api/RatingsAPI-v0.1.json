@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Ratings",
-    "description": "lawiki Ratings Api",
+    "title": "RatingsAPI",
+    "description": "API for the Ratings of laWiki web appplication. It provides all endpoints related to CRUD operatios for ratings.",
     "version": "0.1"
   },
   "servers": [
@@ -15,8 +15,9 @@
     "/ratings/{id}": {
       "get": {
         "tags": [],
-        "summary": "Get rating by ID",
-        "operationId": "get-ratings-id",
+        "summary": "Get Rating",
+        "description": "Get the Rating with the provided ID",
+        "operationId": "getRating",
         "parameters": [
           {
             "name": "id",
@@ -55,6 +56,9 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request, invalid Rating ID format"
+          },
           "404": {
             "description": "Rating Not Found"
           }
@@ -62,9 +66,9 @@
       },
       "delete": {
         "tags": [],
-        "summary": "Delete rating by ID",
+        "summary": "Delete Rating",
         "description": "Delete the rating associated with the selected ID",
-        "operationId": "delete-ratings-id",
+        "operationId": "deleteRating",
         "parameters": [
           {
             "name": "id",
@@ -81,6 +85,9 @@
           "204": {
             "description": "Deleted successfully"
           },
+          "400": {
+            "description": "Bad Request, invalid Rating ID format"
+          },
           "403": {
             "description": "No permissions to delete"
           },
@@ -93,8 +100,8 @@
     "/ratings/articles/{id}": {
       "get": {
         "tags": [],
-        "summary": "Get all ratings of an article",
-        "operationId": "get-ratings-article-id",
+        "summary": "Get Article's Ratings",
+        "operationId": "getArticleRatings",
         "parameters": [
           {
             "name": "id",
@@ -109,31 +116,41 @@
           {
             "name": "order",
             "in": "query",
+            "description": "Set the order the comments will be sorted by. It is determined by date",
             "required": false,
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "recent, oldest"
             }
           },
           {
             "name": "limit",
             "in": "query",
+            "description": "The maximum number of results to return.",
             "required": false,
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "integer"
+              "minimum": 0,
+              "type": "integer",
+              "example": 20,
+              "default": 100
             }
           },
           {
             "name": "offset",
             "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
             "required": false,
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "integer"
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
             }
           }
         ],
@@ -172,6 +189,9 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request, invalid Article ID format"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -179,9 +199,9 @@
       },
       "put": {
         "tags": [],
-        "summary": "Edit rating of an article",
-        "description": "This endpoint must do the same as Post but editting the value instead of creating a new one",
-        "operationId": "put-ratings-article-id",
+        "summary": "Edit Article's Rating",
+        "description": "Update the value of an already existing Rating",
+        "operationId": "editArticleRating",
         "parameters": [
           {
             "name": "id",
@@ -220,7 +240,7 @@
         },
         "responses": {
           "201": {
-            "description": "Edited rating",
+            "description": "Rating edited",
             "content": {
               "application/json": {
                 "schema": {
@@ -245,7 +265,7 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request, invalid Article ID format"
           },
           "403": {
             "description": "Forbidden"
@@ -257,8 +277,9 @@
       },
       "post": {
         "tags": [],
-        "summary": "Create rating on article",
-        "operationId": "post-ratings-article-id",
+        "summary": "Rate Article",
+        "description": "Create a rating for a given Article",
+        "operationId": "rateArticle",
         "parameters": [
           {
             "name": "id",
@@ -282,7 +303,7 @@
         },
         "responses": {
           "201": {
-            "description": "Create a new rating related with an article, this MUST change the author's rating",
+            "description": "Rating created",
             "content": {
               "application/json": {
                 "schema": {
@@ -292,7 +313,7 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request, invalid Article ID format"
           },
           "403": {
             "description": "Forbidden"
@@ -306,8 +327,9 @@
     "/ratings/users/{id}": {
       "get": {
         "tags": [],
-        "summary": "Get the rating from an user",
-        "operationId": "get-ratings-user-id",
+        "summary": "Get User rating",
+        "description": "Get the average rating of an User based on the Ratings of the Articles he made",
+        "operationId": "getUserRating",
         "parameters": [
           {
             "name": "id",
@@ -331,6 +353,9 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request, invalid User ID format"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -340,8 +365,9 @@
     "/ratings/articles/{id}/average": {
       "get": {
         "tags": [],
-        "summary": "Get average rating on selected Article",
-        "operationId": "get-ratings-article-id-average",
+        "summary": "Get Article's average rating",
+        "description": "Get data about the average rating of the article",
+        "operationId": "getArticleAverageRating",
         "parameters": [
           {
             "name": "id",
@@ -360,10 +386,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200"
+                  "$ref": "#/components/schemas/AverageRating"
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format"
           }
         }
       }
@@ -446,7 +475,7 @@
             }
           }
         },
-        "description": "Rating object, which content is obtained from the data base",
+        "description": "Rating of an Article",
         "x-examples": {
           "Example 1": {
             "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
@@ -491,6 +520,7 @@
             }
           }
         },
+        "description": "The author of a Rating",
         "x-examples": {
           "Example 1": {
             "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
@@ -501,6 +531,14 @@
       },
       "RatingList": {
         "title": "RatingList",
+        "required": [
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "ratings",
+          "total"
+        ],
         "type": "object",
         "properties": {
           "ratings": {
@@ -512,26 +550,30 @@
               "id": "d5eh6v2k20xgj"
             }
           },
-          "limit": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "3zrcx11uhb527"
-            }
-          },
-          "offset": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "qdopqbxi79y5p"
-            }
-          },
           "total": {
             "type": "integer",
+            "description": "The total number of items available to return.",
             "x-stoplight": {
               "id": "72gdqe1ngz9hq"
             }
           },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "qdopqbxi79y5p"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "x-stoplight": {
+              "id": "3zrcx11uhb527"
+            }
+          },
           "next": {
             "type": "string",
+            "description": "Request to the next page of items. ( null if none)",
             "format": "uri",
             "x-stoplight": {
               "id": "no5svtesm8hk2"
@@ -539,12 +581,14 @@
           },
           "previous": {
             "type": "string",
+            "description": "Request to the next page of items. ( null if none)",
             "format": "uri",
             "x-stoplight": {
               "id": "lu2ppdfowvavf"
             }
           }
         },
+        "description": "List of Ratings. Supports pagination.",
         "x-examples": {
           "Example 1": {
             "ratings": [
@@ -569,91 +613,79 @@
         }
       },
       "AverageRating": {
-        "title": "AverageRating",
+        "title": "AverageRatingData",
+        "required": [
+          "average",
+          "five_count",
+          "four_count",
+          "one_count",
+          "three_count",
+          "total",
+          "two_count"
+        ],
         "type": "object",
         "properties": {
           "average": {
             "type": "number",
+            "description": "Average rating of an Article",
+            "format": "double",
             "x-stoplight": {
               "id": "xc8d4rg2zmeoe"
             }
           },
+          "total": {
+            "type": "integer",
+            "description": "Total number of Ratings of an Article",
+            "x-stoplight": {
+              "id": "1hpzs5e0yz51f"
+            }
+          },
           "five_count": {
             "type": "integer",
+            "description": "Number of 5-star ratings of an Article",
             "x-stoplight": {
               "id": "tgwuumk1xy9rq"
             }
           },
           "four_count": {
             "type": "integer",
+            "description": "Number of 4-star ratings of an Article",
             "x-stoplight": {
               "id": "v5hqxo4zght6z"
             }
           },
           "three_count": {
             "type": "integer",
+            "description": "Number of 3-star ratings of an Article",
             "x-stoplight": {
               "id": "q3vgda4tu3qrf"
             }
           },
           "two_count": {
             "type": "integer",
+            "description": "Number of 2-star ratings of an Article",
             "x-stoplight": {
               "id": "yt0gl4isfgmc8"
             }
           },
           "one_count": {
             "type": "integer",
+            "description": "Number of 1-star ratings of an Article",
             "x-stoplight": {
               "id": "4rssmlpes2jtm"
             }
           }
-        }
-      },
-      "inline_response_200": {
-        "type": "object",
-        "properties": {
-          "average": {
-            "type": "number",
-            "x-stoplight": {
-              "id": "0lnb4hf0vj6c9"
-            }
-          },
-          "five_count": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "xcnox0bx4b03p"
-            }
-          },
-          "four_count": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "psuaku1zueqhs"
-            }
-          },
-          "three_count": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "lcgwh2iq6eq7s"
-            }
-          },
-          "two_count": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "zucmrlvui19x1"
-            }
-          },
-          "one_count": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "q8s6fm622clq8"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "x-stoplight": {
-              "id": "hlnqh9g8o1tnx"
-            }
+        },
+        "description": "Data of the average rating of an Article",
+        "x-examples": {
+          "Example 1": {
+            "average": 0,
+            "total": 0,
+            "five_count": 0,
+            "four_count": 0,
+            "three_count": 0,
+            "two_count": 0,
+            "one_count": 0
           }
         }
       }
