@@ -3,7 +3,7 @@
   "info": {
     "title": "TagAPI",
     "description": "API for the tags microservice of laWiki web appplication. It provides all endpoints related to CRUD operatios for wiki tags.",
-    "version": "0.1"
+    "version": "1.0"
   },
   "servers": [
     {
@@ -12,15 +12,15 @@
     }
   ],
   "paths": {
-    "/tags/{tag_id}": {
+    "/tags/{id}": {
       "get": {
         "tags": [],
-        "summary": "get a tag by ID",
+        "summary": "Get Tag",
         "description": "Get a tag by ID. ",
         "operationId": "get-tag",
         "parameters": [
           {
-            "name": "tag_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "style": "simple",
@@ -41,6 +41,9 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request, invalid Tag ID format"
+          },
           "403": {
             "description": "Forbidden"
           },
@@ -51,12 +54,12 @@
       },
       "delete": {
         "tags": [],
-        "summary": "delete a tag by ID",
+        "summary": "Delete Tag",
         "description": "Delete a wiki tag.",
         "operationId": "delete-tag",
         "parameters": [
           {
-            "name": "tag_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "style": "simple",
@@ -70,6 +73,9 @@
           "204": {
             "description": "No Content, tag deleted succesfully"
           },
+          "400": {
+            "description": "Bad Request, invalid ID format"
+          },
           "403": {
             "description": "Forbidden"
           },
@@ -79,15 +85,15 @@
         }
       }
     },
-    "/tags/wikis/{wiki_id}": {
+    "/tags/wikis/{id}": {
       "get": {
         "tags": [],
-        "summary": "get a wiki's tags",
+        "summary": "Get Wikis Tags",
         "description": "Retrieve all the tags from a wiki.",
         "operationId": "get-wiki-tags",
         "parameters": [
           {
-            "name": "wiki_id",
+            "name": "id",
             "in": "path",
             "description": "The unique ID of the wiki.",
             "required": true,
@@ -133,13 +139,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Tag"
-                  }
+                  "$ref": "#/components/schemas/TagList"
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters"
           },
           "404": {
             "description": "Wiki not found"
@@ -148,12 +154,12 @@
       },
       "post": {
         "tags": [],
-        "summary": "create a new wiki tag",
-        "description": "Create a new wiki tag.",
+        "summary": "Create Tag",
+        "description": "Create a new tag in a given wiki.",
         "operationId": "post-wiki-tag",
         "parameters": [
           {
-            "name": "wiki_id",
+            "name": "id",
             "in": "path",
             "description": "The unique ID of the wiki.",
             "required": true,
@@ -168,7 +174,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/wikis_wiki_id_body"
+                "$ref": "#/components/schemas/NewTag"
               }
             }
           }
@@ -193,15 +199,15 @@
         }
       }
     },
-    "/tags/articles/{article_id}": {
+    "/tags/articles/{id}": {
       "get": {
         "tags": [],
-        "summary": "get an article's tags",
+        "summary": "Get Articles Tag",
         "description": "Retrieves all the tags from an article.",
         "operationId": "get-articles-tags",
         "parameters": [
           {
-            "name": "article_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "style": "simple",
@@ -259,14 +265,14 @@
           }
         }
       },
-      "post": {
+      "put": {
         "tags": [],
-        "summary": "assign a list of tags to an article",
-        "description": "Assigns a list of tags to an article.",
-        "operationId": "assign-article-tag",
+        "summary": "Unassign Tags",
+        "description": "Unassigns a list of tags, given their IDs to an article.",
+        "operationId": "unassign-tags",
         "parameters": [
           {
-            "name": "article_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "style": "simple",
@@ -280,14 +286,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/articles_article_id_body"
+                "$ref": "#/components/schemas/TagIDList"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content, tag unassigned succesfully"
+          },
+          "400": {
+            "description": "Bad Request, invalid Tag ID format"
           },
           "403": {
             "description": "Forbidden"
@@ -297,14 +306,14 @@
           }
         }
       },
-      "delete": {
+      "post": {
         "tags": [],
-        "summary": "unassign a tag from an article",
-        "description": "Unassigns a tag from an article.",
-        "operationId": "unassign-article-tag",
+        "summary": "Assign Tags",
+        "description": "Assigns a list of tags, given their IDs, to an article.",
+        "operationId": "assign-tags",
         "parameters": [
           {
-            "name": "article_id",
+            "name": "id",
             "in": "path",
             "required": true,
             "style": "simple",
@@ -312,22 +321,23 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "tag_id",
-            "in": "query",
-            "description": "The unique ID of the tag.",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagIDList"
+              }
+            }
+          }
+        },
         "responses": {
-          "204": {
-            "description": "No Content, tag unassigned succesfully"
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request, invalid Tag ID format"
           },
           "403": {
             "description": "Forbidden"
@@ -382,7 +392,20 @@
             }
           }
         },
-        "description": "Tag entity."
+        "description": "Tag entity.",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "tag": "string",
+            "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+            "articles": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string"
+              }
+            ]
+          }
+        }
       },
       "Article": {
         "title": "Article",
@@ -405,23 +428,16 @@
             }
           }
         },
-        "description": "Article entity."
-      },
-      "SimplifiedTag": {
-        "title": "TagSimplified",
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The ID of the tag.",
-            "format": "uuid"
+        "description": "Article entity.",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string"
           }
         }
       },
-      "wikis_wiki_id_body": {
+      "NewTag": {
+        "title": "NewTag",
         "type": "object",
         "properties": {
           "tag": {
@@ -431,19 +447,121 @@
               "id": "yfh5p42q7b13x"
             }
           }
+        },
+        "description": "Model for a new Tag",
+        "x-examples": {
+          "Example 1": {
+            "tag": "string"
+          }
         }
       },
-      "articles_article_id_body": {
+      "TagIDList": {
+        "title": "TagIDsList",
         "type": "object",
         "properties": {
-          "tag_list": {
+          "tag_ids": {
             "type": "array",
+            "description": "List of Tag IDs",
             "items": {
-              "$ref": "#/components/schemas/SimplifiedTag"
+              "type": "string",
+              "format": "uuid"
             },
             "x-stoplight": {
               "id": "kmi9kpdl1ztoh"
             }
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "tag_ids": [
+              "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+            ]
+          }
+        }
+      },
+      "TagList": {
+        "required": [
+          "articles",
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "x-stoplight": {
+              "id": "qmckelb8p9agh"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "ceyp9h3u6pq3t"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "y8f5uy4secbdp"
+            }
+          },
+          "limit": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "example": 0,
+            "x-stoplight": {
+              "id": "mli08w7p9m5ct"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the previous page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "fr352m14ihvc7"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "d6rwzi2d4o45u"
+            }
+          }
+        },
+        "description": "List of Tags. Supports pagination.",
+        "x-examples": {
+          "Example 1": {
+            "articles": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "tag": "string",
+                "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                "articles": [
+                  {
+                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "name": "string"
+                  }
+                ]
+              }
+            ],
+            "total": 0,
+            "offset": 0,
+            "limit": 0,
+            "previous": "http://example.com",
+            "next": "http://example.com"
           }
         }
       }
