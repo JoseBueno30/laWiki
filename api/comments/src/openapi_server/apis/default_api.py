@@ -39,11 +39,12 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     "/comments/{comment_id}",
     responses={
         204: {"description": "No Content, comment deleted succesfully"},
+        400: {"description": "Bad Request, invalid Comment ID format"},
         403: {"description": "Forbidden"},
         404: {"description": "Comment not found"},
     },
     tags=["default"],
-    summary="delete a comment",
+    summary="Delete Comment",
     response_model_by_alias=True,
 )
 async def delete_comment(
@@ -59,10 +60,11 @@ async def delete_comment(
     "/comments/articles/{article_id}",
     responses={
         200: {"model": CommentListResponse, "description": "OK"},
+        400: {"description": "Bad Request, invalid parameters"},
         404: {"description": "Not Found"},
     },
     tags=["default"],
-    summary="get an article&#39;s comments",
+    summary="Get Articles Comments",
     response_model_by_alias=True,
 )
 async def get_article_comments(
@@ -82,10 +84,11 @@ async def get_article_comments(
     "/comments/users/{user_id}",
     responses={
         200: {"model": CommentListResponse, "description": "OK"},
+        400: {"description": "Bad Request, invalid User ID format"},
         404: {"description": "Not Found"},
     },
     tags=["default"],
-    summary="get an user&#39;s comments",
+    summary="Get Users Comments",
     response_model_by_alias=True,
 )
 async def get_users_comments(
@@ -105,13 +108,13 @@ async def get_users_comments(
 @router.post(
     "/comments/articles/{article_id}",
     responses={
-        200: {"model": Comment, "description": "OK"},
+        201: {"model": Comment, "description": "Comment successufully created"},
         400: {"description": "Bad Request, wrong content structure"},
         403: {"description": "Forbidden"},
         404: {"description": "Article or Author not found"},
     },
     tags=["default"],
-    summary="post a comment",
+    summary="Post Comment",
     response_model_by_alias=True,
 )
 async def post_comment(

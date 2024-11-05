@@ -11,7 +11,7 @@ from openapi_server.models.new_comment import NewComment  # noqa: F401
 def test_delete_comment(client: TestClient):
     """Test case for delete_comment
 
-    delete a comment
+    Delete Comment
     """
 
     headers = {
@@ -30,7 +30,7 @@ def test_delete_comment(client: TestClient):
 def test_get_article_comments(client: TestClient):
     """Test case for get_article_comments
 
-    get an article's comments
+    Get Articles Comments
     """
     params = [("order", 'recent'),     ("limit", 20),     ("offset", 0),     ("creation_date", '2013-10-20')]
     headers = {
@@ -50,7 +50,7 @@ def test_get_article_comments(client: TestClient):
 def test_get_users_comments(client: TestClient):
     """Test case for get_users_comments
 
-    get an user's comments
+    Get Users Comments
     """
     params = [("article_id", 'article_id_example'),     ("order", 'recent'),     ("limit", 20),     ("offet", 0),     ("creation_date", '2013-10-20')]
     headers = {
@@ -70,7 +70,7 @@ def test_get_users_comments(client: TestClient):
 def test_post_comment(client: TestClient):
     """Test case for post_comment
 
-    post a comment
+    Post Comment
     """
     new_comment = {"author_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","body":"body"}
 
