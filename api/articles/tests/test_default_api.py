@@ -58,7 +58,7 @@ def test_get_article_by_name(client: TestClient):
     # uncomment below to make a request
     #response = client.request(
     #    "GET",
-    #    "/articles/versions/{name}".format(name='name_example'),
+    #    "/articles/versions/by-name/{name}".format(name='name_example'),
     #    headers=headers,
     #    params=params,
     #)
@@ -131,7 +131,7 @@ def test_search_articles(client: TestClient):
 
     Search for Articles
     """
-    params = [("wiki_id", 'wiki_id_example'),     ("name", 'name'),     ("tags", ['[\"tag1\",\"tag2\"]']),     ("offset", 0),     ("limit", 20),     ("order", 'none'),     ("creation_date", '2024/01/01, 2023/01/01-2024/01/01'),     ("author_name", 'author_name_example'),     ("editor_name", 'editor_name_example')]
+    params = [("wiki_id", 'wiki_id_example'),     ("name", 'name'),     ("tags", ['[\"tag1\",\"tag2\"]']),     ("offset", 0),     ("limit", 20),     ("order", 'none'),     ("creation_date", '2013-10-20'),     ("author_name", 'author_name_example'),     ("editor_name", 'editor_name_example')]
     headers = {
     }
     # uncomment below to make a request

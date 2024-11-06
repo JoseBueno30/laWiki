@@ -79,7 +79,7 @@ async def get_article_by_id(
 
 
 @router.get(
-    "/articles/versions/{name}",
+    "/articles/versions/by-name/{name}",
     responses={
         200: {"model": ArticleVersion, "description": "OK"},
         400: {"description": "Bad Request, invalid Article name format. "},

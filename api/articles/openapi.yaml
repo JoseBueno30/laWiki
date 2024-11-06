@@ -78,7 +78,7 @@ paths:
           description: Article Not Found
       summary: Get Article
       tags: []
-  /articles/versions/{name}:
+  /articles/versions/by-name/{name}:
     get:
       description: Get the most recent ArticleVersion the Article with the given name
         from the specified Wiki.
@@ -207,7 +207,7 @@ paths:
         name: creation_date
         required: false
         schema:
-          example: "2024/01/01, 2023/01/01-2024/01/01"
+          format: date
           type: string
         style: form
       - description: Filter for the author of the Article
@@ -617,6 +617,7 @@ components:
           name: name
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rating: 0.8008281904610115
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         creation_date: 2000-01-23T04:56:07.000+00:00
         title: title
@@ -655,6 +656,11 @@ components:
             $ref: '#/components/schemas/Tag'
           title: tags
           type: array
+        rating:
+          description: Average rating of an article
+          format: double
+          title: rating
+          type: number
         versions:
           description: Array of simplified articleversions
           items:
@@ -665,6 +671,7 @@ components:
       - author
       - creation_date
       - id
+      - rating
       - tags
       - title
       - versions
@@ -821,8 +828,8 @@ components:
       description: List of Articles. Supports pagination.
       example:
         next: https://openapi-generator.tech
-        total: 0
-        offset: 6
+        total: 6
+        offset: 1
         previous: https://openapi-generator.tech
         limit: 0
         articles:
@@ -843,6 +850,7 @@ components:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          rating: 0.8008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
@@ -868,6 +876,7 @@ components:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          rating: 0.8008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
