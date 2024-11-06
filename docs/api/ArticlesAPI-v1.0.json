@@ -118,7 +118,7 @@
         }
       }
     },
-    "/articles/versions/{name}": {
+    "/articles/versions/by-name/{name}": {
       "get": {
         "tags": [],
         "summary": "Get ArticleVersion by name",
@@ -293,7 +293,7 @@
             "explode": true,
             "schema": {
               "type": "string",
-              "example": "2024/01/01, 2023/01/01-2024/01/01"
+              "format": "date"
             }
           },
           {
@@ -859,10 +859,12 @@
   "components": {
     "schemas": {
       "Article": {
+        "title": "",
         "required": [
           "author",
           "creation_date",
           "id",
+          "rating",
           "tags",
           "title",
           "versions",
@@ -898,6 +900,11 @@
             "items": {
               "$ref": "#/components/schemas/Tag"
             }
+          },
+          "rating": {
+            "type": "number",
+            "description": "Average rating of an article",
+            "format": "double"
           },
           "versions": {
             "type": "array",
