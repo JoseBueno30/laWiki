@@ -73,7 +73,7 @@
                             "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                             "name": "string"
                           },
-                          "modification_date": "string"
+                          "modification_date": "2019-08-24T14:15:22Z"
                         }
                       ],
                       "rating": 0
@@ -358,16 +358,21 @@
                             {
                               "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                               "title": "string",
-                              "modification_date": "string"
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
                             }
-                          ]
+                          ],
+                          "rating": 0
                         }
                       ],
                       "total": 0,
                       "offset": 0,
                       "limit": 0,
-                      "next": "string",
-                      "previous": "string"
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
                     }
                   }
                 }
@@ -773,6 +778,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArticleList"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki": "da81406c-0029-4210-a763-93ec80d7ac5b",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
                 }
               }
             }
@@ -850,6 +896,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArticleList"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki": "da81406c-0029-4210-a763-93ec80d7ac5b",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
                 }
               }
             }
@@ -950,7 +1037,7 @@
                   "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                   "name": "string"
                 },
-                "modification_date": "string"
+                "modification_date": "2019-08-24T14:15:22Z"
               }
             ],
             "rating": 0
@@ -1049,15 +1136,20 @@
           },
           "modification_date": {
             "type": "string",
-            "description": "The date of modification of the article version."
+            "description": "The date of modification of the article version.",
+            "format": "date-time"
           }
         },
         "description": "Simplification of an ArticleVersion object",
         "x-examples": {
           "Example 1": {
-            "id": "672271b95150a9cd3f465999",
-            "modification_date": "2024-01-01T00:00:00.000Z",
-            "title": "article_version_title"
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "title": "string",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string"
+            },
+            "modification_date": "2019-08-24T14:15:22Z"
           }
         }
       },
@@ -1179,7 +1271,7 @@
                       "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                       "name": "string"
                     },
-                    "modification_date": "string"
+                    "modification_date": "2019-08-24T14:15:22Z"
                   }
                 ],
                 "rating": 0

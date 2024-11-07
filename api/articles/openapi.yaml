@@ -73,7 +73,7 @@ paths:
                       author:
                         id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                         name: string
-                      modification_date: string
+                      modification_date: 2019-08-24T14:15:22Z
                     rating: 0
               schema:
                 $ref: '#/components/schemas/Article'
@@ -253,12 +253,16 @@ paths:
                       versions:
                       - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                         title: string
-                        modification_date: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        modification_date: 2019-08-24T14:15:22Z
+                      rating: 0
                     total: 0
                     offset: 0
                     limit: 0
-                    next: string
-                    previous: string
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleList'
           description: OK
@@ -536,6 +540,33 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      title: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: string
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        modification_date: 2019-08-24T14:15:22Z
+                      rating: 0
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleList'
           description: OK
@@ -592,6 +623,33 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      title: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: string
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        modification_date: 2019-08-24T14:15:22Z
+                      rating: 0
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleList'
           description: OK
@@ -610,13 +668,13 @@ components:
         - author:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          modification_date: modification_date
+          modification_date: 2000-01-23T04:56:07.000+00:00
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           title: title
         - author:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          modification_date: modification_date
+          modification_date: 2000-01-23T04:56:07.000+00:00
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           title: title
         author:
@@ -705,7 +763,7 @@ components:
             author:
               id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
               name: string
-            modification_date: string
+            modification_date: 2019-08-24T14:15:22Z
           rating: 0
     ArticleVersion:
       description: 'Concrete version of an Article object '
@@ -785,7 +843,7 @@ components:
         author:
           name: name
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        modification_date: modification_date
+        modification_date: 2000-01-23T04:56:07.000+00:00
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         title: title
       properties:
@@ -802,6 +860,7 @@ components:
           $ref: '#/components/schemas/Author'
         modification_date:
           description: The date of modification of the article version.
+          format: date-time
           title: modification_date
           type: string
       required:
@@ -812,9 +871,12 @@ components:
       type: object
       x-examples:
         Example 1:
-          id: 672271b95150a9cd3f465999
-          modification_date: 2024-01-01T00:00:00.000Z
-          title: article_version_title
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          title: string
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+          modification_date: 2019-08-24T14:15:22Z
     Tag:
       description: Keywords for identifying articles
       example:
@@ -854,13 +916,13 @@ components:
           - author:
               name: name
               id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            modification_date: modification_date
+            modification_date: 2000-01-23T04:56:07.000+00:00
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             title: title
           - author:
               name: name
               id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            modification_date: modification_date
+            modification_date: 2000-01-23T04:56:07.000+00:00
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             title: title
           author:
@@ -880,13 +942,13 @@ components:
           - author:
               name: name
               id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            modification_date: modification_date
+            modification_date: 2000-01-23T04:56:07.000+00:00
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             title: title
           - author:
               name: name
               id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            modification_date: modification_date
+            modification_date: 2000-01-23T04:56:07.000+00:00
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             title: title
           author:
@@ -976,7 +1038,7 @@ components:
               author:
                 id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                 name: string
-              modification_date: string
+              modification_date: 2019-08-24T14:15:22Z
             rating: 0
           total: 0
           offset: 0
@@ -994,13 +1056,13 @@ components:
         - author:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          modification_date: modification_date
+          modification_date: 2000-01-23T04:56:07.000+00:00
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           title: title
         - author:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          modification_date: modification_date
+          modification_date: 2000-01-23T04:56:07.000+00:00
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           title: title
         limit: 1
