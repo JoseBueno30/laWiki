@@ -2,7 +2,6 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
-from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.article_version_list import ArticleVersionList
@@ -28,8 +27,17 @@ class BaseDefaultApi:
     async def get_article_by_id(
         self,
         id: str,
-    ) -> Article:
-        """Get an Article identified by it&#39;s unique ID"""
+    ) -> ArticleVersion:
+        """Get an ArticleVersion identified by it&#39;s unique ID"""
+        ...
+
+
+    async def get_article_by_name(
+        self,
+        name: str,
+        wiki: str,
+    ) -> ArticleVersion:
+        """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
         ...
 
 
@@ -38,15 +46,6 @@ class BaseDefaultApi:
         id: str,
     ) -> ArticleVersion:
         """Get an ArticleVersion identified by it&#39;s unique ID"""
-        ...
-
-
-    async def get_article_version_by_name(
-        self,
-        name: str,
-        wiki: str,
-    ) -> ArticleVersion:
-        """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
         ...
 
 

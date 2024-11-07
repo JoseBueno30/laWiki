@@ -3,7 +3,6 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.article import Article  # noqa: F401
 from openapi_server.models.article_list import ArticleList  # noqa: F401
 from openapi_server.models.article_version import ArticleVersion  # noqa: F401
 from openapi_server.models.article_version_list import ArticleVersionList  # noqa: F401
@@ -48,6 +47,26 @@ def test_get_article_by_id(client: TestClient):
     #assert response.status_code == 200
 
 
+def test_get_article_by_name(client: TestClient):
+    """Test case for get_article_by_name
+
+    Get ArticleVersion by name
+    """
+    params = [("wiki", 'wiki_example')]
+    headers = {
+    }
+    # uncomment below to make a request
+    #response = client.request(
+    #    "GET",
+    #    "/articles/versions/by-name/{name}".format(name='name_example'),
+    #    headers=headers,
+    #    params=params,
+    #)
+
+    # uncomment below to assert the status code of the HTTP response
+    #assert response.status_code == 200
+
+
 def test_get_article_version_by_id(client: TestClient):
     """Test case for get_article_version_by_id
 
@@ -61,26 +80,6 @@ def test_get_article_version_by_id(client: TestClient):
     #    "GET",
     #    "/articles/versions/{id}".format(id='id_example'),
     #    headers=headers,
-    #)
-
-    # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
-
-
-def test_get_article_version_by_name(client: TestClient):
-    """Test case for get_article_version_by_name
-
-    Get ArticleVersion by name
-    """
-    params = [("wiki", 'wiki_example')]
-    headers = {
-    }
-    # uncomment below to make a request
-    #response = client.request(
-    #    "GET",
-    #    "/articles/versions/by-name/{name}".format(name='name_example'),
-    #    headers=headers,
-    #    params=params,
     #)
 
     # uncomment below to assert the status code of the HTTP response
