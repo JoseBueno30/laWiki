@@ -10,7 +10,6 @@ mongodb = mongodb_client.get_database("laWikiDB")
 transform_article_ids_pipeline = [
     {"$addFields": {
         "id": {"$toString": "$_id"},
-        "article_id": {"$toString": "$article_id"},
         "author.id": {"$toString": "$author._id"},
         "tags": {
             "$map": {
@@ -21,16 +20,33 @@ transform_article_ids_pipeline = [
                     "tag": "$$tag.tag"
                 }
             }
-        }
+        },
+        "versions": {
+                "$map": {
+                    "input": "$versions",
+                    "as": "version",
+                    "in": {
+                        "id": {"$toString": "$$version._id"},
+                        "title": "$$version.title",
+                        "modification_date": "$$version.modification_date",
+                        "author" : {
+                            "id": {"$toString": "$$version.author._id"},
+                            "name": "$$version.author.name"
+                        }
+                    }
+                }
+            },
+        "wiki_id":{"$toString":"$wiki_id"}
     }},
-    {"$unset": ["_id", "author._id", "tags._id"]}  # Quita los campos _id originales
+    {"$unset": ["_id", "author._id", "tags._id", "versions._id", "versions.autor._id"]}  # Quita los campos _id originales
 ]
 
 transform_version_ids_pipeline = [
     {"$addFields": {
         "id": {"$toString": "$_id"},
         "article_id": {"$toString": "$article_id"},
-        "author.id": {"$toString": "$author._id"},
+        "author.id": {
+            "$toString": "$author._id"},
         "tags": {
             "$map": {
                 "input": "$tags",
@@ -58,7 +74,7 @@ class ArticleAPI(BaseDefaultApi):
         ]
 
         # Ejecutar la consulta de agregación
-        article = await mongodb["article_version"].aggregate(pipeline).to_list(length=1)
+        article = await mongodb["article"].aggregate(pipeline).to_list(length=1)
 
         # Verificar si se encontró el artículo
         if not article[0]:
@@ -70,8 +86,8 @@ class ArticleAPI(BaseDefaultApi):
         version_id_pipeline = [
             {
                 '$match': {
-                    'title': 'article_title',
-                    'wiki_id': ObjectId('672135a7dc51f4c9f5923098')
+                    'title': name,
+                    'wiki_id': ObjectId(wiki_id)
                 }
             }, {
                 '$unwind': '$versions'
@@ -101,7 +117,7 @@ class ArticleAPI(BaseDefaultApi):
         version_pipeline = [
             {
                 '$match': {
-                    '_id': version_ObjectId[0],
+                    '_id': version_ObjectId[0]["_id"],
 
                 }
             },
