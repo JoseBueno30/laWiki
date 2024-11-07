@@ -36,6 +36,7 @@ class Wiki(BaseModel):
     id: StrictStr = Field(description="Unique identifier for the wiki.")
     name: StrictStr = Field(description="Name of the wiki.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
+    rating: float = Field(description="Rating for the wiki by other users.")
     author: Author
     tags: List[Tag]
     __properties: ClassVar[List[str]] = ["id", "name", "description", "author", "tags"]
@@ -102,6 +103,7 @@ class Wiki(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "description": obj.get("description"),
+            "rating": obj.get("rating"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None
         })
