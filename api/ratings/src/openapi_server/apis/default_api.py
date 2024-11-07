@@ -23,10 +23,9 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.inline_response200 import InlineResponse200
+from openapi_server.models.average_rating import AverageRating
 from openapi_server.models.new_rating import NewRating
 from openapi_server.models.rating import Rating
-from openapi_server.models.rating_list import RatingList
 
 
 router = APIRouter()
@@ -40,134 +39,161 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     "/ratings/{id}",
     responses={
         204: {"description": "Deleted successfully"},
+        400: {"description": "Bad Request, invalid Rating ID format"},
         403: {"description": "No permissions to delete"},
         404: {"description": "Rating Not Found"},
     },
     tags=["default"],
-    summary="Delete rating by ID",
+    summary="Delete Rating",
     response_model_by_alias=True,
 )
-async def delete_ratings_id(
+async def delete_rating(
     id: str = Path(..., description=""),
 ) -> None:
     """Delete the rating associated with the selected ID"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().delete_ratings_id(id)
+    return await BaseDefaultApi.subclasses[0]().delete_rating(id)
 
 
-@router.get(
+@router.put(
     "/ratings/articles/{id}",
     responses={
-        200: {"model": RatingList, "description": "OK"},
+        201: {"model": Rating, "description": "Rating edited"},
+        400: {"description": "Bad Request, invalid Article ID format"},
+        403: {"description": "Forbidden"},
         404: {"description": "Not Found"},
     },
     tags=["default"],
-    summary="Get all ratings of an article",
+    summary="Edit Article&#39;s Rating",
     response_model_by_alias=True,
 )
-async def get_ratings_article_id(
+async def edit_article_rating(
     id: str = Path(..., description=""),
-    order: str = Query(None, description="", alias="order"),
-    limit: int = Query(None, description="", alias="limit"),
-    offset: int = Query(None, description="", alias="offset"),
-) -> RatingList:
+    rating: Rating = Body(None, description=""),
+) -> Rating:
+    """Update the value of an already existing Rating"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_ratings_article_id(id, order, limit, offset)
+    return await BaseDefaultApi.subclasses[0]().edit_article_rating(id, rating)
 
 
 @router.get(
     "/ratings/articles/{id}/average",
     responses={
-        200: {"model": InlineResponse200, "description": "OK"},
+        200: {"model": AverageRating, "description": "OK"},
+        400: {"description": "Bad Request, invalid Article ID format"},
     },
     tags=["default"],
-    summary="Get average rating on selected Article",
+    summary="Get Article&#39;s average rating",
     response_model_by_alias=True,
 )
-async def get_ratings_article_id_average(
+async def get_article_average_rating(
     id: str = Path(..., description=""),
-) -> InlineResponse200:
+) -> AverageRating:
+    """Get data about the average rating of the article"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_ratings_article_id_average(id)
+    return await BaseDefaultApi.subclasses[0]().get_article_average_rating(id)
 
 
 @router.get(
     "/ratings/{id}",
     responses={
         200: {"model": Rating, "description": "Rating found and returned"},
+        400: {"description": "Bad Request, invalid Rating ID format"},
         404: {"description": "Rating Not Found"},
     },
     tags=["default"],
-    summary="Get rating by ID",
+    summary="Get Rating",
     response_model_by_alias=True,
 )
-async def get_ratings_id(
+async def get_rating(
     id: str = Path(..., description=""),
+) -> Rating:
+    """Get the Rating with the provided ID"""
+    if not BaseDefaultApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApi.subclasses[0]().get_rating(id)
+
+
+
+@router.get(
+    "/ratings/articles/{articleId}/users/{userId}",
+    responses={
+        200: {"model": Rating, "description": "OK"},
+        404: {"description": "Not Found"},
+        422: {"description": "Unprocessable Entity (WebDAV)"},
+    },
+    tags=["default"],
+    summary="Your GET endpoint",
+    response_model_by_alias=True,
+)
+async def get_ratings_articles_id_users_id(
+    articleId: str = Path(..., description=""),
+    userId: str = Path(..., description=""),
 ) -> Rating:
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_ratings_id(id)
+    return await BaseDefaultApi.subclasses[0]().get_ratings_articles_id_users_id(articleId, userId)
+
+
+@router.get(
+    "/ratings/wikis/{id}",
+    responses={
+        200: {"model": float, "description": "OK"},
+        404: {"description": "Not Found"},
+    },
+    tags=["default"],
+    summary="Get Wiki rating",
+    response_model_by_alias=True,
+)
+async def get_ratings_wikis_id(
+    id: str = Path(..., description=""),
+) -> float:
+    """Get the average rating of a Wiki based on the Ratings of the Articles it has"""
+    if not BaseDefaultApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApi.subclasses[0]().get_ratings_wikis_id(id)
 
 
 @router.get(
     "/ratings/users/{id}",
     responses={
         200: {"model": float, "description": "Return the user rating"},
+        400: {"description": "Bad Request, invalid User ID format"},
         404: {"description": "Not Found"},
     },
     tags=["default"],
-    summary="Get the rating from an user",
+    summary="Get User rating",
     response_model_by_alias=True,
 )
-async def get_ratings_user_id(
+async def get_user_rating(
     id: str = Path(..., description=""),
 ) -> float:
+    """Get the average rating of an User based on the Ratings of the Articles he made"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_ratings_user_id(id)
+    return await BaseDefaultApi.subclasses[0]().get_user_rating(id)
 
 
 @router.post(
     "/ratings/articles/{id}",
     responses={
-        201: {"model": Rating, "description": "Create a new rating related with an article, this MUST change the author&#39;s rating"},
-        400: {"description": "Bad Request"},
+        201: {"model": Rating, "description": "Rating created"},
+        400: {"description": "Bad Request, invalid Article ID format"},
         403: {"description": "Forbidden"},
         404: {"description": "Not Found"},
     },
     tags=["default"],
-    summary="Create rating on article",
+    summary="Rate Article",
     response_model_by_alias=True,
 )
-async def post_ratings_article_id(
+async def rate_article(
     id: str = Path(..., description=""),
     new_rating: NewRating = Body(None, description=""),
 ) -> Rating:
+    """Create a rating for a given Article"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().post_ratings_article_id(id, new_rating)
-
-
-@router.put(
-    "/ratings/articles/{id}",
-    responses={
-        201: {"model": Rating, "description": "Edited rating"},
-        400: {"description": "Bad Request"},
-        403: {"description": "Forbidden"},
-        404: {"description": "Not Found"},
-    },
-    tags=["default"],
-    summary="Edit rating of an article",
-    response_model_by_alias=True,
-)
-async def put_ratings_article_id(
-    id: str = Path(..., description=""),
-    rating: Rating = Body(None, description=""),
-) -> Rating:
-    """This endpoint must do the same as Post but editting the value instead of creating a new one"""
-    if not BaseDefaultApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().put_ratings_article_id(id, rating)
+    return await BaseDefaultApi.subclasses[0]().rate_article(id, new_rating)

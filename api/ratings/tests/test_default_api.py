@@ -3,16 +3,15 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.inline_response200 import InlineResponse200  # noqa: F401
+from openapi_server.models.average_rating import AverageRating  # noqa: F401
 from openapi_server.models.new_rating import NewRating  # noqa: F401
 from openapi_server.models.rating import Rating  # noqa: F401
-from openapi_server.models.rating_list import RatingList  # noqa: F401
 
 
-def test_delete_ratings_id(client: TestClient):
-    """Test case for delete_ratings_id
+def test_delete_rating(client: TestClient):
+    """Test case for delete_rating
 
-    Delete rating by ID
+    Delete Rating
     """
 
     headers = {
@@ -28,30 +27,31 @@ def test_delete_ratings_id(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_get_ratings_article_id(client: TestClient):
-    """Test case for get_ratings_article_id
+def test_edit_article_rating(client: TestClient):
+    """Test case for edit_article_rating
 
-    Get all ratings of an article
+    Edit Article's Rating
     """
-    params = [("order", 'order_example'),     ("limit", 56),     ("offset", 56)]
+    rating = {"article_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","creation_date":"2000-01-23","value":0.8008281904610115}
+
     headers = {
     }
     # uncomment below to make a request
     #response = client.request(
-    #    "GET",
+    #    "PUT",
     #    "/ratings/articles/{id}".format(id='id_example'),
     #    headers=headers,
-    #    params=params,
+    #    json=rating,
     #)
 
     # uncomment below to assert the status code of the HTTP response
     #assert response.status_code == 200
 
 
-def test_get_ratings_article_id_average(client: TestClient):
-    """Test case for get_ratings_article_id_average
+def test_get_article_average_rating(client: TestClient):
+    """Test case for get_article_average_rating
 
-    Get average rating on selected Article
+    Get Article's average rating
     """
 
     headers = {
@@ -67,10 +67,10 @@ def test_get_ratings_article_id_average(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_get_ratings_id(client: TestClient):
-    """Test case for get_ratings_id
+def test_get_rating(client: TestClient):
+    """Test case for get_rating
 
-    Get rating by ID
+    Get Rating
     """
 
     headers = {
@@ -86,10 +86,48 @@ def test_get_ratings_id(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_get_ratings_user_id(client: TestClient):
-    """Test case for get_ratings_user_id
+def test_get_ratings_articles_id_users_id(client: TestClient):
+    """Test case for get_ratings_articles_id_users_id
 
-    Get the rating from an user
+    Your GET endpoint
+    """
+
+    headers = {
+    }
+    # uncomment below to make a request
+    #response = client.request(
+    #    "GET",
+    #    "/ratings/articles/{articleId}/users/{userId}".format(articleId='article_id_example', userId='user_id_example'),
+    #    headers=headers,
+    #)
+
+    # uncomment below to assert the status code of the HTTP response
+    #assert response.status_code == 200
+
+
+def test_get_ratings_wikis_id(client: TestClient):
+    """Test case for get_ratings_wikis_id
+
+    Get Wiki rating
+    """
+
+    headers = {
+    }
+    # uncomment below to make a request
+    #response = client.request(
+    #    "GET",
+    #    "/ratings/wikis/{id}".format(id='id_example'),
+    #    headers=headers,
+    #)
+
+    # uncomment below to assert the status code of the HTTP response
+    #assert response.status_code == 200
+
+
+def test_get_user_rating(client: TestClient):
+    """Test case for get_user_rating
+
+    Get User rating
     """
 
     headers = {
@@ -105,10 +143,10 @@ def test_get_ratings_user_id(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_post_ratings_article_id(client: TestClient):
-    """Test case for post_ratings_article_id
+def test_rate_article(client: TestClient):
+    """Test case for rate_article
 
-    Create rating on article
+    Rate Article
     """
     new_rating = {"author_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","value":0.8008281904610115}
 
@@ -120,27 +158,6 @@ def test_post_ratings_article_id(client: TestClient):
     #    "/ratings/articles/{id}".format(id='id_example'),
     #    headers=headers,
     #    json=new_rating,
-    #)
-
-    # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
-
-
-def test_put_ratings_article_id(client: TestClient):
-    """Test case for put_ratings_article_id
-
-    Edit rating of an article
-    """
-    rating = {"article_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","creation_date":"2000-01-23","value":0.8008281904610115}
-
-    headers = {
-    }
-    # uncomment below to make a request
-    #response = client.request(
-    #    "PUT",
-    #    "/ratings/articles/{id}".format(id='id_example'),
-    #    headers=headers,
-    #    json=rating,
     #)
 
     # uncomment below to assert the status code of the HTTP response

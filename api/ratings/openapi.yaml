@@ -1,8 +1,9 @@
 openapi: 3.0.0
 info:
-  description: lawiki Ratings Api
-  title: Ratings
-  version: "0.1"
+  description: API for the Ratings of laWiki web appplication. It provides all endpoints
+    related to CRUD operatios for ratings.
+  title: RatingsAPI
+  version: "1.0"
 servers:
 - description: SwaggerHub API Auto Mocking
   url: https://virtserver.swaggerhub.com/DAVIDBUENOCARMONA_1/RatingsAPI/0.1
@@ -10,7 +11,7 @@ paths:
   /ratings/{id}:
     delete:
       description: Delete the rating associated with the selected ID
-      operationId: delete-ratings-id
+      operationId: delete-rating
       parameters:
       - explode: false
         in: path
@@ -22,14 +23,17 @@ paths:
       responses:
         "204":
           description: Deleted successfully
+        "400":
+          description: "Bad Request, invalid Rating ID format"
         "403":
           description: No permissions to delete
         "404":
           description: Rating Not Found
-      summary: Delete rating by ID
+      summary: Delete Rating
       tags: []
     get:
-      operationId: get-ratings-id
+      description: Get the Rating with the provided ID
+      operationId: get-rating
       parameters:
       - explode: false
         in: path
@@ -56,72 +60,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/Rating'
           description: Rating found and returned
+        "400":
+          description: "Bad Request, invalid Rating ID format"
         "404":
           description: Rating Not Found
-      summary: Get rating by ID
+      summary: Get Rating
       tags: []
   /ratings/articles/{id}:
-    get:
-      operationId: get-ratings-article-id
-      parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - explode: true
-        in: query
-        name: order
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          type: integer
-        style: form
-      - explode: true
-        in: query
-        name: offset
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                Example 1:
-                  value:
-                    ratings:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      article_id: e4aad634-3311-4e79-b165-3911549b3b29
-                      Author:
-                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                        name: string
-                        image: http://example.com
-                      value: 0
-                      creation_date: 2019-08-24
-                    limit: 0
-                    offset: 0
-                    total: 0
-                    next: http://example.com
-                    previous: http://example.com
-              schema:
-                $ref: '#/components/schemas/RatingList'
-          description: OK
-        "404":
-          description: Not Found
-      summary: Get all ratings of an article
-      tags: []
     post:
-      operationId: post-ratings-article-id
+      description: Create a rating for a given Article
+      operationId: rate-article
       parameters:
       - explode: false
         in: path
@@ -141,20 +89,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Rating'
-          description: "Create a new rating related with an article, this MUST change\
-            \ the author's rating"
+          description: Rating created
         "400":
-          description: Bad Request
+          description: "Bad Request, invalid Article ID format"
         "403":
           description: Forbidden
         "404":
           description: Not Found
-      summary: Create rating on article
+      summary: Rate Article
       tags: []
     put:
-      description: This endpoint must do the same as Post but editting the value instead
-        of creating a new one
-      operationId: put-ratings-article-id
+      description: Update the value of an already existing Rating
+      operationId: edit-article-rating
       parameters:
       - explode: false
         in: path
@@ -196,18 +142,20 @@ paths:
                     creation_date: 2019-08-24
               schema:
                 $ref: '#/components/schemas/Rating'
-          description: Edited rating
+          description: Rating edited
         "400":
-          description: Bad Request
+          description: "Bad Request, invalid Article ID format"
         "403":
           description: Forbidden
         "404":
           description: Not Found
-      summary: Edit rating of an article
+      summary: Edit Article's Rating
       tags: []
   /ratings/users/{id}:
     get:
-      operationId: get-ratings-user-id
+      description: Get the average rating of an User based on the Ratings of the Articles
+        he made
+      operationId: get-user-rating
       parameters:
       - explode: false
         in: path
@@ -223,13 +171,16 @@ paths:
               schema:
                 type: number
           description: Return the user rating
+        "400":
+          description: "Bad Request, invalid User ID format"
         "404":
           description: Not Found
-      summary: Get the rating from an user
+      summary: Get User rating
       tags: []
   /ratings/articles/{id}/average:
     get:
-      operationId: get-ratings-article-id-average
+      description: Get data about the average rating of the article
+      operationId: get-article-average-rating
       parameters:
       - explode: false
         in: path
@@ -243,9 +194,69 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                $ref: '#/components/schemas/AverageRating'
           description: OK
-      summary: Get average rating on selected Article
+        "400":
+          description: "Bad Request, invalid Article ID format"
+      summary: Get Article's average rating
+      tags: []
+  /ratings/wikis/{id}:
+    get:
+      description: Get the average rating of a Wiki based on the Ratings of the Articles
+        it has
+      operationId: get-ratings-wikis-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value: 0
+              schema:
+                type: number
+          description: OK
+        "404":
+          description: Not Found
+      summary: Get Wiki rating
+      tags: []
+  /ratings/articles/{articleId}/users/{userId}:
+    get:
+      operationId: get-ratings-articles-id-users-id
+      parameters:
+      - explode: false
+        in: path
+        name: articleId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: OK
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity (WebDAV)
+      summary: Your GET endpoint
       tags: []
 components:
   schemas:
@@ -279,7 +290,7 @@ components:
           author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
           rating: 5
     Rating:
-      description: "Rating object, which content is obtained from the data base"
+      description: Rating of an Article
       example:
         article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         Author:
@@ -336,6 +347,7 @@ components:
           value: 0
           creation_date: 2019-08-24
     Author:
+      description: The author of a Rating
       example:
         image: https://openapi-generator.tech
         name: name
@@ -371,64 +383,52 @@ components:
           name: string
           image: http://example.com
     RatingList:
-      example:
-        next: https://openapi-generator.tech
-        total: 1
-        offset: 6
-        previous: https://openapi-generator.tech
-        ratings:
-        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          Author:
-            image: https://openapi-generator.tech
-            name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          creation_date: 2000-01-23
-          value: 0.8008281904610115
-        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          Author:
-            image: https://openapi-generator.tech
-            name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          creation_date: 2000-01-23
-          value: 0.8008281904610115
-        limit: 0
+      description: List of Ratings. Supports pagination.
       properties:
         ratings:
           items:
             $ref: '#/components/schemas/Rating'
-          title: ratings
           type: array
           x-stoplight:
             id: d5eh6v2k20xgj
-        limit:
-          title: limit
-          type: integer
-          x-stoplight:
-            id: 3zrcx11uhb527
-        offset:
-          title: offset
-          type: integer
-          x-stoplight:
-            id: qdopqbxi79y5p
         total:
-          title: total
+          description: The total number of items available to return.
           type: integer
           x-stoplight:
             id: 72gdqe1ngz9hq
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          type: integer
+          x-stoplight:
+            id: qdopqbxi79y5p
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          type: integer
+          x-stoplight:
+            id: 3zrcx11uhb527
         next:
+          description: Request to the next page of items. ( null if none)
           format: uri
-          title: next
+          nullable: true
           type: string
           x-stoplight:
             id: no5svtesm8hk2
         previous:
+          description: Request to the next page of items. ( null if none)
           format: uri
-          title: previous
+          nullable: true
           type: string
           x-stoplight:
             id: lu2ppdfowvavf
+      required:
+      - limit
+      - next
+      - offset
+      - previous
+      - ratings
+      - total
       title: RatingList
       type: object
       x-examples:
@@ -448,77 +448,75 @@ components:
           next: http://example.com
           previous: http://example.com
     AverageRating:
+      description: Data of the average rating of an Article
+      example:
+        one_count: 7
+        average: 0.8008281904610115
+        total: 6
+        four_count: 5
+        two_count: 2
+        five_count: 1
+        three_count: 5
       properties:
         average:
+          description: Average rating of an Article
+          format: double
+          title: average
           type: number
           x-stoplight:
             id: xc8d4rg2zmeoe
+        total:
+          description: Total number of Ratings of an Article
+          title: total
+          type: integer
+          x-stoplight:
+            id: 1hpzs5e0yz51f
         five_count:
+          description: Number of 5-star ratings of an Article
+          title: five_count
           type: integer
           x-stoplight:
             id: tgwuumk1xy9rq
         four_count:
+          description: Number of 4-star ratings of an Article
+          title: four_count
           type: integer
           x-stoplight:
             id: v5hqxo4zght6z
         three_count:
+          description: Number of 3-star ratings of an Article
+          title: three_count
           type: integer
           x-stoplight:
             id: q3vgda4tu3qrf
         two_count:
+          description: Number of 2-star ratings of an Article
+          title: two_count
           type: integer
           x-stoplight:
             id: yt0gl4isfgmc8
         one_count:
-          type: integer
-          x-stoplight:
-            id: 4rssmlpes2jtm
-      title: AverageRating
-      type: object
-    inline_response_200:
-      example:
-        one_count: 2
-        average: 0.8008281904610115
-        total: 7
-        four_count: 1
-        two_count: 5
-        five_count: 6
-        three_count: 5
-      properties:
-        average:
-          title: average
-          type: number
-          x-stoplight:
-            id: 0lnb4hf0vj6c9
-        five_count:
-          title: five_count
-          type: integer
-          x-stoplight:
-            id: xcnox0bx4b03p
-        four_count:
-          title: four_count
-          type: integer
-          x-stoplight:
-            id: psuaku1zueqhs
-        three_count:
-          title: three_count
-          type: integer
-          x-stoplight:
-            id: lcgwh2iq6eq7s
-        two_count:
-          title: two_count
-          type: integer
-          x-stoplight:
-            id: zucmrlvui19x1
-        one_count:
+          description: Number of 1-star ratings of an Article
           title: one_count
           type: integer
           x-stoplight:
-            id: q8s6fm622clq8
-        total:
-          title: total
-          type: integer
-          x-stoplight:
-            id: hlnqh9g8o1tnx
-      title: inline_response_200
+            id: 4rssmlpes2jtm
+      required:
+      - average
+      - five_count
+      - four_count
+      - one_count
+      - three_count
+      - total
+      - two_count
+      title: AverageRatingData
       type: object
+      x-examples:
+        Example 1:
+          average: 0
+          total: 0
+          five_count: 0
+          four_count: 0
+          three_count: 0
+          two_count: 0
+          one_count: 0
