@@ -58,7 +58,7 @@ paths:
                 Example 1:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                    wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
                     title: string
                     creation_date: 2019-08-24T14:15:22Z
                     author:
@@ -115,13 +115,12 @@ paths:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                     article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
                     title: string
                     modification_date: 2019-08-24T14:15:22Z
                     body: string
-                    editors:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      name: string
-                      edition_date: 2019-08-24T14:15:22Z
                     tags:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       tag: string
@@ -241,7 +240,7 @@ paths:
                   value:
                     articles:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
                       title: string
                       creation_date: 2019-08-24T14:15:22Z
                       author:
@@ -315,13 +314,12 @@ paths:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                     article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
                     title: string
                     modification_date: 2019-08-24T14:15:22Z
                     body: string
-                    editors:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      name: string
-                      edition_date: 2019-08-24T14:15:22Z
                     tags:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       tag: string
@@ -389,12 +387,15 @@ paths:
                     article_versions:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       title: string
-                      modification_date: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      modification_date: 2019-08-24T14:15:22Z
                     total: 0
                     offset: 0
                     limit: 0
-                    previous: string
-                    next: string
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleVersionList'
           description: OK
@@ -545,7 +546,7 @@ paths:
                   value:
                     articles:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
                       title: string
                       creation_date: 2019-08-24T14:15:22Z
                       author:
@@ -628,7 +629,7 @@ paths:
                   value:
                     articles:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
                       title: string
                       creation_date: 2019-08-24T14:15:22Z
                       author:
@@ -680,11 +681,11 @@ components:
         author:
           name: name
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         rating: 0.08008281904610115
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         creation_date: 2000-01-23T04:56:07.000+00:00
         title: title
+        wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         tags:
         - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           tag: tag
@@ -696,10 +697,10 @@ components:
           format: uuid
           title: id
           type: string
-        wiki:
+        wiki_id:
           description: The ID corresponding to the wiki the article belongs to.
           format: uuid
-          title: wiki
+          title: wiki_id
           type: string
         title:
           description: The title of the article. The same as the title of the most
@@ -742,13 +743,13 @@ components:
       - tags
       - title
       - versions
-      - wiki
+      - wiki_id
       title: Article
       type: object
       x-examples:
         Example 1:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-          wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+          wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
           title: string
           creation_date: 2019-08-24T14:15:22Z
           author:
@@ -928,11 +929,11 @@ components:
           author:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           rating: 0.08008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           tags:
           - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             tag: tag
@@ -954,11 +955,11 @@ components:
           author:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           rating: 0.08008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           tags:
           - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             tag: tag
@@ -1023,7 +1024,7 @@ components:
         Example 1:
           articles:
           - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-            wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
             title: string
             creation_date: 2019-08-24T14:15:22Z
             author:
