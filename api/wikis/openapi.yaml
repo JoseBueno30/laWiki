@@ -1,0 +1,549 @@
+openapi: 3.0.0
+info:
+  description: This API is used to perform operations on the wikis of laWiki
+  title: Wiki API
+  version: "1.0"
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/JoseMiguelPrietoPaez/wiki/0.1.0
+paths:
+  /wikis:
+    description: Search for wikis using the below query parameters.
+    get:
+      description: "Get a list of Wikis that match a keyword string. Results can by\
+        \ filtered by tags, sorted by different parameters and support pagination."
+      operationId: searchWikis
+      parameters:
+      - description: String to be searched within the wiki's name.
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Maximum amount of results to be returned.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 0
+          example: 10
+          minimum: 0
+          type: integer
+        style: form
+      - description: Sorts the articles by different criteria
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          example: "2024/01/01, 2023/01/01-2024/01/01"
+          type: string
+        style: form
+      - description: Filter for the author of the Wiki
+        explode: true
+        in: query
+        name: author_name
+        required: false
+        schema:
+          example: author_name
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: string
+                      name: string
+                      description: string
+                      author:
+                        id: string
+                        name: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/WikiList'
+          description: Succesful operation.
+        "400":
+          description: "Bad Request, invalid parameters"
+        "418":
+          description: "The server refused to brew coffee. <br/> *Yes, this is a joke.\
+            \ Yes, this is a reserved HTTP response code since 1998.* <br/> *See [RFC\
+            \ 2324](https://datatracker.ietf.org/doc/html/rfc2324) for more information.\
+            \ Actually, do not.*"
+      summary: Search for Wikis
+    post:
+      description: Create a new Wiki
+      operationId: createWiki
+      parameters:
+      - description: String to be searched within the wiki's name.
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Maximum amount of results to be returned.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 10
+          minimum: 0
+          type: integer
+        style: form
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  name: string
+                  description: string
+                  author: string
+            schema:
+              $ref: '#/components/schemas/NewWiki'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Created succesfully.
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+      summary: Create Wiki
+  /wikis/{id}:
+    delete:
+      description: Remove Wiki with the matching ID.
+      operationId: removeWiki
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content: {}
+          description: Removed successfully. Returned deleted item.
+        "400":
+          description: Bad Request.
+        "403":
+          description: Forbidden. User is not authorized to delete wikis.
+        "404":
+          description: Wiki not found.
+      summary: Remove Wiki
+    get:
+      description: Get Wiki with the matching ID.
+      operationId: getWiki
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: "1"
+                    name: Example wiki
+                    description: This is an example of a response when getting a wiki
+                    author: "Someone, change when user return is finalized"
+                    tags:
+                    - id: "1"
+                      name: Gift cards
+                      wiki_id: "1"
+                    - id: "2"
+                      name: Stores
+                      wiki_id: "1"
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Succesful operation.
+        "400":
+          description: Bad Request
+        "404":
+          description: Bad Request. Wiki not found.
+      summary: Get Wiki
+    put:
+      description: Update Wiki with wiki the matching ID
+      operationId: updateWiki
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewWiki'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: "1"
+                    name: Example wiki
+                    description: This is an example of a response when getting a wiki
+                    author: "Someone, change when user return is finalized"
+                    tags:
+                    - id: "1"
+                      name: Gift cards
+                      wiki_id: "1"
+                    - id: "2"
+                      name: Stores
+                      wiki_id: "1"
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Succesful operation.
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden. User is not authorized to edit wiki the requested
+            wiki.
+        "404":
+          description: Bad Request. Wiki not found.
+      summary: Update Wiki
+  /wikis/{name}:
+    get:
+      description: Get the Wiki with the given name.
+      operationId: getOneWikiByName
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: "1"
+                    name: Example wiki
+                    description: This is an example of a response when getting a wiki
+                    author: "Someone, change when user return is finalized"
+                    tags:
+                    - id: "1"
+                      name: Gift cards
+                      wiki_id: "1"
+                    - id: "2"
+                      name: Stores
+                      wiki_id: "1"
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Succesful operation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Bad Request
+        "404":
+          description: Wiki Not Found
+      summary: Get Wiki by name
+components:
+  requestBodies:
+    Wiki_Post:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NewWiki'
+      description: Body of a post request to upload a new wiki.
+      required: true
+  schemas:
+    NewWiki:
+      description: Model of a new wiki
+      example:
+        author: author
+        name: name
+        description: description
+      properties:
+        name:
+          description: Name of the wiki.
+          title: name
+          type: string
+        description:
+          description: Details of the wiki set by its editors.
+          title: description
+          type: string
+        author:
+          description: Creator of the wiki. Should not remain a string.
+          title: author
+          type: string
+      required:
+      - author
+      - description
+      - name
+      title: NewWiki
+      type: object
+    Wiki:
+      example:
+        id: "1"
+        name: Example wiki
+        description: This is an example of a response when getting a wiki
+        author: "Someone, change when user return is finalized"
+        tags:
+        - id: "1"
+          name: Gift cards
+          wiki_id: "1"
+        - id: "2"
+          name: Stores
+          wiki_id: "1"
+      properties:
+        id:
+          description: Unique identifier for the wiki.
+          type: string
+        name:
+          description: Name of the wiki.
+          type: string
+        description:
+          description: Details of the wiki set by its editors.
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        tags:
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+      required:
+      - author
+      - description
+      - id
+      - name
+      - tags
+      title: Wiki
+      type: object
+    Tag:
+      example:
+      - id: "1"
+        name: Gift cards
+        wiki_id: "1"
+      - id: "2"
+        name: Stores
+        wiki_id: "1"
+      - id: "1"
+        name: Sports cars
+        wiki_id: "2"
+      properties:
+        id:
+          description: Unique identifier for the tag.
+          type: string
+        name:
+          description: Name of the tag.
+          type: string
+        wiki_id:
+          description: Unique identifier for the wiki that uses the tag.
+          type: string
+      required:
+      - id
+      - name
+      - wiki_id
+      title: Tag
+      type: object
+    Author:
+      description: "Schema for the user, temporary as we do not know how the user\
+        \ will be modelled."
+      example:
+        name: name
+        id: id
+      properties:
+        id:
+          description: Unique identifier for the user.
+          title: id
+          type: string
+        name:
+          description: Name of the user.
+          title: name
+          type: string
+      required:
+      - id
+      - name
+      title: Author
+      type: object
+    WikiList:
+      description: List of Wikis. Supports pagination.
+      example:
+        next: https://openapi-generator.tech
+        total: 0
+        offset: 6
+        previous: https://openapi-generator.tech
+        limit: 0
+        articles:
+        - author:
+            name: name
+            id: id
+          name: name
+          description: description
+          id: id
+        - author:
+            name: name
+            id: id
+          name: name
+          description: description
+          id: id
+      properties:
+        articles:
+          items:
+            $ref: '#/components/schemas/SimplifiedWiki'
+          title: articles
+          type: array
+          x-stoplight:
+            id: qmckelb8p9agh
+        total:
+          description: The total number of items available to return.
+          title: total
+          type: integer
+          x-stoplight:
+            id: ceyp9h3u6pq3t
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          title: offset
+          type: integer
+          x-stoplight:
+            id: y8f5uy4secbdp
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          example: 0
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: mli08w7p9m5ct
+        previous:
+          description: Request to the previous page of items. ( null if none)
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: fr352m14ihvc7
+        next:
+          description: 'Request to the next page of items. ( null if none) '
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: d6rwzi2d4o45u
+      required:
+      - articles
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      title: WikiList
+      type: object
+    SimplifiedWiki:
+      example:
+        author:
+          name: name
+          id: id
+        name: name
+        description: description
+        id: id
+      properties:
+        id:
+          description: Unique identifier for the wiki.
+          title: id
+          type: string
+        name:
+          description: Name of the wiki.
+          title: name
+          type: string
+        description:
+          description: Details of the wiki set by its editors.
+          title: description
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+      required:
+      - author
+      - description
+      - id
+      - name
+      - tags
+      title: SimplifiedWiki
+      type: object

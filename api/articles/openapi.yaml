@@ -617,7 +617,7 @@ components:
           name: name
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        rating: 0.8008281904610115
+        rating: 0.08008281904610115
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         creation_date: 2000-01-23T04:56:07.000+00:00
         title: title
@@ -667,6 +667,14 @@ components:
             $ref: '#/components/schemas/SimplifiedArticleVersion'
           title: versions
           type: array
+        rating:
+          description: Average rating of the Article
+          format: double
+          minimum: 0
+          title: rating
+          type: number
+          x-stoplight:
+            id: 102q2hlty1t4n
       required:
       - author
       - creation_date
@@ -680,20 +688,24 @@ components:
       type: object
       x-examples:
         Example 1:
-          id: 670eb0bb7a55b98db9cc12d8
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+          title: string
+          creation_date: 2019-08-24T14:15:22Z
           author:
-            id: 672272c65150a9cd3f46599e
-            name: author_name
-          creation_date: 2024-01-01T00:00:00.000Z
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
           tags:
-          - id: 672273165150a9cd3f46599f
-            tag: tag
-          title: article_title
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: string
           versions:
-          - id: 672273585150a9cd3f4659a1
-            title: version_title
-            modification_date: 2024-01-01T00:00:00.000Z
-          wiki_id: 672273365150a9cd3f4659a0
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            title: string
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            modification_date: string
+          rating: 0
     ArticleVersion:
       description: 'Concrete version of an Article object '
       example:
@@ -824,6 +836,10 @@ components:
       - tag
       title: Tag
       type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          tag: string
     ArticleList:
       description: List of Articles. Supports pagination.
       example:
@@ -850,7 +866,7 @@ components:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          rating: 0.8008281904610115
+          rating: 0.08008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
@@ -876,7 +892,7 @@ components:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          rating: 0.8008281904610115
+          rating: 0.08008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
@@ -940,6 +956,32 @@ components:
       - total
       title: ArticleList
       type: object
+      x-examples:
+        Example 1:
+          articles:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+            title: string
+            creation_date: 2019-08-24T14:15:22Z
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            tags:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              tag: string
+            versions:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              title: string
+              author:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                name: string
+              modification_date: string
+            rating: 0
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
     ArticleVersionList:
       description: List of ArticleVersions. Supports pagination.
       example:
@@ -1014,6 +1056,20 @@ components:
       - total
       title: ArticleVersionList
       type: object
+      x-examples:
+        Example 1:
+          article_versions:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            title: string
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            modification_date: string
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
     NewArticleVersion:
       description: Data required to the user to create a new ArticleVersion of an
         Article (given in the path of the endpoint)
@@ -1057,6 +1113,16 @@ components:
       - title
       title: NewArticleVersion
       type: object
+      x-examples:
+        Example 1:
+          title: string
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+          tags:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: string
+          body: string
     Author:
       description: The author of an Article or ArticleVersion.
       example:
@@ -1077,3 +1143,7 @@ components:
       - name
       title: Author
       type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: string

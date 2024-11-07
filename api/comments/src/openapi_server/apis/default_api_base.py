@@ -39,7 +39,7 @@ class BaseDefaultApi:
         article_id: str,
         order: str,
         limit: int,
-        offet: int,
+        offset: int,
         creation_date: str,
     ) -> CommentListResponse:
         """Retrieves all comments from an user"""

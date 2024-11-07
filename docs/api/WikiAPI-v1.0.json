@@ -1,0 +1,699 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wiki API",
+    "description": "This API is used to perform operations on the wikis of laWiki",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/JoseMiguelPrietoPaez/wiki/0.1.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/wikis": {
+      "description": "Search for wikis using the below query parameters.",
+      "get": {
+        "summary": "Search for Wikis",
+        "description": "Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination.",
+        "operationId": "searchWikis",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "String to be searched within the wiki's name.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Maximum amount of results to be returned.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "example": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the articles by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "creation_date",
+            "in": "query",
+            "description": "Single date or range",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "2024/01/01, 2023/01/01-2024/01/01"
+            }
+          },
+          {
+            "name": "author_name",
+            "in": "query",
+            "description": "Filter for the author of the Wiki",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "author_name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WikiList"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "string",
+                          "name": "string",
+                          "description": "string",
+                          "author": {
+                            "id": "string",
+                            "name": "string"
+                          }
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters"
+          },
+          "418": {
+            "description": "The server refused to brew coffee. <br/> *Yes, this is a joke. Yes, this is a reserved HTTP response code since 1998.* <br/> *See [RFC 2324](https://datatracker.ietf.org/doc/html/rfc2324) for more information. Actually, do not.*"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Wiki",
+        "description": "Create a new Wiki",
+        "operationId": "createWiki",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "String to be searched within the wiki's name.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum amount of results to be returned.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "example": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWiki"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "name": "string",
+                    "description": "string",
+                    "author": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created succesfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/wikis/{id}": {
+      "get": {
+        "summary": "Get Wiki",
+        "description": "Get Wiki with the matching ID.",
+        "operationId": "getWiki",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Bad Request. Wiki not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Wiki",
+        "description": "Update Wiki with wiki the matching ID",
+        "operationId": "updateWiki",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWiki"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden. User is not authorized to edit wiki the requested wiki."
+          },
+          "404": {
+            "description": "Bad Request. Wiki not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove Wiki",
+        "description": "Remove Wiki with the matching ID.",
+        "operationId": "removeWiki",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removed successfully. Returned deleted item.",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request."
+          },
+          "403": {
+            "description": "Forbidden. User is not authorized to delete wikis."
+          },
+          "404": {
+            "description": "Wiki not found."
+          }
+        }
+      }
+    },
+    "/wikis/{name}": {
+      "get": {
+        "summary": "Get Wiki by name",
+        "description": "Get the Wiki with the given name.",
+        "operationId": "getOneWikiByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewWiki": {
+        "required": [
+          "author",
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "author": {
+            "type": "string",
+            "description": "Creator of the wiki. Should not remain a string."
+          }
+        },
+        "description": "Model of a new wiki"
+      },
+      "Wiki": {
+        "required": [
+          "author",
+          "description",
+          "id",
+          "name",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          }
+        },
+        "example": {
+          "id": "1",
+          "name": "Example wiki",
+          "description": "This is an example of a response when getting a wiki",
+          "author": "Someone, change when user return is finalized",
+          "tags": [
+            {
+              "id": "1",
+              "name": "Gift cards",
+              "wiki_id": "1"
+            },
+            {
+              "id": "2",
+              "name": "Stores",
+              "wiki_id": "1"
+            }
+          ]
+        }
+      },
+      "Tag": {
+        "required": [
+          "id",
+          "name",
+          "wiki_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the tag."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the tag."
+          },
+          "wiki_id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki that uses the tag."
+          }
+        },
+        "example": [
+          {
+            "id": "1",
+            "name": "Gift cards",
+            "wiki_id": "1"
+          },
+          {
+            "id": "2",
+            "name": "Stores",
+            "wiki_id": "1"
+          },
+          {
+            "id": "1",
+            "name": "Sports cars",
+            "wiki_id": "2"
+          }
+        ]
+      },
+      "Author": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user."
+          }
+        },
+        "description": "Schema for the user, temporary as we do not know how the user will be modelled."
+      },
+      "WikiList": {
+        "required": [
+          "articles",
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedWiki"
+            },
+            "x-stoplight": {
+              "id": "qmckelb8p9agh"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "ceyp9h3u6pq3t"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "y8f5uy4secbdp"
+            }
+          },
+          "limit": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "example": 0,
+            "x-stoplight": {
+              "id": "mli08w7p9m5ct"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the previous page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "fr352m14ihvc7"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "d6rwzi2d4o45u"
+            }
+          }
+        },
+        "description": "List of Wikis. Supports pagination."
+      },
+      "SimplifiedWiki": {
+        "title": "SimplifiedWiki",
+        "required": [
+          "author",
+          "description",
+          "id",
+          "name",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "Wiki_Post": {
+        "description": "Body of a post request to upload a new wiki.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NewWiki"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  }
+}
