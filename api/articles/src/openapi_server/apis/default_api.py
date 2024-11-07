@@ -4,7 +4,6 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
-from bson.errors import InvalidId
 from openapi_server.apis.default_api_base import BaseDefaultApi
 import openapi_server.impl
 
@@ -23,9 +22,8 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from websockets.exceptions import InvalidParameterValue
-
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.article_version_list import ArticleVersionList
@@ -64,7 +62,7 @@ async def get_article_by_author(
 @router.get(
     "/articles/{id}",
     responses={
-        200: {"model": ArticleVersion, "description": "OK"},
+        200: {"model": Article, "description": "OK"},
         400: {"description": "Bad Request, invalid Article ID format. "},
         404: {"description": "Article Not Found"},
     },
@@ -74,16 +72,12 @@ async def get_article_by_author(
 )
 async def get_article_by_id(
     id: str = Path(..., description=""),
-) -> ArticleVersion:
+) -> Article:
     """Get an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    try:
-        return await BaseDefaultApi.subclasses[0]().get_article_by_id(id)
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
-    except Exception as e:
-        raise HTTPException(status_code=404, detail="Article Not Found")
+    return await BaseDefaultApi.subclasses[0]().get_article_by_id(id)
+
 
 @router.get(
     "/articles/versions/by-name/{name}",
@@ -103,13 +97,7 @@ async def get_article_by_name(
     """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-
-    try:
-        return await BaseDefaultApi.subclasses[0]().get_article_by_name(name, wiki)
-    except InvalidParameterValue:
-        raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
-    except Exception as e:
-        raise HTTPException(status_code=404, detail="Article Not Found")
+    return await BaseDefaultApi.subclasses[0]().get_article_by_name(name, wiki)
 
 
 @router.get(

@@ -46,29 +46,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ArticleVersion"
+                  "$ref": "#/components/schemas/Article"
                 },
                 "examples": {
                   "Example 1": {
                     "value": {
                       "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "wiki": "da81406c-0029-4210-a763-93ec80d7ac5b",
                       "title": "string",
-                      "modification_date": "2019-08-24T14:15:22Z",
-                      "body": "string",
-                      "editors": [
-                        {
-                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                          "name": "string",
-                          "edition_date": "2019-08-24T14:15:22Z"
-                        }
-                      ],
+                      "creation_date": "2019-08-24T14:15:22Z",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
                       "tags": [
                         {
                           "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                           "tag": "string"
                         }
-                      ]
+                      ],
+                      "versions": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "title": "string",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "modification_date": "string"
+                        }
+                      ],
+                      "rating": 0
                     }
                   }
                 }
@@ -859,7 +867,6 @@
   "components": {
     "schemas": {
       "Article": {
-        "title": "",
         "required": [
           "author",
           "creation_date",
@@ -900,11 +907,6 @@
             "items": {
               "$ref": "#/components/schemas/Tag"
             }
-          },
-          "rating": {
-            "type": "number",
-            "description": "Average rating of an article",
-            "format": "double"
           },
           "versions": {
             "type": "array",

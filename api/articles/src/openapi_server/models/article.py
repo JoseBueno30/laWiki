@@ -42,7 +42,6 @@ class Article(BaseModel):
     creation_date: datetime = Field(description="The date of creation of the article.")
     author: Author
     tags: List[Tag] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
-    rating: Union[StrictFloat, StrictInt] = Field(description="Average rating of an article")
     versions: List[SimplifiedArticleVersion] = Field(description="Array of simplified articleversions")
     rating: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]] = Field(description="Average rating of the Article")
     __properties: ClassVar[List[str]] = ["id", "wiki", "title", "creation_date", "author", "tags", "versions", "rating"]

@@ -58,19 +58,25 @@ paths:
                 Example 1:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    wiki: da81406c-0029-4210-a763-93ec80d7ac5b
                     title: string
-                    modification_date: 2019-08-24T14:15:22Z
-                    body: string
-                    editors:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    creation_date: 2019-08-24T14:15:22Z
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       name: string
-                      edition_date: 2019-08-24T14:15:22Z
                     tags:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       tag: string
+                    versions:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      modification_date: string
+                    rating: 0
               schema:
-                $ref: '#/components/schemas/ArticleVersion'
+                $ref: '#/components/schemas/Article'
           description: OK
         "400":
           description: "Bad Request, invalid Article ID format. "
@@ -656,11 +662,6 @@ components:
             $ref: '#/components/schemas/Tag'
           title: tags
           type: array
-        rating:
-          description: Average rating of an article
-          format: double
-          title: rating
-          type: number
         versions:
           description: Array of simplified articleversions
           items:
@@ -844,8 +845,8 @@ components:
       description: List of Articles. Supports pagination.
       example:
         next: https://openapi-generator.tech
-        total: 6
-        offset: 1
+        total: 0
+        offset: 6
         previous: https://openapi-generator.tech
         limit: 0
         articles:
