@@ -21,8 +21,8 @@ import json
 
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
 from openapi_server.models.author import Author
 from openapi_server.models.simplified_article_version import SimplifiedArticleVersion
 from openapi_server.models.tag import Tag
@@ -41,8 +41,9 @@ class Article(BaseModel):
     creation_date: datetime = Field(description="The date of creation of the article.")
     author: Author
     tags: List[Tag] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
+    rating: Union[StrictFloat, StrictInt] = Field(description="Average rating of an article")
     versions: List[SimplifiedArticleVersion] = Field(description="Array of simplified articleversions")
-    __properties: ClassVar[List[str]] = ["id", "wiki", "title", "creation_date", "author", "tags", "versions"]
+    __properties: ClassVar[List[str]] = ["id", "wiki", "title", "creation_date", "author", "tags", "rating", "versions"]
 
     model_config = {
         "populate_by_name": True,
@@ -116,6 +117,7 @@ class Article(BaseModel):
             "creation_date": obj.get("creation_date"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "rating": obj.get("rating"),
             "versions": [SimplifiedArticleVersion.from_dict(_item) for _item in obj.get("versions")] if obj.get("versions") is not None else None
         })
         return _obj

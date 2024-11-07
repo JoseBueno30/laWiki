@@ -23,6 +23,7 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.article_version_list import ArticleVersionList
@@ -61,7 +62,7 @@ async def get_article_by_author(
 @router.get(
     "/articles/{id}",
     responses={
-        200: {"model": ArticleVersion, "description": "OK"},
+        200: {"model": Article, "description": "OK"},
         400: {"description": "Bad Request, invalid Article ID format. "},
         404: {"description": "Article Not Found"},
     },
@@ -71,32 +72,11 @@ async def get_article_by_author(
 )
 async def get_article_by_id(
     id: str = Path(..., description=""),
-) -> ArticleVersion:
-    """Get an ArticleVersion identified by it&#39;s unique ID"""
+) -> Article:
+    """Get an Article identified by it&#39;s unique ID"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().get_article_by_id(id)
-
-
-@router.get(
-    "/articles/versions/{name}",
-    responses={
-        200: {"model": ArticleVersion, "description": "OK"},
-        400: {"description": "Bad Request, invalid Article name format. "},
-        404: {"description": "Article Not Found"},
-    },
-    tags=["default"],
-    summary="Get ArticleVersion by name",
-    response_model_by_alias=True,
-)
-async def get_article_by_name(
-    name: str = Path(..., description=""),
-    wiki: str = Query(None, description="The ID of the wiki of the Article", alias="wiki"),
-) -> ArticleVersion:
-    """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
-    if not BaseDefaultApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_article_by_name(name, wiki)
 
 
 @router.get(
@@ -117,6 +97,27 @@ async def get_article_version_by_id(
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().get_article_version_by_id(id)
+
+
+@router.get(
+    "/articles/versions/by-name/{name}",
+    responses={
+        200: {"model": ArticleVersion, "description": "OK"},
+        400: {"description": "Bad Request, invalid Article name format. "},
+        404: {"description": "Article Not Found"},
+    },
+    tags=["default"],
+    summary="Get ArticleVersion by name",
+    response_model_by_alias=True,
+)
+async def get_article_version_by_name(
+    name: str = Path(..., description=""),
+    wiki: str = Query(None, description="The ID of the wiki of the Article", alias="wiki"),
+) -> ArticleVersion:
+    """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
+    if not BaseDefaultApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApi.subclasses[0]().get_article_version_by_name(name, wiki)
 
 
 @router.get(

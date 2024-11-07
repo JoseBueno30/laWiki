@@ -40,7 +40,7 @@ paths:
       tags:
       - editors
     get:
-      description: Get an ArticleVersion identified by it's unique ID
+      description: Get an Article identified by it's unique ID
       operationId: getArticleById
       parameters:
       - explode: false
@@ -58,19 +58,25 @@ paths:
                 Example 1:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    wiki: da81406c-0029-4210-a763-93ec80d7ac5b
                     title: string
-                    modification_date: 2019-08-24T14:15:22Z
-                    body: string
-                    editors:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    creation_date: 2019-08-24T14:15:22Z
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       name: string
-                      edition_date: 2019-08-24T14:15:22Z
                     tags:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       tag: string
+                    rating: 0
+                    versions:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      modification_date: string
               schema:
-                $ref: '#/components/schemas/ArticleVersion'
+                $ref: '#/components/schemas/Article'
           description: OK
         "400":
           description: "Bad Request, invalid Article ID format. "
@@ -78,11 +84,11 @@ paths:
           description: Article Not Found
       summary: Get Article
       tags: []
-  /articles/versions/{name}:
+  /articles/versions/by-name/{name}:
     get:
       description: Get the most recent ArticleVersion the Article with the given name
         from the specified Wiki.
-      operationId: getArticleByName
+      operationId: getArticleVersionByName
       parameters:
       - explode: false
         in: path
@@ -109,13 +115,12 @@ paths:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                     article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
                     title: string
                     modification_date: 2019-08-24T14:15:22Z
                     body: string
-                    editors:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      name: string
-                      edition_date: 2019-08-24T14:15:22Z
                     tags:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       tag: string
@@ -207,7 +212,7 @@ paths:
         name: creation_date
         required: false
         schema:
-          example: "2024/01/01, 2023/01/01-2024/01/01"
+          format: date
           type: string
         style: form
       - description: Filter for the author of the Article
@@ -244,15 +249,19 @@ paths:
                       tags:
                       - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                         tag: string
+                      rating: 0
                       versions:
                       - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                         title: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
                         modification_date: string
                     total: 0
                     offset: 0
                     limit: 0
-                    next: string
-                    previous: string
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleList'
           description: OK
@@ -305,13 +314,12 @@ paths:
                   value:
                     id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                     article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
                     title: string
                     modification_date: 2019-08-24T14:15:22Z
                     body: string
-                    editors:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                      name: string
-                      edition_date: 2019-08-24T14:15:22Z
                     tags:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       tag: string
@@ -379,12 +387,15 @@ paths:
                     article_versions:
                     - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
                       title: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
                       modification_date: string
                     total: 0
                     offset: 0
                     limit: 0
-                    previous: string
-                    next: string
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleVersionList'
           description: OK
@@ -530,6 +541,33 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      title: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: string
+                      rating: 0
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        modification_date: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleList'
           description: OK
@@ -586,6 +624,33 @@ paths:
         "200":
           content:
             application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki: da81406c-0029-4210-a763-93ec80d7ac5b
+                      title: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: string
+                      rating: 0
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        modification_date: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
               schema:
                 $ref: '#/components/schemas/ArticleList'
           description: OK
@@ -617,6 +682,7 @@ components:
           name: name
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rating: 0.8008281904610115
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         creation_date: 2000-01-23T04:56:07.000+00:00
         title: title
@@ -655,6 +721,11 @@ components:
             $ref: '#/components/schemas/Tag'
           title: tags
           type: array
+        rating:
+          description: Average rating of an article
+          format: double
+          title: rating
+          type: number
         versions:
           description: Array of simplified articleversions
           items:
@@ -665,6 +736,7 @@ components:
       - author
       - creation_date
       - id
+      - rating
       - tags
       - title
       - versions
@@ -843,6 +915,7 @@ components:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          rating: 0.8008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
@@ -868,6 +941,7 @@ components:
             name: name
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           wiki: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          rating: 0.8008281904610115
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           creation_date: 2000-01-23T04:56:07.000+00:00
           title: title
