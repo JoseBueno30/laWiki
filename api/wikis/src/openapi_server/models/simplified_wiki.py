@@ -21,7 +21,8 @@ import json
 
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from openapi_server.models.author import Author
 try:
     from typing import Self
@@ -35,9 +36,10 @@ class SimplifiedWiki(BaseModel):
     id: StrictStr = Field(description="Unique identifier for the wiki.")
     name: StrictStr = Field(description="Name of the wiki.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
-    rating: float = Field(description="Rating for the wiki by other users.")
+    creation_date: StrictStr = Field(description="Date of creation of the wiki.")
+    rating: Optional[Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]]] = Field(default=None, description="Average rating of the wiki")
     author: Author
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "author"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "creation_date", "rating", "author"]
 
     model_config = {
         "populate_by_name": True,
@@ -94,6 +96,7 @@ class SimplifiedWiki(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "description": obj.get("description"),
+            "creation_date": obj.get("creation_date"),
             "rating": obj.get("rating"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None
         })

@@ -162,6 +162,8 @@ paths:
         "403":
           description: Forbidden
       summary: Create Wiki
+      tags:
+      - admins
   /wikis/{id}:
     delete:
       description: Remove Wiki with the matching ID.
@@ -188,6 +190,8 @@ paths:
         "404":
           description: Wiki not found.
       summary: Remove Wiki
+      tags:
+      - admins
     get:
       description: Get Wiki with the matching ID.
       operationId: getWiki
@@ -228,6 +232,27 @@ paths:
         "404":
           description: Bad Request. Wiki not found.
       summary: Get Wiki
+    head:
+      description: 'Check if a Wiki exits given its unique ID. '
+      operationId: checkWikiByID
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Bad Request, invalid Wiki ID"
+        "404":
+          description: Wiki Not Found
+      summary: Check Wiki
+      tags:
+      - internal
     put:
       description: Update Wiki with wiki the matching ID
       operationId: updateWiki
@@ -276,6 +301,8 @@ paths:
         "404":
           description: Bad Request. Wiki not found.
       summary: Update Wiki
+      tags:
+      - admins
   /wikis/{name}:
     get:
       description: Get the Wiki with the given name.
@@ -321,6 +348,122 @@ paths:
         "404":
           description: Wiki Not Found
       summary: Get Wiki by name
+  /wikis/{id}/ratings:
+    put:
+      description: Update the rating of a Wiki give its unique ID and a rating
+      operationId: updateRating
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  raitng: 4.5
+            schema:
+              $ref: '#/components/schemas/id_ratings_body'
+      responses:
+        "204":
+          description: "No Content, rating updated"
+        "400":
+          description: "Bad Request, invalid parameter format"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Wiki Not Found
+      summary: Update Rating
+      tags:
+      - internal
+      x-internal: false
+  /wikis/{id}/tags:
+    delete:
+      description: "Unassigns a list of tags, given their IDs to a Wiki."
+      operationId: unassignArticleTags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of Tag IDs
+        explode: false
+        in: query
+        name: ids
+        required: true
+        schema:
+          example:
+          - tag1
+          - tag2
+          items:
+            type: string
+          maxItems: 50
+          type: array
+          uniqueItems: true
+        style: form
+      responses:
+        "204":
+          description: "No Content, tags unassigned"
+        "400":
+          description: "Bad Request, invalid parameters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Wiki Not Found
+      summary: Unassign Tags
+      tags:
+      - internal
+      x-internal: false
+    put:
+      description: "Assigns a list of tags, given their IDs, to a wiki"
+      operationId: assignWikiTags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  tag_ids:
+                  - - id: "1"
+                      name: Gift cards
+                      wiki_id: "1"
+                    - id: "2"
+                      name: Stores
+                      wiki_id: "1"
+                    - id: "1"
+                      name: Sports cars
+                      wiki_id: "2"
+            schema:
+              $ref: '#/components/schemas/id_tags_body'
+      responses:
+        "204":
+          description: "No Content, tags assigned"
+        "400":
+          description: "Bad Request, invalid parameters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Wiki Not Found
+      summary: Assign Tags
+      tags:
+      - internal
+      x-internal: false
 components:
   requestBodies:
     Wiki_Post:
@@ -379,17 +522,32 @@ components:
         description:
           description: Details of the wiki set by its editors.
           type: string
+        creation_date:
+          description: Date of creation of the wiki.
+          format: date_time
+          type: string
         author:
           $ref: '#/components/schemas/Author'
         tags:
           items:
             $ref: '#/components/schemas/Tag'
           type: array
+        rating:
+          description: Average rating of the wiki
+          example: 4.5
+          format: double
+          maximum: 5
+          minimum: 0
+          type: number
+          x-stoplight:
+            id: n41bjowninj5a
       required:
       - author
+      - creation_date
       - description
       - id
       - name
+      - rating
       - tags
       title: Wiki
       type: object
@@ -411,13 +569,9 @@ components:
         name:
           description: Name of the tag.
           type: string
-        wiki_id:
-          description: Unique identifier for the wiki that uses the tag.
-          type: string
       required:
       - id
       - name
-      - wiki_id
       title: Tag
       type: object
     Author:
@@ -453,14 +607,18 @@ components:
             name: name
             id: id
           name: name
+          rating: 4.5
           description: description
           id: id
+          creation_date: creation_date
         - author:
             name: name
             id: id
           name: name
+          rating: 4.5
           description: description
           id: id
+          creation_date: creation_date
       properties:
         articles:
           items:
@@ -522,8 +680,10 @@ components:
           name: name
           id: id
         name: name
+        rating: 4.5
         description: description
         id: id
+        creation_date: creation_date
       properties:
         id:
           description: Unique identifier for the wiki.
@@ -537,13 +697,58 @@ components:
           description: Details of the wiki set by its editors.
           title: description
           type: string
+        creation_date:
+          description: Date of creation of the wiki.
+          format: date_time
+          title: creation_date
+          type: string
+        rating:
+          description: Average rating of the wiki
+          example: 4.5
+          format: double
+          maximum: 5
+          minimum: 0
+          title: rating
+          type: number
+          x-stoplight:
+            id: n41bjowninj5a
         author:
           $ref: '#/components/schemas/Author'
       required:
       - author
+      - creation_date
       - description
       - id
       - name
-      - tags
       title: SimplifiedWiki
+      type: object
+    id_ratings_body:
+      properties:
+        raitng:
+          description: Average rating of the wiki
+          example: 4.5
+          format: double
+          maximum: 5
+          minimum: 0
+          title: raitng
+          type: number
+          x-stoplight:
+            id: e861y8ux0w86b
+      required:
+      - raitng
+      title: id_ratings_body
+      type: object
+    id_tags_body:
+      properties:
+        tag_ids:
+          description: List of Tag IDs
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: tag_ids
+          type: array
+          x-stoplight:
+            id: w0pyzqdbvcjuk
+      required:
+      - tag_ids
+      title: id_tags_body
       type: object
