@@ -195,6 +195,7 @@ async def get_articles_commented_by_user(
     responses={
         200: {"model": ArticleList, "description": "OK"},
         400: {"description": "Bad Request, invalid input paramaters"},
+        404: {"description": "Article Not Found"},
     },
     tags=["default"],
     summary="Search for Articles",
@@ -214,4 +215,9 @@ async def search_articles(
     """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
+    try:
+        return await BaseDefaultApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Article Not Found")

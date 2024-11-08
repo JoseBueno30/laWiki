@@ -333,9 +333,8 @@ class DefaultArticleAPI(BaseDefaultApi):
         articles = await mongodb["article"].aggregate(query_pipeline).to_list()
 
         print(articles)
-        print(articles[0])
 
-        if not articles[0]:
+        if not articles:
             raise Exception
 
         return articles[0]
