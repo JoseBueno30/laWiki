@@ -76,7 +76,7 @@ class BaseDefaultApi:
         self,
         wiki_id: str,
         name: str,
-        tags: list[str],
+        tags: List[str],
         offset: int,
         limit: int,
         order: str,

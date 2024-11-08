@@ -1,15 +1,15 @@
 from datetime import datetime, date
 
 from bson import ObjectId
-from dns.e164 import query
+
 
 from openapi_server.apis.default_api_base import BaseDefaultApi
+from openapi_server.impl import api_calls
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.models.new_comment import NewComment
-from openapi_server.utils.parsers import from_cursor_to_comment
 from openapi_server.utils.url_creator import generate_url_offset
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
@@ -68,8 +68,12 @@ class ContentManager(BaseDefaultApi):
     ) -> Comment:
         """Post Comment"""
         art_id = ObjectId(article_id)
-        if not mongodb['article'].find_one({"_id": art_id}):
+
+        if not await api_calls.check_article(article_id):
             raise Exception("Article not found")
+
+        # if not mongodb['article'].find_one({"_id": art_id}):
+        #     raise Exception("Article not found")
 
         today = date.today()
 
@@ -105,7 +109,7 @@ class ContentManager(BaseDefaultApi):
         return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date, user_id, article_id)
 
 def parse_date(date_str):
-    res_date = datetime.strptime(date_str, "%Y-%m-%d")
+    res_date = datetime.strptime(date_str, "%Y/%m/%d")
     return res_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
 def build_pagination_urls(base_path, path_vars, pagination, offset, total_count, limit):
@@ -115,14 +119,14 @@ def build_pagination_urls(base_path, path_vars, pagination, offset, total_count,
 
 
 async def get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date = None, user_id = None, article_id = None):
-    """Funcion general que recibe todos los parametros y devuelve los comentarios"""
-    pagination = {"limit": limit, "offset": offset} # Diccionario para pasar los argumentos a la url
-    matching_variables = {} # Diccionario para el filtro de comentarios
+    """General function to retrieve comments by parameters"""
+    pagination = {"limit": limit, "offset": offset} # Dictionary for pagination info in the url
+    matching_variables = {} # Dictionary for the filters
 
-    if user_id is not None and path_vars["user_id"] is None: # Si el user_id no es None y no esta en path_vars
+    if user_id is not None and path_vars["user_id"] is None: # If the user_id is in the path, we don't need to filter by it
         matching_variables["author._id"] = ObjectId(user_id)
         pagination["user_id"] = user_id
-    if article_id is not None and path_vars["article_id"] is None: # Si el article_id no es None y no esta en path_vars
+    if article_id is not None and path_vars["article_id"] is None:
         matching_variables["article_id"] = ObjectId(article_id)
         pagination["article_id"] = article_id
     if creation_date is not None:

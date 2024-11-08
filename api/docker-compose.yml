@@ -1,0 +1,17 @@
+services:
+  comments:
+    container_name: comments_api
+    build:
+      context: ./comments
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8080
+  articles:
+    container_name: articles_api
+    build:
+      context: ./articles
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8081

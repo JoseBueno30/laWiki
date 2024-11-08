@@ -152,3 +152,5 @@ async def post_comment(
         return await BaseDefaultApi.subclasses[0]().post_comment(article_id, new_comment)
     except InvalidId:
         raise HTTPException(status_code=400, detail="Bad Request, wrong content structure")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=e.args[0])
