@@ -58,7 +58,12 @@ async def get_article_by_author(
     """Get a list of Articles given an author&#39;s ID.  """
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_article_by_author(id, offset, limit, order)
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_article_by_author(id, offset, limit, order)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Author ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Article Not Found")
 
 
 @router.get(
