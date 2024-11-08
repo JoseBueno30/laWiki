@@ -167,7 +167,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             },
             {
                 "$sort": {
-                    "creation_date": 1 if order == "asc" else -1
+                    "creation_date": 1 if order == "recent" else -1
                 }
             },
             {
@@ -222,3 +222,4 @@ class DefaultArticleAPI(BaseDefaultApi):
             raise Exception
 
         return articles[0]
+

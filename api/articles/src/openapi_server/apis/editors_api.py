@@ -1,8 +1,9 @@
 # coding: utf-8
-
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+
+from pymongo import errors
 
 from openapi_server.apis.editors_api_base import BaseEditorsApi
 import openapi_server.impl
@@ -53,7 +54,12 @@ async def create_article(
     """Create a new Article in a given wiki"""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().create_article(new_article)
+    try:
+        return await BaseEditorsApi.subclasses[0]().create_article(new_article)
+    except errors.DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Duplicate Key")
+    except errors.PyMongoError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post(
@@ -74,7 +80,12 @@ async def create_article_version(
     """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().create_article_version(id, new_article_version)
+    try:
+        return await BaseEditorsApi.subclasses[0]().create_article_version(id, new_article_version)
+    except errors.DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Duplicate Key")
+    except errors.PyMongoError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete(
