@@ -18,11 +18,11 @@ mongodb = client.get_database("laWikiDB")
 # Removes ObjectID fields and converts them to string
 pipeline_remove_id = [
     {'$addFields': {"id": {'$toString': '$_id'},
-                    "art_id": {'$toString': '$article_id'},
+                    "article_id": {'$toString': '$article_id'},
                     "author.id": {'$toString': '$author._id'}
                     }
      },
-    {'$unset': ["_id", "author._id"]}
+    {'$unset': ["_id", "author._id"]}  # Remove the original _id fields
 ]
 
 
@@ -62,34 +62,54 @@ class ContentManager(BaseDefaultApi):
 
         print(matching_variables)
 
+        total_count = await mongodb['comment'].count_documents(matching_variables)
         query_pipeline = [
             {"$match": matching_variables},
             {"$sort": {"creation_date": -1 if order == "recent" else 1}},
             {"$skip": offset * limit},
             {"$limit": limit},
-            *pipeline_remove_id
+            *pipeline_remove_id,
+            {"$group": {
+                "_id": None,
+                "comments": {"$push": "$$ROOT"},
+            }},
+            {
+                "$project": {
+                    "_id": 0,
+                }
+            },
+            {"$addFields": {
+                "total": total_count,
+                "offset": offset,
+                "limit": limit,
+                "next": {
+                    "$cond": {
+                        "if" : {"$lt": [limit + offset, total_count]},
+                        "then": f"comments/articles/{article_id}?limit={limit}&offset={offset + limit}",
+                        "else": None
+                    }
+                },
+                "previous": {
+                    "$cond": {
+                        "if": {"$gt": [offset, 0]},
+                        "then": f"comments/articles/{article_id}?limit={limit}&offset={max(offset - limit, 0)}",
+                        "else": None
+                    }
+                }
+            }}
         ]
 
-        comments = []
-        async for doc in mongodb['comment'].aggregate(query_pipeline):
-            comments.append(from_cursor_to_comment(doc))
+        comments = await mongodb['comment'].aggregate(query_pipeline).to_list(length=1);
 
-        if not comments:
+        if not comments[0].get('comments'):
             raise Exception("Not found")
 
-        return CommentListResponse(
-            comments=comments,
-            limit=limit,
-            offset=offset,
-            total=len(comments),
-            next="",
-            previous=""
-        )
+        return comments[0]
 
     async def post_comment(
-        self,
-        article_id: str,
-        new_comment: NewComment,
+            self,
+            article_id: str,
+            new_comment: NewComment,
     ) -> Comment:
         """Post Comment"""
         art_id = ObjectId(article_id)
@@ -103,7 +123,7 @@ class ContentManager(BaseDefaultApi):
                        'image': 'author_image'}
         comment_dic = {
             'article_id': article_id,
-            'author' : author_dict,
+            'author': author_dict,
             'body': new_comment.body,
 
             'creation_date': datetime(today.year, today.month, today.day)
@@ -116,13 +136,13 @@ class ContentManager(BaseDefaultApi):
             raise Exception("Error creating comment")
 
     async def get_users_comments(
-        self,
-        user_id: str,
-        article_id: str,
-        order: str,
-        limit: int,
-        offset: int,
-        creation_date: str,
+            self,
+            user_id: str,
+            article_id: str,
+            order: str,
+            limit: int,
+            offset: int,
+            creation_date: str,
     ) -> CommentListResponse:
         """Retrieves all comments from a user"""
 
@@ -139,33 +159,47 @@ class ContentManager(BaseDefaultApi):
                     "$lte": datetime.strptime(dates[1], "%Y/%m/%d")
                 }
 
-        # Falta poner el count
+        total_counts = await mongodb['comment'].count_documents(matching_variables)
+
         query_pipeline = [
             {"$match": matching_variables},
             {"$sort": {"creation_date": -1 if order == "recent" else 1}},
             {"$skip": offset * limit},
             {"$limit": limit},
-            *pipeline_remove_id
+            *pipeline_remove_id,
+            {"$group": {
+                "_id": None,
+                "comments": {"$push": "$$ROOT"},
+            }},
+            {
+                "$project": {
+                    "_id": 0,
+                }
+            },
+            {"$addFields": {
+                "total": total_counts,
+                "offset": offset,
+                "limit": limit,
+                "next": {
+                    "$cond": {
+                        "if": {"$lt": [limit + offset, total_counts]},
+                        "then": f"/comments/users/{user_id}?limit={limit}&offset={offset + limit}",
+                        "else": None
+                    }
+                },
+                "previous": {
+                    "$cond": {
+                        "if": {"$gt": [offset, 0]},
+                        "then": f"/comments/users/{user_id}comments?limit={limit}&offset={max(offset - limit, 0)}",
+                        "else": None
+                    }
+                }
+            }}
         ]
 
-        comments = []
-        async for doc in mongodb['comment'].aggregate(query_pipeline):
-            comments.append(from_cursor_to_comment(doc))
+        comments = await mongodb['comment'].aggregate(query_pipeline).to_list(length=1);
 
-        if not comments:
+        if not comments[0].get('comments'):
             raise Exception("Not found")
 
-        return CommentListResponse(
-            comments=comments,
-            limit=limit,
-            offset=offset,
-            total=len(comments),
-            next="",
-            previous=""
-        )
-
-
-
-
-
-
+        return comments[0]
