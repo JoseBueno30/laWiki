@@ -83,11 +83,12 @@ class ArticleAPI(BaseDefaultApi):
         return article[0]  # El resultado es una lista, así que se toma el primer elemento
 
     async def get_article_by_name(self, name: str, wiki_id: str):
+        #TODO: Throw InvalidaParameterValue if name is not valid
         version_id_pipeline = [
             {
                 '$match': {
-                    'title': name,
-                    'wiki_id': ObjectId(wiki_id)
+                    "title": name,
+                    "wiki_id": ObjectId(wiki_id)
                 }
             }, {
                 '$unwind': '$versions'
@@ -109,7 +110,13 @@ class ArticleAPI(BaseDefaultApi):
             }
         ]
 
+        print(version_id_pipeline)
+
+
         version_ObjectId = await mongodb["article"].aggregate(version_id_pipeline).to_list(length=1)
+
+        print(version_ObjectId)
+        print(version_ObjectId[0]["_id"])
 
         if not version_ObjectId[0]:
             raise Exception

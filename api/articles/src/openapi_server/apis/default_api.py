@@ -30,6 +30,7 @@ from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.article_version_list import ArticleVersionList
 from websockets.exceptions import InvalidParameterValue
 
+
 router = APIRouter()
 
 ns_pkg = openapi_server.impl
@@ -79,7 +80,7 @@ async def get_article_by_id(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         return await BaseDefaultApi.subclasses[0]().get_article_by_id(id)
-    except InvalidId:
+    except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:
         raise HTTPException(status_code=404, detail="Article Not Found")
@@ -97,7 +98,7 @@ async def get_article_by_id(
 )
 async def get_article_by_name(
         name: str = Path(..., description=""),
-        wiki: str = Query(None, description="The ID of the wiki of the Article", alias="wiki"),
+        wiki: str = Query(..., description="The ID of the wiki of the Article", alias="wiki"),
 ) -> ArticleVersion:
     """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
     if not BaseDefaultApi.subclasses:
