@@ -3,7 +3,7 @@ from datetime import datetime, date
 
 from bson import ObjectId
 
-from openapi_server.apis.editors_api import create_article_version
+from openapi_server.apis.editors_api import create_article_version, delete_article_version_by_id
 from openapi_server.apis.editors_api_base import BaseEditorsApi
 from openapi_server.impl.default_article_api import mongodb
 from openapi_server.models.article import Article
@@ -69,10 +69,15 @@ class EditorArticleAPI(BaseEditorsApi):
         #   Add the version to the Article document
         simplified_article_version_dict = simplified_article_version.to_dict()
         simplified_article_version_dict["_id"] = ObjectId(simplified_article_version_dict.pop("id"))
+        simplified_article_version_dict["author"]["_id"] = (
+            ObjectId(simplified_article_version_dict["author"].pop("id")))
+
         await mongodb["article"].update_one(
             {"_id": article_result.inserted_id},
             {"$set": {"versions" : [simplified_article_version_dict]}}
         )
+        simplified_article_version_dict["author"]["id"] = (
+            str(simplified_article_version_dict["author"].pop("_id")))
         simplified_article_version_dict["id"] = str(simplified_article_version_dict.pop("_id"))
         new_article_json["versions"].append(simplified_article_version_dict)
 
@@ -112,3 +117,25 @@ class EditorArticleAPI(BaseEditorsApi):
             tag["id"] = str(tag.pop("_id"))
 
         return ArticleVersion.from_dict(new_article_version_json)
+
+    async def delete_article_by_id(
+        self,
+        id: str,
+    ) -> None:
+
+        article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
+        if article_result is None:
+            raise Exception("Article Not Found")
+
+        for version in article_result["versions"]:
+            await delete_article_version_by_id(str(version["_id"]))
+
+        await mongodb["article"].delete_one({"_id": ObjectId(id)})
+
+    async def delete_article_version_by_id(
+        self,
+        id: str,
+    ) -> None:
+        result = await mongodb["article_version"].delete_one({"_id": ObjectId(id)})
+        if result.deleted_count == 0:
+            raise Exception("Article Not Found")

@@ -3,6 +3,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
 from pymongo import errors
 
 from openapi_server.apis.editors_api_base import BaseEditorsApi
@@ -106,8 +107,12 @@ async def delete_article_by_id(
     """Delete an Article identified by it&#39;s unique ID"""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().delete_article_by_id(id)
-
+    try:
+        await BaseEditorsApi.subclasses[0]().delete_article_by_id(id)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Article Not Found")
 
 @router.delete(
     "/articles/versions/{id}",
@@ -127,8 +132,12 @@ async def delete_article_version_by_id(
     """Delete an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().delete_article_version_by_id(id)
-
+    try:
+        await BaseEditorsApi.subclasses[0]().delete_article_version_by_id(id)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Article Not Found")
 
 @router.put(
     "/articles/{article_id}/versions/{version_id}",
