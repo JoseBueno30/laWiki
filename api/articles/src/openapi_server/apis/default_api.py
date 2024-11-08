@@ -104,6 +104,7 @@ async def get_article_by_name(
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
 
+    #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
     try:
         return await BaseDefaultApi.subclasses[0]().get_article_by_name(name, wiki)
     except InvalidParameterValue:
@@ -129,7 +130,13 @@ async def get_article_version_by_id(
     """Get an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_article_version_by_id(id)
+
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_article_version_by_id(id)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid ArticleVersion ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
 
 
 @router.get(

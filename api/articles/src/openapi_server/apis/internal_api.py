@@ -1,8 +1,12 @@
 # coding: utf-8
-
+from fastapi.responses import JSONResponse
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+from xml.dom import NotFoundErr
+
+from bson.errors import InvalidId
+from websockets.exceptions import InvalidParameterValue
 
 from openapi_server.apis.internal_api_base import BaseInternalApi
 import openapi_server.impl
@@ -48,12 +52,18 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 )
 async def assign_article_tags(
     id: str = Path(..., description=""),
-    id_tags_body: IdTagsBody = Body(None, description=""),
+    id_tags_body: IdTagsBody = Body(..., description=""),
 ) -> None:
     """Assigns a list of tags, given their IDs, to an article"""
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().assign_article_tags(id, id_tags_body)
+    try:
+        if await BaseInternalApi.subclasses[0]().assign_article_tags(id, id_tags_body) is None:
+            raise HTTPException(status_code=204, detail="No Content, tags assigned")
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
+    except NotFoundErr:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
 
 
 @router.head(
@@ -73,7 +83,14 @@ async def check_article_by_id(
     """Check if an Article exits given its unique ID. """
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().check_article_by_id(id)
+
+    try:
+        if not await BaseInternalApi.subclasses[0]().check_article_by_id(id):
+            raise HTTPException(status_code=404, detail="Artcile Not Found")
+        else:
+            return
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
 
 
 @router.delete(
@@ -90,12 +107,18 @@ async def check_article_by_id(
 )
 async def unassign_article_tags(
     id: str = Path(..., description=""),
-    ids: list[str] = Query(None, description="List of Tag IDs", alias="ids"),
+    ids: list[str] = Query(..., description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().unassign_article_tags(id, ids)
+    try:
+        if await BaseInternalApi.subclasses[0]().unassign_article_tags(id, ids) is None:
+            raise HTTPException(status_code=204, detail="No Content, tags assigned")
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
+    except NotFoundErr:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
 
 
 @router.put(
@@ -112,9 +135,15 @@ async def unassign_article_tags(
 )
 async def update_rating(
     id: str = Path(..., description=""),
-    id_ratings_body: IdRatingsBody = Body(None, description=""),
+    id_ratings_body: IdRatingsBody = Body(..., description=""),
 ) -> None:
     """Update the rating of an Article give its unique ID and a rating"""
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().update_rating(id, id_ratings_body)
+    try:
+        if await BaseInternalApi.subclasses[0]().update_rating(id, id_ratings_body) is None:
+            raise HTTPException(status_code=204, detail="No Content, rating updated")
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")
+    except NotFoundErr:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
