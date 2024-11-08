@@ -4,6 +4,8 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+
 from openapi_server.apis.editors_api_base import BaseEditorsApi
 import openapi_server.impl
 
@@ -52,7 +54,14 @@ async def assign_tags(
     """Assigns a list of tags, given their IDs, to an article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().assign_tags(id, tag_id_list)
+    try:
+        return await BaseEditorsApi.subclasses[0]().assign_tags(id, tag_id_list)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Article ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Article not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete(
@@ -74,4 +83,11 @@ async def unassign_tags(
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().unassign_tags(id, ids)
+    try:
+        return await BaseEditorsApi.subclasses[0]().unassign_tags(id, ids)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Article ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Article not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

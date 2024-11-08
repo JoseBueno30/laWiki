@@ -3,7 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.models.new_tag import NewTag
 from openapi_server.models.tag import Tag
-from src.openapi_server.apis.admins_api_base import BaseAdminsApi
+from openapi_server.apis.admins_api_base import BaseAdminsApi
 
 mongodb_client = AsyncIOMotorClient(
         "mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")

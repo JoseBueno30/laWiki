@@ -4,6 +4,8 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+
 from openapi_server.apis.admins_api_base import BaseAdminsApi
 import openapi_server.impl
 
@@ -52,7 +54,14 @@ async def delete_tag(
     """Delete a wiki tag."""
     if not BaseAdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseAdminsApi.subclasses[0]().delete_tag(id)
+    try:
+        return await BaseAdminsApi.subclasses[0]().delete_tag(id)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Tag ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post(
@@ -73,4 +82,11 @@ async def post_wiki_tag(
     """Create a new tag in a given wiki."""
     if not BaseAdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseAdminsApi.subclasses[0]().post_wiki_tag(id, new_tag)
+    try:
+        return await BaseAdminsApi.subclasses[0]().post_wiki_tag(id, new_tag)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Wiki ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Wiki not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

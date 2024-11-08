@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e6340ae8-426f-4696-8658-767f2322018c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/apis/admins_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/apis/admins_api_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/apis/editors_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/apis/editors_api_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/impl/TagsManager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/impl/admins_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/impl/default_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/impl/editors_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_admins_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.openapi-generator/FILES" beforeDir="false" afterPath="$PROJECT_DIR$/.openapi-generator/FILES" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/admins_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/admins_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/default_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/default_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/default_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/default_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_tag.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/new_tag.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/tag_id_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/tag_id_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_default_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_default_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../docs/api/TagsAPI-v1.0.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../docs/api/TagsAPI-v1.0.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/editors_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/admins_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/admins_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/default_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/default_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/editors_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/editors_manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

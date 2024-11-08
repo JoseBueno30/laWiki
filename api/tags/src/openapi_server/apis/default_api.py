@@ -4,6 +4,8 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+
 from openapi_server.apis.default_api_base import BaseDefaultApi
 import openapi_server.impl
 
@@ -52,7 +54,14 @@ async def get_articles_tags(
     """Retrieves all the tags from an article."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_articles_tags(id, limit, offset)
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_articles_tags(id, limit, offset)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Article ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Article not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get(
@@ -73,7 +82,14 @@ async def get_tag(
     """Get a tag by ID. """
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_tag(id)
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_tag(id)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Tag ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get(
@@ -95,4 +111,11 @@ async def get_wiki_tags(
     """Retrieve all the tags from a wiki."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_wiki_tags(id, limit, offset)
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_wiki_tags(id, limit, offset)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Bad request, invalid Wiki ID format")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Wiki not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
