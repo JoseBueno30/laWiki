@@ -1,11 +1,8 @@
-from lib2to3.pgen2.tokenize import group
 
-from fastapi import FastAPI, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from openapi_server.apis.default_api_base import BaseDefaultApi
 from openapi_server.models.article_list import ArticleList
-from openapi_server.models.article_version import ArticleVersion
 
 mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 mongodb = mongodb_client.get_database("laWikiDB")
@@ -154,6 +151,11 @@ class ArticleAPI(BaseDefaultApi):
 
         pipeline = [
             {
+                "$match": {
+                    "author._id": ObjectId(id)
+                }
+            },
+            {
                 "$sort": {
                     "creation_date": 1 if order == "asc" else -1
                 }
@@ -163,11 +165,6 @@ class ArticleAPI(BaseDefaultApi):
             },
             {
                 "$limit": limit
-            },
-            {
-                "$match": {
-                    "author._id": ObjectId(id)
-                }
             },
             *transform_article_ids_pipeline,
             {
