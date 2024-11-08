@@ -119,8 +119,13 @@ async def get_users_comments(
     """Retrieves all comments from a user"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_users_comments(user_id, article_id, order, limit, offset,
-                                                                   creation_date)
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_users_comments(user_id, article_id, order, limit, offset,
+                                                                       creation_date)
+    except (InvalidId,ValueError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameters")
+    except Exception:
+        raise HTTPException(status_code=404)
 
 
 @router.post(
