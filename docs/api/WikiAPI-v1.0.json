@@ -138,6 +138,9 @@
         }
       },
       "post": {
+        "tags": [
+          "admins"
+        ],
         "summary": "Create Wiki",
         "description": "Create a new Wiki",
         "operationId": "createWiki",
@@ -282,6 +285,9 @@
         }
       },
       "put": {
+        "tags": [
+          "admins"
+        ],
         "summary": "Update Wiki",
         "description": "Update Wiki with wiki the matching ID",
         "operationId": "updateWiki",
@@ -353,6 +359,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "admins"
+        ],
         "summary": "Remove Wiki",
         "description": "Remove Wiki with the matching ID.",
         "operationId": "removeWiki",
@@ -383,6 +392,37 @@
           },
           "404": {
             "description": "Wiki not found."
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Check Wiki",
+        "description": "Check if a Wiki exits given its unique ID. ",
+        "operationId": "checkWikiByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request, invalid Wiki ID"
+          },
+          "404": {
+            "description": "Wiki Not Found"
           }
         }
       }
@@ -454,6 +494,185 @@
           }
         }
       }
+    },
+    "/wikis/{id}/ratings": {
+      "put": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Update Rating",
+        "description": "Update the rating of a Wiki give its unique ID and a rating",
+        "operationId": "updateRating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_ratings_body"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "raitng": 4.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, rating updated"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameter format"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": true
+      }
+    },
+    "/wikis/{id}/tags": {
+      "put": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Assign Tags",
+        "description": "Assigns a list of tags, given their IDs, to a wiki",
+        "operationId": "assignWikiTags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_tags_body"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "tag_ids": [
+                      [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "1",
+                          "name": "Sports cars",
+                          "wiki_id": "2"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, tags assigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": true
+      },
+      "delete": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Unassign Tags",
+        "description": "Unassigns a list of tags, given their IDs to a Wiki.",
+        "operationId": "unassignArticleTags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of Tag IDs",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "maxItems": 50,
+              "uniqueItems": true,
+              "type": "array",
+              "example": [
+                "tag1",
+                "tag2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content, tags unassigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": true
+      }
     }
   },
   "components": {
@@ -487,6 +706,7 @@
           "description",
           "id",
           "name",
+          "rating",
           "tags"
         ],
         "type": "object",
@@ -510,6 +730,17 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "n41bjowninj5a"
             }
           }
         },
@@ -535,8 +766,7 @@
       "Tag": {
         "required": [
           "id",
-          "name",
-          "wiki_id"
+          "name"
         ],
         "type": "object",
         "properties": {
@@ -547,10 +777,6 @@
           "name": {
             "type": "string",
             "description": "Name of the tag."
-          },
-          "wiki_id": {
-            "type": "string",
-            "description": "Unique identifier for the wiki that uses the tag."
           }
         },
         "example": [
@@ -678,6 +904,43 @@
           },
           "author": {
             "$ref": "#/components/schemas/Author"
+          }
+        }
+      },
+      "id_ratings_body": {
+        "required": [
+          "raitng"
+        ],
+        "type": "object",
+        "properties": {
+          "raitng": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "e861y8ux0w86b"
+            }
+          }
+        }
+      },
+      "id_tags_body": {
+        "required": [
+          "tag_ids"
+        ],
+        "type": "object",
+        "properties": {
+          "tag_ids": {
+            "type": "array",
+            "description": "List of Tag IDs",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "x-stoplight": {
+              "id": "w0pyzqdbvcjuk"
+            }
           }
         }
       }

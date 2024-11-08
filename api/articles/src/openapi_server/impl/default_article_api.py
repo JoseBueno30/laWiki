@@ -1,7 +1,10 @@
+from lib2to3.pgen2.tokenize import group
+
 from fastapi import FastAPI, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from openapi_server.apis.default_api_base import BaseDefaultApi
+from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
 
 mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
@@ -137,3 +140,78 @@ class ArticleAPI(BaseDefaultApi):
             raise Exception
 
         return article_version[0]
+
+    async def get_article_by_author(
+        self,
+        id: str,
+        offset: int,
+        limit: int,
+        order: str,
+    ) -> ArticleList:
+
+        total_documents = await mongodb["article"].count_documents({})
+        print("total: ",total_documents)
+
+        pipeline = [
+            {
+                "$sort": {
+                    "creation_date": 1 if order == "asc" else -1
+                }
+            },
+            {
+                "$skip": offset
+            },
+            {
+                "$limit": limit
+            },
+            {
+                "$match": {
+                    "author._id": ObjectId(id)
+                }
+            },
+            *transform_article_ids_pipeline,
+            {
+                "$group": {
+                    "_id": None,
+                    "articles":{
+                        "$push": "$$ROOT"
+                    }
+                }
+            },
+            {
+                "$addFields": {
+                    "total": {
+                        "$size": "$articles"
+                    },
+                    "offset": offset,
+                    "limit": limit,
+                    "next":{
+                        "$cond":{
+                            "if": {"$lt":[offset + limit, total_documents]},
+                            "then": f"/articles/?offset={offset + limit}&limit={limit}",
+                            "else": None
+                        }
+                    },
+                    "previous":{
+                        "$cond":{
+                            "if": {"$gt":[offset, 0]},
+                            "then": f"/articles/?offset={max(offset - limit, 0)}&limit={limit}",
+                            "else": None
+                        }
+                    },
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                }
+            }
+
+        ]
+
+        articles = await mongodb["article"].aggregate(pipeline).to_list()
+
+        if not articles[0]:
+            raise Exception
+
+        return articles[0]
