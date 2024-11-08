@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from typing import Dict, List  # noqa: F401
+from typing import Any, Coroutine, Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
@@ -25,7 +25,7 @@ from fastapi import (  # noqa: F401
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.id_ratings_body import IdRatingsBody
 from openapi_server.models.id_tags_body import IdTagsBody
-
+from bson.errors import InvalidId
 
 router = APIRouter()
 
@@ -73,7 +73,11 @@ async def check_wiki_by_id(
     """Check if a Wiki exits given its unique ID. """
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().check_wiki_by_id(id)
+    try:
+        if not await BaseInternalApi.subclasses[0]().check_wiki_by_id(id):
+            raise HTTPException(status_code=404, detail="Wiki Not Found")
+    except InvalidId:
+        raise HTTPException(status_code=400,detail="Bad Request, invalid Wiki ID")
 
 
 @router.delete(

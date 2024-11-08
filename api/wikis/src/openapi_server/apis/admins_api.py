@@ -49,6 +49,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def create_wiki(
+    response: Response,
     name: str = Query(None, description="String to be searched within the wiki&#39;s name.", alias="name"),
     limit: int = Query(20, description="Maximum amount of results to be returned.", alias="limit", ge=1, le=100),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
@@ -59,10 +60,13 @@ async def create_wiki(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         result = await BaseAdminsApi.subclasses[0]().create_wiki(name, limit, offset, new_wiki)
+        response.status_code = 201
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Wiki name unavailable")
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+
     return result
 
 
