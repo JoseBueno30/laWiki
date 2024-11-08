@@ -770,7 +770,7 @@ paths:
       summary: Update Rating
       tags:
       - internal
-      x-internal: true
+      x-internal: false
   /articles/{id}/tags:
     delete:
       description: "Unassigns a list of tags, given their IDs to an article."
@@ -810,7 +810,7 @@ paths:
       summary: Unassign Tags
       tags:
       - internal
-      x-internal: true
+      x-internal: false
     put:
       description: "Assigns a list of tags, given their IDs, to an article"
       operationId: assignArticleTags
@@ -845,7 +845,7 @@ paths:
       summary: Assign Tags
       tags:
       - internal
-      x-internal: true
+      x-internal: false
 components:
   schemas:
     Article:
@@ -1466,11 +1466,13 @@ components:
           format: double
           maximum: 5
           minimum: 0
+          title: raitng
           type: number
           x-stoplight:
             id: e861y8ux0w86b
       required:
       - raitng
+      title: id_ratings_body
       type: object
     id_tags_body:
       properties:
@@ -1478,10 +1480,12 @@ components:
           description: List of Tag IDs
           items:
             $ref: '#/components/schemas/Tag'
+          title: tag_ids
           type: array
           x-stoplight:
             id: w0pyzqdbvcjuk
       required:
       - tag_ids
+      title: id_tags_body
       type: object
   securitySchemes: {}

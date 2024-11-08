@@ -1116,7 +1116,7 @@
             "description": "Article Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       }
     },
     "/articles/{id}/tags": {
@@ -1174,7 +1174,7 @@
             "description": "Artcile Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       },
       "delete": {
         "tags": [
@@ -1229,7 +1229,7 @@
             "description": "Article Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       }
     }
   },

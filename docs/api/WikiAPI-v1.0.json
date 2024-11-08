@@ -545,7 +545,7 @@
             "description": "Wiki Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       }
     },
     "/wikis/{id}/tags": {
@@ -616,7 +616,7 @@
             "description": "Wiki Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       },
       "delete": {
         "tags": [
@@ -671,7 +671,7 @@
             "description": "Wiki Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       }
     }
   },
