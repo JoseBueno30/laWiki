@@ -39,7 +39,7 @@ class Wiki(BaseModel):
     rating: float = Field(description="Rating for the wiki by other users.")
     author: Author
     tags: List[Tag]
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "author", "tags"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "rating", "author", "tags"]
 
     model_config = {
         "populate_by_name": True,

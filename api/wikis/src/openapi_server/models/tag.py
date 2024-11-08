@@ -33,8 +33,7 @@ class Tag(BaseModel):
     """ # noqa: E501
     id: StrictStr = Field(description="Unique identifier for the tag.")
     name: StrictStr = Field(description="Name of the tag.")
-    wiki_id: StrictStr = Field(description="Unique identifier for the wiki that uses the tag.")
-    __properties: ClassVar[List[str]] = ["id", "name", "wiki_id"]
+    __properties: ClassVar[List[str]] = ["id", "name"]
 
     model_config = {
         "populate_by_name": True,
@@ -87,7 +86,6 @@ class Tag(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "wiki_id": obj.get("wiki_id")
         })
         return _obj
 

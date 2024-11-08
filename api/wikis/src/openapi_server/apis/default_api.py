@@ -4,6 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from pymongo.errors import DuplicateKeyError
 from openapi_server.apis.default_api_base import BaseDefaultApi
 import openapi_server.impl
 
@@ -27,6 +28,7 @@ from openapi_server.models.new_wiki import NewWiki
 from openapi_server.models.wiki import Wiki
 from openapi_server.models.wiki_list import WikiList
 
+MESSAGE_UNEXPECTED = "Unexpected server error"
 
 router = APIRouter()
 
@@ -55,7 +57,13 @@ async def create_wiki(
     """Create a new Wiki"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().create_wiki(name, limit, offset, new_wiki)
+    try:
+        result = await BaseDefaultApi.subclasses[0]().create_wiki(name, limit, offset, new_wiki)
+    except DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Wiki name unavailable")
+    except:
+        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+    return result
 
 
 @router.get(
@@ -75,7 +83,14 @@ async def get_one_wiki_by_name(
     """Get the Wiki with the given name."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_one_wiki_by_name(name)
+    try:
+        result = await BaseDefaultApi.subclasses[0]().get_one_wiki_by_name(name)
+    except LookupError:
+        raise HTTPException(status_code=404, detail="Wiki Not Found")
+    except:
+        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+
+    return result
 
 
 @router.get(
