@@ -61,7 +61,7 @@ transform_version_ids_pipeline = [
     {"$unset": ["_id", "author._id", "tags._id"]}  # Quita los campos _id originales
 ]
 
-class ArticleAPI(BaseDefaultApi):
+class DefaultArticleAPI(BaseDefaultApi):
 
 
     def __init__(self):
@@ -73,14 +73,12 @@ class ArticleAPI(BaseDefaultApi):
             *transform_article_ids_pipeline
         ]
 
-        # Ejecutar la consulta de agregación
         article = await mongodb["article"].aggregate(pipeline).to_list(length=1)
 
-        # Verificar si se encontró el artículo
         if not article[0]:
             raise Exception
 
-        return article[0]  # El resultado es una lista, así que se toma el primer elemento
+        return article[0]
 
     async def get_article_by_name(self, name: str, wiki_id: str):
         #TODO: Throw InvalidaParameterValue if name is not valid
@@ -110,9 +108,6 @@ class ArticleAPI(BaseDefaultApi):
             }
         ]
 
-        print(version_id_pipeline)
-
-
         version_ObjectId = await mongodb["article"].aggregate(version_id_pipeline).to_list(length=1)
 
         print(version_ObjectId)
@@ -132,6 +127,21 @@ class ArticleAPI(BaseDefaultApi):
         ]
 
         article_version = await mongodb["article_version"].aggregate(version_pipeline).to_list(length=1)
+
+        if not article_version[0]:
+            raise Exception
+
+        return article_version[0]
+
+    async def get_article_version_by_id(self, id: str,):
+        pipeline = [
+            {"$match": {"_id": ObjectId(id)}},
+            *transform_version_ids_pipeline
+        ]
+
+        article_version = await mongodb["article_version"].aggregate(pipeline).to_list(length=1)
+
+        print(article_version)
 
         if not article_version[0]:
             raise Exception
