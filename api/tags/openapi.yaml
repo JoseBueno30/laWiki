@@ -30,7 +30,8 @@ paths:
         "404":
           description: Tag not found
       summary: Delete Tag
-      tags: []
+      tags:
+      - admins
     get:
       description: 'Get a tag by ID. '
       operationId: get-tag
@@ -136,8 +137,47 @@ paths:
         "403":
           description: Forbidden
       summary: Create Tag
-      tags: []
+      tags:
+      - admins
   /tags/articles/{id}:
+    delete:
+      description: "Unassigns a list of tags, given their IDs to an article."
+      operationId: unassign-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of Tag IDs
+        explode: false
+        in: query
+        name: ids
+        required: true
+        schema:
+          example:
+          - tag1
+          - tag2
+          items:
+            type: string
+          maxItems: 50
+          type: array
+          uniqueItems: true
+        style: form
+      responses:
+        "204":
+          description: "No Content, tag unassigned succesfully"
+        "400":
+          description: "Bad Request, invalid invalid paramaters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Unassign Tags
+      tags:
+      - editors
     get:
       description: Retrieves all the tags from an article.
       operationId: get-articles-tags
@@ -178,15 +218,13 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/Tag'
-                type: array
+                $ref: '#/components/schemas/TagList'
           description: OK
         "404":
           description: Article not found
       summary: Get Articles Tag
       tags: []
-    post:
+    put:
       description: "Assigns a list of tags, given their IDs, to an article."
       operationId: assign-tags
       parameters:
@@ -200,46 +238,25 @@ paths:
       requestBody:
         content:
           application/json:
+            examples:
+              Example 1:
+                value:
+                  tag_ids:
+                  - 497f6eca-6276-4993-bfeb-53cbbbba6f08
             schema:
               $ref: '#/components/schemas/TagIDList'
       responses:
-        "200":
-          description: OK
+        "204":
+          description: "No Content, tags assigned"
         "400":
-          description: "Bad Request, invalid Tag ID format"
+          description: "Bad Request, invalid paramaters format"
         "403":
           description: Forbidden
         "404":
           description: Article or tag not found
       summary: Assign Tags
-      tags: []
-    put:
-      description: "Unassigns a list of tags, given their IDs to an article."
-      operationId: unassign-tags
-      parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TagIDList'
-      responses:
-        "204":
-          description: "No Content, tag unassigned succesfully"
-        "400":
-          description: "Bad Request, invalid Tag ID format"
-        "403":
-          description: Forbidden
-        "404":
-          description: Article or tag not found
-      summary: Unassign Tags
-      tags: []
+      tags:
+      - editors
 components:
   schemas:
     Tag:
@@ -332,6 +349,8 @@ components:
           type: string
           x-stoplight:
             id: yfh5p42q7b13x
+      required:
+      - tag
       title: NewTag
       type: object
       x-examples:
@@ -352,6 +371,8 @@ components:
           type: array
           x-stoplight:
             id: kmi9kpdl1ztoh
+      required:
+      - tag_ids
       title: TagIDsList
       type: object
       x-examples:

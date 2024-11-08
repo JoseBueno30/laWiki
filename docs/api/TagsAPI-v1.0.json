@@ -53,7 +53,9 @@
         }
       },
       "delete": {
-        "tags": [],
+        "tags": [
+          "admins"
+        ],
         "summary": "Delete Tag",
         "description": "Delete a wiki tag.",
         "operationId": "delete-tag",
@@ -153,7 +155,9 @@
         }
       },
       "post": {
-        "tags": [],
+        "tags": [
+          "admins"
+        ],
         "summary": "Create Tag",
         "description": "Create a new tag in a given wiki.",
         "operationId": "post-wiki-tag",
@@ -252,10 +256,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Tag"
-                  }
+                  "$ref": "#/components/schemas/TagList"
                 }
               }
             }
@@ -266,48 +267,9 @@
         }
       },
       "put": {
-        "tags": [],
-        "summary": "Unassign Tags",
-        "description": "Unassigns a list of tags, given their IDs to an article.",
-        "operationId": "unassign-tags",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
+        "tags": [
+          "editors"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagIDList"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content, tag unassigned succesfully"
-          },
-          "400": {
-            "description": "Bad Request, invalid Tag ID format"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Article or tag not found"
-          }
-        }
-      },
-      "post": {
-        "tags": [],
         "summary": "Assign Tags",
         "description": "Assigns a list of tags, given their IDs, to an article.",
         "operationId": "assign-tags",
@@ -328,16 +290,79 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TagIDList"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "tag_ids": [
+                      "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+                    ]
+                  }
+                }
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content, tags assigned"
           },
           "400": {
-            "description": "Bad Request, invalid Tag ID format"
+            "description": "Bad Request, invalid paramaters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Article or tag not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "editors"
+        ],
+        "summary": "Unassign Tags",
+        "description": "Unassigns a list of tags, given their IDs to an article.",
+        "operationId": "unassign-tags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of Tag IDs",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "maxItems": 50,
+              "uniqueItems": true,
+              "type": "array",
+              "example": [
+                "tag1",
+                "tag2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content, tag unassigned succesfully"
+          },
+          "400": {
+            "description": "Bad Request, invalid invalid paramaters format"
           },
           "403": {
             "description": "Forbidden"
@@ -438,6 +463,9 @@
       },
       "NewTag": {
         "title": "NewTag",
+        "required": [
+          "tag"
+        ],
         "type": "object",
         "properties": {
           "tag": {
@@ -457,6 +485,9 @@
       },
       "TagIDList": {
         "title": "TagIDsList",
+        "required": [
+          "tag_ids"
+        ],
         "type": "object",
         "properties": {
           "tag_ids": {

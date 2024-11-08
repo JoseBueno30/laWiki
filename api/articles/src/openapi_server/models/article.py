@@ -37,14 +37,14 @@ class Article(BaseModel):
     Article of a Wiki
     """ # noqa: E501
     id: StrictStr = Field(description="The ID of the article")
-    wiki: StrictStr = Field(description="The ID corresponding to the wiki the article belongs to.")
+    wiki_id: StrictStr = Field(description="The ID corresponding to the wiki the article belongs to.")
     title: StrictStr = Field(description="The title of the article. The same as the title of the most recent version.")
     creation_date: datetime = Field(description="The date of creation of the article.")
     author: Author
     tags: List[Tag] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
     versions: List[SimplifiedArticleVersion] = Field(description="Array of simplified articleversions")
     rating: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]] = Field(description="Average rating of the Article")
-    __properties: ClassVar[List[str]] = ["id", "wiki", "title", "creation_date", "author", "tags", "versions", "rating"]
+    __properties: ClassVar[List[str]] = ["id", "wiki_id", "title", "creation_date", "author", "tags", "versions", "rating"]
 
     model_config = {
         "populate_by_name": True,
@@ -113,7 +113,7 @@ class Article(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "wiki": obj.get("wiki"),
+            "wiki_id": obj.get("wiki_id"),
             "title": obj.get("title"),
             "creation_date": obj.get("creation_date"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,

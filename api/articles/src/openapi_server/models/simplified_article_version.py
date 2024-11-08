@@ -20,6 +20,7 @@ import json
 
 
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from openapi_server.models.author import Author
@@ -35,7 +36,7 @@ class SimplifiedArticleVersion(BaseModel):
     id: StrictStr = Field(description="The ID of the article version.")
     title: StrictStr = Field(description="The title of the article version.")
     author: Optional[Author] = None
-    modification_date: StrictStr = Field(description="The date of modification of the article version.")
+    modification_date: datetime = Field(description="The date of modification of the article version.")
     __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
 
     model_config = {
