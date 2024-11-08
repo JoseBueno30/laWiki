@@ -23,7 +23,9 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
+from openapi_server.models.new_article import NewArticle
 from openapi_server.models.new_article_version import NewArticleVersion
 
 
@@ -32,6 +34,26 @@ router = APIRouter()
 ns_pkg = openapi_server.impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
+
+
+@router.post(
+    "/articles",
+    responses={
+        201: {"model": Article, "description": "Created"},
+        400: {"description": "Bad Request, invalid paramaters"},
+        403: {"description": "Forbidden"},
+    },
+    tags=["editors"],
+    summary="Create Article",
+    response_model_by_alias=True,
+)
+async def create_article(
+    new_article: NewArticle = Body(None, description=""),
+) -> Article:
+    """Create a new Article in a given wiki"""
+    if not BaseEditorsApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseEditorsApi.subclasses[0]().create_article(new_article)
 
 
 @router.post(
@@ -49,7 +71,7 @@ async def create_article_version(
     id: str = Path(..., description=""),
     new_article_version: NewArticleVersion = Body(None, description=""),
 ) -> ArticleVersion:
-    """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article. If not given an Article, a new one is created."""
+    """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseEditorsApi.subclasses[0]().create_article_version(id, new_article_version)

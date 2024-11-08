@@ -20,20 +20,20 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, ClassVar, Dict, List, Union
+from typing_extensions import Annotated
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class Tag(BaseModel):
+class IdRatingsBody(BaseModel):
     """
-    Keywords for identifying articles
+    IdRatingsBody
     """ # noqa: E501
-    id: StrictStr = Field(description="The name of the tag.")
-    tag: StrictStr = Field(description="The name of the tag.")
-    __properties: ClassVar[List[str]] = ["id", "tag"]
+    raitng: Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]] = Field(description="Average rating of the article ")
+    __properties: ClassVar[List[str]] = ["raitng"]
 
     model_config = {
         "populate_by_name": True,
@@ -53,7 +53,7 @@ class Tag(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Tag from a JSON string"""
+        """Create an instance of IdRatingsBody from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +76,7 @@ class Tag(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Tag from a dict"""
+        """Create an instance of IdRatingsBody from a dict"""
         if obj is None:
             return None
 
@@ -84,8 +84,7 @@ class Tag(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "tag": obj.get("tag")
+            "raitng": obj.get("raitng")
         })
         return _obj
 

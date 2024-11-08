@@ -84,6 +84,28 @@ paths:
           description: Article Not Found
       summary: Get Article
       tags: []
+    head:
+      description: 'Check if an Article exits given its unique ID. '
+      operationId: checkArticleByID
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Bad Request, invalid Article ID"
+        "404":
+          description: Article Not Found
+      summary: Check Article
+      tags:
+      - internal
+      x-internal: false
   /articles/versions/by-name/{name}:
     get:
       description: Get the most recent ArticleVersion the Article with the given name
@@ -158,7 +180,7 @@ paths:
           example: name
           type: string
         style: form
-      - description: A comma-separated list of tags to search for
+      - description: A comma-separated list of tag IDs to search for
         explode: false
         in: query
         name: tags
@@ -270,6 +292,61 @@ paths:
           description: "Bad Request, invalid input paramaters"
       summary: Search for Articles
       tags: []
+    post:
+      description: Create a new Article in a given wiki
+      operationId: createArticle
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  title: string
+                  author:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: string
+                  tags:
+                  - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    tag: string
+                  body: string
+                  wiki_id: string
+            schema:
+              $ref: '#/components/schemas/NewArticle'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                    title: string
+                    creation_date: 2019-08-24T14:15:22Z
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: string
+                    versions:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      modification_date: 2019-08-24T14:15:22Z
+                    rating: 0
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: Created
+        "400":
+          description: "Bad Request, invalid paramaters"
+        "403":
+          description: Forbidden
+      summary: Create Article
+      tags:
+      - editors
   /articles/versions/{id}:
     delete:
       description: Delete an ArticleVersion identified by it's unique ID
@@ -406,8 +483,8 @@ paths:
       summary: Get Article's ArticleVersions
       tags: []
     post:
-      description: "Create an ArticleVersion for a given Article and adds it to the\
-        \ list of versions of the Article. If not given an Article, a new one is created."
+      description: Create an ArticleVersion for a given Article and adds it to the
+        list of versions of the Article.
       operationId: createArticleVersion
       parameters:
       - explode: false
@@ -660,6 +737,115 @@ paths:
           description: Author Not Found.
       summary: Get Articles by Author
       tags: []
+  /articles/{id}/ratings:
+    put:
+      description: Update the rating of an Article give its unique ID and a rating
+      operationId: updateRating
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  raitng: 4.5
+            schema:
+              $ref: '#/components/schemas/id_ratings_body'
+      responses:
+        "204":
+          description: "No Content, rating updated"
+        "400":
+          description: "Bad Request, invalid parameter format"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Article Not Found
+      summary: Update Rating
+      tags:
+      - internal
+      x-internal: true
+  /articles/{id}/tags:
+    delete:
+      description: "Unassigns a list of tags, given their IDs to an article."
+      operationId: unassignArticleTags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of Tag IDs
+        explode: false
+        in: query
+        name: ids
+        required: true
+        schema:
+          example:
+          - tag1
+          - tag2
+          items:
+            type: string
+          maxItems: 50
+          type: array
+          uniqueItems: true
+        style: form
+      responses:
+        "204":
+          description: "No Content, tags unassigned"
+        "400":
+          description: "Bad Request, invalid parameters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article Not Found
+      summary: Unassign Tags
+      tags:
+      - internal
+      x-internal: true
+    put:
+      description: "Assigns a list of tags, given their IDs, to an article"
+      operationId: assignArticleTags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  tag_ids:
+                  - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    tag: string
+            schema:
+              $ref: '#/components/schemas/id_tags_body'
+      responses:
+        "204":
+          description: "No Content, tags assigned"
+        "400":
+          description: "Bad Request, invalid parameters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Artcile Not Found
+      summary: Assign Tags
+      tags:
+      - internal
+      x-internal: true
 components:
   schemas:
     Article:
@@ -885,7 +1071,7 @@ components:
         tag: tag
       properties:
         id:
-          description: The ID of the tag.
+          description: The name of the tag.
           format: uuid
           title: id
           type: string
@@ -1211,3 +1397,91 @@ components:
         Example 1:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
           name: string
+    NewArticle:
+      description: Data required to the user to create a new Article and its first
+        version
+      example:
+        author:
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        title: title
+        body: body
+        wiki_id: wiki_id
+        tags:
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: tag
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: tag
+      properties:
+        title:
+          description: The title of the version of the article.
+          title: title
+          type: string
+          x-stoplight:
+            id: 3ec4vruerwwxz
+        author:
+          $ref: '#/components/schemas/Author'
+        tags:
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: tags
+          type: array
+          x-stoplight:
+            id: gn4btncpluv0e
+        body:
+          description: The body of the version.
+          title: body
+          type: string
+          x-stoplight:
+            id: sdqsmbl8khsan
+        wiki_id:
+          description: The ID of the Wiki where the Article is created.
+          title: wiki_id
+          type: string
+          x-stoplight:
+            id: sdqsmbl8khsan
+      required:
+      - author
+      - tags
+      - title
+      - wiki_id
+      title: NewArticle
+      type: object
+      x-examples:
+        Example 1:
+          title: string
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+          tags:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: string
+          body: string
+          wiki_id: string
+    id_ratings_body:
+      properties:
+        raitng:
+          description: 'Average rating of the article '
+          example: 4.5
+          format: double
+          maximum: 5
+          minimum: 0
+          type: number
+          x-stoplight:
+            id: e861y8ux0w86b
+      required:
+      - raitng
+      type: object
+    id_tags_body:
+      properties:
+        tag_ids:
+          description: List of Tag IDs
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-stoplight:
+            id: w0pyzqdbvcjuk
+      required:
+      - tag_ids
+      type: object
+  securitySchemes: {}

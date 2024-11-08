@@ -3,8 +3,31 @@
 from fastapi.testclient import TestClient
 
 
+from openapi_server.models.article import Article  # noqa: F401
 from openapi_server.models.article_version import ArticleVersion  # noqa: F401
+from openapi_server.models.new_article import NewArticle  # noqa: F401
 from openapi_server.models.new_article_version import NewArticleVersion  # noqa: F401
+
+
+def test_create_article(client: TestClient):
+    """Test case for create_article
+
+    Create Article
+    """
+    new_article = {"author":{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"title":"title","body":"body","wiki_id":"wiki_id","tags":[{"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":"tag"},{"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":"tag"}]}
+
+    headers = {
+    }
+    # uncomment below to make a request
+    #response = client.request(
+    #    "POST",
+    #    "/articles",
+    #    headers=headers,
+    #    json=new_article,
+    #)
+
+    # uncomment below to assert the status code of the HTTP response
+    #assert response.status_code == 200
 
 
 def test_create_article_version(client: TestClient):
