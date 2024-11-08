@@ -9,8 +9,12 @@ pyproject.toml
 requirements.txt
 setup.cfg
 src/openapi_server/apis/__init__.py
+src/openapi_server/apis/admins_api.py
+src/openapi_server/apis/admins_api_base.py
 src/openapi_server/apis/default_api.py
 src/openapi_server/apis/default_api_base.py
+src/openapi_server/apis/editors_api.py
+src/openapi_server/apis/editors_api_base.py
 src/openapi_server/impl/__init__.py
 src/openapi_server/main.py
 src/openapi_server/models/__init__.py
@@ -22,4 +26,6 @@ src/openapi_server/models/tag_id_list.py
 src/openapi_server/models/tag_list.py
 src/openapi_server/security_api.py
 tests/conftest.py
+tests/test_admins_api.py
 tests/test_default_api.py
+tests/test_editors_api.py
