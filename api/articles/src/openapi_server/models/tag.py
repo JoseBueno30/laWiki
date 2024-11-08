@@ -31,7 +31,7 @@ class Tag(BaseModel):
     """
     Keywords for identifying articles
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the tag.")
+    id: StrictStr = Field(description="The name of the tag.")
     tag: StrictStr = Field(description="The name of the tag.")
     __properties: ClassVar[List[str]] = ["id", "tag"]
 

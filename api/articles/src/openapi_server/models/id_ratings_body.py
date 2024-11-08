@@ -20,24 +20,20 @@ import json
 
 
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from openapi_server.models.author import Author
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, ClassVar, Dict, List, Union
+from typing_extensions import Annotated
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SimplifiedArticleVersion(BaseModel):
+class IdRatingsBody(BaseModel):
     """
-    Simplification of an ArticleVersion object
+    IdRatingsBody
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the article version.")
-    title: StrictStr = Field(description="The title of the article version.")
-    author: Optional[Author] = None
-    modification_date: datetime = Field(description="The date of modification of the article version.")
-    __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
+    raitng: Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]] = Field(description="Average rating of the article ")
+    __properties: ClassVar[List[str]] = ["raitng"]
 
     model_config = {
         "populate_by_name": True,
@@ -57,7 +53,7 @@ class SimplifiedArticleVersion(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SimplifiedArticleVersion from a JSON string"""
+        """Create an instance of IdRatingsBody from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,14 +72,11 @@ class SimplifiedArticleVersion(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of author
-        if self.author:
-            _dict['author'] = self.author.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SimplifiedArticleVersion from a dict"""
+        """Create an instance of IdRatingsBody from a dict"""
         if obj is None:
             return None
 
@@ -91,10 +84,7 @@ class SimplifiedArticleVersion(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "title": obj.get("title"),
-            "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "modification_date": obj.get("modification_date")
+            "raitng": obj.get("raitng")
         })
         return _obj
 

@@ -46,29 +46,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ArticleVersion"
+                  "$ref": "#/components/schemas/Article"
                 },
                 "examples": {
                   "Example 1": {
                     "value": {
                       "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
                       "title": "string",
-                      "modification_date": "2019-08-24T14:15:22Z",
-                      "body": "string",
-                      "editors": [
-                        {
-                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                          "name": "string",
-                          "edition_date": "2019-08-24T14:15:22Z"
-                        }
-                      ],
+                      "creation_date": "2019-08-24T14:15:22Z",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
                       "tags": [
                         {
                           "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                           "tag": "string"
                         }
-                      ]
+                      ],
+                      "versions": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "title": "string",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "modification_date": "2019-08-24T14:15:22Z"
+                        }
+                      ],
+                      "rating": 0
                     }
                   }
                 }
@@ -193,16 +201,13 @@
                     "value": {
                       "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                       "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
                       "title": "string",
                       "modification_date": "2019-08-24T14:15:22Z",
                       "body": "string",
-                      "editors": [
-                        {
-                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                          "name": "string",
-                          "edition_date": "2019-08-24T14:15:22Z"
-                        }
-                      ],
                       "tags": [
                         {
                           "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
@@ -365,7 +370,7 @@
                       "articles": [
                         {
                           "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                          "wiki": "da81406c-0029-4210-a763-93ec80d7ac5b",
+                          "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
                           "title": "string",
                           "creation_date": "2019-08-24T14:15:22Z",
                           "author": {
@@ -382,16 +387,21 @@
                             {
                               "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                               "title": "string",
-                              "modification_date": "string"
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
                             }
-                          ]
+                          ],
+                          "rating": 0
                         }
                       ],
                       "total": 0,
                       "offset": 0,
                       "limit": 0,
-                      "next": "string",
-                      "previous": "string"
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
                     }
                   }
                 }
@@ -522,16 +532,13 @@
                     "value": {
                       "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                       "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
                       "title": "string",
                       "modification_date": "2019-08-24T14:15:22Z",
                       "body": "string",
-                      "editors": [
-                        {
-                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                          "name": "string",
-                          "edition_date": "2019-08-24T14:15:22Z"
-                        }
-                      ],
                       "tags": [
                         {
                           "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
@@ -660,14 +667,18 @@
                         {
                           "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                           "title": "string",
-                          "modification_date": "string"
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "modification_date": "2019-08-24T14:15:22Z"
                         }
                       ],
                       "total": 0,
                       "offset": 0,
                       "limit": 0,
-                      "previous": "string",
-                      "next": "string"
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
                     }
                   }
                 }
@@ -883,6 +894,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArticleList"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
                 }
               }
             }
@@ -960,6 +1012,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ArticleList"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
                 }
               }
             }
@@ -1023,7 +1116,7 @@
             "description": "Article Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       }
     },
     "/articles/{id}/tags": {
@@ -1081,7 +1174,7 @@
             "description": "Artcile Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       },
       "delete": {
         "tags": [
@@ -1136,7 +1229,7 @@
             "description": "Article Not Found"
           }
         },
-        "x-internal": true
+        "x-internal": false
       }
     }
   },
@@ -1151,7 +1244,7 @@
           "tags",
           "title",
           "versions",
-          "wiki"
+          "wiki_id"
         ],
         "type": "object",
         "properties": {
@@ -1160,7 +1253,7 @@
             "description": "The ID of the article",
             "format": "uuid"
           },
-          "wiki": {
+          "wiki_id": {
             "type": "string",
             "description": "The ID corresponding to the wiki the article belongs to.",
             "format": "uuid"
@@ -1205,7 +1298,7 @@
         "x-examples": {
           "Example 1": {
             "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-            "wiki": "da81406c-0029-4210-a763-93ec80d7ac5b",
+            "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
             "title": "string",
             "creation_date": "2019-08-24T14:15:22Z",
             "author": {
@@ -1226,7 +1319,7 @@
                   "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                   "name": "string"
                 },
-                "modification_date": "string"
+                "modification_date": "2019-08-24T14:15:22Z"
               }
             ],
             "rating": 0
@@ -1325,15 +1418,20 @@
           },
           "modification_date": {
             "type": "string",
-            "description": "The date of modification of the article version."
+            "description": "The date of modification of the article version.",
+            "format": "date-time"
           }
         },
         "description": "Simplification of an ArticleVersion object",
         "x-examples": {
           "Example 1": {
-            "id": "672271b95150a9cd3f465999",
-            "modification_date": "2024-01-01T00:00:00.000Z",
-            "title": "article_version_title"
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "title": "string",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string"
+            },
+            "modification_date": "2019-08-24T14:15:22Z"
           }
         }
       },
@@ -1434,7 +1532,7 @@
             "articles": [
               {
                 "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                "wiki": "da81406c-0029-4210-a763-93ec80d7ac5b",
+                "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
                 "title": "string",
                 "creation_date": "2019-08-24T14:15:22Z",
                 "author": {
@@ -1455,7 +1553,7 @@
                       "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
                       "name": "string"
                     },
-                    "modification_date": "string"
+                    "modification_date": "2019-08-24T14:15:22Z"
                   }
                 ],
                 "rating": 0

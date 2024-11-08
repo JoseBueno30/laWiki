@@ -2,7 +2,9 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
+from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
+from openapi_server.models.new_article import NewArticle
 from openapi_server.models.new_article_version import NewArticleVersion
 
 
@@ -12,12 +14,20 @@ class BaseEditorsApi:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         BaseEditorsApi.subclasses = BaseEditorsApi.subclasses + (cls,)
+    async def create_article(
+        self,
+        new_article: NewArticle,
+    ) -> Article:
+        """Create a new Article in a given wiki"""
+        ...
+
+
     async def create_article_version(
         self,
         id: str,
         new_article_version: NewArticleVersion,
     ) -> ArticleVersion:
-        """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article. If not given an Article, a new one is created."""
+        """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
         ...
 
 

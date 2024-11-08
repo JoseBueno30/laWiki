@@ -16,6 +16,7 @@ from fastapi import FastAPI
 
 from openapi_server.apis.default_api import router as DefaultApiRouter
 from openapi_server.apis.editors_api import router as EditorsApiRouter
+from openapi_server.apis.internal_api import router as InternalApiRouter
 
 app = FastAPI(
     title="ArticlesAPI",
@@ -25,3 +26,4 @@ app = FastAPI(
 
 app.include_router(DefaultApiRouter)
 app.include_router(EditorsApiRouter)
+app.include_router(InternalApiRouter)

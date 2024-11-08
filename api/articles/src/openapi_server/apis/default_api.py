@@ -4,6 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
 from openapi_server.apis.default_api_base import BaseDefaultApi
 import openapi_server.impl
 
@@ -23,9 +24,11 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.article_version_list import ArticleVersionList
+from websockets.exceptions import InvalidParameterValue
 
 
 router = APIRouter()
@@ -61,7 +64,7 @@ async def get_article_by_author(
 @router.get(
     "/articles/{id}",
     responses={
-        200: {"model": ArticleVersion, "description": "OK"},
+        200: {"model": Article, "description": "OK"},
         400: {"description": "Bad Request, invalid Article ID format. "},
         404: {"description": "Article Not Found"},
     },
@@ -71,12 +74,16 @@ async def get_article_by_author(
 )
 async def get_article_by_id(
     id: str = Path(..., description=""),
-) -> ArticleVersion:
+) -> Article:
     """Get an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_article_by_id(id)
-
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_article_by_id(id)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Article Not Found")
 
 @router.get(
     "/articles/versions/by-name/{name}",
@@ -90,13 +97,19 @@ async def get_article_by_id(
     response_model_by_alias=True,
 )
 async def get_article_by_name(
-    name: str = Path(..., description=""),
-    wiki: str = Query(None, description="The ID of the wiki of the Article", alias="wiki"),
+        name: str = Path(..., description=""),
+        wiki: str = Query(..., description="The ID of the wiki of the Article", alias="wiki"),
 ) -> ArticleVersion:
     """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_article_by_name(name, wiki)
+
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_article_by_name(name, wiki)
+    except InvalidParameterValue:
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Article Not Found")
 
 
 @router.get(
@@ -178,7 +191,7 @@ async def get_articles_commented_by_user(
 async def search_articles(
     wiki_id: str = Query(None, description="The ID of the wiki where the serch will be made", alias="wiki_id"),
     name: str = Query(None, description="Search query for the name of the article", alias="name"),
-    tags: list[str] = Query(None, description="A comma-separated list of tags to search for", alias="tags"),
+    tags: list[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
     limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
     order: str = Query('none', description="Sorts the articles by different criteria", alias="order"),

@@ -20,24 +20,25 @@ import json
 
 
 
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from openapi_server.models.author import Author
+from openapi_server.models.tag import Tag
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SimplifiedArticleVersion(BaseModel):
+class NewArticle(BaseModel):
     """
-    Simplification of an ArticleVersion object
+    Data required to the user to create a new Article and its first version
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the article version.")
-    title: StrictStr = Field(description="The title of the article version.")
-    author: Optional[Author] = None
-    modification_date: datetime = Field(description="The date of modification of the article version.")
-    __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
+    title: StrictStr = Field(description="The title of the version of the article.")
+    author: Author
+    tags: List[Tag]
+    body: Optional[StrictStr] = Field(default=None, description="The body of the version.")
+    wiki_id: StrictStr = Field(description="The ID of the Wiki where the Article is created.")
+    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "wiki_id"]
 
     model_config = {
         "populate_by_name": True,
@@ -57,7 +58,7 @@ class SimplifiedArticleVersion(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SimplifiedArticleVersion from a JSON string"""
+        """Create an instance of NewArticle from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,11 +80,18 @@ class SimplifiedArticleVersion(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of author
         if self.author:
             _dict['author'] = self.author.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
+        _items = []
+        if self.tags:
+            for _item in self.tags:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['tags'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SimplifiedArticleVersion from a dict"""
+        """Create an instance of NewArticle from a dict"""
         if obj is None:
             return None
 
@@ -91,10 +99,11 @@ class SimplifiedArticleVersion(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
             "title": obj.get("title"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "modification_date": obj.get("modification_date")
+            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "body": obj.get("body"),
+            "wiki_id": obj.get("wiki_id")
         })
         return _obj
 

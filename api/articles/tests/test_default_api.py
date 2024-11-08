@@ -3,6 +3,7 @@
 from fastapi.testclient import TestClient
 
 
+from openapi_server.models.article import Article  # noqa: F401
 from openapi_server.models.article_list import ArticleList  # noqa: F401
 from openapi_server.models.article_version import ArticleVersion  # noqa: F401
 from openapi_server.models.article_version_list import ArticleVersionList  # noqa: F401
