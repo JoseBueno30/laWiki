@@ -4,6 +4,7 @@ from typing import Any, Coroutine, Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from openapi_server.impl.misc import *
 from openapi_server.apis.internal_api_base import BaseInternalApi
 import openapi_server.impl
 
@@ -33,8 +34,6 @@ ns_pkg = openapi_server.impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
-MESSAGE_UNEXPECTED = "Unexpected server error"
-MESSAGE_BAD_FORMAT = "Malformed request, check ID formatting or other fields"
 
 @router.put(
     "/wikis/{id}/tags",
@@ -96,13 +95,22 @@ async def check_wiki_by_id(
     response_model_by_alias=True,
 )
 async def unassign_article_tags(
+    response: Response,
     id: str = Path(..., description=""),
     ids: list[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to a Wiki."""
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().unassign_article_tags(id, ids)
+    try:
+        await BaseInternalApi.subclasses[0]().unassign_article_tags(id, ids)
+        response.status_code = 204
+    except LookupError:
+        response.status_code = 404
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
 
 @router.put(
@@ -130,9 +138,7 @@ async def update_rating(
         response.status_code = 204
     except LookupError:
         response.status_code = 404
-    except InvalidId:
-        raise HTTPException(status_code=400, detail=MESSAGE_BAD_FORMAT)
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
     except Exception as e:
-        print(e)
-        print(type(e))
-        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
