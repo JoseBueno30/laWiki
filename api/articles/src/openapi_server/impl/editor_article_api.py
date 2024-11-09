@@ -1,10 +1,13 @@
+import copy
 import json
 from datetime import datetime, date
+from xml.dom import NotFoundErr
 
 from bson import ObjectId
 
 from openapi_server.apis.editors_api import create_article_version, delete_article_version_by_id
 from openapi_server.apis.editors_api_base import BaseEditorsApi
+from openapi_server.apis.internal_api import check_article_by_id
 from openapi_server.impl.default_article_api import mongodb
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
@@ -48,7 +51,7 @@ class EditorArticleAPI(BaseEditorsApi):
         for tag in new_article_json["tags"]:
             tag["_id"] = ObjectId(tag.pop("id"))
 
-        new_article_json["creation_date"] = datetime(today.year, today.month, today.day)
+        new_article_json["creation_date"] = datetime.now()
         new_article_json["rating"] = 0
         new_article_json["versions"] = []
 
@@ -90,9 +93,12 @@ class EditorArticleAPI(BaseEditorsApi):
         #   Changes the id types in order to insert the document
         new_article_version_json["article_id"] = ObjectId(id)
         new_article_version_json["author"]["_id"] = ObjectId(new_article_version_json["author"].pop("id"))
-        new_article_version_json["modification_date"] = datetime(today.year, today.month, today.day)
+        new_article_version_json["modification_date"] = datetime.now()
         for tag in new_article_version_json["tags"]:
             tag["_id"] = ObjectId(tag.pop("id"))
+
+        article_tags = copy.deepcopy(new_article_version_json["tags"])
+        print(article_tags)
 
         #   MongoDB query
         article_version_result = await mongodb["article_version"].insert_one(new_article_version_json)
@@ -116,11 +122,13 @@ class EditorArticleAPI(BaseEditorsApi):
         simplified_article_version_dict["author"]["_id"] = (
             ObjectId(simplified_article_version_dict["author"].pop("id")))
 
+        print(article_tags)
         # MongoDB query
         await mongodb["article"].update_one(
             {"_id": ObjectId(id)},
             {"$push": {"versions": simplified_article_version_dict},
-             "$set": {"title": new_article_version_json["title"]}},
+             "$set": {"title": new_article_version_json["title"],
+                      "tags": article_tags}},
         )
 
         return article_version
@@ -146,3 +154,33 @@ class EditorArticleAPI(BaseEditorsApi):
         result = await mongodb["article_version"].delete_one({"_id": ObjectId(id)})
         if result.deleted_count == 0:
             raise Exception("Article Not Found")
+
+    async def restore_article_version(
+        self,
+        article_id: str,
+        version_id: str,
+    ) -> None:
+        """Restore an older ArticleVersion of an Article."""
+        restored_version = await mongodb["article_version"].find_one({"_id": ObjectId(version_id)})
+        article = await mongodb["article"].find_one({"_id": ObjectId(article_id)}, {"versions._id": 1, "versions.modification_date": 1})
+
+        if restored_version is None:
+            raise Exception("ArticleVersion Not Found")
+        if article is None:
+            raise Exception("Article Not Found")
+
+        version_ids_to_delete = [
+            version["_id"] for version in article["versions"] if version["modification_date"] > restored_version["modification_date"]
+        ]
+
+        result = await mongodb["article"].update_one(
+            {"_id": ObjectId(article_id)},
+            {"$pull": {"versions": {"_id": {"$in": version_ids_to_delete}}},
+             "$set": {"title": restored_version["title"],
+                      "tags": restored_version["tags"]}},
+        )
+
+        if version_ids_to_delete:
+            await mongodb["article_version"].delete_many({"_id": {"$in": version_ids_to_delete}})
+
+        return None

@@ -1,4 +1,5 @@
 # coding: utf-8
+from fastapi.responses import JSONResponse
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
@@ -66,7 +67,7 @@ async def create_article(
 @router.post(
     "/articles/{id}/versions",
     responses={
-        201: {"model": ArticleVersion, "description": "Version successfully created."},
+        201: {"model": ArticleVersion, "message": "Version successfully created."},
         400: {"description": "Bad Request, Invalid Parameters"},
         403: {"description": "Forbidden"},
     },
@@ -143,9 +144,9 @@ async def delete_article_version_by_id(
     "/articles/{article_id}/versions/{version_id}",
     responses={
         200: {"description": "ArticleVersion successfully restored"},
-        400: {"description": "invalid Article or ArticleVersion ID format"},
+        400: {"description": "Bad Request, invalid Article or ArticleVersion ID format"},
         403: {"description": "Forbidden"},
-        404: {"description": "Article Version Not Found"},
+        404: {"description": "ArticleVersion Not Found"},
     },
     tags=["editors"],
     summary="Restore ArticleVersion",
@@ -158,4 +159,10 @@ async def restore_article_version(
     """Restore an older ArticleVersion of an Article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().restore_article_version(article_id, version_id)
+    try:
+        if await BaseEditorsApi.subclasses[0]().restore_article_version(article_id, version_id) is None:
+            return JSONResponse(status_code=200, content={"detail": "ArticleVersion successfully restored"})
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article or ArticleVersion ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")

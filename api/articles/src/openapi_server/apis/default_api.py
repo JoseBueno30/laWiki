@@ -218,6 +218,6 @@ async def search_articles(
     try:
         return await BaseDefaultApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
     except (InvalidId, TypeError):
-        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+        raise HTTPException(status_code=400, detail="Bad Request, invalid input parameters.")
     except Exception as e:
         raise HTTPException(status_code=404, detail="Article Not Found")
