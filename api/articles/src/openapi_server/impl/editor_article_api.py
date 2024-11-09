@@ -15,8 +15,10 @@ from openapi_server.models.simplified_article_version import SimplifiedArticleVe
 today = date.today()
 
 def article_version_to_simplified_article_version(article_version):
-    simplified_article_version = article_version.to_dict()
-
+    if type(article_version) is not dict:
+        simplified_article_version = article_version.to_dict()
+    else:
+        simplified_article_version = article_version
     #   Deletes the non-necessary attributes
     simplified_article_version.pop("article_id", None)
     simplified_article_version.pop("tags", None)
@@ -63,22 +65,8 @@ class EditorArticleAPI(BaseEditorsApi):
                 NewArticleVersion.from_dict(new_article_version_json)
             )
         )
-
-        simplified_article_version = article_version_to_simplified_article_version(article_version)
-
-        #   Add the version to the Article document
-        simplified_article_version_dict = simplified_article_version.to_dict()
-        simplified_article_version_dict["_id"] = ObjectId(simplified_article_version_dict.pop("id"))
-        simplified_article_version_dict["author"]["_id"] = (
-            ObjectId(simplified_article_version_dict["author"].pop("id")))
-
-        await mongodb["article"].update_one(
-            {"_id": article_result.inserted_id},
-            {"$set": {"versions" : [simplified_article_version_dict]}}
-        )
-        simplified_article_version_dict["author"]["id"] = (
-            str(simplified_article_version_dict["author"].pop("_id")))
-        simplified_article_version_dict["id"] = str(simplified_article_version_dict.pop("_id"))
+        #   Adds the SimplifiedArticleVersion to the returning JSON
+        simplified_article_version_dict = article_version_to_simplified_article_version(article_version)
         new_article_json["versions"].append(simplified_article_version_dict)
 
         #   Undo the previous changes to ids in order to return the Article created
@@ -116,7 +104,26 @@ class EditorArticleAPI(BaseEditorsApi):
         for tag in new_article_version_json["tags"]:
             tag["id"] = str(tag.pop("_id"))
 
-        return ArticleVersion.from_dict(new_article_version_json)
+        #   Generates the returning ArticleVersion value
+        article_version = ArticleVersion.from_dict(new_article_version_json)
+
+        #   Generates a simplified article version
+        simplified_article_version = article_version_to_simplified_article_version(new_article_version_json)
+
+        #   Add the simplified version to the Article document
+        simplified_article_version_dict = simplified_article_version.to_dict()
+        simplified_article_version_dict["_id"] = ObjectId(simplified_article_version_dict.pop("id"))
+        simplified_article_version_dict["author"]["_id"] = (
+            ObjectId(simplified_article_version_dict["author"].pop("id")))
+
+        # MongoDB query
+        await mongodb["article"].update_one(
+            {"_id": ObjectId(id)},
+            {"$push": {"versions": simplified_article_version_dict},
+             "$set": {"title": new_article_version_json["title"]}},
+        )
+
+        return article_version
 
     async def delete_article_by_id(
         self,

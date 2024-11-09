@@ -210,7 +210,7 @@ async def search_articles(
     order: str = Query(None, description="Sorts the articles by different criteria", alias="order"),
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Article", alias="author_name"),
-    editor_name: str = Query(None, description="Filter for the editors of the Article", alias="editor_name"),
+    editor_name: str = Query(None, description="Filter for the editors of the Article", alias="editor_name")
 ) -> ArticleList:
     """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
     if not BaseDefaultApi.subclasses:

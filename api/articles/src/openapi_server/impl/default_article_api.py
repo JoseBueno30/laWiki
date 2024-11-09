@@ -7,6 +7,7 @@ from openapi_server.models import tag
 from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
+from openapi_server.models.article_version_list import ArticleVersionList
 
 mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 mongodb = mongodb_client.get_database("laWikiDB")
@@ -26,23 +27,24 @@ transform_article_ids_pipeline = [
             }
         },
         "versions": {
-                "$map": {
-                    "input": "$versions",
-                    "as": "version",
-                    "in": {
-                        "id": {"$toString": "$$version._id"},
-                        "title": "$$version.title",
-                        "modification_date": "$$version.modification_date",
-                        "author" : {
-                            "id": {"$toString": "$$version.author._id"},
-                            "name": "$$version.author.name"
-                        }
+            "$map": {
+                "input": "$versions",
+                "as": "version",
+                "in": {
+                    "id": {"$toString": "$$version._id"},
+                    "title": "$$version.title",
+                    "modification_date": "$$version.modification_date",
+                    "author": {
+                        "id": {"$toString": "$$version.author._id"},
+                        "name": "$$version.author.name"
                     }
                 }
-            },
-        "wiki_id":{"$toString":"$wiki_id"}
+            }
+        },
+        "wiki_id": {"$toString": "$wiki_id"}
     }},
-    {"$unset": ["_id", "author._id", "tags._id", "versions._id", "versions.autor._id"]}  # Quita los campos _id originales
+    {"$unset": ["_id", "author._id", "tags._id", "versions._id", "versions.autor._id"]}
+    # Quita los campos _id originales
 ]
 
 transform_version_ids_pipeline = [
@@ -65,8 +67,77 @@ transform_version_ids_pipeline = [
     {"$unset": ["_id", "author._id", "tags._id"]}  # Quita los campos _id originales
 ]
 
-class DefaultArticleAPI(BaseDefaultApi):
 
+def get_model_list_pipeline(match_query, offset, limit, order, total_documents, list_name):
+    """
+    This method generates the pipeline using the parameters up above.
+    Parameters:
+        match_query (dict): The query to match
+        offset (int): The offset to start at
+        limit (int): The maximum number of items to return
+        order (str): The order in which to sort the results
+        total_documents (int): The total number of documents matched with the query
+        list_name (str): The name of the list parameter of the (Model)List
+
+    Returns:
+        The Pipeline generated
+    """
+
+    pipeline = [
+        {
+            "$match": match_query
+        },
+        {
+            "$sort": {
+                "creation_date": -1 if order == "recent" else 1
+            }
+        },
+        {
+            "$skip": offset
+        },
+        {
+            "$limit": limit
+        },
+        *transform_article_ids_pipeline,
+        {
+            "$group": {
+                "_id": None,
+                list_name: {
+                    "$push": "$$ROOT"
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "total": total_documents,
+                "offset": offset,
+                "limit": limit,
+                "next": {
+                    "$cond": {
+                        "if": {"$lt": [offset + limit, total_documents]},
+                        "then": f"/articles/?offset={offset + limit}&limit={limit}",
+                        "else": None
+                    }
+                },
+                "previous": {
+                    "$cond": {
+                        "if": {"$gt": [offset, 0]},
+                        "then": f"/articles/?offset={max(offset - limit, 0)}&limit={limit}",
+                        "else": None
+                    }
+                },
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+            }
+        }
+    ]
+    return pipeline
+
+
+class DefaultArticleAPI(BaseDefaultApi):
 
     def __init__(self):
         super().__init__()
@@ -163,72 +234,18 @@ class DefaultArticleAPI(BaseDefaultApi):
         return article_version[0]
 
     async def get_article_by_author(
-        self,
-        id: str,
-        offset: int,
-        limit: int,
-        order: str,
+            self,
+            id: str,
+            offset: int,
+            limit: int,
+            order: str,
     ) -> ArticleList:
 
-        total_documents = await mongodb["article"].count_documents({})
-        print("total: ",total_documents)
+        total_documents = await mongodb["article"].count_documents({"author._id": ObjectId(id)})
+        print("total: ", total_documents)
 
-        pipeline = [
-            {
-                "$match": {
-                    "author._id": ObjectId(id)
-                }
-            },
-            {
-                "$sort": {
-                    "creation_date": -1 if order == "recent" else 1
-                }
-            },
-            {
-                "$skip": offset
-            },
-            {
-                "$limit": limit
-            },
-            *transform_article_ids_pipeline,
-            {
-                "$group": {
-                    "_id": None,
-                    "articles":{
-                        "$push": "$$ROOT"
-                    }
-                }
-            },
-            {
-                "$addFields": {
-                    "total": {
-                        "$size": "$articles"
-                    },
-                    "offset": offset,
-                    "limit": limit,
-                    "next":{
-                        "$cond":{
-                            "if": {"$lt":[offset + limit, total_documents]},
-                            "then": f"/articles/?offset={offset + limit}&limit={limit}",
-                            "else": None
-                        }
-                    },
-                    "previous":{
-                        "$cond":{
-                            "if": {"$gt":[offset, 0]},
-                            "then": f"/articles/?offset={max(offset - limit, 0)}&limit={limit}",
-                            "else": None
-                        }
-                    },
-                }
-            },
-            {
-                "$project": {
-                    "_id": 0,
-                }
-            }
-
-        ]
+        pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
+                                           offset, limit, order, total_documents, "articles")
 
         articles = await mongodb["article"].aggregate(pipeline).to_list()
 
@@ -238,16 +255,16 @@ class DefaultArticleAPI(BaseDefaultApi):
         return articles[0]
 
     async def search_articles(
-        self,
-        wiki_id: str,
-        name: str,
-        tags: list[str],
-        offset: int,
-        limit: int,
-        order: str,
-        creation_date: str,
-        author_name: str,
-        editor_name: str,
+            self,
+            wiki_id: str,
+            name: str,
+            tags: list[str],
+            offset: int,
+            limit: int,
+            order: str,
+            creation_date: str,
+            author_name: str,
+            editor_name: str,
     ) -> ArticleList:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
         url_filters = "/articles/?"
@@ -326,7 +343,6 @@ class DefaultArticleAPI(BaseDefaultApi):
             }
         ]
 
-        #TODO: arreglar el total
         pagination_pipeline = [
             {
                 "$addFields": {
@@ -356,3 +372,22 @@ class DefaultArticleAPI(BaseDefaultApi):
             raise Exception
 
         return articles[0]
+
+    async def get_article_version_list_by_article_id(
+            self,
+            id: str,
+            offset: int,
+            limit: int,
+            order: str,
+    ) -> ArticleVersionList:
+        total_documents = await mongodb["article_version"].count_documents({"article_id": ObjectId(id)})
+
+        pipeline = get_model_list_pipeline({"article_id": ObjectId(id)},
+                                           offset, limit, order, total_documents, "article_versions")
+
+        article_versions = await mongodb["article_version"].aggregate(pipeline).to_list()
+
+        if not article_versions:
+            raise Exception
+
+        return article_versions[0]

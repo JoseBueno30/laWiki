@@ -1,5 +1,6 @@
 from xml.dom import NotFoundErr
 
+from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from openapi_server.apis.internal_api_base import BaseInternalApi
@@ -28,7 +29,7 @@ class InternalArticleAPI(BaseInternalApi):
             raise NotFoundErr
         return None
 
-    async def assign_article_tags(self, id: str, id_tags_body: IdTagsBody, ):
+    async def assign_article_tags(self, id: str, id_tags_body: IdTagsBody ):
         tags = [{"_id": ObjectId(tag.id), "tag": tag.tag} for tag in id_tags_body.tag_ids or []]
 
         result = await mongodb["article"].update_one({"_id": ObjectId(id)},
@@ -37,7 +38,7 @@ class InternalArticleAPI(BaseInternalApi):
             raise NotFoundErr
         return None
 
-    async def unassign_article_tags(self, id: str, ids: list[str], ):
+    async def unassign_article_tags(self, id: str, ids: List[str]):
 
         tag_ids = [ObjectId(tag_id) for tag_id in ids or []]
 

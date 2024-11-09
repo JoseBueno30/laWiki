@@ -703,6 +703,7 @@
       "Wiki": {
         "required": [
           "author",
+          "creation_date",
           "description",
           "id",
           "name",
@@ -722,6 +723,11 @@
           "description": {
             "type": "string",
             "description": "Details of the wiki set by its editors."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date of creation of the wiki.",
+            "format": "date_time"
           },
           "author": {
             "$ref": "#/components/schemas/Author"
@@ -883,10 +889,10 @@
         "title": "SimplifiedWiki",
         "required": [
           "author",
+          "creation_date",
           "description",
           "id",
-          "name",
-          "tags"
+          "name"
         ],
         "type": "object",
         "properties": {
@@ -901,6 +907,22 @@
           "description": {
             "type": "string",
             "description": "Details of the wiki set by its editors."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date of creation of the wiki.",
+            "format": "date_time"
+          },
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "n41bjowninj5a"
+            }
           },
           "author": {
             "$ref": "#/components/schemas/Author"

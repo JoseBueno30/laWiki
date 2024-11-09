@@ -14,7 +14,9 @@
 
 from fastapi import FastAPI
 
+from openapi_server.apis.admins_api import router as AdminsApiRouter
 from openapi_server.apis.default_api import router as DefaultApiRouter
+from openapi_server.apis.internal_api import router as InternalApiRouter
 
 app = FastAPI(
     title="Wiki API",
@@ -22,4 +24,6 @@ app = FastAPI(
     version="1.0",
 )
 
+app.include_router(AdminsApiRouter)
 app.include_router(DefaultApiRouter)
+app.include_router(InternalApiRouter)
