@@ -8,7 +8,7 @@ from pymongo.errors import DuplicateKeyError
 from openapi_server.apis.admins_api_base import BaseAdminsApi
 import openapi_server.impl
 
-MESSAGE_UNEXPECTED = "Unexpected server error"
+from openapi_server.impl.misc import *
 
 from fastapi import (  # noqa: F401
     APIRouter,

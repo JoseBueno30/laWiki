@@ -2,6 +2,7 @@ import httpx
 
 ARTICLES_PORT = 8081
 ARTICLES_URL = "articles_api"
+# ARTICLES_URL = "localhost"
 
 # This function is used to check if an article exists
 async def check_article(article_id: str) -> bool:

@@ -32,8 +32,8 @@ class IdRatingsBody(BaseModel):
     """
     IdRatingsBody
     """ # noqa: E501
-    raitng: Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]] = Field(description="Average rating of the wiki")
-    __properties: ClassVar[List[str]] = ["raitng"]
+    rating: Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]] = Field(description="Average rating of the wiki")
+    __properties: ClassVar[List[str]] = ["rating"]
 
     model_config = {
         "populate_by_name": True,
@@ -84,7 +84,7 @@ class IdRatingsBody(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "raitng": obj.get("raitng")
+            "rating": obj.get("rating")
         })
         return _obj
 

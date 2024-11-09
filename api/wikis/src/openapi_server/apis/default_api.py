@@ -7,7 +7,7 @@ import pkgutil
 from openapi_server.apis.default_api_base import BaseDefaultApi
 import openapi_server.impl
 
-MESSAGE_UNEXPECTED = "Unexpected server error"
+from openapi_server.impl.misc import *
 
 from fastapi import (  # noqa: F401
     APIRouter,

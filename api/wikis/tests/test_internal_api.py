@@ -72,7 +72,7 @@ def test_update_rating(client: TestClient):
 
     Update Rating
     """
-    id_ratings_body = {"raitng":4.5}
+    id_ratings_body = {"rating":4.5}
 
     headers = {
     }

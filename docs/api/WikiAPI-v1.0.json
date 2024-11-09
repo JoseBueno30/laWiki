@@ -524,7 +524,7 @@
               "examples": {
                 "Example 1": {
                   "value": {
-                    "raitng": 4.5
+                    "rating": 4.5
                   }
                 }
               }
@@ -931,11 +931,11 @@
       },
       "id_ratings_body": {
         "required": [
-          "raitng"
+          "rating"
         ],
         "type": "object",
         "properties": {
-          "raitng": {
+          "rating": {
             "maximum": 5,
             "minimum": 0,
             "type": "number",
