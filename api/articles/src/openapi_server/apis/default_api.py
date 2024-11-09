@@ -204,10 +204,10 @@ async def get_articles_commented_by_user(
 async def search_articles(
     wiki_id: str = Query(None, description="The ID of the wiki where the serch will be made", alias="wiki_id"),
     name: str = Query(None, description="Search query for the name of the article", alias="name"),
-    tags: list[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
+    tags: List[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
     limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
-    order: str = Query('none', description="Sorts the articles by different criteria", alias="order"),
+    order: str = Query(None, description="Sorts the articles by different criteria", alias="order"),
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Article", alias="author_name"),
     editor_name: str = Query(None, description="Filter for the editors of the Article", alias="editor_name"),
