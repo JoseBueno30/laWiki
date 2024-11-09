@@ -153,4 +153,7 @@ async def post_comment(
     except InvalidId:
         raise HTTPException(status_code=400, detail="Bad Request, wrong content structure")
     except Exception as e:
-        raise HTTPException(status_code=404, detail=e.args[0])
+        if e.args:
+            raise HTTPException(status_code=404, detail=e.args[0])
+        else:
+            raise HTTPException(status_code=404, detail="Article or Author not found")

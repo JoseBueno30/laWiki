@@ -67,7 +67,6 @@ class ContentManager(BaseDefaultApi):
             new_comment: NewComment,
     ) -> Comment:
         """Post Comment"""
-        art_id = ObjectId(article_id)
 
         if not await api_calls.check_article(article_id):
             raise Exception("Article not found")
@@ -77,11 +76,11 @@ class ContentManager(BaseDefaultApi):
 
         today = date.today()
 
-        author_dict = {'id': new_comment.author_id,
+        author_dict = {'id': ObjectId(new_comment.author_id),
                        'name': 'author_name',
                        'image': 'author_image'}
         comment_dic = {
-            'article_id': article_id,
+            'article_id': ObjectId(article_id),
             'author': author_dict,
             'body': new_comment.body,
 
@@ -89,7 +88,10 @@ class ContentManager(BaseDefaultApi):
         }
         result = await mongodb['comment'].insert_one(comment_dic)
         if result:
+            # Once inserted, we return the comment with the id as strings
             comment_dic['id'] = str(result.inserted_id)
+            comment_dic['article_id'] = str(comment_dic['article_id'])
+            comment_dic['author']['id'] = str(comment_dic['author']['id'])
             return Comment.from_dict(comment_dic)
         else:
             raise Exception("Error creating comment")
