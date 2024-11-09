@@ -119,7 +119,8 @@ class EditorArticleAPI(BaseEditorsApi):
         # MongoDB query
         await mongodb["article"].update_one(
             {"_id": ObjectId(id)},
-            {"$set": {"versions": [simplified_article_version_dict]}}
+            {"$push": {"versions": simplified_article_version_dict},
+             "$set": {"title": new_article_version_json["title"]}},
         )
 
         return article_version

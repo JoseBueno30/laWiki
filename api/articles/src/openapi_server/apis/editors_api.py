@@ -82,7 +82,7 @@ async def create_article_version(
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseEditorsApi.subclasses[0]().create_article_version(id, new_article_version)
+        return await BaseEditorsApi.subclasses[0]().    create_article_version(id, new_article_version)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
