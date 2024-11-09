@@ -5,6 +5,7 @@ from bson import ObjectId
 from openapi_server.apis.default_api_base import BaseDefaultApi
 from openapi_server.apis.admins_api_base import BaseAdminsApi
 from openapi_server.apis.internal_api_base import BaseInternalApi
+from openapi_server.models.id_ratings_body import IdRatingsBody
 from openapi_server.models.new_wiki import NewWiki
 from openapi_server.models.wiki import Wiki, Author
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -80,4 +81,14 @@ class WikiApiInternal(BaseInternalApi):
         super().__init__()
     
     async def check_wiki_by_id(self, id: str) -> Coroutine[Any, Any, None]:
-        return await mongodb["wikis"].find_one({"_id": ObjectId(id)}, {"_id": 1}) is not None
+        return await mongodb["wiki"].find_one({"_id": ObjectId(id)}, {"_id": 1}) is not None
+    
+    async def update_rating(self, id: str, id_ratings_body: IdRatingsBody) -> None:
+        update_rating_object = [{"_id" : ObjectId(id)},
+                                {"$set" : {"rating": id_ratings_body.rating}}]
+        result = await mongodb["wiki"].update_one(filter=update_rating_object[0],
+                                         update=update_rating_object[1])
+        if result.matched_count < 1: # If _id does not lead to a wiki, causes 404
+            raise LookupError()
+        elif result.modified_count < 1: # If _id leads to wiki, but failed to update, causes 500
+            raise Exception()

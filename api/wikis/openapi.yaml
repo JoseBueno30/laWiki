@@ -366,7 +366,7 @@ paths:
             examples:
               Example 1:
                 value:
-                  raitng: 4.5
+                  rating: 4.5
             schema:
               $ref: '#/components/schemas/id_ratings_body'
       responses:
@@ -724,18 +724,18 @@ components:
       type: object
     id_ratings_body:
       properties:
-        raitng:
+        rating:
           description: Average rating of the wiki
           example: 4.5
           format: double
           maximum: 5
           minimum: 0
-          title: raitng
+          title: rating
           type: number
           x-stoplight:
             id: e861y8ux0w86b
       required:
-      - raitng
+      - rating
       title: id_ratings_body
       type: object
     id_tags_body:

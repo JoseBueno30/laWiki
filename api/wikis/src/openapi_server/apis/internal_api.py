@@ -33,6 +33,8 @@ ns_pkg = openapi_server.impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
+MESSAGE_UNEXPECTED = "Unexpected server error"
+MESSAGE_BAD_FORMAT = "Malformed request, check ID formatting or other fields"
 
 @router.put(
     "/wikis/{id}/tags",
@@ -68,6 +70,7 @@ async def assign_wiki_tags(
     response_model_by_alias=True,
 )
 async def check_wiki_by_id(
+    response: Response,
     id: str = Path(..., description=""),
 ) -> None:
     """Check if a Wiki exits given its unique ID. """
@@ -75,9 +78,9 @@ async def check_wiki_by_id(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         if not await BaseInternalApi.subclasses[0]().check_wiki_by_id(id):
-            raise HTTPException(status_code=404, detail="Wiki Not Found")
+            response.status_code = 404
     except InvalidId:
-        raise HTTPException(status_code=400,detail="Bad Request, invalid Wiki ID")
+        raise HTTPException(status_code=400, detail=MESSAGE_BAD_FORMAT)
 
 
 @router.delete(
@@ -115,10 +118,21 @@ async def unassign_article_tags(
     response_model_by_alias=True,
 )
 async def update_rating(
+    response: Response,
     id: str = Path(..., description=""),
     id_ratings_body: IdRatingsBody = Body(None, description=""),
 ) -> None:
     """Update the rating of a Wiki give its unique ID and a rating"""
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().update_rating(id, id_ratings_body)
+    try:
+        await BaseInternalApi.subclasses[0]().update_rating(id, id_ratings_body)
+        response.status_code = 204
+    except LookupError:
+        response.status_code = 404
+    except InvalidId:
+        raise HTTPException(status_code=400, detail=MESSAGE_BAD_FORMAT)
+    except Exception as e:
+        print(e)
+        print(type(e))
+        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
