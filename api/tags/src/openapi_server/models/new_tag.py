@@ -21,7 +21,7 @@ import json
 
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 try:
     from typing import Self
 except ImportError:
@@ -31,7 +31,7 @@ class NewTag(BaseModel):
     """
     Model for a new Tag
     """ # noqa: E501
-    tag: Optional[StrictStr] = Field(default=None, description="The name of the tag.")
+    tag: StrictStr = Field(description="The name of the tag.")
     __properties: ClassVar[List[str]] = ["tag"]
 
     model_config = {

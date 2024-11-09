@@ -256,10 +256,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Tag"
-                  }
+                  "$ref": "#/components/schemas/TagList"
                 }
               }
             }

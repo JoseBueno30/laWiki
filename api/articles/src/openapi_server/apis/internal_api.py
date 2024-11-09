@@ -107,7 +107,7 @@ async def check_article_by_id(
 )
 async def unassign_article_tags(
     id: str = Path(..., description=""),
-    ids: list[str] = Query(..., description="List of Tag IDs", alias="ids"),
+    ids: List[str] = Query(..., description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseInternalApi.subclasses:
