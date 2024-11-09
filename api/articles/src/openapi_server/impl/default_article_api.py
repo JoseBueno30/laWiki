@@ -1,8 +1,10 @@
 from datetime import datetime
 
+import httpx
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from openapi_server.apis.default_api_base import BaseDefaultApi
+from openapi_server.impl.api_calls import get_user_comments, check_if_wiki_exists
 from openapi_server.models import tag
 from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
@@ -67,6 +69,8 @@ transform_version_ids_pipeline = [
     {"$unset": ["_id", "author._id", "tags._id"]}  # Quita los campos _id originales
 ]
 
+async def get_total_number_of_documents(collection, match_query):
+    return await collection.count_documents(match_query)
 
 def get_model_list_pipeline(match_query, offset, limit, order, total_documents, list_name):
     """
@@ -163,7 +167,9 @@ class DefaultArticleAPI(BaseDefaultApi):
             name: str,
             wiki_id: str
     ) -> ArticleVersion:
-        #TODO: Throw InvalidaParameterValue if name is not valid
+        if not await check_if_wiki_exists(wiki_id):
+            raise Exception("Wiki does not exist")
+
         version_id_pipeline = [
             {
                 '$match': {
@@ -241,8 +247,8 @@ class DefaultArticleAPI(BaseDefaultApi):
             order: str,
     ) -> ArticleList:
 
-        total_documents = await mongodb["article"].count_documents({"author._id": ObjectId(id)})
-        print("total: ", total_documents)
+        total_documents = await get_total_number_of_documents(mongodb["article"],
+                                                              {"author._id": ObjectId(id)})
 
         pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
                                            offset, limit, order, total_documents, "articles")
@@ -270,6 +276,9 @@ class DefaultArticleAPI(BaseDefaultApi):
         url_filters = "/articles/?"
         matching_variables = {}
         if wiki_id is not None:
+            if not await check_if_wiki_exists(wiki_id):
+                raise Exception("Wiki does not exist")
+
             matching_variables["wiki_id"] = ObjectId(wiki_id)
             url_filters += "wiki_id=" + wiki_id + "&"
         if name is not None:
@@ -380,14 +389,41 @@ class DefaultArticleAPI(BaseDefaultApi):
             limit: int,
             order: str,
     ) -> ArticleVersionList:
-        total_documents = await mongodb["article_version"].count_documents({"article_id": ObjectId(id)})
+        total_documents = await get_total_number_of_documents(mongodb["article_version"],
+                                                              {"article_id": ObjectId(id)})
 
         pipeline = get_model_list_pipeline({"article_id": ObjectId(id)},
                                            offset, limit, order, total_documents, "article_versions")
 
         article_versions = await mongodb["article_version"].aggregate(pipeline).to_list()
 
-        if not article_versions:
+        if not article_versions[0]:
             raise Exception
 
         return article_versions[0]
+
+
+    async def get_articles_commented_by_user(
+        self,
+        id: str,
+        offset: int,
+        limit: int,
+        order: str,
+    ) -> ArticleList:
+        comment_list = await get_user_comments(id, order, offset, limit)
+        article_ids_list = []
+        for comment in comment_list["comments"]:
+                article_ids_list.append(ObjectId(comment["article_id"]))
+
+        total_articles = await get_total_number_of_documents(mongodb["article"],
+                                                             {"_id": {"$in": article_ids_list}})
+
+        pipeline = get_model_list_pipeline({"_id": {"$in": article_ids_list}},
+                                           offset, limit, order, total_articles, "articles")
+
+        article_list = await mongodb["article"].aggregate(pipeline).to_list()
+
+        if not article_list[0]:
+            raise Exception
+
+        return article_list[0]
