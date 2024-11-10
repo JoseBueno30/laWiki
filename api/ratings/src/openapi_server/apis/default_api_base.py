@@ -2,10 +2,9 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
-from openapi_server.models.inline_response200 import InlineResponse200
+from openapi_server.models.average_rating import AverageRating
 from openapi_server.models.new_rating import NewRating
 from openapi_server.models.rating import Rating
-from openapi_server.models.rating_list import RatingList
 
 
 class BaseDefaultApi:
@@ -14,7 +13,7 @@ class BaseDefaultApi:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         BaseDefaultApi.subclasses = BaseDefaultApi.subclasses + (cls,)
-    async def delete_ratings_id(
+    async def delete_rating(
         self,
         id: str,
     ) -> None:
@@ -22,49 +21,59 @@ class BaseDefaultApi:
         ...
 
 
-    async def get_ratings_article_id(
-        self,
-        id: str,
-        order: str,
-        limit: int,
-        offset: int,
-    ) -> RatingList:
-        ...
-
-
-    async def get_ratings_article_id_average(
-        self,
-        id: str,
-    ) -> InlineResponse200:
-        ...
-
-
-    async def get_ratings_id(
-        self,
-        id: str,
-    ) -> Rating:
-        ...
-
-
-    async def get_ratings_user_id(
-        self,
-        id: str,
-    ) -> float:
-        ...
-
-
-    async def post_ratings_article_id(
-        self,
-        id: str,
-        new_rating: NewRating,
-    ) -> Rating:
-        ...
-
-
-    async def put_ratings_article_id(
+    async def edit_article_rating(
         self,
         id: str,
         rating: Rating,
     ) -> Rating:
-        """This endpoint must do the same as Post but editting the value instead of creating a new one"""
+        """Update the value of an already existing Rating"""
+        ...
+
+
+    async def get_article_average_rating(
+        self,
+        id: str,
+    ) -> AverageRating:
+        """Get data about the average rating of the article"""
+        ...
+
+
+    async def get_rating(
+        self,
+        id: str,
+    ) -> Rating:
+        """Get the Rating with the provided ID"""
+        ...
+
+
+    async def get_ratings_articles_id_users_id(
+        self,
+        articleId: str,
+        userId: str,
+    ) -> Rating:
+        ...
+
+
+    async def get_ratings_wikis_id(
+        self,
+        id: str,
+    ) -> float:
+        """Get the average rating of a Wiki based on the Ratings of the Articles it has"""
+        ...
+
+
+    async def get_user_rating(
+        self,
+        id: str,
+    ) -> float:
+        """Get the average rating of an User based on the Ratings of the Articles he made"""
+        ...
+
+
+    async def rate_article(
+        self,
+        id: str,
+        new_rating: NewRating,
+    ) -> Rating:
+        """Create a rating for a given Article"""
         ...
