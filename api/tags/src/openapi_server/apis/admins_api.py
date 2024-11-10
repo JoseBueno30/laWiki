@@ -39,7 +39,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 @router.delete(
     "/tags/{id}",
     responses={
-        204: {"description": "No Content, tag deleted succesfully"},
+        204: {"description": "No Content, tag deleted successfully"},
         400: {"description": "Bad Request, invalid ID format"},
         403: {"description": "Forbidden"},
         404: {"description": "Tag not found"},

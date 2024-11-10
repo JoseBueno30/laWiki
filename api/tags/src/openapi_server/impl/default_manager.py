@@ -1,6 +1,7 @@
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from openapi_server.impl import api_calls
 from openapi_server.models.tag import Tag
 from openapi_server.models.tag_list import TagList
 from openapi_server.apis.default_api_base import BaseDefaultApi
@@ -20,11 +21,10 @@ class DefaultManager(BaseDefaultApi):
 
         article_id = ObjectId(id)
 
-        article = await mongodb["article"].find_one({"_id": article_id})
-        if not article:
+        if not await api_calls.check_article(id):
             raise KeyError
 
-        total_tags = len(article.get("tags", []))
+        total_tags = await mongodb["tag"].count_documents({"articles._id": article_id})
 
         pipeline = [
             {"$match": {"articles._id": article_id}},
@@ -115,14 +115,13 @@ class DefaultManager(BaseDefaultApi):
         """Retrieve all the tags from a wiki."""
         wiki_id = ObjectId(id)
 
-        wiki = await mongodb["wiki"].find_one({"_id": wiki_id})
-        if not wiki:
+        if not await api_calls.check_wiki(id):
             raise KeyError
 
-        total_tags = len(wiki.get("tags", []))
+        total_tags = await mongodb["tag"].count_documents({"wiki_id": wiki_id})
 
         pipeline = [
-            {"$match": {"articles._id": wiki_id}},
+            {"$match": {"wiki_id": wiki_id}},
 
             {"$skip": offset},
             {"$limit": limit},

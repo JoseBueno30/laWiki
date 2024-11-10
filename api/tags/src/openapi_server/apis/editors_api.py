@@ -38,7 +38,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 @router.put(
     "/tags/articles/{id}",
     responses={
-        204: {"description": "No Content, tags assigned"},
+        204: {"description": "No Content, tags assigned successfully"},
         400: {"description": "Bad Request, invalid paramaters format"},
         403: {"description": "Forbidden"},
         404: {"description": "Article or tag not found"},
@@ -57,7 +57,7 @@ async def assign_tags(
     try:
         return await BaseEditorsApi.subclasses[0]().assign_tags(id, tag_id_list)
     except InvalidId:
-        raise HTTPException(status_code=400, detail="Bad request, invalid Article ID format")
+        raise HTTPException(status_code=400, detail="Bad request, invalid ID format")
     except KeyError:
         raise HTTPException(status_code=404, detail="Article not found")
     except Exception as e:
@@ -67,7 +67,7 @@ async def assign_tags(
 @router.delete(
     "/tags/articles/{id}",
     responses={
-        204: {"description": "No Content, tag unassigned succesfully"},
+        204: {"description": "No Content, tags unassigned successfully"},
         400: {"description": "Bad Request, invalid invalid paramaters format"},
         403: {"description": "Forbidden"},
         404: {"description": "Article or tag not found"},
@@ -86,7 +86,7 @@ async def unassign_tags(
     try:
         return await BaseEditorsApi.subclasses[0]().unassign_tags(id, ids)
     except InvalidId:
-        raise HTTPException(status_code=400, detail="Bad request, invalid Article ID format")
+        raise HTTPException(status_code=400, detail="Bad request, invalid ID format")
     except KeyError:
         raise HTTPException(status_code=404, detail="Article not found")
     except Exception as e:

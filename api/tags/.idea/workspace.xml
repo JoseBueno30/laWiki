@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e6340ae8-426f-4696-8658-767f2322018c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/openapi_server/impl/api_calls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/admins_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/admins_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/default_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/default_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/editors_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/TagsManager.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/admins_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/admins_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/default_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/default_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/editors_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/editors_manager.py" afterDir="false" />
@@ -31,23 +32,23 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2oZHqm8tThURaLbzQfmPkjTIMZA" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PythonContentEntriesConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PythonContentEntriesConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ezesa\Escritorio\GitHub\laWiki\api\tags\src\openapi_server" />
