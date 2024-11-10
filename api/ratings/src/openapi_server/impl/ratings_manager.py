@@ -205,7 +205,7 @@ class RatingsManager (BaseDefaultApi):
             total = 0;
             for articles in article_list['articles']:
                 total += articles['rating']
-            update_wiki = requests.put(self.wiki_url + "wikis/" + article['wiki_id'] + "/ratings", json={'rating': total / len(article_list['articles'])})
+            update_wiki = requests.put(self.wiki_url + "wikis/" + article['wiki_id'] + "/ratings", json={'rating': total / len(article_list['articles']) })
             update_wiki.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
@@ -213,7 +213,7 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=500, detail="Error connecting to the wiki service")
 
     async def _check_user_has_no_rating(self, id: str, author_id: str):
-        result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(author_id)}).to_list()
+        result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(author_id)}).to_list(length=None)
         if len(result) > 0:
             raise HTTPException(status_code=422, detail="You have already rated this article")
         return None;
