@@ -117,7 +117,6 @@ async def get_rating(
     return await BaseDefaultApi.subclasses[0]().get_rating(id)
 
 
-
 @router.get(
     "/ratings/articles/{articleId}/users/{userId}",
     responses={

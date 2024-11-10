@@ -1,0 +1,684 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "RatingsAPI",
+    "description": "API for the Ratings of laWiki web appplication. It provides all endpoints related to CRUD operatios for ratings.",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/DAVIDBUENOCARMONA_1/RatingsAPI/0.1",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/ratings/{id}": {
+      "get": {
+        "tags": [],
+        "summary": "Get Rating",
+        "description": "Get the Rating with the provided ID",
+        "operationId": "get-rating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rating found and returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rating"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "Author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string",
+                        "image": "http://example.com"
+                      },
+                      "value": 0,
+                      "creation_date": "2019-08-24"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid Rating ID format"
+          },
+          "404": {
+            "description": "Rating Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "summary": "Delete Rating",
+        "description": "Delete the rating associated with the selected ID",
+        "operationId": "delete-rating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted successfully"
+          },
+          "400": {
+            "description": "Bad Request, invalid Rating ID format"
+          },
+          "403": {
+            "description": "No permissions to delete"
+          },
+          "404": {
+            "description": "Rating Not Found"
+          }
+        }
+      }
+    },
+    "/ratings/articles/{id}": {
+      "put": {
+        "tags": [],
+        "summary": "Edit Article's Rating",
+        "description": "Update the value of an already existing Rating",
+        "operationId": "edit-article-rating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rating"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                    "Author": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "name": "string",
+                      "image": "http://example.com"
+                    },
+                    "value": 0,
+                    "creation_date": "2019-08-24"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rating edited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rating"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "Author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string",
+                        "image": "http://example.com"
+                      },
+                      "value": 0,
+                      "creation_date": "2019-08-24"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Rate Article",
+        "description": "Create a rating for a given Article",
+        "operationId": "rate-article",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRating"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rating created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rating"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/ratings/users/{id}": {
+      "get": {
+        "tags": [],
+        "summary": "Get User rating",
+        "description": "Get the average rating of an User based on the Ratings of the Articles he made",
+        "operationId": "get-user-rating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the user rating",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid User ID format"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/ratings/articles/{id}/average": {
+      "get": {
+        "tags": [],
+        "summary": "Get Article's average rating",
+        "description": "Get data about the average rating of the article",
+        "operationId": "get-article-average-rating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AverageRating"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format"
+          }
+        }
+      }
+    },
+    "/ratings/wikis/{id}": {
+      "get": {
+        "tags": [],
+        "summary": "Get Wiki rating",
+        "description": "Get the average rating of a Wiki based on the Ratings of the Articles it has",
+        "operationId": "get-ratings-wikis-id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": 0
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/ratings/articles/{articleId}/users/{userId}": {
+      "get": {
+        "tags": [],
+        "summary": "Your GET endpoint",
+        "operationId": "get-ratings-articles-id-users-id",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rating"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity (WebDAV)"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewRating": {
+        "title": "NewRating",
+        "required": [
+          "author_id",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "author_id": {
+            "type": "string",
+            "description": "Author ID: ID of the person who publish the rating",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "q4bc1zm0v0tt4"
+            }
+          },
+          "value": {
+            "type": "number",
+            "description": "Value: The value of the rating published",
+            "x-stoplight": {
+              "id": "b3wl5oq26a7ik"
+            }
+          }
+        },
+        "description": "New Rating, created by one user associated with one article (Article ID is obtained in path)",
+        "x-examples": {
+          "Example 1": {
+            "author_id": "78424c75-5c41-4b25-9735-3c9f7d05c59e",
+            "rating": 5
+          }
+        }
+      },
+      "Rating": {
+        "title": "Rating",
+        "required": [
+          "Author",
+          "article_id",
+          "creation_date",
+          "id",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Rating ID\r\n",
+            "format": "uuid"
+          },
+          "article_id": {
+            "type": "string",
+            "description": "Article ID where the rating is published",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "uzi095sjp0udm"
+            }
+          },
+          "Author": {
+            "$ref": "#/components/schemas/Author"
+          },
+          "value": {
+            "type": "number",
+            "description": "Rating's value",
+            "x-stoplight": {
+              "id": "2n2knofgepww9"
+            }
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date where the rating was published",
+            "format": "date",
+            "x-stoplight": {
+              "id": "s2jphmehddzvv"
+            }
+          }
+        },
+        "description": "Rating of an Article",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+            "Author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string",
+              "image": "http://example.com"
+            },
+            "value": 0,
+            "creation_date": "2019-08-24"
+          }
+        }
+      },
+      "Author": {
+        "title": "Author",
+        "required": [
+          "id",
+          "image",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Author's ID on database",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Author's name ",
+            "x-stoplight": {
+              "id": "qb0c3tnhxfrd2"
+            }
+          },
+          "image": {
+            "type": "string",
+            "description": "Author's profile image",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "nhj8lampltfr6"
+            }
+          }
+        },
+        "description": "The author of a Rating",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string",
+            "image": "http://example.com"
+          }
+        }
+      },
+      "RatingList": {
+        "title": "RatingList",
+        "required": [
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "ratings",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "ratings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rating"
+            },
+            "x-stoplight": {
+              "id": "d5eh6v2k20xgj"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "72gdqe1ngz9hq"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "qdopqbxi79y5p"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "x-stoplight": {
+              "id": "3zrcx11uhb527"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "no5svtesm8hk2"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "lu2ppdfowvavf"
+            }
+          }
+        },
+        "description": "List of Ratings. Supports pagination.",
+        "x-examples": {
+          "Example 1": {
+            "ratings": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                "Author": {
+                  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                  "name": "string",
+                  "image": "http://example.com"
+                },
+                "value": 0,
+                "creation_date": "2019-08-24"
+              }
+            ],
+            "limit": 0,
+            "offset": 0,
+            "total": 0,
+            "next": "http://example.com",
+            "previous": "http://example.com"
+          }
+        }
+      },
+      "AverageRating": {
+        "title": "AverageRatingData",
+        "required": [
+          "average",
+          "five_count",
+          "four_count",
+          "one_count",
+          "three_count",
+          "total",
+          "two_count"
+        ],
+        "type": "object",
+        "properties": {
+          "average": {
+            "type": "number",
+            "description": "Average rating of an Article",
+            "format": "double",
+            "x-stoplight": {
+              "id": "xc8d4rg2zmeoe"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of Ratings of an Article",
+            "x-stoplight": {
+              "id": "1hpzs5e0yz51f"
+            }
+          },
+          "five_count": {
+            "type": "integer",
+            "description": "Number of 5-star ratings of an Article",
+            "x-stoplight": {
+              "id": "tgwuumk1xy9rq"
+            }
+          },
+          "four_count": {
+            "type": "integer",
+            "description": "Number of 4-star ratings of an Article",
+            "x-stoplight": {
+              "id": "v5hqxo4zght6z"
+            }
+          },
+          "three_count": {
+            "type": "integer",
+            "description": "Number of 3-star ratings of an Article",
+            "x-stoplight": {
+              "id": "q3vgda4tu3qrf"
+            }
+          },
+          "two_count": {
+            "type": "integer",
+            "description": "Number of 2-star ratings of an Article",
+            "x-stoplight": {
+              "id": "yt0gl4isfgmc8"
+            }
+          },
+          "one_count": {
+            "type": "integer",
+            "description": "Number of 1-star ratings of an Article",
+            "x-stoplight": {
+              "id": "4rssmlpes2jtm"
+            }
+          }
+        },
+        "description": "Data of the average rating of an Article",
+        "x-examples": {
+          "Example 1": {
+            "average": 0,
+            "total": 0,
+            "five_count": 0,
+            "four_count": 0,
+            "three_count": 0,
+            "two_count": 0,
+            "one_count": 0
+          }
+        }
+      }
+    }
+  }
+}
