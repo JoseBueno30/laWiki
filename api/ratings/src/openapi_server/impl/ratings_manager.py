@@ -16,8 +16,8 @@ class RatingsManager (BaseDefaultApi):
     app: FastAPI = FastAPI()
     mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
     mongodb = mongodb_client.get_database("laWikiDB")
-    wiki_url = "http://localhost:8081/"
-    article_url = "http://localhost:8082/"
+    wiki_url = "http://wikis_api:8084/"
+    article_url = "http://articles_api:8081/"
 
     async def get_rating(self, id: str):
         pipe = [{'$match': {'_id': self._convert_id_into_ObjectId(id)}},
@@ -57,7 +57,7 @@ class RatingsManager (BaseDefaultApi):
             },
         }
         result = await self.mongodb["rating"].insert_one(rating);
-        await self._update_article_and_wiki_average(id, rating)
+        await self._update_article_and_wiki_average(id)
         # Change the ObjectId value to string
         rating['id'] = str(result.inserted_id);
         rating['creation_date'] = date.today();
@@ -73,13 +73,13 @@ class RatingsManager (BaseDefaultApi):
 
         result['value'] = rating.value
         await self.mongodb["rating"].update_one({'_id': self._convert_id_into_ObjectId(rating.id)}, {'$set': result})
-        await self._update_article_and_wiki_average(id, rating)
+        await self._update_article_and_wiki_average(id)
         return rating;
 
     async def get_article_average_rating(self, id: str):
         await self._check_article_exists(id)
 
-        result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id)}).to_list()
+        result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id)}).to_list(length=None)
         if result == None or len(result) == 0:
             raise HTTPException(status_code=404, detail="No Ratings found with that article ID")
 
@@ -162,7 +162,7 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=404, detail="Wiki Not Found")
         return wiki;
 
-    def _check_new_rating_is_valid(self, new_rating: NewRating | Rating):
+    def _check_new_rating_is_valid(self, new_rating: NewRating or Rating):
         author_id = new_rating.author_id if isinstance(new_rating, NewRating) else new_rating.author.id
         if new_rating is None or new_rating.value is None or new_rating.value < 0 or new_rating.value > 5 or author_id is None:
             raise HTTPException(status_code=400, detail="Invalid Rating")

@@ -15,3 +15,28 @@ services:
     ports:
       - "8081:8081"
     command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8081
+  ratings:
+    container_name: ratings_api
+    build:
+      context: ./ratings
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8082
+  tags:
+    container_name: tags_api
+    build:
+      context: ./tags
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8083
+  wikis:
+    container_name: wikis_api
+    build:
+      context: ./wikis
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8084
+  

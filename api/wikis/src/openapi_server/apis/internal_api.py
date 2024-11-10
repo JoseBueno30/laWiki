@@ -106,7 +106,7 @@ async def check_wiki_by_id(
 async def unassign_article_tags(
     response: Response,
     id: str = Path(..., description=""),
-    ids: list[str] = Query(None, description="List of Tag IDs", alias="ids"),
+    ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to a Wiki."""
     if not BaseInternalApi.subclasses:

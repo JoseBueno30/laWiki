@@ -23,7 +23,7 @@ class BaseEditorsApi:
     async def unassign_tags(
         self,
         id: str,
-        ids: list[str],
+        ids: List[str],
     ) -> None:
         """Unassigns a list of tags, given their IDs to an article."""
         ...

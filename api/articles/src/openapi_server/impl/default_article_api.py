@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from typing import List
+
 import httpx
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
@@ -264,7 +266,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             self,
             wiki_id: str,
             name: str,
-            tags: list[str],
+            tags: List[str],
             offset: int,
             limit: int,
             order: str,
@@ -273,7 +275,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             editor_name: str,
     ) -> ArticleList:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-        url_filters = "/articles/?"
+        url_filters = "/articles?"
         matching_variables = {}
         if wiki_id is not None:
             matching_variables["wiki_id"] = ObjectId(wiki_id)
@@ -374,6 +376,8 @@ class DefaultArticleAPI(BaseDefaultApi):
         ]
 
         articles = await mongodb["article"].aggregate(query_pipeline).to_list()
+
+        print(articles)
 
         if not articles:
             raise Exception

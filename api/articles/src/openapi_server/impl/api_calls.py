@@ -1,10 +1,10 @@
 import httpx
 
-COMMENTS_PORT = 8081
-COMMENTS_URL = "localhost"
+COMMENTS_PORT = 8080
+COMMENTS_URL = "comments_api"
 
-WIKI_PORT = 8081
-WIKI_URL = "localhost"
+WIKI_PORT = 8084
+WIKI_URL = "wikis_api"
 
 async def get_user_comments(usr_id : str, order : str=None, limit : int=None, offset : int=None):
     async with httpx.AsyncClient() as client:
