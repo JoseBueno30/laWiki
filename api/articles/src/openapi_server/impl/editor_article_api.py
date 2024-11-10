@@ -8,7 +8,7 @@ from bson import ObjectId
 from openapi_server.apis.editors_api import create_article_version, delete_article_version_by_id
 from openapi_server.apis.editors_api_base import BaseEditorsApi
 from openapi_server.apis.internal_api import check_article_by_id
-from openapi_server.impl.api_calls import delete_article_comments
+from openapi_server.impl.api_calls import delete_article_comments, check_if_wiki_exists
 from openapi_server.impl.default_article_api import mongodb
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
