@@ -255,7 +255,7 @@ class DefaultArticleAPI(BaseDefaultApi):
         pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
                                            offset, limit, order, total_documents, "articles")
 
-        articles = await mongodb["article"].aggregate(pipeline).to_list()
+        articles = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         if not articles[0]:
             raise Exception
@@ -375,9 +375,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             *pagination_pipeline
         ]
 
-        articles = await mongodb["article"].aggregate(query_pipeline).to_list()
-
-        print(articles)
+        articles = await mongodb["article"].aggregate(query_pipeline).to_list(None)
 
         if not articles:
             raise Exception
@@ -398,7 +396,7 @@ class DefaultArticleAPI(BaseDefaultApi):
                                            offset, limit, order, total_documents, "article_versions",
                                            f"articles/{id}/versions")
 
-        article_versions = await mongodb["article_version"].aggregate(pipeline).to_list()
+        article_versions = await mongodb["article_version"].aggregate(pipeline).to_list(None)
 
         if not article_versions[0]:
             raise Exception
@@ -425,7 +423,7 @@ class DefaultArticleAPI(BaseDefaultApi):
                                            offset, limit, order, total_articles, "articles",
                                            f"articles/commented_by/{id}")
 
-        article_list = await mongodb["article"].aggregate(pipeline).to_list()
+        article_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         if not article_list[0]:
             raise Exception
