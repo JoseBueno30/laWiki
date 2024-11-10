@@ -72,7 +72,7 @@ transform_version_ids_pipeline = [
 async def get_total_number_of_documents(collection, match_query):
     return await collection.count_documents(match_query)
 
-def get_model_list_pipeline(match_query, offset, limit, order, total_documents, list_name):
+def get_model_list_pipeline(match_query, offset, limit, order, total_documents, list_name, pagination_path):
     """
     This method generates the pipeline using the parameters up above.
     Parameters:
@@ -119,14 +119,14 @@ def get_model_list_pipeline(match_query, offset, limit, order, total_documents, 
                 "next": {
                     "$cond": {
                         "if": {"$lt": [offset + limit, total_documents]},
-                        "then": f"/articles/?offset={offset + limit}&limit={limit}",
+                        "then": f"/{pagination_path}?offset={offset + limit}&limit={limit}&order={order if order else ''}",
                         "else": None
                     }
                 },
                 "previous": {
                     "$cond": {
                         "if": {"$gt": [offset, 0]},
-                        "then": f"/articles/?offset={max(offset - limit, 0)}&limit={limit}",
+                        "then": f"/{pagination_path}?offset={max(offset - limit, 0)}&limit={limit}&order={order if order else ''}",
                         "else": None
                     }
                 },
@@ -393,7 +393,8 @@ class DefaultArticleAPI(BaseDefaultApi):
                                                               {"article_id": ObjectId(id)})
 
         pipeline = get_model_list_pipeline({"article_id": ObjectId(id)},
-                                           offset, limit, order, total_documents, "article_versions")
+                                           offset, limit, order, total_documents, "article_versions",
+                                           f"articles/{id}/versions")
 
         article_versions = await mongodb["article_version"].aggregate(pipeline).to_list()
 
@@ -410,7 +411,7 @@ class DefaultArticleAPI(BaseDefaultApi):
         limit: int,
         order: str,
     ) -> ArticleList:
-        comment_list = await get_user_comments(id, order, offset, limit)
+        comment_list = await get_user_comments(id)
         article_ids_list = []
         for comment in comment_list["comments"]:
                 article_ids_list.append(ObjectId(comment["article_id"]))
@@ -419,7 +420,8 @@ class DefaultArticleAPI(BaseDefaultApi):
                                                              {"_id": {"$in": article_ids_list}})
 
         pipeline = get_model_list_pipeline({"_id": {"$in": article_ids_list}},
-                                           offset, limit, order, total_articles, "articles")
+                                           offset, limit, order, total_articles, "articles",
+                                           f"articles/commented_by/{id}")
 
         article_list = await mongodb["article"].aggregate(pipeline).to_list()
 
