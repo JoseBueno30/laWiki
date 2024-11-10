@@ -19,9 +19,13 @@ client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.ne
 
 mongodb = client.get_database("laWikiDB")
 
+def check_modification_match(result):
+    if result.matched_count < 1: # If _id does not lead to a wiki, causes 404
+        raise LookupError(MESSAGE_NOT_FOUND.format(resource="Wiki"))
+
 def check_modification(result):
     if result.matched_count < 1: # If _id does not lead to a wiki, causes 404
-        raise LookupError(MESSAGE_NOT_FOUND)
+        raise LookupError(MESSAGE_NOT_FOUND).format(resource="Wiki")
     elif result.modified_count < 1: # If _id leads to wiki, but failed to update, causes 500
         raise Exception(MESSAGE_NOT_FOUND_NESTED)
 
@@ -99,7 +103,28 @@ class WikiApiInternal(BaseInternalApi):
         check_modification(result)
 
     async def assign_wiki_tags(self, id: str, id_tags_body: IdTagsBody) -> None:
-        return await super().assign_wiki_tags(id, id_tags_body)
+        print(id_tags_body)
+        print(id_tags_body.to_json())
+        uploaded_obj = []
+        for obj in id_tags_body.tag_ids:
+            uploaded_obj.append({
+            "_id" : ObjectId(obj.id),
+            "name" : obj.name
+        })
+        add_tags_object = [
+            { "_id" : ObjectId(id[1:-1]) }
+            ,
+            {
+                "$addToSet" : {
+                    "tags" : {
+                        "$each": uploaded_obj
+                    }
+                }
+            }
+            ]
+        result = await mongodb["wiki"].update_one(filter=add_tags_object[0],
+                                         update=add_tags_object[1])
+        check_modification_match(result) 
     
     async def unassign_article_tags(self, id: str, ids: list[str]) -> None:
         id_list = []
@@ -109,5 +134,5 @@ class WikiApiInternal(BaseInternalApi):
     { "$pull": { "tags": { "_id" : {"$in" : id_list }}}}]
         result = await mongodb["wiki"].update_one(filter=remove_tags_object[0],
                                          update=remove_tags_object[1])
-        check_modification(result)
+        check_modification_match(result)
         
