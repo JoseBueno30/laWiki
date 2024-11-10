@@ -1,8 +1,11 @@
 # coding: utf-8
-
+from fastapi.responses import JSONResponse
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+
+from bson.errors import InvalidId
+from pymongo import errors
 
 from openapi_server.apis.editors_api_base import BaseEditorsApi
 import openapi_server.impl
@@ -53,13 +56,18 @@ async def create_article(
     """Create a new Article in a given wiki"""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().create_article(new_article)
+    try:
+        return await BaseEditorsApi.subclasses[0]().create_article(new_article)
+    except errors.DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Duplicate Key")
+    except errors.PyMongoError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post(
     "/articles/{id}/versions",
     responses={
-        201: {"model": ArticleVersion, "description": "Version successfully created."},
+        201: {"model": ArticleVersion, "message": "Version successfully created."},
         400: {"description": "Bad Request, Invalid Parameters"},
         403: {"description": "Forbidden"},
     },
@@ -74,7 +82,12 @@ async def create_article_version(
     """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().create_article_version(id, new_article_version)
+    try:
+        return await BaseEditorsApi.subclasses[0]().    create_article_version(id, new_article_version)
+    except errors.DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Duplicate Key")
+    except errors.PyMongoError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete(
@@ -95,8 +108,12 @@ async def delete_article_by_id(
     """Delete an Article identified by it&#39;s unique ID"""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().delete_article_by_id(id)
-
+    try:
+        await BaseEditorsApi.subclasses[0]().delete_article_by_id(id)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Article Not Found")
 
 @router.delete(
     "/articles/versions/{id}",
@@ -116,16 +133,20 @@ async def delete_article_version_by_id(
     """Delete an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().delete_article_version_by_id(id)
-
+    try:
+        await BaseEditorsApi.subclasses[0]().delete_article_version_by_id(id)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Article Not Found")
 
 @router.put(
     "/articles/{article_id}/versions/{version_id}",
     responses={
         200: {"description": "ArticleVersion successfully restored"},
-        400: {"description": "invalid Article or ArticleVersion ID format"},
+        400: {"description": "Bad Request, invalid Article or ArticleVersion ID format"},
         403: {"description": "Forbidden"},
-        404: {"description": "Article Version Not Found"},
+        404: {"description": "ArticleVersion Not Found"},
     },
     tags=["editors"],
     summary="Restore ArticleVersion",
@@ -138,4 +159,10 @@ async def restore_article_version(
     """Restore an older ArticleVersion of an Article."""
     if not BaseEditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseEditorsApi.subclasses[0]().restore_article_version(article_id, version_id)
+    try:
+        if await BaseEditorsApi.subclasses[0]().restore_article_version(article_id, version_id) is None:
+            return JSONResponse(status_code=200, content={"detail": "ArticleVersion successfully restored"})
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Article or ArticleVersion ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")

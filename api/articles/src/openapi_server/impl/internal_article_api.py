@@ -48,7 +48,6 @@ class InternalArticleAPI(BaseInternalApi):
             {"_id": ObjectId(id)},
             {"$pull": {"tags": {"_id": {"$in": tag_ids}}}}
         )
-        print(result)
         if result.matched_count == 0:
             raise NotFoundErr
         return None

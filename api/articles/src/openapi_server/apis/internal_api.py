@@ -59,7 +59,7 @@ async def assign_article_tags(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         if await BaseInternalApi.subclasses[0]().assign_article_tags(id, id_tags_body) is None:
-            raise HTTPException(status_code=204, detail="No Content, tags assigned")
+            return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
     except NotFoundErr:
@@ -114,7 +114,7 @@ async def unassign_article_tags(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         if await BaseInternalApi.subclasses[0]().unassign_article_tags(id, ids) is None:
-            raise HTTPException(status_code=204, detail="No Content, tags assigned")
+            return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
     except NotFoundErr:
@@ -142,7 +142,7 @@ async def update_rating(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         if await BaseInternalApi.subclasses[0]().update_rating(id, id_ratings_body) is None:
-            raise HTTPException(status_code=204, detail="No Content, rating updated")
+            return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")
     except NotFoundErr:

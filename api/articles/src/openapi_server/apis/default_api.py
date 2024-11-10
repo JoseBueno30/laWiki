@@ -58,7 +58,12 @@ async def get_article_by_author(
     """Get a list of Articles given an author&#39;s ID.  """
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_article_by_author(id, offset, limit, order)
+    try:
+        return await BaseDefaultApi.subclasses[0]().get_article_by_author(id, offset, limit, order)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid Author ID format.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Article Not Found")
 
 
 @router.get(
@@ -190,6 +195,7 @@ async def get_articles_commented_by_user(
     responses={
         200: {"model": ArticleList, "description": "OK"},
         400: {"description": "Bad Request, invalid input paramaters"},
+        404: {"description": "Article Not Found"},
     },
     tags=["default"],
     summary="Search for Articles",
@@ -201,7 +207,7 @@ async def search_articles(
     tags: List[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
     limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
-    order: str = Query('none', description="Sorts the articles by different criteria", alias="order"),
+    order: str = Query(None, description="Sorts the articles by different criteria", alias="order"),
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Article", alias="author_name"),
     editor_name: str = Query(None, description="Filter for the editors of the Article", alias="editor_name")
@@ -209,4 +215,9 @@ async def search_articles(
     """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
+    try:
+        return await BaseDefaultApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid input parameters.")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Article Not Found")

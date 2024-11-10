@@ -411,6 +411,9 @@
           "400": {
             "description": "Bad Request, invalid input paramaters",
             "content": {}
+          },
+          "404": {
+            "description": "Article Not Found"
           }
         }
       },
@@ -1095,7 +1098,7 @@
               "examples": {
                 "Example 1": {
                   "value": {
-                    "rating": 4.5
+                    "raitng": 4.5
                   }
                 }
               }
