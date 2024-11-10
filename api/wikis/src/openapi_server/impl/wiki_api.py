@@ -1,5 +1,5 @@
 
-from typing import Any, Coroutine
+from typing import Any, Coroutine, List
 
 from bson import ObjectId
 from openapi_server.apis.default_api_base import BaseDefaultApi
@@ -135,7 +135,7 @@ class WikiApiInternal(BaseInternalApi):
                                          update=add_tags_object[1])
         check_modification_match(result) 
     
-    async def unassign_article_tags(self, id: str, ids: list[str]) -> None:
+    async def unassign_article_tags(self, id: str, ids: List[str]) -> None:
         id_list = []
         for id_str in ids:
             id_list.append(ObjectId(id_str))

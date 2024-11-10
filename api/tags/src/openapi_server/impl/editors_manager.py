@@ -1,6 +1,8 @@
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from typing import List
+
 from openapi_server.impl import api_calls
 from openapi_server.models.tag_id_list import TagIDList
 from openapi_server.apis.editors_api_base import BaseEditorsApi
@@ -50,7 +52,7 @@ class EditorsManager(BaseEditorsApi):
     async def unassign_tags(
         self,
         id: str,
-        ids: list[str],
+        ids: List[str],
     ) -> None:
         """Unassigns a list of tags, given their IDs to an article."""
         article_id = ObjectId(id)

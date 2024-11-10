@@ -32,7 +32,7 @@ class BaseInternalApi:
     async def unassign_article_tags(
         self,
         id: str,
-        ids: list[str],
+        ids: List[str],
     ) -> None:
         """Unassigns a list of tags, given their IDs to a Wiki."""
         ...

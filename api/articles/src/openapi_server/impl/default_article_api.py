@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from typing import List
+
 import httpx
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
@@ -97,10 +99,10 @@ def get_model_list_pipeline(match_query, offset, limit, order, total_documents, 
             }
         },
         {
-            "$skip": offset
+            "$skip": (offset if offset is not None else 0)
         },
         {
-            "$limit": limit
+            "$limit": (limit if limit is not None else 20)
         },
         *transform_article_ids_pipeline,
         {
@@ -167,8 +169,6 @@ class DefaultArticleAPI(BaseDefaultApi):
             name: str,
             wiki_id: str
     ) -> ArticleVersion:
-        if not await check_if_wiki_exists(wiki_id):
-            raise Exception("Wiki does not exist")
 
         version_id_pipeline = [
             {
@@ -251,9 +251,10 @@ class DefaultArticleAPI(BaseDefaultApi):
                                                               {"author._id": ObjectId(id)})
 
         pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
-                                           offset, limit, order, total_documents, "articles")
+                                           offset, limit, order, total_documents, "articles",
+                                           "articles/author/")
 
-        articles = await mongodb["article"].aggregate(pipeline).to_list()
+        articles = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         if not articles[0]:
             raise Exception
@@ -264,7 +265,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             self,
             wiki_id: str,
             name: str,
-            tags: list[str],
+            tags: List[str],
             offset: int,
             limit: int,
             order: str,
@@ -273,7 +274,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             editor_name: str,
     ) -> ArticleList:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-        url_filters = "/articles/?"
+        url_filters = "/articles?"
         matching_variables = {}
         if wiki_id is not None:
             matching_variables["wiki_id"] = ObjectId(wiki_id)
@@ -373,7 +374,7 @@ class DefaultArticleAPI(BaseDefaultApi):
             *pagination_pipeline
         ]
 
-        articles = await mongodb["article"].aggregate(query_pipeline).to_list()
+        articles = await mongodb["article"].aggregate(query_pipeline).to_list(length=None)
 
         if not articles:
             raise Exception
@@ -394,7 +395,7 @@ class DefaultArticleAPI(BaseDefaultApi):
                                            offset, limit, order, total_documents, "article_versions",
                                            f"articles/{id}/versions")
 
-        article_versions = await mongodb["article_version"].aggregate(pipeline).to_list()
+        article_versions = await mongodb["article_version"].aggregate(pipeline).to_list(length=None)
 
         if not article_versions[0]:
             raise Exception
@@ -421,7 +422,7 @@ class DefaultArticleAPI(BaseDefaultApi):
                                            offset, limit, order, total_articles, "articles",
                                            f"articles/commented_by/{id}")
 
-        article_list = await mongodb["article"].aggregate(pipeline).to_list()
+        article_list = await mongodb["article"].aggregate(pipeline).to_list(length=None)
 
         if not article_list[0]:
             raise Exception
