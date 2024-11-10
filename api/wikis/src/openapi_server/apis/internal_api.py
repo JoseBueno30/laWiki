@@ -48,13 +48,22 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def assign_wiki_tags(
+    response : Response,
     id: str = Path(..., description=""),
     id_tags_body: IdTagsBody = Body(None, description=""),
 ) -> None:
     """Assigns a list of tags, given their IDs, to a wiki"""
     if not BaseInternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().assign_wiki_tags(id, id_tags_body)
+    try:
+        await BaseInternalApi.subclasses[0]().assign_wiki_tags(id, id_tags_body)
+        response.status_code = 204
+    except LookupError:
+        response.status_code = 404
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
 
 @router.head(

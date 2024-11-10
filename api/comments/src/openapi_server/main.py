@@ -15,6 +15,7 @@
 from fastapi import FastAPI
 
 from openapi_server.apis.default_api import router as DefaultApiRouter
+from openapi_server.apis.internal_api import router as InternalApiRouter
 
 app = FastAPI(
     title="CommentsAPI",
@@ -23,3 +24,4 @@ app = FastAPI(
 )
 
 app.include_router(DefaultApiRouter)
+app.include_router(InternalApiRouter)

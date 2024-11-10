@@ -3,8 +3,10 @@
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+from xml.dom import NotFoundErr
 
 from bson.errors import InvalidId
+from starlette.responses import JSONResponse
 
 from openapi_server.apis.default_api_base import BaseDefaultApi
 import openapi_server.impl
@@ -29,6 +31,7 @@ from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from openapi_server.models.new_comment import NewComment
 
+
 router = APIRouter()
 
 ns_pkg = openapi_server.impl
@@ -49,17 +52,21 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def delete_comment(
-        comment_id: str = Path(..., description="The unique ID of the article"),
-) -> None:
+    comment_id: str = Path(..., description="The unique ID of the article"),
+) -> Response:
     """Deletes an article&#39;s comment"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseDefaultApi.subclasses[0]().delete_comment(comment_id)
+        await BaseDefaultApi.subclasses[0]().delete_comment(comment_id)
+        return Response(status_code=204)
     except InvalidId:
         raise HTTPException(status_code=400, detail="Bad Request, Invalid Comment ID format")
-    except Exception as e:
-        raise HTTPException(status_code=404, detail=e.args[0])
+    except NotFoundErr as e:
+        if e.args:
+            raise HTTPException(status_code=404, detail=e.args[0])
+        else:
+            raise HTTPException(status_code=404, detail="Comment not found")
 
 
 @router.get(
@@ -74,14 +81,11 @@ async def delete_comment(
     response_model_by_alias=True,
 )
 async def get_article_comments(
-        article_id: str = Path(..., description="The unique ID of the article"),
-        order: str = Query('recent', description="Set the order the comments will be shown. It is determined by date",
-                           alias="order"),
-        limit: int = Query(20, description="Maximum amount of responses to be returned", alias="limit", ge=0, le=100),
-        offset: int = Query(0,
-                            description="The index of the first result to return. Use with limit to get the next page of search results.",
-                            alias="offset", ge=0),
-        creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
+    article_id: str = Path(..., description="The unique ID of the article"),
+    order: str = Query('recent', description="Set the order the comments will be shown. It is determined by date", alias="order"),
+    limit: int = Query(20, description="Maximum amount of responses to be returned", alias="limit", ge=0, le=100),
+    offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
+    creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
 ) -> CommentListResponse:
     """Retrieves all comments from an articles"""
     if not BaseDefaultApi.subclasses:
@@ -89,10 +93,11 @@ async def get_article_comments(
     try:
         return await BaseDefaultApi.subclasses[0]().get_article_comments(article_id, order, limit, offset,
                                                                          creation_date)
-    except (InvalidId,ValueError):
-        raise HTTPException(status_code=400, detail="Invalid parameters")
-    except Exception:
-        raise HTTPException(status_code=404)
+    except (InvalidId, ValueError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameters")
+    except NotFoundErr:
+        raise HTTPException(status_code=404, detail="Not Found")
+
 
 @router.get(
     "/comments/users/{user_id}",
@@ -106,32 +111,32 @@ async def get_article_comments(
     response_model_by_alias=True,
 )
 async def get_users_comments(
-        user_id: str = Path(..., description="The unique ID of the user"),
-        article_id: str = Query(None, description="Fillters the results by the article&#39;s ID", alias="article_id"),
-        order: str = Query('recent', description="Set the order the comments will be shown. It is determined by date",
-                           alias="order"),
-        limit: int = Query(20, description="Maximum amount of responses to be returned", alias="limit", ge=0, le=100),
-        offset: int = Query(0,
-                            description="The index of the first result to return. Use with limit to get the next page of search results.",
-                            alias="offet", ge=0),
-        creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
+    user_id: str = Path(..., description="The unique ID of the user"),
+    article_id: str = Query(None, description="Filters the results by the article&#39;s ID", alias="article_id"),
+    order: str = Query('recent', description="Set the order the comments will be shown. It is determined by date", alias="order"),
+    limit: int = Query(20, description="Maximum amount of responses to be returned", alias="limit", ge=0, le=100),
+    offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
+    creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
 ) -> CommentListResponse:
-    """Retrieves all comments from a user"""
+    """Retrieves all comments from an user"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         return await BaseDefaultApi.subclasses[0]().get_users_comments(user_id, article_id, order, limit, offset,
                                                                        creation_date)
-    except (InvalidId,ValueError):
+    except (InvalidId, ValueError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters")
-    except Exception:
-        raise HTTPException(status_code=404)
+    except NotFoundErr as e:
+        if e.args:
+            raise HTTPException(status_code=404, detail=e.args[0])
+        else:
+            raise HTTPException(status_code=404, detail="Not found")
 
 
 @router.post(
     "/comments/articles/{article_id}",
     responses={
-        201: {"model": Comment, "description": "Comment successufully created"},
+        201: {"model": Comment, "description": "Comment successfully created"},
         400: {"description": "Bad Request, wrong content structure"},
         403: {"description": "Forbidden"},
         404: {"description": "Article or Author not found"},
@@ -141,9 +146,8 @@ async def get_users_comments(
     response_model_by_alias=True,
 )
 async def post_comment(
-        article_id: str = Path(..., description="The unique ID of the article"),
-        new_comment: NewComment = Body(None,
-                                       description="JSON object that contains the author and content of the comment"),
+    article_id: str = Path(..., description="The unique ID of the article"),
+    new_comment: NewComment = Body(None, description="JSON object that contains the author and content of the comment"),
 ) -> Comment:
     """Posts a new comment in an article"""
     if not BaseDefaultApi.subclasses:
@@ -152,7 +156,7 @@ async def post_comment(
         return await BaseDefaultApi.subclasses[0]().post_comment(article_id, new_comment)
     except InvalidId:
         raise HTTPException(status_code=400, detail="Bad Request, wrong content structure")
-    except Exception as e:
+    except NotFoundErr as e:
         if e.args:
             raise HTTPException(status_code=404, detail=e.args[0])
         else:

@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from xml.dom import NotFoundErr
 
 from bson import ObjectId
 
@@ -13,7 +14,6 @@ from openapi_server.models.new_comment import NewComment
 from openapi_server.utils.url_creator import generate_url_offset
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
-
 mongodb = client.get_database("laWikiDB")
 
 # Removes ObjectID fields and converts them to string
@@ -39,13 +39,13 @@ pipeline_group_comments = [
     }
 ]
 
-class ContentManager(BaseDefaultApi):
+class DefaultCommentsManager(BaseDefaultApi):
 
     async def delete_comment(self, comment_id: str) -> None:
         """Deletes an article's comment"""
         result = await mongodb['comment'].delete_one({"_id": ObjectId(comment_id)})
         if result.deleted_count == 0:
-            raise Exception("Comment not found")
+            raise NotFoundErr("Comment not found")
         return None
 
     async def get_article_comments(
@@ -69,7 +69,7 @@ class ContentManager(BaseDefaultApi):
         """Post Comment"""
 
         if not await api_calls.check_article(article_id):
-            raise Exception("Article not found")
+            raise NotFoundErr("Article not found")
 
         # if not mongodb['article'].find_one({"_id": art_id}):
         #     raise Exception("Article not found")
@@ -170,6 +170,6 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
     comments = await mongodb['comment'].aggregate(query_pipeline).to_list(length=1);
 
     if not comments:
-        raise Exception("Not found")
+        raise NotFoundErr()
 
     return comments[0]

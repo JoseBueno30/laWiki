@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="HttpClientEndpointsTabState">
-    <option name="requestToText" value="&lt;CachedHttpClientTabRequests&gt;&#10;  &lt;entry key=&quot;34b8272a009ba9cadd32ec133c4e68bf3c3d6ad9&quot; value=&quot;###&amp;#10;GET https://localhost:8080/comments/670eb185d8bb6a680c6108ac&quot; /&gt;&#10;  &lt;entry key=&quot;647df1feb06ad46a173d947c616632a795223944&quot; value=&quot;###&amp;#10;POST https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/CommentsAPI/1.0/comments/articles/{{article_id}}&amp;#10;Content-Type: application/json&amp;#10;&amp;#10;{&amp;#10;  &amp;quot;author_id&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;body&amp;quot;: &amp;quot;&amp;quot;&amp;#10;}&quot; /&gt;&#10;&lt;/CachedHttpClientTabRequests&gt;" />
-  </component>
-</project>

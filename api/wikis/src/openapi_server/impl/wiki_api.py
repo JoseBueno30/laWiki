@@ -19,16 +19,21 @@ client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.ne
 
 mongodb = client.get_database("laWikiDB")
 
+def check_modification_match(result):
+    if result.matched_count < 1: # If _id does not lead to a wiki, causes 404
+        raise LookupError(MESSAGE_NOT_FOUND.format(resource="Wiki"))
+
 def check_modification(result):
     if result.matched_count < 1: # If _id does not lead to a wiki, causes 404
-        raise LookupError(MESSAGE_NOT_FOUND)
+        raise LookupError(MESSAGE_NOT_FOUND).format(resource="Wiki")
     elif result.modified_count < 1: # If _id leads to wiki, but failed to update, causes 500
         raise Exception(MESSAGE_NOT_FOUND_NESTED)
 
 # Removes ObjectID fields and converts them to string
-def pipeline_remove_id_filter_name(name : str) -> list :
+def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
+    filter = ({"name" : name}) if name else ({"_id" : ObjectId(id_wiki)})
     return [
-        {'$match' : {"name" : name}},
+        {'$match' : filter},
         {'$addFields': {
                 "tags": {
                     "$map": {
@@ -52,14 +57,22 @@ class WikiApi(BaseDefaultApi):
     def __init__(self):
         super().__init__()
 
+    async def get_wiki(self, id: str) -> Wiki:
+        print(1234567890)
+        result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(id_wiki=id)).to_list(length=1)
+
+        if result.__len__() != 1:
+            raise LookupError()
+
+        return result[0]
+
     async def get_one_wiki_by_name(self, name: str) -> Wiki:
+        if ObjectId.is_valid(name):
+            return await self.get_wiki(name)
         result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(name)).to_list(length=1)
 
         if result.__len__() != 1:
             raise LookupError()
-        
-        print(result)
-        print(type(result[0]))
 
         return result[0]
 
@@ -99,15 +112,36 @@ class WikiApiInternal(BaseInternalApi):
         check_modification(result)
 
     async def assign_wiki_tags(self, id: str, id_tags_body: IdTagsBody) -> None:
-        return await super().assign_wiki_tags(id, id_tags_body)
+        print(id_tags_body)
+        print(id_tags_body.to_json())
+        uploaded_obj = []
+        for obj in id_tags_body.tag_ids:
+            uploaded_obj.append({
+            "_id" : ObjectId(obj.id),
+            "name" : obj.name
+        })
+        add_tags_object = [
+            { "_id" : ObjectId(id) }
+            ,
+            {
+                "$addToSet" : {
+                    "tags" : {
+                        "$each": uploaded_obj
+                    }
+                }
+            }
+            ]
+        result = await mongodb["wiki"].update_one(filter=add_tags_object[0],
+                                         update=add_tags_object[1])
+        check_modification_match(result) 
     
     async def unassign_article_tags(self, id: str, ids: list[str]) -> None:
         id_list = []
         for id_str in ids:
             id_list.append(ObjectId(id_str))
-        remove_tags_object = [{ "_id" : ObjectId(id[1:-1]) },
+        remove_tags_object = [{ "_id" : ObjectId(id) },
     { "$pull": { "tags": { "_id" : {"$in" : id_list }}}}]
         result = await mongodb["wiki"].update_one(filter=remove_tags_object[0],
                                          update=remove_tags_object[1])
-        check_modification(result)
+        check_modification_match(result)
         

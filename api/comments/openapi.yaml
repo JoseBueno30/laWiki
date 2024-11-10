@@ -10,6 +10,8 @@ servers:
 tags:
 - description: Operations available for all authenticated users
   name: default
+- description: Operations available only between authorized microservices
+  name: internal
 paths:
   /comments/users/{user_id}:
     get:
@@ -60,7 +62,7 @@ paths:
           the next page of search results.
         explode: true
         in: query
-        name: offet
+        name: offset
         required: false
         schema:
           default: 0
@@ -107,6 +109,30 @@ paths:
       summary: Get Users Comments
       tags: []
   /comments/articles/{article_id}:
+    delete:
+      description: Deletes all comments from an article
+      operationId: delete_articles_comments
+      parameters:
+      - description: The unique ID of the Article
+        explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No content, comments deleted successfully"
+        "400":
+          description: "Bad Request, invalid Article ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article not found
+      summary: Delete Articles Comments
+      tags:
+      - internal
     get:
       description: Retrieves all comments from an articles
       operationId: get_article_comments
@@ -243,7 +269,7 @@ paths:
         style: simple
       responses:
         "204":
-          description: "No Content, comment deleted succesfully"
+          description: "No Content, comment deleted successfully"
         "400":
           description: "Bad Request, invalid Comment ID format"
         "403":
