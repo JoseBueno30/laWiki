@@ -2,6 +2,8 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
+from starlette.responses import JSONResponse, Response
+
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from openapi_server.models.new_comment import NewComment
@@ -16,7 +18,7 @@ class BaseDefaultApi:
     async def delete_comment(
         self,
         comment_id: str,
-    ) -> None:
+    ) -> Response:
         """Deletes an article&#39;s comment"""
         ...
 

@@ -15,6 +15,10 @@
     {
       "name": "default",
       "description": "Operations available for all authenticated users"
+    },
+    {
+      "name": "internal",
+      "description": "Operations available only between authorized microservices"
     }
   ],
   "paths": {
@@ -77,7 +81,7 @@
             }
           },
           {
-            "name": "offet",
+            "name": "offset",
             "in": "query",
             "description": "The index of the first result to return. Use with limit to get the next page of search results.",
             "required": false,
@@ -313,6 +317,41 @@
             "description": "Article or Author not found"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Delete Articles Comments",
+        "description": "Deletes all comments from an article",
+        "operationId": "delete_articles_comments",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "path",
+            "description": "The unique ID of the Article",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content, comments deleted successfully"
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Article not found"
+          }
+        }
       }
     },
     "/comments/{comment_id}": {
@@ -337,7 +376,7 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content, comment deleted succesfully"
+            "description": "No Content, comment deleted successfully"
           },
           "400": {
             "description": "Bad Request, invalid Comment ID format"

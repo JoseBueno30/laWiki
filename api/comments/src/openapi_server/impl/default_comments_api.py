@@ -1,19 +1,19 @@
 from datetime import datetime, date
+from xml.dom import NotFoundErr
 
 from bson import ObjectId
-from dns.e164 import query
+
 
 from openapi_server.apis.default_api_base import BaseDefaultApi
+from openapi_server.impl import api_calls
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.models.new_comment import NewComment
-from openapi_server.utils.parsers import from_cursor_to_comment
 from openapi_server.utils.url_creator import generate_url_offset
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
-
 mongodb = client.get_database("laWikiDB")
 
 # Removes ObjectID fields and converts them to string
@@ -39,13 +39,13 @@ pipeline_group_comments = [
     }
 ]
 
-class ContentManager(BaseDefaultApi):
+class DefaultCommentsManager(BaseDefaultApi):
 
     async def delete_comment(self, comment_id: str) -> None:
         """Deletes an article's comment"""
         result = await mongodb['comment'].delete_one({"_id": ObjectId(comment_id)})
         if result.deleted_count == 0:
-            raise Exception("Comment not found")
+            raise NotFoundErr("Comment not found")
         return None
 
     async def get_article_comments(
@@ -59,7 +59,7 @@ class ContentManager(BaseDefaultApi):
         """Retrieves all comments from an articles"""
         path = "/comments/articles/{article_id}"
         path_vars = {"article_id": article_id}
-        return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date = creation_date, article_id = article_id)
+        return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date,None ,article_id)
 
     async def post_comment(
             self,
@@ -67,17 +67,20 @@ class ContentManager(BaseDefaultApi):
             new_comment: NewComment,
     ) -> Comment:
         """Post Comment"""
-        art_id = ObjectId(article_id)
-        if not mongodb['article'].find_one({"_id": art_id}):
-            raise Exception("Article not found")
+
+        if not await api_calls.check_article(article_id):
+            raise NotFoundErr("Article not found")
+
+        # if not mongodb['article'].find_one({"_id": art_id}):
+        #     raise Exception("Article not found")
 
         today = date.today()
 
-        author_dict = {'id': new_comment.author_id,
+        author_dict = {'_id': ObjectId(new_comment.author_id),
                        'name': 'author_name',
                        'image': 'author_image'}
         comment_dic = {
-            'article_id': article_id,
+            'article_id': ObjectId(article_id),
             'author': author_dict,
             'body': new_comment.body,
 
@@ -85,7 +88,10 @@ class ContentManager(BaseDefaultApi):
         }
         result = await mongodb['comment'].insert_one(comment_dic)
         if result:
+            # Once inserted, we return the comment with the id as strings
             comment_dic['id'] = str(result.inserted_id)
+            comment_dic['article_id'] = str(comment_dic['article_id'])
+            comment_dic['author']['id'] = str(comment_dic['author']['_id'])
             return Comment.from_dict(comment_dic)
         else:
             raise Exception("Error creating comment")
@@ -105,7 +111,7 @@ class ContentManager(BaseDefaultApi):
         return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date, user_id, article_id)
 
 def parse_date(date_str):
-    res_date = datetime.strptime(date_str, "%Y-%m-%d")
+    res_date = datetime.strptime(date_str, "%Y/%m/%d")
     return res_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
 def build_pagination_urls(base_path, path_vars, pagination, offset, total_count, limit):
@@ -115,19 +121,21 @@ def build_pagination_urls(base_path, path_vars, pagination, offset, total_count,
 
 
 async def get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date = None, user_id = None, article_id = None):
-    """Funcion general que recibe todos los parametros y devuelve los comentarios"""
-    pagination = {"limit": limit, "offset": offset} # Diccionario para pasar los argumentos a la url
-    matching_variables = {} # Diccionario para el filtro de comentarios
+    """General function to retrieve comments by parameters"""
+    res_query_params = {"limit": limit, "offset": offset} # Dictionary for pagination info in the url
+    matching_variables = {} # Dictionary for the filters
 
-    if user_id is not None and path_vars["user_id"] is None: # Si el user_id no es None y no esta en path_vars
+    if user_id is not None:
         matching_variables["author._id"] = ObjectId(user_id)
-        pagination["user_id"] = user_id
-    if article_id is not None and path_vars["article_id"] is None: # Si el article_id no es None y no esta en path_vars
+        if "user_id" not in path_vars: # Path variables dont need to be added to the query url
+            res_query_params["user_id"] = user_id
+    if article_id is not None:
         matching_variables["article_id"] = ObjectId(article_id)
-        pagination["article_id"] = article_id
+        if "article_id" not in path_vars:
+            res_query_params["article_id"] = article_id
     if creation_date is not None:
         dates = creation_date.split("-")
-        pagination["creation_date"] = creation_date
+        res_query_params["creation_date"] = creation_date
         # En funcion de si hay una o dos fechas, se filtra por una o por un rango
         if len(dates) == 1:
             matching_variables["creation_date"] = parse_date(dates[0])
@@ -139,7 +147,7 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
 
     total_count = await mongodb['comment'].count_documents(matching_variables) # Contamos el numero de comentarios que cumplen con los filtros
     next_url, prev_url = build_pagination_urls(path, path_vars,
-                                               pagination, offset, total_count, limit) # Generamos las urls de paginacion
+                                               res_query_params, offset, total_count, limit) # Generamos las urls de paginacion
     query_pipeline = [
         {"$match": matching_variables},
         {"$sort": {"creation_date": -1 if order == "recent" else 1}},
@@ -157,9 +165,11 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
         }
     ]
 
+    print(query_pipeline)
+
     comments = await mongodb['comment'].aggregate(query_pipeline).to_list(length=1);
 
-    if not comments[0].get('comments'):
-        raise Exception("Not found")
+    if not comments:
+        raise NotFoundErr()
 
     return comments[0]

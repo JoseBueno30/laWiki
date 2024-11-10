@@ -12,29 +12,29 @@ class BaseInternalApi:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         BaseInternalApi.subclasses = BaseInternalApi.subclasses + (cls,)
-    async def assign_article_tags(
+    async def assign_wiki_tags(
         self,
         id: str,
         id_tags_body: IdTagsBody,
     ) -> None:
-        """Assigns a list of tags, given their IDs, to an article"""
+        """Assigns a list of tags, given their IDs, to a wiki"""
         ...
 
 
-    async def check_article_by_id(
+    async def check_wiki_by_id(
         self,
         id: str,
     ) -> None:
-        """Check if an Article exits given its unique ID. """
+        """Check if a Wiki exits given its unique ID. """
         ...
 
 
     async def unassign_article_tags(
         self,
         id: str,
-        ids: List[str],
+        ids: list[str],
     ) -> None:
-        """Unassigns a list of tags, given their IDs to an article."""
+        """Unassigns a list of tags, given their IDs to a Wiki."""
         ...
 
 
@@ -43,5 +43,5 @@ class BaseInternalApi:
         id: str,
         id_ratings_body: IdRatingsBody,
     ) -> None:
-        """Update the rating of an Article give its unique ID and a rating"""
+        """Update the rating of a Wiki give its unique ID and a rating"""
         ...
