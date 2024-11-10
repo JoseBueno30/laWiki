@@ -276,11 +276,9 @@ class DefaultArticleAPI(BaseDefaultApi):
         url_filters = "/articles/?"
         matching_variables = {}
         if wiki_id is not None:
-            if not await check_if_wiki_exists(wiki_id):
-                raise Exception("Wiki does not exist")
-
             matching_variables["wiki_id"] = ObjectId(wiki_id)
             url_filters += "wiki_id=" + wiki_id + "&"
+
         if name is not None:
             matching_variables["title"] = {
                 "$regex": ".*"+ name +".*",
