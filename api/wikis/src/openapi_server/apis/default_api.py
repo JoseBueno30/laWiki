@@ -55,14 +55,14 @@ async def get_one_wiki_by_name(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         result = await BaseDefaultApi.subclasses[0]().get_one_wiki_by_name(name)
-    except LookupError:
-        raise HTTPException(status_code=404, detail="Wiki Not Found")
-    except:
-        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+    except LookupError as e:
+        raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"),e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED,e)
 
     return result
 
-
+# Never called, for modelling purposes
 @router.get(
     "/wikis/{id}",
     responses={

@@ -30,9 +30,10 @@ def check_modification(result):
         raise Exception(MESSAGE_NOT_FOUND_NESTED)
 
 # Removes ObjectID fields and converts them to string
-def pipeline_remove_id_filter_name(name : str) -> list :
+def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
+    filter = ({"name" : name}) if name else ({"_id" : ObjectId(id_wiki)})
     return [
-        {'$match' : {"name" : name}},
+        {'$match' : filter},
         {'$addFields': {
                 "tags": {
                     "$map": {
@@ -56,14 +57,22 @@ class WikiApi(BaseDefaultApi):
     def __init__(self):
         super().__init__()
 
+    async def get_wiki(self, id: str) -> Wiki:
+        print(1234567890)
+        result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(id_wiki=id)).to_list(length=1)
+
+        if result.__len__() != 1:
+            raise LookupError()
+
+        return result[0]
+
     async def get_one_wiki_by_name(self, name: str) -> Wiki:
+        if ObjectId.is_valid(name):
+            return await self.get_wiki(name)
         result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(name)).to_list(length=1)
 
         if result.__len__() != 1:
             raise LookupError()
-        
-        print(result)
-        print(type(result[0]))
 
         return result[0]
 
@@ -112,7 +121,7 @@ class WikiApiInternal(BaseInternalApi):
             "name" : obj.name
         })
         add_tags_object = [
-            { "_id" : ObjectId(id[1:-1]) }
+            { "_id" : ObjectId(id) }
             ,
             {
                 "$addToSet" : {
@@ -130,7 +139,7 @@ class WikiApiInternal(BaseInternalApi):
         id_list = []
         for id_str in ids:
             id_list.append(ObjectId(id_str))
-        remove_tags_object = [{ "_id" : ObjectId(id[1:-1]) },
+        remove_tags_object = [{ "_id" : ObjectId(id) },
     { "$pull": { "tags": { "_id" : {"$in" : id_list }}}}]
         result = await mongodb["wiki"].update_one(filter=remove_tags_object[0],
                                          update=remove_tags_object[1])
