@@ -45,6 +45,10 @@ class EditorArticleAPI(BaseEditorsApi):
         #   Deletes the body key from the article json
         new_article_json.pop("body", None)
 
+        #   Checks if the wiki exists
+        if not await check_if_wiki_exists(new_article_json["wiki_id"]):
+            raise Exception("Wiki does not exist")
+
         #   Changes the id type and inserts other attributes
         new_article_json["wiki_id"] = ObjectId(new_article_json["wiki_id"])
         new_article_json["author"]["_id"] = ObjectId(new_article_json["author"].pop("id"))
