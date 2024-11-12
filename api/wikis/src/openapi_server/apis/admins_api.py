@@ -3,6 +3,7 @@
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+from bson.errors import InvalidId
 
 from pymongo.errors import DuplicateKeyError
 from openapi_server.apis.admins_api_base import BaseAdminsApi
@@ -83,12 +84,20 @@ async def create_wiki(
     response_model_by_alias=True,
 )
 async def remove_wiki(
+    response : Response,
     id: str = Path(..., description="Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."),
 ) -> None:
     """Remove Wiki with the matching ID."""
     if not BaseAdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseAdminsApi.subclasses[0]().remove_wiki(id)
+    try:
+        await BaseAdminsApi.subclasses[0]().remove_wiki(id)
+    except LookupError:
+        response.status_code = 404
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
 
 @router.put(

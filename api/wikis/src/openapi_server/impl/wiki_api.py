@@ -96,6 +96,10 @@ class WikiApiAdmins(BaseAdminsApi):
         final_wiki.id = str(result.inserted_id)
         return final_wiki
     
+    async def remove_wiki(self, id: str) -> None:
+        result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id)})
+        # Gestionar respuesta
+    
 class WikiApiInternal(BaseInternalApi):
 
     def __init__(self):
