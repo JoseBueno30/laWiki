@@ -1755,6 +1755,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "lan",
+            "in": "query",
+            "description": "Language of the ArticleVersion",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2505,6 +2516,17 @@
               "type": "boolean",
               "example": false,
               "default": false
+            }
+          },
+          {
+            "name": "lan",
+            "in": "query",
+            "description": "Language of the body, if parsed",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
