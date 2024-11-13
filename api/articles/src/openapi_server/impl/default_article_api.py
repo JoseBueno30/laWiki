@@ -1,8 +1,11 @@
+import textwrap
 from datetime import datetime
 
 from typing import List
 
 import httpx
+import mwparserfromhell
+import pypandoc
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from openapi_server.apis.default_api_base import BaseDefaultApi
@@ -428,3 +431,21 @@ class DefaultArticleAPI(BaseDefaultApi):
             raise Exception
 
         return article_list[0]
+
+
+# PRUEBA DE EJECUCION PYPANDOC Y MWPARSEFROMHELL
+if __name__ == '__main__':
+    wiki_text = textwrap.dedent("""
+    == Sección de ejemplo ==
+    
+    Este es un ejemplo de contenido en ''wikitexto'' con '''negritas''' 
+    y un enlace a [[Página de ejemplo]].""")
+
+    print(wiki_text)
+    print("--------------------------------")
+    parsed_text = mwparserfromhell.parse(wiki_text)
+    print(parsed_text)
+    print("--------------------------------")
+
+    html_parsed = pypandoc.convert_text(str(parsed_text), 'html5', format='mediawiki')
+    print(html_parsed)
