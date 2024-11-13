@@ -78,12 +78,13 @@ class RatingsManager (BaseDefaultApi):
 
     async def get_article_average_rating(self, id: str):
         await self._check_article_exists(id)
+        avgRating = AverageRating(total=0, five_count=0, four_count=0, three_count=0, two_count=0, one_count=0, average=0.0, total_sum=0)
 
         result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id)}).to_list(length=None)
         if result == None or len(result) == 0:
-            raise HTTPException(status_code=404, detail="No Ratings found with that article ID")
+            return avgRating;
 
-        avgRating = AverageRating(total=0, five_count=0, four_count=0, three_count=0, two_count=0, one_count=0, average=0.0, total_sum=0)
+
         avgRating.total = len(result)
         for item in result:
             if item['value'] == 5:
@@ -126,9 +127,12 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=404, detail="Rating Not Found")
         return result[0]
 
-    async def get_user_rating(self, id: str):
-        # TODO: No users in the database yet
-        return 0.0;
+    async def delete_ratings_articles_id(self, id: str):
+        await self._check_article_exists(id)
+        await self.mongodb["rating"].delete_many({'article_id': self._convert_id_into_ObjectId(id)})
+        await self._update_article_and_wiki_average(id)
+        return None;
+
 
     ##-----------------------------------------------------------------------------------------------------------------
     ##--------------------------------------Private Methods------------------------------------------------------------

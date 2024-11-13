@@ -56,6 +56,25 @@ async def delete_rating(
     return await BaseDefaultApi.subclasses[0]().delete_rating(id)
 
 
+@router.delete(
+    "/ratings/articles/{id}",
+    responses={
+        204: {"description": "No Content"},
+        401: {"description": "Unauthorized"},
+        404: {"description": "Not Found"},
+    },
+    tags=["default"],
+    summary="Delete all ratings associated to an article",
+    response_model_by_alias=True,
+)
+async def delete_ratings_articles_id(
+    id: str = Path(..., description=""),
+) -> None:
+    if not BaseDefaultApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApi.subclasses[0]().delete_ratings_articles_id(id)
+
+
 @router.put(
     "/ratings/articles/{id}",
     responses={
@@ -125,55 +144,16 @@ async def get_rating(
         422: {"description": "Unprocessable Entity (WebDAV)"},
     },
     tags=["default"],
-    summary="Your GET endpoint",
+    summary="Get rating made by an user in an article",
     response_model_by_alias=True,
 )
-async def get_ratings_articles_id_users_id(
+async def get_ratings_bu_user_on_article(
     articleId: str = Path(..., description=""),
     userId: str = Path(..., description=""),
 ) -> Rating:
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_ratings_articles_id_users_id(articleId, userId)
-
-
-@router.get(
-    "/ratings/wikis/{id}",
-    responses={
-        200: {"model": float, "description": "OK"},
-        404: {"description": "Not Found"},
-    },
-    tags=["default"],
-    summary="Get Wiki rating",
-    response_model_by_alias=True,
-)
-async def get_ratings_wikis_id(
-    id: str = Path(..., description=""),
-) -> float:
-    """Get the average rating of a Wiki based on the Ratings of the Articles it has"""
-    if not BaseDefaultApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_ratings_wikis_id(id)
-
-
-@router.get(
-    "/ratings/users/{id}",
-    responses={
-        200: {"model": float, "description": "Return the user rating"},
-        400: {"description": "Bad Request, invalid User ID format"},
-        404: {"description": "Not Found"},
-    },
-    tags=["default"],
-    summary="Get User rating",
-    response_model_by_alias=True,
-)
-async def get_user_rating(
-    id: str = Path(..., description=""),
-) -> float:
-    """Get the average rating of an User based on the Ratings of the Articles he made"""
-    if not BaseDefaultApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_user_rating(id)
+    return await BaseDefaultApi.subclasses[0]().get_ratings_bu_user_on_article(articleId, userId)
 
 
 @router.post(
