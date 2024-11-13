@@ -9,7 +9,7 @@
     "license": {
       "name": ""
     },
-    "version": "1.0"
+    "version": "2.0"
   },
   "servers": [
     {
@@ -22,12 +22,1241 @@
     }
   ],
   "paths": {
-    "/v2/articles/{id}": {
+    "/v1/articles/{id}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v1/public"
+        ],
         "summary": "Get Article",
         "description": "Get an ArticleVersion identified by it's unique ID",
-        "operationId": "getArticleById",
+        "operationId": "getArticleByIdV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                      "title": "string",
+                      "creation_date": "2019-08-24T14:15:22Z",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
+                      "tags": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "tag": "string"
+                        }
+                      ],
+                      "versions": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "title": "string",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "modification_date": "2019-08-24T14:15:22Z"
+                        }
+                      ],
+                      "rating": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format. "
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "v1/editors"
+        ],
+        "summary": "Delete Article",
+        "description": "Delete an Article identified by it's unique ID",
+        "operationId": "deleteArticleByIDV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully deleted."
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID format. "
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Check Article",
+        "description": "Check if an Article exits given its unique ID. ",
+        "operationId": "checkArticleByIDV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request, invalid Article ID"
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    },
+    "/v1/articles/versions/by-name/{name}": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get ArticleVersion by name",
+        "description": "Get the most recent ArticleVersion the Article with the given name from the specified Wiki.",
+        "operationId": "getArticleByNameV1",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wiki",
+            "in": "query",
+            "description": "The ID of the wiki of the Article",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleVersionV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
+                      "title": "string",
+                      "modification_date": "2019-08-24T14:15:22Z",
+                      "body": "string",
+                      "tags": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "tag": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid Article name format. "
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        }
+      }
+    },
+    "/v1/articles": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Search for Articles",
+        "description": "Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination.",
+        "operationId": "searchArticlesV1",
+        "parameters": [
+          {
+            "name": "wiki_id",
+            "in": "query",
+            "description": "The ID of the wiki where the serch will be made",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search query for the name of the article",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "name"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "A comma-separated list of tag IDs to search for",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "example": [
+                "tag1",
+                "tag2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "example": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the articles by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "recent, oldest, popular, unpopular",
+              "default": "none"
+            }
+          },
+          {
+            "name": "creation_date",
+            "in": "query",
+            "description": "Single date or range",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "author_name",
+            "in": "query",
+            "description": "Filter for the author of the Article",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "editor_name",
+            "in": "query",
+            "description": "Filter for the editors of the Article",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleListV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid input paramaters",
+            "content": {}
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "v1/editors"
+        ],
+        "summary": "Create Article",
+        "description": "Create a new Article in a given wiki",
+        "operationId": "createArticleV1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewArticleV1"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "title": "string",
+                    "author": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "name": "string"
+                    },
+                    "tags": [
+                      {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "tag": "string"
+                      }
+                    ],
+                    "body": "string",
+                    "wiki_id": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                      "title": "string",
+                      "creation_date": "2019-08-24T14:15:22Z",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
+                      "tags": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "tag": "string"
+                        }
+                      ],
+                      "versions": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "title": "string",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "modification_date": "2019-08-24T14:15:22Z"
+                        }
+                      ],
+                      "rating": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid paramaters"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v1/articles/versions/{id}": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get ArticleVersion",
+        "description": "Get an ArticleVersion identified by it's unique ID",
+        "operationId": "getArticleVersionByIdV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleVersionV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "author": {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string"
+                      },
+                      "title": "string",
+                      "modification_date": "2019-08-24T14:15:22Z",
+                      "body": "string",
+                      "tags": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "tag": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid ArticleVersion ID format. "
+          },
+          "404": {
+            "description": "Article Version Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "v1/editors"
+        ],
+        "summary": "Delete ArticleVersion",
+        "description": "Delete an ArticleVersion identified by it's unique ID",
+        "operationId": "deleteArticleVersionByIdV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ArticleVersion successfully deleted."
+          },
+          "400": {
+            "description": "Bad Request, invalid ArticleVersion ID format. "
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "ArticleVersion Not Found"
+          }
+        }
+      }
+    },
+    "/v1/articles/{id}/versions": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get Article's ArticleVersions",
+        "description": "Get a list of ArticleVersions of a given Article. Results can be sorted by creation date adn support pagination.",
+        "operationId": "getArticleVersionListByArticleIDV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "example": 50,
+              "default": 20
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the articles by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "recent, oldest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleVersionListV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "article_versions": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "title": "string",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "modification_date": "2019-08-24T14:15:22Z"
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid input paramaters"
+          },
+          "404": {
+            "description": "Article not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "v1/editors"
+        ],
+        "summary": "Create ArticleVersion for an Article",
+        "description": "Create an ArticleVersion for a given Article and adds it to the list of versions of the Article.",
+        "operationId": "createArticleVersionV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewArticleVersionV1"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                    "title": "string",
+                    "author": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "name": "string"
+                    },
+                    "tags": [
+                      {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "tag": "string"
+                      }
+                    ],
+                    "body": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleVersionV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+                      "title": "string",
+                      "modification_date": "2019-08-24T14:15:22Z",
+                      "body": "string",
+                      "editors": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "name": "string",
+                          "edition_date": "2019-08-24T14:15:22Z"
+                        }
+                      ],
+                      "tags": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "tag": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, Invalid Parameters"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v1/articles/{article_id}/versions/{version_id}": {
+      "put": {
+        "tags": [
+          "v1/editors"
+        ],
+        "summary": "Restore ArticleVersion",
+        "description": "Restore an older ArticleVersion of an Article.",
+        "operationId": "restoreArticleVersionV1",
+        "parameters": [
+          {
+            "name": "article_id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version_id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ArticleVersion successfully restored"
+          },
+          "400": {
+            "description": "invalid Article or ArticleVersion ID format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Article Version Not Found"
+          }
+        }
+      }
+    },
+    "/v1/articles/commented_by/{id}": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get Articles commented by User",
+        "description": "Get a list of the Articles commented by a given user.",
+        "operationId": "getArticlesCommentedByUserV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the articles by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "recent, oldest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleListV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, inavalid User ID format"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      }
+    },
+    "/v1/articles/author/{id}": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get Articles by Author",
+        "description": "Get a list of Articles given an author's ID.  ",
+        "operationId": "GetArticleByAuthorV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the articles by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "recent, oldest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleListV1"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                          "title": "string",
+                          "creation_date": "2019-08-24T14:15:22Z",
+                          "author": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "string"
+                          },
+                          "tags": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "tag": "string"
+                            }
+                          ],
+                          "versions": [
+                            {
+                              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                              "title": "string",
+                              "author": {
+                                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                                "name": "string"
+                              },
+                              "modification_date": "2019-08-24T14:15:22Z"
+                            }
+                          ],
+                          "rating": 0
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, The given ID was not correct."
+          },
+          "404": {
+            "description": "Author Not Found."
+          }
+        }
+      }
+    },
+    "/v1/articles/{id}/ratings": {
+      "put": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Update Rating",
+        "description": "Update the rating of an Article give its unique ID and a rating",
+        "operationId": "updateRatingV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_ratings_bodyV1"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "raitng": 4.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, rating updated"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameter format"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    },
+    "/v1/articles/{id}/tags": {
+      "put": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Assign Tags",
+        "description": "Assigns a list of tags, given their IDs, to an article",
+        "operationId": "assignArticleTagsV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_tags_bodyV1"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "tag_ids": [
+                      {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "tag": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, tags assigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Artcile Not Found"
+          }
+        },
+        "x-internal": false
+      },
+      "delete": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Unassign Tags",
+        "description": "Unassigns a list of tags, given their IDs to an article.",
+        "operationId": "unassignArticleTagsV1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of Tag IDs",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "maxItems": 50,
+              "uniqueItems": true,
+              "type": "array",
+              "example": [
+                "tag1",
+                "tag2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content, tags unassigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Article Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    },
+    "/v2/articles/{id}": {
+      "get": {
+        "tags": [
+          "v2/public"
+        ],
+        "summary": "Get Article",
+        "description": "Get an ArticleVersion identified by it's unique ID",
+        "operationId": "getArticleByIdV2",
         "parameters": [
           {
             "name": "id",
@@ -93,11 +1322,11 @@
       },
       "delete": {
         "tags": [
-          "editors"
+          "v2/editors"
         ],
         "summary": "Delete Article",
         "description": "Delete an Article identified by it's unique ID",
-        "operationId": "deleteArticleByID",
+        "operationId": "deleteArticleByIDV2",
         "parameters": [
           {
             "name": "id",
@@ -127,11 +1356,11 @@
       },
       "head": {
         "tags": [
-          "internal"
+          "v2/internal"
         ],
         "summary": "Check Article",
         "description": "Check if an Article exits given its unique ID. ",
-        "operationId": "checkArticleByID",
+        "operationId": "checkArticleByIDV2",
         "parameters": [
           {
             "name": "id",
@@ -160,10 +1389,12 @@
     },
     "/v2/articles/versions/by-name/{name}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Get ArticleVersion by name",
         "description": "Get the most recent ArticleVersion the Article with the given name from the specified Wiki.",
-        "operationId": "getArticleByName",
+        "operationId": "getArticleByNameV2",
         "parameters": [
           {
             "name": "name",
@@ -231,10 +1462,12 @@
     },
     "/v2/articles": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Search for Articles",
         "description": "Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination.",
-        "operationId": "searchArticles",
+        "operationId": "searchArticlesV2",
         "parameters": [
           {
             "name": "wiki_id",
@@ -419,11 +1652,11 @@
       },
       "post": {
         "tags": [
-          "editors"
+          "v2/editors"
         ],
         "summary": "Create Article",
         "description": "Create a new Article in a given wiki",
-        "operationId": "createArticle",
+        "operationId": "createArticleV2",
         "requestBody": {
           "content": {
             "application/json": {
@@ -506,10 +1739,12 @@
     },
     "/v2/articles/versions/{id}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Get ArticleVersion",
         "description": "Get an ArticleVersion identified by it's unique ID",
-        "operationId": "getArticleVersionById",
+        "operationId": "getArticleVersionByIdV2",
         "parameters": [
           {
             "name": "id",
@@ -564,11 +1799,11 @@
       },
       "delete": {
         "tags": [
-          "editors"
+          "v2/editors"
         ],
         "summary": "Delete ArticleVersion",
         "description": "Delete an ArticleVersion identified by it's unique ID",
-        "operationId": "deleteArticleVersionById",
+        "operationId": "deleteArticleVersionByIdV2",
         "parameters": [
           {
             "name": "id",
@@ -599,10 +1834,12 @@
     },
     "/v2/articles/{id}/versions": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Get Article's ArticleVersions",
         "description": "Get a list of ArticleVersions of a given Article. Results can be sorted by creation date adn support pagination.",
-        "operationId": "getArticleVersionListByArticleID",
+        "operationId": "getArticleVersionListByArticleIDV2",
         "parameters": [
           {
             "name": "id",
@@ -698,11 +1935,11 @@
       },
       "post": {
         "tags": [
-          "editors"
+          "v2/editors"
         ],
         "summary": "Create ArticleVersion for an Article",
         "description": "Create an ArticleVersion for a given Article and adds it to the list of versions of the Article.",
-        "operationId": "createArticleVersion",
+        "operationId": "createArticleVersionV2",
         "parameters": [
           {
             "name": "id",
@@ -790,11 +2027,11 @@
     "/v2/articles/{article_id}/versions/{version_id}": {
       "put": {
         "tags": [
-          "editors"
+          "v2/editors"
         ],
         "summary": "Restore ArticleVersion",
         "description": "Restore an older ArticleVersion of an Article.",
-        "operationId": "restoreArticleVersion",
+        "operationId": "restoreArticleVersionV2",
         "parameters": [
           {
             "name": "article_id",
@@ -835,10 +2072,12 @@
     },
     "/v2/articles/commented_by/{id}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Get Articles commented by User",
         "description": "Get a list of the Articles commented by a given user.",
-        "operationId": "getArticlesCommentedByUser",
+        "operationId": "getArticlesCommentedByUserV2",
         "parameters": [
           {
             "name": "id",
@@ -953,10 +2192,12 @@
     },
     "/v2/articles/author/{id}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Get Articles by Author",
         "description": "Get a list of Articles given an author's ID.  ",
-        "operationId": "GetArticleByAuthor",
+        "operationId": "GetArticleByAuthorV2",
         "parameters": [
           {
             "name": "id",
@@ -1072,11 +2313,11 @@
     "/v2/articles/{id}/ratings": {
       "put": {
         "tags": [
-          "internal"
+          "v2/internal"
         ],
         "summary": "Update Rating",
         "description": "Update the rating of an Article give its unique ID and a rating",
-        "operationId": "updateRating",
+        "operationId": "updateRatingV2",
         "parameters": [
           {
             "name": "id",
@@ -1125,11 +2366,11 @@
     "/v2/articles/{id}/tags": {
       "put": {
         "tags": [
-          "internal"
+          "v2/internal"
         ],
         "summary": "Assign Tags",
         "description": "Assigns a list of tags, given their IDs, to an article",
-        "operationId": "assignArticleTags",
+        "operationId": "assignArticleTagsV2",
         "parameters": [
           {
             "name": "id",
@@ -1181,11 +2422,11 @@
       },
       "delete": {
         "tags": [
-          "internal"
+          "v2/internal"
         ],
         "summary": "Unassign Tags",
         "description": "Unassigns a list of tags, given their IDs to an article.",
-        "operationId": "unassignArticleTags",
+        "operationId": "unassignArticleTagsV2",
         "parameters": [
           {
             "name": "id",
@@ -1237,9 +2478,11 @@
     },
     "/v2/articles/versions/{id}/body": {
       "get": {
-        "tags": [],
+        "tags": [
+          "v2/public"
+        ],
         "summary": "Get ArticleVersion body",
-        "operationId": "GetArticleVersionBodyByID",
+        "operationId": "GetArticleVersionBodyByIDV2",
         "parameters": [
           {
             "name": "id",
@@ -1271,7 +2514,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200"
+                  "$ref": "#/components/schemas/inline_response_200_V2"
                 }
               }
             }
@@ -1284,9 +2527,11 @@
     },
     "/v2/articles/wiki/{id}": {
       "delete": {
-        "tags": [],
+        "tags": [
+          "v2/internal"
+        ],
         "summary": "Delete Articles from Wiki",
-        "operationId": "DeleteArticlesFromWiki",
+        "operationId": "DeleteArticlesFromWikiV2",
         "parameters": [
           {
             "name": "id",
@@ -1319,7 +2564,7 @@
   },
   "components": {
     "schemas": {
-      "ArticleV2": {
+      "ArticleV1": {
         "required": [
           "author",
           "creation_date",
@@ -1352,20 +2597,20 @@
             "format": "date-time"
           },
           "author": {
-            "$ref": "#/components/schemas/AuthorV2"
+            "$ref": "#/components/schemas/AuthorV1"
           },
           "tags": {
             "type": "array",
             "description": "Array of the tags of the article. The same as the array of tags of the most recent version.",
             "items": {
-              "$ref": "#/components/schemas/TagV2"
+              "$ref": "#/components/schemas/TagV1"
             }
           },
           "versions": {
             "type": "array",
             "description": "Array of simplified articleversions",
             "items": {
-              "$ref": "#/components/schemas/SimplifiedArticleVersionV2"
+              "$ref": "#/components/schemas/SimplifiedArticleVersionV1"
             }
           },
           "rating": {
@@ -1410,13 +2655,12 @@
           }
         }
       },
-      "ArticleVersionV2": {
+      "ArticleVersionV1": {
         "required": [
           "article_id",
           "author",
           "body",
           "id",
-          "lan",
           "modification_date",
           "tags",
           "title"
@@ -1434,7 +2678,7 @@
             "format": "uuid"
           },
           "author": {
-            "$ref": "#/components/schemas/AuthorV2"
+            "$ref": "#/components/schemas/AuthorV1"
           },
           "title": {
             "type": "string",
@@ -1453,13 +2697,7 @@
             "type": "array",
             "description": "Array of the tags of the version of the article.",
             "items": {
-              "$ref": "#/components/schemas/TagV2"
-            }
-          },
-          "lan": {
-            "type": "string",
-            "x-stoplight": {
-              "id": "4q7rih86ockg4"
+              "$ref": "#/components/schemas/TagV1"
             }
           }
         },
@@ -1487,7 +2725,7 @@
           }
         }
       },
-      "SimplifiedArticleVersionV2": {
+      "SimplifiedArticleVersionV1": {
         "required": [
           "id",
           "modification_date",
@@ -1505,7 +2743,7 @@
             "description": "The title of the article version."
           },
           "author": {
-            "$ref": "#/components/schemas/AuthorV2"
+            "$ref": "#/components/schemas/AuthorV1"
           },
           "modification_date": {
             "type": "string",
@@ -1526,7 +2764,7 @@
           }
         }
       },
-      "TagV2": {
+      "TagV1": {
         "title": "Tag",
         "required": [
           "id",
@@ -1540,14 +2778,8 @@
             "format": "uuid"
           },
           "tag": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "x-stoplight": {
-                "id": "wu2il8qpp7cz6"
-              }
-            },
-            "description": "The traductions of the tag.",
+            "type": "string",
+            "description": "The name of the tag.",
             "x-stoplight": {
               "id": "28n4e2xedche5"
             }
@@ -1561,7 +2793,7 @@
           }
         }
       },
-      "ArticleListV2": {
+      "ArticleListV1": {
         "required": [
           "articles",
           "limit",
@@ -1575,7 +2807,7 @@
           "articles": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ArticleV2"
+              "$ref": "#/components/schemas/ArticleV1"
             },
             "x-stoplight": {
               "id": "qmckelb8p9agh"
@@ -1664,6 +2896,628 @@
           }
         }
       },
+      "ArticleVersionListV1": {
+        "required": [
+          "article_versions",
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "article_versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedArticleVersionV1"
+            },
+            "x-stoplight": {
+              "id": "dytirb2nopmcp"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "nyqo2igxm0plp"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "cy8nldi2is9br"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "x-stoplight": {
+              "id": "p51ex5e7pdmzw"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "tlbg5auyullr7"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "rc3t7xs8w8yr3"
+            }
+          }
+        },
+        "description": "List of ArticleVersions. Supports pagination.",
+        "x-examples": {
+          "Example 1": {
+            "article_versions": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "title": "string",
+                "author": {
+                  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                  "name": "string"
+                },
+                "modification_date": "string"
+              }
+            ],
+            "total": 0,
+            "offset": 0,
+            "limit": 0,
+            "previous": "http://example.com",
+            "next": "http://example.com"
+          }
+        }
+      },
+      "NewArticleVersionV1": {
+        "required": [
+          "author",
+          "body",
+          "tags",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the version of the article.",
+            "x-stoplight": {
+              "id": "3ec4vruerwwxz"
+            }
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV1"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagV1"
+            },
+            "x-stoplight": {
+              "id": "gn4btncpluv0e"
+            }
+          },
+          "body": {
+            "type": "string",
+            "description": "The body of the version.",
+            "x-stoplight": {
+              "id": "sdqsmbl8khsan"
+            }
+          }
+        },
+        "description": "Data required to the user to create a new ArticleVersion of an Article (given in the path of the endpoint)",
+        "x-examples": {
+          "Example 1": {
+            "title": "string",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string"
+            },
+            "tags": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "tag": "string"
+              }
+            ],
+            "body": "string"
+          }
+        }
+      },
+      "AuthorV1": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the author.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the author."
+          }
+        },
+        "description": "The author of an Article or ArticleVersion.",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string"
+          }
+        }
+      },
+      "NewArticleV1": {
+        "title": "NewArticle",
+        "required": [
+          "author",
+          "tags",
+          "title",
+          "wiki_id"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the version of the article.",
+            "x-stoplight": {
+              "id": "3ec4vruerwwxz"
+            }
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV1"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagV1"
+            },
+            "x-stoplight": {
+              "id": "gn4btncpluv0e"
+            }
+          },
+          "body": {
+            "type": "string",
+            "description": "The body of the version.",
+            "x-stoplight": {
+              "id": "sdqsmbl8khsan"
+            }
+          },
+          "wiki_id": {
+            "type": "string",
+            "description": "The ID of the Wiki where the Article is created.",
+            "x-stoplight": {
+              "id": "sdqsmbl8khsan"
+            }
+          }
+        },
+        "description": "Data required to the user to create a new Article and its first version",
+        "x-examples": {
+          "Example 1": {
+            "title": "string",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string"
+            },
+            "tags": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "tag": "string"
+              }
+            ],
+            "body": "string",
+            "wiki_id": "string"
+          }
+        }
+      },
+      "id_ratings_bodyV1": {
+        "required": [
+          "rating"
+        ],
+        "type": "object",
+        "properties": {
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the article ",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "e861y8ux0w86b"
+            }
+          }
+        }
+      },
+      "id_tags_bodyV1": {
+        "required": [
+          "tag_ids"
+        ],
+        "type": "object",
+        "properties": {
+          "tag_ids": {
+            "type": "array",
+            "description": "List of Tag IDs",
+            "items": {
+              "$ref": "#/components/schemas/TagV1"
+            },
+            "x-stoplight": {
+              "id": "w0pyzqdbvcjuk"
+            }
+          }
+        }
+      },
+      "ArticleV2": {
+        "required": [
+          "author",
+          "creation_date",
+          "id",
+          "rating",
+          "tags",
+          "title",
+          "versions",
+          "wiki_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the article",
+            "format": "uuid"
+          },
+          "wiki_id": {
+            "type": "string",
+            "description": "The ID corresponding to the wiki the article belongs to.",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the article. The same as the title of the most recent version."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "The date of creation of the article.",
+            "format": "date-time"
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV2"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Array of the tags of the article. The same as the array of tags of the most recent version.",
+            "items": {
+              "$ref": "#/components/schemas/TagV2"
+            }
+          },
+          "versions": {
+            "type": "array",
+            "description": "Array of simplified articleversions",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedArticleVersionV2"
+            }
+          },
+          "rating": {
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the Article",
+            "format": "double",
+            "x-stoplight": {
+              "id": "102q2hlty1t4n"
+            }
+          }
+        },
+        "description": "Article of a Wiki",
+        "x-examples": {
+          "Example 2": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+            "title": "string",
+            "creation_date": "2019-08-24T14:15:22Z",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string",
+              "image": "http://example.com"
+            },
+            "tags": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "tag": {
+                  "property1": "string",
+                  "property2": "string"
+                }
+              }
+            ],
+            "versions": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "title": "string",
+                "author": {
+                  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                  "name": "string",
+                  "image": "http://example.com"
+                },
+                "modification_date": "2019-08-24T14:15:22Z"
+              }
+            ],
+            "rating": 0
+          }
+        }
+      },
+      "ArticleVersionV2": {
+        "required": [
+          "article_id",
+          "author",
+          "body",
+          "id",
+          "lan",
+          "modification_date",
+          "tags",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the version of the article.",
+            "format": "uuid"
+          },
+          "article_id": {
+            "type": "string",
+            "description": "The ID of the article.",
+            "format": "uuid"
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV2"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the version of the article."
+          },
+          "modification_date": {
+            "type": "string",
+            "description": "The date of modification the article that created the version.",
+            "format": "date-time"
+          },
+          "body": {
+            "type": "string",
+            "description": "The body of the version."
+          },
+          "tags": {
+            "type": "array",
+            "description": "Array of the tags of the version of the article.",
+            "items": {
+              "$ref": "#/components/schemas/TagV2"
+            }
+          },
+          "lan": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "4q7rih86ockg4"
+            }
+          }
+        },
+        "description": "Concrete version of an Article object ",
+        "x-examples": {
+          "Example 1": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string",
+              "image": "http://example.com"
+            },
+            "title": "string",
+            "modification_date": "2019-08-24T14:15:22Z",
+            "body": "string",
+            "tags": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "tag": {
+                  "property1": "string",
+                  "property2": "string"
+                }
+              }
+            ],
+            "lan": "string"
+          }
+        }
+      },
+      "SimplifiedArticleVersionV2": {
+        "required": [
+          "id",
+          "modification_date",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the article version.",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the article version."
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV2"
+          },
+          "modification_date": {
+            "type": "string",
+            "description": "The date of modification of the article version.",
+            "format": "date-time"
+          }
+        },
+        "description": "Simplification of an ArticleVersion object",
+        "x-examples": {
+          "Example 2": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "title": "string",
+            "author": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string",
+              "image": "http://example.com"
+            },
+            "modification_date": "2019-08-24T14:15:22Z"
+          }
+        }
+      },
+      "TagV2": {
+        "title": "Tag",
+        "required": [
+          "id",
+          "tag"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The name of the tag.",
+            "format": "uuid"
+          },
+          "tag": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "x-stoplight": {
+                "id": "wu2il8qpp7cz6"
+              }
+            },
+            "description": "The traductions of the tag.",
+            "x-stoplight": {
+              "id": "28n4e2xedche5"
+            }
+          }
+        },
+        "description": "Keywords for identifying articles",
+        "x-examples": {
+          "Example 2": {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "tag": {
+              "property1": "string",
+              "property2": "string"
+            }
+          }
+        }
+      },
+      "ArticleListV2": {
+        "required": [
+          "articles",
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleV2"
+            },
+            "x-stoplight": {
+              "id": "qmckelb8p9agh"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "ceyp9h3u6pq3t"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "y8f5uy4secbdp"
+            }
+          },
+          "limit": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "example": 0,
+            "x-stoplight": {
+              "id": "mli08w7p9m5ct"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the previous page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "fr352m14ihvc7"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "d6rwzi2d4o45u"
+            }
+          }
+        },
+        "description": "List of Articles. Supports pagination.",
+        "x-examples": {
+          "Example 1": {
+            "articles": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "wiki_id": "9a3179cd-aa83-4a5b-a08a-5c794d4020a8",
+                "title": "string",
+                "creation_date": "2019-08-24T14:15:22Z",
+                "author": {
+                  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                  "name": "string",
+                  "image": "http://example.com"
+                },
+                "tags": [
+                  {
+                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "tag": {
+                      "property1": "string",
+                      "property2": "string"
+                    }
+                  }
+                ],
+                "versions": [
+                  {
+                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "title": "string",
+                    "author": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "name": "string",
+                      "image": "http://example.com"
+                    },
+                    "modification_date": "2019-08-24T14:15:22Z"
+                  }
+                ],
+                "rating": 0
+              }
+            ],
+            "total": 0,
+            "offset": 0,
+            "limit": 0,
+            "previous": "http://example.com",
+            "next": "http://example.com"
+          }
+        }
+      },
       "ArticleVersionListV2": {
         "required": [
           "article_versions",
@@ -1733,9 +3587,10 @@
                 "title": "string",
                 "author": {
                   "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                  "name": "string"
+                  "name": "string",
+                  "image": "http://example.com"
                 },
-                "modification_date": "string"
+                "modification_date": "2019-08-24T14:15:22Z"
               }
             ],
             "total": 0,
@@ -1794,21 +3649,27 @@
             "title": "string",
             "author": {
               "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-              "name": "string"
+              "name": "string",
+              "image": "http://example.com"
             },
             "tags": [
               {
                 "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                "tag": "string"
+                "tag": {
+                  "property1": "string",
+                  "property2": "string"
+                }
               }
             ],
-            "body": "string"
+            "body": "string",
+            "lan": "string"
           }
         }
       },
       "AuthorV2": {
         "required": [
           "id",
+          "image",
           "name"
         ],
         "type": "object",
@@ -1821,13 +3682,22 @@
           "name": {
             "type": "string",
             "description": "The name of the author."
+          },
+          "image": {
+            "type": "string",
+            "description": "PFP of the author",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "4fwdxuojiyz6e"
+            }
           }
         },
         "description": "The author of an Article or ArticleVersion.",
         "x-examples": {
           "Example 1": {
             "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-            "name": "string"
+            "name": "string",
+            "image": "http://example.com"
           }
         }
       },
@@ -1892,11 +3762,15 @@
             "tags": [
               {
                 "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                "tag": "string"
+                "tag": {
+                  "property1": "string",
+                  "property2": "string"
+                }
               }
             ],
             "body": "string",
-            "wiki_id": "string"
+            "wiki_id": "string",
+            "lan": "string"
           }
         }
       },
@@ -1917,6 +3791,11 @@
               "id": "e861y8ux0w86b"
             }
           }
+        },
+        "x-examples": {
+          "Example 1": {
+            "rating": 4.5
+          }
         }
       },
       "id_tags_bodyV2": {
@@ -1935,9 +3814,22 @@
               "id": "w0pyzqdbvcjuk"
             }
           }
+        },
+        "x-examples": {
+          "Example 1": {
+            "tag_ids": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "tag": {
+                  "property1": "string",
+                  "property2": "string"
+                }
+              }
+            ]
+          }
         }
       },
-      "inline_response_200": {
+      "inline_response_200_V2": {
         "type": "object",
         "properties": {
           "body": {
@@ -1945,6 +3837,11 @@
             "x-stoplight": {
               "id": "i3lbzx86wf1aw"
             }
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "body": "string"
           }
         }
       }
