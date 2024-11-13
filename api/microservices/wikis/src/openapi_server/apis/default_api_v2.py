@@ -4,7 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
-from openapi_server.apis.default_api_base import BaseDefaultApi
+from openapi_server.apis.default_api_v2_base import BaseDefaultApiV2
 import openapi_server.impl
 
 from openapi_server.impl.misc import *
@@ -29,7 +29,7 @@ from openapi_server.models.wiki import Wiki
 from openapi_server.models.wiki_list import WikiList
 
 
-router = APIRouter(prefix="/v1")
+router = APIRouter(prefix="/v2")
 
 ns_pkg = openapi_server.impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
@@ -51,10 +51,10 @@ async def get_one_wiki_by_name(
     name: str = Path(..., description="Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."),
 ) -> Wiki:
     """Get the Wiki with the given name."""
-    if not BaseDefaultApi.subclasses:
+    if not BaseDefaultApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        result = await BaseDefaultApi.subclasses[0]().get_one_wiki_by_name(name)
+        result = await BaseDefaultApiV2.subclasses[0]().get_one_wiki_by_name(name)
     except LookupError as e:
         raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"),e)
     except Exception as e:
@@ -78,9 +78,9 @@ async def get_wiki(
     id: str = Path(..., description="Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."),
 ) -> Wiki:
     """Get Wiki with the matching ID."""
-    if not BaseDefaultApi.subclasses:
+    if not BaseDefaultApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().get_wiki(id)
+    return await BaseDefaultApiV2.subclasses[0]().get_wiki(id)
 
 
 @router.get(
@@ -103,6 +103,6 @@ async def search_wikis(
     author_name: str = Query(None, description="Filter for the author of the Wiki", alias="author_name"),
 ) -> WikiList:
     """Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-    if not BaseDefaultApi.subclasses:
+    if not BaseDefaultApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().search_wikis(name, offset, limit, order, creation_date, author_name)
+    return await BaseDefaultApiV2.subclasses[0]().search_wikis(name, offset, limit, order, creation_date, author_name)

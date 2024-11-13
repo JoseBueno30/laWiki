@@ -2,9 +2,9 @@
 from typing import Any, Coroutine, List
 
 from bson import ObjectId
-from openapi_server.apis.default_api_base import BaseDefaultApi
-from openapi_server.apis.admins_api_base import BaseAdminsApi
-from openapi_server.apis.internal_api_base import BaseInternalApi
+from openapi_server.apis.default_api_v2_base import BaseDefaultApiV2
+from openapi_server.apis.admins_api_v2_base import BaseAdminsApiV2
+from openapi_server.apis.internal_api_v2_base import BaseInternalApiV2
 from openapi_server.models.id_ratings_body import IdRatingsBody
 from openapi_server.models.id_tags_body import IdTagsBody
 from openapi_server.models.new_wiki import NewWiki
@@ -52,7 +52,7 @@ def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
         {'$unset': ["_id", "author._id"]}
     ]
 
-class WikiApi(BaseDefaultApi):
+class WikiApi(BaseDefaultApiV2):
 
     def __init__(self):
         super().__init__()
@@ -76,7 +76,7 @@ class WikiApi(BaseDefaultApi):
 
         return result[0]
 
-class WikiApiAdmins(BaseAdminsApi):
+class WikiApiAdmins(BaseAdminsApiV2):
 
     def __init__(self):
         super().__init__()
@@ -96,7 +96,7 @@ class WikiApiAdmins(BaseAdminsApi):
         final_wiki.id = str(result.inserted_id)
         return final_wiki
     
-class WikiApiInternal(BaseInternalApi):
+class WikiApiInternal(BaseInternalApiV2):
 
     def __init__(self):
         super().__init__()

@@ -6,7 +6,7 @@ import pkgutil
 from bson.errors import InvalidId
 
 from pymongo.errors import DuplicateKeyError
-from openapi_server.apis.admins_api_base import BaseAdminsApi
+from openapi_server.apis.admins_api_v2_base import BaseAdminsApiV2
 import openapi_server.impl
 
 from openapi_server.impl.misc import *
@@ -31,7 +31,7 @@ from openapi_server.models.new_wiki import NewWiki
 from openapi_server.models.wiki import Wiki
 
 
-router = APIRouter(prefix="/v1")
+router = APIRouter(prefix="/v2")
 
 ns_pkg = openapi_server.impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
@@ -57,10 +57,10 @@ async def create_wiki(
     new_wiki: NewWiki = Body(None, description=""),
 ) -> Wiki:
     """Create a new Wiki"""
-    if not BaseAdminsApi.subclasses:
+    if not BaseAdminsApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        result = await BaseAdminsApi.subclasses[0]().create_wiki(name, limit, offset, new_wiki)
+        result = await BaseAdminsApiV2.subclasses[0]().create_wiki(name, limit, offset, new_wiki)
         response.status_code = 201
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Wiki name unavailable")
@@ -88,10 +88,10 @@ async def remove_wiki(
     id: str = Path(..., description="Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."),
 ) -> None:
     """Remove Wiki with the matching ID."""
-    if not BaseAdminsApi.subclasses:
+    if not BaseAdminsApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseAdminsApi.subclasses[0]().remove_wiki(id)
+        await BaseAdminsApiV2.subclasses[0]().remove_wiki(id)
     except LookupError:
         response.status_code = 404
     except InvalidId as e:
@@ -117,6 +117,6 @@ async def update_wiki(
     new_wiki: NewWiki = Body(None, description=""),
 ) -> Wiki:
     """Update Wiki with wiki the matching ID"""
-    if not BaseAdminsApi.subclasses:
+    if not BaseAdminsApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseAdminsApi.subclasses[0]().update_wiki(id, new_wiki)
+    return await BaseAdminsApiV2.subclasses[0]().update_wiki(id, new_wiki)

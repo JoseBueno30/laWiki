@@ -5,7 +5,7 @@ import importlib
 import pkgutil
 
 from openapi_server.impl.misc import *
-from openapi_server.apis.internal_api_base import BaseInternalApi
+from openapi_server.apis.internal_api_v2_base import BaseInternalApiV2
 import openapi_server.impl
 
 from fastapi import (  # noqa: F401
@@ -28,7 +28,7 @@ from openapi_server.models.id_ratings_body import IdRatingsBody
 from openapi_server.models.id_tags_body import IdTagsBody
 from bson.errors import InvalidId
 
-router = APIRouter(prefix="/v1")
+router = APIRouter(prefix="/v2")
 
 ns_pkg = openapi_server.impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
@@ -53,10 +53,10 @@ async def assign_wiki_tags(
     id_tags_body: IdTagsBody = Body(None, description=""),
 ) -> None:
     """Assigns a list of tags, given their IDs, to a wiki"""
-    if not BaseInternalApi.subclasses:
+    if not BaseInternalApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseInternalApi.subclasses[0]().assign_wiki_tags(id, id_tags_body)
+        await BaseInternalApiV2.subclasses[0]().assign_wiki_tags(id, id_tags_body)
         response.status_code = 204
     except LookupError:
         response.status_code = 404
@@ -82,10 +82,10 @@ async def check_wiki_by_id(
     id: str = Path(..., description=""),
 ) -> None:
     """Check if a Wiki exits given its unique ID. """
-    if not BaseInternalApi.subclasses:
+    if not BaseInternalApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if not await BaseInternalApi.subclasses[0]().check_wiki_by_id(id):
+        if not await BaseInternalApiV2.subclasses[0]().check_wiki_by_id(id):
             response.status_code = 404
     except InvalidId:
         raise HTTPException(status_code=400, detail=MESSAGE_BAD_FORMAT)
@@ -109,10 +109,10 @@ async def unassign_article_tags(
     ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to a Wiki."""
-    if not BaseInternalApi.subclasses:
+    if not BaseInternalApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseInternalApi.subclasses[0]().unassign_article_tags(id, ids)
+        await BaseInternalApiV2.subclasses[0]().unassign_article_tags(id, ids)
         response.status_code = 204
     except LookupError:
         response.status_code = 404
@@ -140,10 +140,10 @@ async def update_rating(
     id_ratings_body: IdRatingsBody = Body(None, description=""),
 ) -> None:
     """Update the rating of a Wiki give its unique ID and a rating"""
-    if not BaseInternalApi.subclasses:
+    if not BaseInternalApiV2.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseInternalApi.subclasses[0]().update_rating(id, id_ratings_body)
+        await BaseInternalApiV2.subclasses[0]().update_rating(id, id_ratings_body)
         response.status_code = 204
     except LookupError:
         response.status_code = 404
