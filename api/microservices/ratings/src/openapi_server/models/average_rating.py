@@ -33,13 +33,13 @@ class AverageRating(BaseModel):
     """ # noqa: E501
     average: Union[StrictFloat, StrictInt] = Field(description="Average rating of an Article")
     total: StrictInt = Field(description="Total number of Ratings of an Article")
-    total_sum: StrictInt = Field(description="Total sum of all Ratings of an Article")
     five_count: StrictInt = Field(description="Number of 5-star ratings of an Article")
     four_count: StrictInt = Field(description="Number of 4-star ratings of an Article")
     three_count: StrictInt = Field(description="Number of 3-star ratings of an Article")
     two_count: StrictInt = Field(description="Number of 2-star ratings of an Article")
     one_count: StrictInt = Field(description="Number of 1-star ratings of an Article")
-    __properties: ClassVar[List[str]] = ["average", "total", "five_count", "four_count", "three_count", "two_count", "one_count"]
+    total_sum: StrictInt
+    __properties: ClassVar[List[str]] = ["average", "total", "five_count", "four_count", "three_count", "two_count", "one_count", "total_sum"]
 
     model_config = {
         "populate_by_name": True,
@@ -96,7 +96,8 @@ class AverageRating(BaseModel):
             "four_count": obj.get("four_count"),
             "three_count": obj.get("three_count"),
             "two_count": obj.get("two_count"),
-            "one_count": obj.get("one_count")
+            "one_count": obj.get("one_count"),
+            "total_sum": obj.get("total_sum")
         })
         return _obj
 

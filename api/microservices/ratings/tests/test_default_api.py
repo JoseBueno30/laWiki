@@ -27,6 +27,25 @@ def test_delete_rating(client: TestClient):
     #assert response.status_code == 200
 
 
+def test_delete_ratings_articles_id(client: TestClient):
+    """Test case for delete_ratings_articles_id
+
+    Delete all ratings associated to an article
+    """
+
+    headers = {
+    }
+    # uncomment below to make a request
+    #response = client.request(
+    #    "DELETE",
+    #    "/ratings/articles/{id}".format(id='id_example'),
+    #    headers=headers,
+    #)
+
+    # uncomment below to assert the status code of the HTTP response
+    #assert response.status_code == 200
+
+
 def test_edit_article_rating(client: TestClient):
     """Test case for edit_article_rating
 
@@ -86,10 +105,10 @@ def test_get_rating(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_get_ratings_articles_id_users_id(client: TestClient):
-    """Test case for get_ratings_articles_id_users_id
+def test_get_ratings_bu_user_on_article(client: TestClient):
+    """Test case for get_ratings_bu_user_on_article
 
-    Your GET endpoint
+    Get rating made by an user in an article
     """
 
     headers = {
@@ -98,44 +117,6 @@ def test_get_ratings_articles_id_users_id(client: TestClient):
     #response = client.request(
     #    "GET",
     #    "/ratings/articles/{articleId}/users/{userId}".format(articleId='article_id_example', userId='user_id_example'),
-    #    headers=headers,
-    #)
-
-    # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
-
-
-def test_get_ratings_wikis_id(client: TestClient):
-    """Test case for get_ratings_wikis_id
-
-    Get Wiki rating
-    """
-
-    headers = {
-    }
-    # uncomment below to make a request
-    #response = client.request(
-    #    "GET",
-    #    "/ratings/wikis/{id}".format(id='id_example'),
-    #    headers=headers,
-    #)
-
-    # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
-
-
-def test_get_user_rating(client: TestClient):
-    """Test case for get_user_rating
-
-    Get User rating
-    """
-
-    headers = {
-    }
-    # uncomment below to make a request
-    #response = client.request(
-    #    "GET",
-    #    "/ratings/users/{id}".format(id='id_example'),
     #    headers=headers,
     #)
 

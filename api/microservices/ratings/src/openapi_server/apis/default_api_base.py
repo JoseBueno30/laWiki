@@ -21,6 +21,13 @@ class BaseDefaultApi:
         ...
 
 
+    async def delete_ratings_articles_id(
+        self,
+        id: str,
+    ) -> None:
+        ...
+
+
     async def edit_article_rating(
         self,
         id: str,
@@ -46,27 +53,11 @@ class BaseDefaultApi:
         ...
 
 
-    async def get_ratings_articles_id_users_id(
+    async def get_ratings_bu_user_on_article(
         self,
         articleId: str,
         userId: str,
     ) -> Rating:
-        ...
-
-
-    async def get_ratings_wikis_id(
-        self,
-        id: str,
-    ) -> float:
-        """Get the average rating of a Wiki based on the Ratings of the Articles it has"""
-        ...
-
-
-    async def get_user_rating(
-        self,
-        id: str,
-    ) -> float:
-        """Get the average rating of an User based on the Ratings of the Articles he made"""
         ...
 
 
