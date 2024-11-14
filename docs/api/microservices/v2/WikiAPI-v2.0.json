@@ -747,7 +747,7 @@
           {
             "name": "order",
             "in": "query",
-            "description": "Sorts the articles by different criteria",
+            "description": "Sorts the wikis by different criteria",
             "required": false,
             "style": "form",
             "explode": true,
@@ -783,10 +783,10 @@
           {
             "name": "lang",
             "in": "query",
-            "description": "Language of the wiki to retrieve, original language if not specified",
+            "description": "Language of the wiki to retrieve.",
             "required": false,
             "style": "form",
-            "explode": true,
+            "explode": false,
             "schema": {
               "type": "string"
             }
@@ -803,19 +803,20 @@
                 "examples": {
                   "Example 1": {
                     "value": {
-                      "articles": [
+                      "wikis": [
                         {
                           "id": "string",
-                          "name": "string",
+                          "name": {
+                            "es": "string",
+                            "en": "string"
+                          },
                           "description": "string",
-                          "creation_date": "string",
-                          "rating": 4.5,
                           "author": {
                             "id": "string",
                             "name": "string"
                           },
                           "lang": "string",
-                          "image": "http://example.com"
+                          "image": "url"
                         }
                       ],
                       "total": 0,
@@ -853,7 +854,10 @@
               "examples": {
                 "Example 1": {
                   "value": {
-                    "name": "string",
+                    "name": {
+                      "en": "string",
+                      "es": "string"
+                    },
                     "description": "string",
                     "author": "string",
                     "lang": "string",
@@ -870,7 +874,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Wiki"
+                  "$ref": "#/components/schemas/WikiV2"
                 }
               }
             }
@@ -890,7 +894,7 @@
           "defaultV2"
         ],
         "summary": "Get Wiki",
-        "description": "Get Wiki with the matching name or ID.",
+        "description": "Get Wiki with the matching ID.",
         "operationId": "getWikiV2",
         "parameters": [
           {
@@ -908,7 +912,7 @@
           {
             "name": "lang",
             "in": "query",
-            "description": "Language of the wiki to retrieve, original language if not specified",
+            "description": "Language of the wiki to retrieve.",
             "required": false,
             "style": "form",
             "explode": false,
@@ -935,17 +939,21 @@
                       "tags": [
                         {
                           "id": "1",
-                          "name": "Gift cards",
+                          "name": {
+                            "en": "Gift Cards",
+                            "es": "Tarjetas de regalo"
+                          },
                           "wiki_id": "1"
                         },
                         {
                           "id": "2",
-                          "name": "Stores",
+                          "name": {
+                            "en": "Stores",
+                            "es": "Tiendas"
+                          },
                           "wiki_id": "1"
                         }
-                      ],
-                      "lang": "en",
-                      "image": "https://picsum.photos/200"
+                      ]
                     }
                   }
                 }
@@ -985,7 +993,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewWiki"
+                "$ref": "#/components/schemas/NewWikiV2"
               }
             }
           }
@@ -996,7 +1004,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Wiki"
+                  "$ref": "#/components/schemas/WikiV2"
                 },
                 "examples": {
                   "Example 1": {
@@ -1008,12 +1016,18 @@
                       "tags": [
                         {
                           "id": "1",
-                          "name": "Gift cards",
+                          "name": {
+                            "en": "Gift Cards",
+                            "es": "Tarjetas de regalo"
+                          },
                           "wiki_id": "1"
                         },
                         {
                           "id": "2",
-                          "name": "Stores",
+                          "name": {
+                            "en": "Stores",
+                            "es": "Tiendas"
+                          },
                           "wiki_id": "1"
                         }
                       ]
@@ -1180,29 +1194,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/id_tags_body"
+                "$ref": "#/components/schemas/id_tags_bodyV2"
               },
               "examples": {
                 "Example 1": {
                   "value": {
                     "tag_ids": [
-                      [
-                        {
-                          "id": "1",
-                          "name": "Gift cards",
-                          "wiki_id": "1"
+                      {
+                        "id": "1",
+                        "name": {
+                          "en": "Gift Cards",
+                          "es": "Tarjetas de regalo"
                         },
-                        {
-                          "id": "2",
-                          "name": "Stores",
-                          "wiki_id": "1"
+                        "wiki_id": "1"
+                      },
+                      {
+                        "id": "2",
+                        "name": {
+                          "en": "Stores",
+                          "es": "Tiendas"
                         },
-                        {
-                          "id": "1",
-                          "name": "Sports cars",
-                          "wiki_id": "2"
-                        }
-                      ]
+                        "wiki_id": "1"
+                      },
+                      {
+                        "id": "1",
+                        "name": {
+                          "en": "Sports cars",
+                          "es": "Coches deportivo"
+                        },
+                        "wiki_id": "2"
+                      }
                     ]
                   }
                 }
@@ -1232,7 +1253,7 @@
         ],
         "summary": "Unassign Tags",
         "description": "Unassigns a list of tags, given their IDs to a Wiki.",
-        "operationId": "unassignArticleTagsV2",
+        "operationId": "unassignWikiTagsV2",
         "parameters": [
           {
             "name": "id",
@@ -1321,7 +1342,8 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "Name of the wiki."
+            "description": "Name of the wiki.",
+            "example": "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
           },
           "description": {
             "type": "string",
@@ -1342,24 +1364,13 @@
           },
           "translate": {
             "type": "boolean",
-            "description": "Indicates if the title of the Wiki should be translated in the different languages supported",
-            "default": true,
+            "description": "Indicates if the Wiki shall be translated to the supported languages",
             "x-stoplight": {
-              "id": "is3rscvtf5iai"
+              "id": "xicwyll9xtrfl"
             }
           }
         },
-        "description": "Model of a new wiki",
-        "x-examples": {
-          "Example 1": {
-            "name": "string",
-            "description": "string",
-            "author": "string",
-            "lang": "string",
-            "image": "http://example.com",
-            "translate": true
-          }
-        }
+        "description": "Model of a new wiki"
       },
       "Wiki": {
         "required": [
@@ -1451,12 +1462,9 @@
           "name": {
             "type": "object",
             "additionalProperties": {
-              "type": "string",
-              "x-stoplight": {
-                "id": "167i3caiejm3g"
-              }
+              "type": "string"
             },
-            "description": "Dictionary of the title of the wiki in the different supported languages"
+            "description": "Name of the wiki in different languages."
           },
           "description": {
             "type": "string",
@@ -1468,12 +1476,12 @@
             "format": "date_time"
           },
           "author": {
-            "$ref": "#/components/schemas/Author"
+            "$ref": "#/components/schemas/AuthorV2"
           },
           "tags": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Tag"
+              "$ref": "#/components/schemas/TagV2"
             }
           },
           "rating": {
@@ -1489,7 +1497,7 @@
           },
           "lang": {
             "type": "string",
-            "description": "Original language of the wiki."
+            "description": "Language of the wiki."
           },
           "image": {
             "type": "string",
@@ -1516,28 +1524,6 @@
           ],
           "lang": "en",
           "image": "https://picsum.photos/200"
-        },
-        "x-examples": {
-          "Example 1": {
-            "id": "1",
-            "name": "Example wiki",
-            "description": "This is an example of a response when getting a wiki",
-            "author": "Someone, change when user return is finalized",
-            "tags": [
-              {
-                "id": "1",
-                "name": "Gift cards",
-                "wiki_id": "1"
-              },
-              {
-                "id": "2",
-                "name": "Stores",
-                "wiki_id": "1"
-              }
-            ],
-            "lang": "en",
-            "image": "https://picsum.photos/200"
-          }
         }
       },
       "Tag": {
@@ -1574,6 +1560,49 @@
           }
         ]
       },
+      "TagV2": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the tag."
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Name of the tag."
+          }
+        },
+        "example": [
+          {
+            "id": "1",
+            "name": {
+              "en": "Gift Cards",
+              "es": "Tarjetas de regalo"
+            }
+          },
+          {
+            "id": "2",
+            "name": {
+              "en": "Stores",
+              "es": "Tiendas"
+            }
+          },
+          {
+            "id": "3",
+            "name": {
+              "en": "Sports cars",
+              "es": "Coches deportivo"
+            }
+          }
+        ]
+      },
       "Author": {
         "required": [
           "id",
@@ -1588,6 +1617,30 @@
           "name": {
             "type": "string",
             "description": "Name of the user."
+          }
+        },
+        "description": "Schema for the user, temporary as we do not know how the user will be modelled."
+      },
+      "AuthorV2": {
+        "required": [
+          "id",
+          "image",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user."
+          },
+          "image": {
+            "type": "string",
+            "description": "Link to the author's profile picture",
+            "format": "uri"
           }
         },
         "description": "Schema for the user, temporary as we do not know how the user will be modelled."
@@ -1658,16 +1711,16 @@
       },
       "WikiListV2": {
         "required": [
-          "articles",
           "limit",
           "next",
           "offset",
           "previous",
-          "total"
+          "total",
+          "wikis"
         ],
         "type": "object",
         "properties": {
-          "articles": {
+          "wikis": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SimplifiedWikiV2"
@@ -1786,10 +1839,10 @@
             "additionalProperties": {
               "type": "string",
               "x-stoplight": {
-                "id": "hps6ao6tomwct"
+                "id": "1uipxzv6uj856"
               }
             },
-            "description": "Dictionary of the title of the wiki in the different supported languages"
+            "description": "Name of the wiki."
           },
           "description": {
             "type": "string",
@@ -1812,34 +1865,16 @@
             }
           },
           "author": {
-            "$ref": "#/components/schemas/Author"
+            "$ref": "#/components/schemas/AuthorV2"
           },
           "lang": {
             "type": "string",
-            "description": "Original language of the wiki."
+            "description": "Language of the wiki."
           },
           "image": {
             "type": "string",
             "description": "Link to the wiki banner image.",
             "format": "uri"
-          }
-        },
-        "x-examples": {
-          "Example 1": {
-            "id": "string",
-            "name": {
-              "property1": "string",
-              "property2": "string"
-            },
-            "description": "string",
-            "creation_date": "string",
-            "rating": 4.5,
-            "author": {
-              "id": "string",
-              "name": "string"
-            },
-            "lang": "string",
-            "image": "http://example.com"
           }
         }
       },
@@ -1879,6 +1914,21 @@
             }
           }
         }
+      },
+      "id_tags_bodyV2": {
+        "required": [
+          "tag_ids"
+        ],
+        "type": "object",
+        "properties": {
+          "tag_ids": {
+            "type": "array",
+            "description": "List of Tag IDs",
+            "items": {
+              "$ref": "#/components/schemas/TagV2"
+            }
+          }
+        }
       }
     },
     "requestBodies": {
@@ -1888,6 +1938,17 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/NewWiki"
+            }
+          }
+        },
+        "required": true
+      },
+      "Wiki_PostV2": {
+        "description": "Body of a post request to upload a new wiki.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NewWikiV2"
             }
           }
         },

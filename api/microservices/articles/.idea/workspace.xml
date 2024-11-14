@@ -4,39 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="339763c8-32cd-48d0-bef9-ebab0742d3d1" name="Changes" comment="">
+    <list default="true" id="a232b6ce-9f7e-4153-9161-1b8b651dd5d6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/default_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_public_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/editor_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/internal_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_list_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_list_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_list_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_list_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_list_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_version_list_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_list_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_version_list_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/article_version_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/author_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/author_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/author_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/author_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/extra_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/extra_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_ratings_body_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/id_ratings_body_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_ratings_body_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/id_ratings_body_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_tags_body_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/id_tags_body_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_tags_body_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/id_tags_body_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/inline_response200_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/inline_response200_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/new_article_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/new_article_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/new_article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_version_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/new_article_version_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/simplified_article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/simplified_article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/simplified_article_version_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/simplified_article_version_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/tag_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/tag_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/tag_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/tag_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v0.1.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v1.0.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../docs/api/microservices/v2/WikiAPI-v2.0.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../docs/api/microservices/v2/WikiAPI-v2.0.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,59 +17,13 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 2
-}</component>
-  <component name="ProjectId" id="2onzRI0dtDFPioteTeJckO4qxdL" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Python.v1_public_article_api.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/vparm/Documents/GitHub/laWiki/api/microservices/articles/src/openapi_server/impl",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
-    "vue.rearranger.settings.migration": "true"
+    "git-widget-placeholder": "Merging main"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\vparm\Documents\GitHub\laWiki\api\microservices\articles\src\openapi_server\impl" />
-    </key>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23726.102" />
-        <option value="bundled-python-sdk-5e1850174b45-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23726.102" />
-      </set>
-    </attachedChunks>
-  </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="339763c8-32cd-48d0-bef9-ebab0742d3d1" name="Changes" comment="" />
-      <created>1731520121026</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1731520121026</updated>
-      <workItem from="1731520123104" duration="1128000" />
-      <workItem from="1731579984450" duration="1447000" />
-      <workItem from="1731600384511" duration="7854000" />
-    </task>
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/articles$v1_public_article_api.coverage" NAME="v1_public_article_api Coverage Results" MODIFIED="1731602597686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/openapi_server/impl" />
