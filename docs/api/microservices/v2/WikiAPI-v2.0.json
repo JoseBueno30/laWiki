@@ -779,6 +779,17 @@
               "type": "string",
               "example": "author_name"
             }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Language of the wiki to retrieve.",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -901,7 +912,7 @@
           {
             "name": "lang",
             "in": "query",
-            "description": "Language of the wiki to retrieve, may generate a new translation if it  hasn't been requested before.",
+            "description": "Language of the wiki to retrieve.",
             "required": false,
             "style": "form",
             "explode": false,
@@ -1324,22 +1335,15 @@
           "description",
           "image",
           "lang",
-          "name"
+          "name",
+          "translate"
         ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Name of the wiki in different languages.",
-            "example": [
-              {
-                "en": "Wiki name",
-                "es": "Nombre de wiki"
-              }
-            ]
+            "type": "string",
+            "description": "Name of the wiki.",
+            "example": "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
           },
           "description": {
             "type": "string",
@@ -1357,6 +1361,13 @@
             "type": "string",
             "description": "Link to the wiki banner image.",
             "format": "uri"
+          },
+          "translate": {
+            "type": "boolean",
+            "description": "Indicates if the Wiki shall be translated to the supported languages",
+            "x-stoplight": {
+              "id": "xicwyll9xtrfl"
+            }
           }
         },
         "description": "Model of a new wiki"
@@ -1574,24 +1585,21 @@
             "name": {
               "en": "Gift Cards",
               "es": "Tarjetas de regalo"
-            },
-            "wiki_id": "1"
+            }
           },
           {
             "id": "2",
             "name": {
               "en": "Stores",
               "es": "Tiendas"
-            },
-            "wiki_id": "1"
+            }
           },
           {
-            "id": "1",
+            "id": "3",
             "name": {
               "en": "Sports cars",
               "es": "Coches deportivo"
-            },
-            "wiki_id": "2"
+            }
           }
         ]
       },
@@ -1631,7 +1639,7 @@
           },
           "image": {
             "type": "string",
-            "description": "Linkt to the author's profile picture",
+            "description": "Link to the author's profile picture",
             "format": "uri"
           }
         },
@@ -1827,7 +1835,13 @@
             "description": "Unique identifier for the wiki."
           },
           "name": {
-            "type": "string",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "x-stoplight": {
+                "id": "1uipxzv6uj856"
+              }
+            },
             "description": "Name of the wiki."
           },
           "description": {
