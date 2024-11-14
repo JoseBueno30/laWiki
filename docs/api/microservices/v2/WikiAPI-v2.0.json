@@ -779,6 +779,17 @@
               "type": "string",
               "example": "author_name"
             }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Language of the wiki to retrieve, original language if not specified",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -797,12 +808,14 @@
                           "id": "string",
                           "name": "string",
                           "description": "string",
+                          "creation_date": "string",
+                          "rating": 4.5,
                           "author": {
                             "id": "string",
                             "name": "string"
                           },
                           "lang": "string",
-                          "image": "url"
+                          "image": "http://example.com"
                         }
                       ],
                       "total": 0,
@@ -877,7 +890,7 @@
           "defaultV2"
         ],
         "summary": "Get Wiki",
-        "description": "Get Wiki with the matching ID.",
+        "description": "Get Wiki with the matching name or ID.",
         "operationId": "getWikiV2",
         "parameters": [
           {
@@ -895,7 +908,7 @@
           {
             "name": "lang",
             "in": "query",
-            "description": "Language of the wiki to retrieve, may generate a new translation if it  hasn't been requested before.",
+            "description": "Language of the wiki to retrieve, original language if not specified",
             "required": false,
             "style": "form",
             "explode": false,
@@ -930,7 +943,9 @@
                           "name": "Stores",
                           "wiki_id": "1"
                         }
-                      ]
+                      ],
+                      "lang": "en",
+                      "image": "https://picsum.photos/200"
                     }
                   }
                 }
@@ -1299,7 +1314,8 @@
           "description",
           "image",
           "lang",
-          "name"
+          "name",
+          "translate"
         ],
         "type": "object",
         "properties": {
@@ -1323,9 +1339,27 @@
             "type": "string",
             "description": "Link to the wiki banner image.",
             "format": "uri"
+          },
+          "translate": {
+            "type": "boolean",
+            "description": "Indicates if the title of the Wiki should be translated in the different languages supported",
+            "default": true,
+            "x-stoplight": {
+              "id": "is3rscvtf5iai"
+            }
           }
         },
-        "description": "Model of a new wiki"
+        "description": "Model of a new wiki",
+        "x-examples": {
+          "Example 1": {
+            "name": "string",
+            "description": "string",
+            "author": "string",
+            "lang": "string",
+            "image": "http://example.com",
+            "translate": true
+          }
+        }
       },
       "Wiki": {
         "required": [
@@ -1415,8 +1449,14 @@
             "description": "Unique identifier for the wiki."
           },
           "name": {
-            "type": "string",
-            "description": "Name of the wiki."
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "x-stoplight": {
+                "id": "167i3caiejm3g"
+              }
+            },
+            "description": "Dictionary of the title of the wiki in the different supported languages"
           },
           "description": {
             "type": "string",
@@ -1449,7 +1489,7 @@
           },
           "lang": {
             "type": "string",
-            "description": "Language of the wiki."
+            "description": "Original language of the wiki."
           },
           "image": {
             "type": "string",
@@ -1476,6 +1516,28 @@
           ],
           "lang": "en",
           "image": "https://picsum.photos/200"
+        },
+        "x-examples": {
+          "Example 1": {
+            "id": "1",
+            "name": "Example wiki",
+            "description": "This is an example of a response when getting a wiki",
+            "author": "Someone, change when user return is finalized",
+            "tags": [
+              {
+                "id": "1",
+                "name": "Gift cards",
+                "wiki_id": "1"
+              },
+              {
+                "id": "2",
+                "name": "Stores",
+                "wiki_id": "1"
+              }
+            ],
+            "lang": "en",
+            "image": "https://picsum.photos/200"
+          }
         }
       },
       "Tag": {
@@ -1720,8 +1782,14 @@
             "description": "Unique identifier for the wiki."
           },
           "name": {
-            "type": "string",
-            "description": "Name of the wiki."
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "x-stoplight": {
+                "id": "hps6ao6tomwct"
+              }
+            },
+            "description": "Dictionary of the title of the wiki in the different supported languages"
           },
           "description": {
             "type": "string",
@@ -1748,12 +1816,30 @@
           },
           "lang": {
             "type": "string",
-            "description": "Language of the wiki."
+            "description": "Original language of the wiki."
           },
           "image": {
             "type": "string",
             "description": "Link to the wiki banner image.",
             "format": "uri"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "id": "string",
+            "name": {
+              "property1": "string",
+              "property2": "string"
+            },
+            "description": "string",
+            "creation_date": "string",
+            "rating": 4.5,
+            "author": {
+              "id": "string",
+              "name": "string"
+            },
+            "lang": "string",
+            "image": "http://example.com"
           }
         }
       },
