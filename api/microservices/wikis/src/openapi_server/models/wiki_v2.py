@@ -21,25 +21,29 @@ import json
 
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Union
 from typing_extensions import Annotated
-from openapi_server.models.author import Author
+from openapi_server.models.author_v2 import AuthorV2
+from openapi_server.models.tag_v2 import TagV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SimplifiedWiki(BaseModel):
+class WikiV2(BaseModel):
     """
-    SimplifiedWiki
+    WikiV2
     """ # noqa: E501
     id: StrictStr = Field(description="Unique identifier for the wiki.")
-    name: StrictStr = Field(description="Name of the wiki.")
+    name: Dict[str, StrictStr] = Field(description="Name of the wiki in different languages.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
     creation_date: StrictStr = Field(description="Date of creation of the wiki.")
-    rating: Optional[Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]]] = Field(default=None, description="Average rating of the wiki")
-    author: Author
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "creation_date", "rating", "author"]
+    author: AuthorV2
+    tags: List[TagV2]
+    rating: Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]] = Field(description="Average rating of the wiki")
+    lang: StrictStr = Field(description="Language of the wiki.")
+    image: StrictStr = Field(description="Link to the wiki banner image.")
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "creation_date", "author", "tags", "rating", "lang", "image"]
 
     model_config = {
         "populate_by_name": True,
@@ -59,7 +63,7 @@ class SimplifiedWiki(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SimplifiedWiki from a JSON string"""
+        """Create an instance of WikiV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,11 +85,18 @@ class SimplifiedWiki(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of author
         if self.author:
             _dict['author'] = self.author.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
+        _items = []
+        if self.tags:
+            for _item in self.tags:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['tags'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SimplifiedWiki from a dict"""
+        """Create an instance of WikiV2 from a dict"""
         if obj is None:
             return None
 
@@ -97,8 +108,11 @@ class SimplifiedWiki(BaseModel):
             "name": obj.get("name"),
             "description": obj.get("description"),
             "creation_date": obj.get("creation_date"),
+            "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
+            "tags": [TagV2.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
             "rating": obj.get("rating"),
-            "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None
+            "lang": obj.get("lang"),
+            "image": obj.get("image")
         })
         return _obj
 

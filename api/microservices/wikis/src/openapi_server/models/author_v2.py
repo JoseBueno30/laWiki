@@ -21,25 +21,20 @@ import json
 
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from typing_extensions import Annotated
-from openapi_server.models.author import Author
+from typing import Any, ClassVar, Dict, List
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SimplifiedWiki(BaseModel):
+class AuthorV2(BaseModel):
     """
-    SimplifiedWiki
+    Schema for the user, temporary as we do not know how the user will be modelled.
     """ # noqa: E501
-    id: StrictStr = Field(description="Unique identifier for the wiki.")
-    name: StrictStr = Field(description="Name of the wiki.")
-    description: StrictStr = Field(description="Details of the wiki set by its editors.")
-    creation_date: StrictStr = Field(description="Date of creation of the wiki.")
-    rating: Optional[Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]]] = Field(default=None, description="Average rating of the wiki")
-    author: Author
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "creation_date", "rating", "author"]
+    id: StrictStr = Field(description="Unique identifier for the user.")
+    name: StrictStr = Field(description="Name of the user.")
+    image: StrictStr = Field(description="Linkt to the author's profile picture")
+    __properties: ClassVar[List[str]] = ["id", "name", "image"]
 
     model_config = {
         "populate_by_name": True,
@@ -59,7 +54,7 @@ class SimplifiedWiki(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SimplifiedWiki from a JSON string"""
+        """Create an instance of AuthorV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,14 +73,11 @@ class SimplifiedWiki(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of author
-        if self.author:
-            _dict['author'] = self.author.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SimplifiedWiki from a dict"""
+        """Create an instance of AuthorV2 from a dict"""
         if obj is None:
             return None
 
@@ -95,10 +87,7 @@ class SimplifiedWiki(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "description": obj.get("description"),
-            "creation_date": obj.get("creation_date"),
-            "rating": obj.get("rating"),
-            "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None
+            "image": obj.get("image")
         })
         return _obj
 

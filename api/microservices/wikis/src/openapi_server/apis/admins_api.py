@@ -39,7 +39,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 
 
 @router.post(
-    "/wikis",
+    "/v1/wikis",
     responses={
         201: {"model": Wiki, "description": "Created succesfully."},
         400: {"description": "Bad Request"},
@@ -72,7 +72,7 @@ async def create_wiki(
 
 
 @router.delete(
-    "/wikis/{id}",
+    "/v1/wikis/{id}",
     responses={
         200: {"description": "Removed successfully. Returned deleted item."},
         400: {"description": "Bad Request."},
@@ -101,7 +101,7 @@ async def remove_wiki(
 
 
 @router.put(
-    "/wikis/{id}",
+    "/v1/wikis/{id}",
     responses={
         200: {"model": Wiki, "description": "Succesful operation."},
         400: {"description": "Bad Request"},

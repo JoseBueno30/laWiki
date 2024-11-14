@@ -23,23 +23,23 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from openapi_server.models.simplified_wiki import SimplifiedWiki
+from openapi_server.models.simplified_wiki_v2 import SimplifiedWikiV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class WikiList(BaseModel):
+class WikiListV2(BaseModel):
     """
     List of Wikis. Supports pagination.
     """ # noqa: E501
-    articles: List[SimplifiedWiki]
+    wikis: List[SimplifiedWikiV2]
     total: StrictInt = Field(description="The total number of items available to return.")
     offset: StrictInt = Field(description="The offset of the items returned (as set in the query or by default)")
     limit: Annotated[int, Field(strict=True, ge=0)] = Field(description="The maximum number of items in the response (as set in the query or by default).")
     previous: Optional[StrictStr] = Field(description="Request to the previous page of items. ( null if none)")
     next: Optional[StrictStr] = Field(description="Request to the next page of items. ( null if none) ")
-    __properties: ClassVar[List[str]] = ["articles", "total", "offset", "limit", "previous", "next"]
+    __properties: ClassVar[List[str]] = ["wikis", "total", "offset", "limit", "previous", "next"]
 
     model_config = {
         "populate_by_name": True,
@@ -59,7 +59,7 @@ class WikiList(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of WikiList from a JSON string"""
+        """Create an instance of WikiListV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,13 +78,13 @@ class WikiList(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in articles (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in wikis (list)
         _items = []
-        if self.articles:
-            for _item in self.articles:
+        if self.wikis:
+            for _item in self.wikis:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['articles'] = _items
+            _dict['wikis'] = _items
         # set to None if previous (nullable) is None
         # and model_fields_set contains the field
         if self.previous is None and "previous" in self.model_fields_set:
@@ -99,7 +99,7 @@ class WikiList(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of WikiList from a dict"""
+        """Create an instance of WikiListV2 from a dict"""
         if obj is None:
             return None
 
@@ -107,7 +107,7 @@ class WikiList(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "articles": [SimplifiedWiki.from_dict(_item) for _item in obj.get("articles")] if obj.get("articles") is not None else None,
+            "wikis": [SimplifiedWikiV2.from_dict(_item) for _item in obj.get("wikis")] if obj.get("wikis") is not None else None,
             "total": obj.get("total"),
             "offset": obj.get("offset"),
             "limit": obj.get("limit"),
