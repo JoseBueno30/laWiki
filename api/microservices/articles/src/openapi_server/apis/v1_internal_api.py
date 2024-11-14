@@ -3,6 +3,10 @@
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+from xml.dom import NotFoundErr
+
+from bson.errors import InvalidId
+from starlette.responses import JSONResponse
 
 from openapi_server.apis.v1_internal_api_base import BaseV1InternalApi
 import openapi_server.impl
@@ -54,7 +58,7 @@ async def assign_article_tags_v1(
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV1InternalApi.subclasses[0]().assign_article_tags(id, id_tags_body) is None:
+        if await BaseV1InternalApi.subclasses[0]().assign_article_tags_v1(id, id_tags_body_v1) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
@@ -80,7 +84,7 @@ async def check_article_by_idv1(
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if not await BaseV1InternalApi.subclasses[0]().check_article_by_id(id):
+        if not await BaseV1InternalApi.subclasses[0]().check_article_by_idv1(id):
             raise HTTPException(status_code=404, detail="Artcile Not Found")
         else:
             return
@@ -108,7 +112,7 @@ async def unassign_article_tags_v1(
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV1InternalApi.subclasses[0]().unassign_article_tags(id, ids) is None:
+        if await BaseV1InternalApi.subclasses[0]().unassign_article_tags_v1(id, ids) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
@@ -136,7 +140,7 @@ async def update_rating_v1(
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV1InternalApi.subclasses[0]().update_rating(id, id_ratings_body) is None:
+        if await BaseV1InternalApi.subclasses[0]().update_rating_v1(id, id_ratings_body_v1) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")

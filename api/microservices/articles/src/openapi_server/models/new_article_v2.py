@@ -20,7 +20,7 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from openapi_server.models.author_v2 import AuthorV2
 from openapi_server.models.tag_v2 import TagV2
@@ -38,8 +38,9 @@ class NewArticleV2(BaseModel):
     tags: List[TagV2]
     body: Optional[StrictStr] = Field(default=None, description="The body of the version.")
     wiki_id: StrictStr = Field(description="The ID of the Wiki where the Article is created.")
-    lan: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "wiki_id", "lan"]
+    lan: StrictStr = Field(description="Original language of the first ArticleVersion of the Article")
+    trasnlate_title: StrictBool = Field(description="Indicates if the title of the ArticleVersion of the Artivle should be translated in the different translations of the ArticleVersion")
+    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "wiki_id", "lan", "trasnlate_title"]
 
     model_config = {
         "populate_by_name": True,
@@ -105,7 +106,8 @@ class NewArticleV2(BaseModel):
             "tags": [TagV2.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
             "body": obj.get("body"),
             "wiki_id": obj.get("wiki_id"),
-            "lan": obj.get("lan")
+            "lan": obj.get("lan"),
+            "trasnlate_title": obj.get("trasnlate_title") if obj.get("trasnlate_title") is not None else True
         })
         return _obj
 

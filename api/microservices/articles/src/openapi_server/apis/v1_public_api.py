@@ -4,6 +4,9 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+from websockets import InvalidParameterValue
+
 from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
 import openapi_server.impl
 
@@ -57,7 +60,7 @@ async def get_article_by_author_v1(
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV1PublicApi.subclasses[0]().get_article_by_author(id, offset, limit, order)
+        return await BaseV1PublicApi.subclasses[0]().get_article_by_author_v1(id, offset, limit, order)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Author ID format.")
     except Exception as e:
@@ -82,7 +85,7 @@ async def get_article_by_id_v1(
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV1PublicApi.subclasses[0]().get_article_by_id(id)
+        return await BaseV1PublicApi.subclasses[0]().get_article_by_id_v1(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:
@@ -110,7 +113,7 @@ async def get_article_by_name_v1(
     
     #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
     try:
-        return await BaseV1PublicApi.subclasses[0]().get_article_by_name(name, wiki)
+        return await BaseV1PublicApi.subclasses[0]().get_article_by_name_v1(name, wiki)
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
     except Exception as e:
@@ -135,7 +138,7 @@ async def get_article_version_by_id_v1(
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV1PublicApi.subclasses[0]().get_article_version_by_id(id)
+        return await BaseV1PublicApi.subclasses[0]().get_article_version_by_id_v1(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid ArticleVersion ID format.")
     except Exception as e:
@@ -214,7 +217,7 @@ async def search_articles_v1(
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV1PublicApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
+        return await BaseV1PublicApi.subclasses[0]().search_articles_v1(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid input parameters.")
     except Exception as e:

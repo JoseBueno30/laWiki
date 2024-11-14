@@ -34,7 +34,7 @@ except ImportError:
 
 class ArticleV1(BaseModel):
     """
-    Article of a Wiki
+    Article of a Wiki   
     """ # noqa: E501
     id: StrictStr = Field(description="The ID of the article")
     wiki_id: StrictStr = Field(description="The ID corresponding to the wiki the article belongs to.")
@@ -50,6 +50,7 @@ class ArticleV1(BaseModel):
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
+        "extra":  "ignore"
     }
 
 

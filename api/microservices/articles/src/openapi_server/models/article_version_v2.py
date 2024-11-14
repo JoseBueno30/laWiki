@@ -37,11 +37,11 @@ class ArticleVersionV2(BaseModel):
     id: StrictStr = Field(description="The ID of the version of the article.")
     article_id: StrictStr = Field(description="The ID of the article.")
     author: AuthorV2
-    title: StrictStr = Field(description="The title of the version of the article.")
+    title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages.")
     modification_date: datetime = Field(description="The date of modification the article that created the version.")
     body: StrictStr = Field(description="The body of the version.")
     tags: List[TagV2] = Field(description="Array of the tags of the version of the article.")
-    lan: StrictStr
+    lan: StrictStr = Field(description="Original language of the ArticleVersion")
     __properties: ClassVar[List[str]] = ["id", "article_id", "author", "title", "modification_date", "body", "tags", "lan"]
 
     model_config = {

@@ -38,13 +38,14 @@ class ArticleV2(BaseModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The ID of the article")
     wiki_id: StrictStr = Field(description="The ID corresponding to the wiki the article belongs to.")
-    title: StrictStr = Field(description="The title of the article. The same as the title of the most recent version.")
+    title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages. The same as the title of the most recent version.")
     creation_date: datetime = Field(description="The date of creation of the article.")
     author: AuthorV2
     tags: List[TagV2] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
     versions: List[SimplifiedArticleVersionV2] = Field(description="Array of simplified articleversions")
     rating: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]] = Field(description="Average rating of the Article")
-    __properties: ClassVar[List[str]] = ["id", "wiki_id", "title", "creation_date", "author", "tags", "versions", "rating"]
+    lan: StrictStr = Field(description="Original language of the Article")
+    __properties: ClassVar[List[str]] = ["id", "wiki_id", "title", "creation_date", "author", "tags", "versions", "rating", "lan"]
 
     model_config = {
         "populate_by_name": True,
@@ -119,7 +120,8 @@ class ArticleV2(BaseModel):
             "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "tags": [TagV2.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
             "versions": [SimplifiedArticleVersionV2.from_dict(_item) for _item in obj.get("versions")] if obj.get("versions") is not None else None,
-            "rating": obj.get("rating")
+            "rating": obj.get("rating"),
+            "lan": obj.get("lan")
         })
         return _obj
 

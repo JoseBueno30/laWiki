@@ -22,7 +22,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from openapi_server.models.author_v2 import AuthorV2
 try:
     from typing import Self
@@ -34,10 +34,11 @@ class SimplifiedArticleVersionV2(BaseModel):
     Simplification of an ArticleVersion object
     """ # noqa: E501
     id: StrictStr = Field(description="The ID of the article version.")
-    title: StrictStr = Field(description="The title of the article version.")
-    author: Optional[AuthorV2] = None
+    title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages.")
+    author: AuthorV2
     modification_date: datetime = Field(description="The date of modification of the article version.")
-    __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
+    lan: StrictStr = Field(description="Original language of the ArticleVersion")
+    __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date", "lan"]
 
     model_config = {
         "populate_by_name": True,
@@ -94,7 +95,8 @@ class SimplifiedArticleVersionV2(BaseModel):
             "id": obj.get("id"),
             "title": obj.get("title"),
             "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "modification_date": obj.get("modification_date")
+            "modification_date": obj.get("modification_date"),
+            "lan": obj.get("lan")
         })
         return _obj
 
