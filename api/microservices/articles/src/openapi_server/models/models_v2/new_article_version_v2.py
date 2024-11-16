@@ -20,31 +20,26 @@ import json
 
 
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
-from typing_extensions import Annotated
-from openapi_server.models.author_v2 import AuthorV2
-from openapi_server.models.simplified_article_version_v2 import SimplifiedArticleVersionV2
-from openapi_server.models.tag_v2 import TagV2
+from pydantic import BaseModel, Field, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List
+from openapi_server.models.models_v2.author_v2 import AuthorV2
+from openapi_server.models.models_v2.tag_v2 import TagV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class ArticleV2(BaseModel):
+class NewArticleVersionV2(BaseModel):
     """
-    Article of a Wiki
+    Data required to the user to create a new ArticleVersion of an Article (given in the path of the endpoint)
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the article")
-    wiki_id: StrictStr = Field(description="The ID corresponding to the wiki the article belongs to.")
-    title: StrictStr = Field(description="The title of the article. The same as the title of the most recent version.")
-    creation_date: datetime = Field(description="The date of creation of the article.")
+    title: StrictStr = Field(description="The title of the version of the article.")
     author: AuthorV2
-    tags: List[TagV2] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
-    versions: List[SimplifiedArticleVersionV2] = Field(description="Array of simplified articleversions")
-    rating: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]] = Field(description="Average rating of the Article")
-    __properties: ClassVar[List[str]] = ["id", "wiki_id", "title", "creation_date", "author", "tags", "versions", "rating"]
+    tags: List[TagV2]
+    body: StrictStr = Field(description="The body of the version.")
+    lan: StrictStr = Field(description="Original language of the ArticleVersion")
+    translate_title: StrictBool = Field(description="Indicates if the title of the ArticleVersion should be translated in the different translations of the Article")
+    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "lan", "translate_title"]
 
     model_config = {
         "populate_by_name": True,
@@ -64,7 +59,7 @@ class ArticleV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ArticleV2 from a JSON string"""
+        """Create an instance of NewArticleVersionV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -93,18 +88,11 @@ class ArticleV2(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['tags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in versions (list)
-        _items = []
-        if self.versions:
-            for _item in self.versions:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['versions'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ArticleV2 from a dict"""
+        """Create an instance of NewArticleVersionV2 from a dict"""
         if obj is None:
             return None
 
@@ -112,14 +100,12 @@ class ArticleV2(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "wiki_id": obj.get("wiki_id"),
             "title": obj.get("title"),
-            "creation_date": obj.get("creation_date"),
             "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "tags": [TagV2.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
-            "versions": [SimplifiedArticleVersionV2.from_dict(_item) for _item in obj.get("versions")] if obj.get("versions") is not None else None,
-            "rating": obj.get("rating")
+            "body": obj.get("body"),
+            "lan": obj.get("lan"),
+            "translate_title": obj.get("translate_title") if obj.get("translate_title") is not None else True
         })
         return _obj
 

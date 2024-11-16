@@ -4,8 +4,12 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+from pymongo import errors
+from starlette.responses import JSONResponse
+
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
-import openapi_server.impl
+import openapi_server.impl.v1_apis_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -22,16 +26,16 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.article_v1 import ArticleV1
-from openapi_server.models.article_version_v1 import ArticleVersionV1
-from openapi_server.models.new_article_v1 import NewArticleV1
-from openapi_server.models.new_article_version_v1 import NewArticleVersionV1
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v1.article_v1 import ArticleV1
+from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
+from openapi_server.models.models_v1.new_article_v1 import NewArticleV1
+from openapi_server.models.models_v1.new_article_version_v1 import NewArticleVersionV1
 
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v1_apis_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
@@ -54,7 +58,7 @@ async def create_article_v1(
     if not BaseV1EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV1EditorsApi.subclasses[0]().create_article(new_article)
+        return await BaseV1EditorsApi.subclasses[0]().create_article_v1(new_article_v1)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
@@ -79,7 +83,7 @@ async def create_article_version_v1(
     if not BaseV1EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV1EditorsApi.subclasses[0]().    create_article_version(id, new_article_version)
+        return await BaseV1EditorsApi.subclasses[0]().    create_article_version_v1(id, new_article_version_v1)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
@@ -104,7 +108,7 @@ async def delete_article_by_idv1(
     if not BaseV1EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseV1EditorsApi.subclasses[0]().delete_article_by_id(id)
+        await BaseV1EditorsApi.subclasses[0]().delete_article_by_idv1(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:
@@ -130,7 +134,7 @@ async def delete_article_version_by_id_v1(
     if not BaseV1EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseV1EditorsApi.subclasses[0]().delete_article_version_by_id(id)
+        await BaseV1EditorsApi.subclasses[0]().delete_article_version_by_id_v1(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:
@@ -157,7 +161,7 @@ async def restore_article_version_v1(
     if not BaseV1EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV1EditorsApi.subclasses[0]().restore_article_version(article_id, version_id) is None:
+        if await BaseV1EditorsApi.subclasses[0]().restore_article_version_v1(article_id, version_id) is None:
             return JSONResponse(status_code=200, content={"detail": "ArticleVersion successfully restored"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article or ArticleVersion ID format.")

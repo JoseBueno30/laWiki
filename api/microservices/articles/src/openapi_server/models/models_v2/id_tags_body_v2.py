@@ -20,25 +20,20 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from openapi_server.models.author_v2 import AuthorV2
-from openapi_server.models.tag_v2 import TagV2
+from pydantic import BaseModel, Field
+from typing import Any, ClassVar, Dict, List
+from openapi_server.models.models_v2.tag_v2 import TagV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class NewArticleVersionV2(BaseModel):
+class IdTagsBodyV2(BaseModel):
     """
-    Data required to the user to create a new ArticleVersion of an Article (given in the path of the endpoint)
+    IdTagsBodyV2
     """ # noqa: E501
-    title: StrictStr = Field(description="The title of the version of the article.")
-    author: AuthorV2
-    tags: List[TagV2]
-    body: StrictStr = Field(description="The body of the version.")
-    lan: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "lan"]
+    tag_ids: List[TagV2] = Field(description="List of Tag IDs")
+    __properties: ClassVar[List[str]] = ["tag_ids"]
 
     model_config = {
         "populate_by_name": True,
@@ -58,7 +53,7 @@ class NewArticleVersionV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of NewArticleVersionV2 from a JSON string"""
+        """Create an instance of IdTagsBodyV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,21 +72,18 @@ class NewArticleVersionV2(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of author
-        if self.author:
-            _dict['author'] = self.author.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in tag_ids (list)
         _items = []
-        if self.tags:
-            for _item in self.tags:
+        if self.tag_ids:
+            for _item in self.tag_ids:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['tags'] = _items
+            _dict['tag_ids'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of NewArticleVersionV2 from a dict"""
+        """Create an instance of IdTagsBodyV2 from a dict"""
         if obj is None:
             return None
 
@@ -99,11 +91,7 @@ class NewArticleVersionV2(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "title": obj.get("title"),
-            "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "tags": [TagV2.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
-            "body": obj.get("body"),
-            "lan": obj.get("lan")
+            "tag_ids": [TagV2.from_dict(_item) for _item in obj.get("tag_ids")] if obj.get("tag_ids") is not None else None
         })
         return _obj
 

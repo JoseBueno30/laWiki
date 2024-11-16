@@ -21,23 +21,28 @@ import json
 
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from openapi_server.models.author_v1 import AuthorV1
+from pydantic import BaseModel, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
+from openapi_server.models.models_v2.author_v2 import AuthorV2
+from openapi_server.models.models_v2.tag_v2 import TagV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SimplifiedArticleVersionV1(BaseModel):
+class ArticleVersionV2(BaseModel):
     """
-    Simplification of an ArticleVersion object
+    Concrete version of an Article object 
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the article version.")
-    title: StrictStr = Field(description="The title of the article version.")
-    author: Optional[AuthorV1] = None
-    modification_date: datetime = Field(description="The date of modification of the article version.")
-    __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
+    id: StrictStr = Field(description="The ID of the version of the article.")
+    article_id: StrictStr = Field(description="The ID of the article.")
+    author: AuthorV2
+    title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages.")
+    modification_date: datetime = Field(description="The date of modification the article that created the version.")
+    body: StrictStr = Field(description="The body of the version.")
+    tags: List[TagV2] = Field(description="Array of the tags of the version of the article.")
+    lan: StrictStr = Field(description="Original language of the ArticleVersion")
+    __properties: ClassVar[List[str]] = ["id", "article_id", "author", "title", "modification_date", "body", "tags", "lan"]
 
     model_config = {
         "populate_by_name": True,
@@ -57,7 +62,7 @@ class SimplifiedArticleVersionV1(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SimplifiedArticleVersionV1 from a JSON string"""
+        """Create an instance of ArticleVersionV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,11 +84,18 @@ class SimplifiedArticleVersionV1(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of author
         if self.author:
             _dict['author'] = self.author.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
+        _items = []
+        if self.tags:
+            for _item in self.tags:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['tags'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SimplifiedArticleVersionV1 from a dict"""
+        """Create an instance of ArticleVersionV2 from a dict"""
         if obj is None:
             return None
 
@@ -92,9 +104,13 @@ class SimplifiedArticleVersionV1(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
+            "article_id": obj.get("article_id"),
+            "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "title": obj.get("title"),
-            "author": AuthorV1.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "modification_date": obj.get("modification_date")
+            "modification_date": obj.get("modification_date"),
+            "body": obj.get("body"),
+            "tags": [TagV2.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "lan": obj.get("lan")
         })
         return _obj
 

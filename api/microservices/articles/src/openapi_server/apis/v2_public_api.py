@@ -4,6 +4,9 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+from websockets import InvalidParameterValue
+
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
 import openapi_server.impl
 
@@ -22,12 +25,12 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.article_list_v2 import ArticleListV2
-from openapi_server.models.article_v2 import ArticleV2
-from openapi_server.models.article_version_list_v2 import ArticleVersionListV2
-from openapi_server.models.article_version_v2 import ArticleVersionV2
-from openapi_server.models.inline_response200_v2 import InlineResponse200V2
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
+from openapi_server.models.models_v2.article_v2 import ArticleV2
+from openapi_server.models.models_v2.article_version_list_v2 import ArticleVersionListV2
+from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
+from openapi_server.models.models_v2.inline_response200_v2 import InlineResponse200V2
 
 
 router = APIRouter()
@@ -104,6 +107,7 @@ async def get_article_by_id_v2(
 async def get_article_by_name_v2(
     name: str = Path(..., description=""),
     wiki: str = Query(None, description="The ID of the wiki of the Article", alias="wiki"),
+    lan: str = Query(None, description="Language of the ArticleVersion, original language if not specified", alias="lan"),
 ) -> ArticleVersionV2:
     """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
     if not BaseV2PublicApi.subclasses:
@@ -111,7 +115,7 @@ async def get_article_by_name_v2(
     
     #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
     try:
-        return await BaseV2PublicApi.subclasses[0]().get_article_by_name(name, wiki)
+        return await BaseV2PublicApi.subclasses[0]().get_article_by_name(name, wiki, lan)
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
     except Exception as e:
@@ -136,7 +140,7 @@ async def get_article_version_body_by_idv2(
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2PublicApi.subclasses[0]().get_article_version_by_id(id)
+        return await BaseV2PublicApi.subclasses[0]().get_article_version_body_by_idv2(id, parsed, lan)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid ArticleVersion ID format.")
     except Exception as e:
@@ -231,12 +235,13 @@ async def search_articles_v2(
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Article", alias="author_name"),
     editor_name: str = Query(None, description="Filter for the editors of the Article", alias="editor_name"),
+    lan: str = Query(None, description="Language of the ArticleVersion, original language if not specified", alias="lan")
 ) -> ArticleListV2:
     """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2PublicApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name)
+        return await BaseV2PublicApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name, lan)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid input parameters.")
     except Exception as e:

@@ -21,12 +21,12 @@ import json
 
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
 from typing_extensions import Annotated
-from openapi_server.models.author_v1 import AuthorV1
-from openapi_server.models.simplified_article_version_v1 import SimplifiedArticleVersionV1
-from openapi_server.models.tag_v1 import TagV1
+from openapi_server.models.models_v1.author_v1 import AuthorV1
+from openapi_server.models.models_v1.simplified_article_version_v1 import SimplifiedArticleVersionV1
+from openapi_server.models.models_v1.tag_v1 import TagV1
 try:
     from typing import Self
 except ImportError:
@@ -34,7 +34,7 @@ except ImportError:
 
 class ArticleV1(BaseModel):
     """
-    Article of a Wiki
+    Article of a Wiki   
     """ # noqa: E501
     id: StrictStr = Field(description="The ID of the article")
     wiki_id: StrictStr = Field(description="The ID corresponding to the wiki the article belongs to.")
@@ -50,6 +50,7 @@ class ArticleV1(BaseModel):
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
+        "extra":  "ignore"
     }
 
 

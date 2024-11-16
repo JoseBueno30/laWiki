@@ -22,9 +22,9 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.id_ratings_body_v2 import IdRatingsBodyV2
-from openapi_server.models.id_tags_body_v2 import IdTagsBodyV2
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
+from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
 
 router = APIRouter()

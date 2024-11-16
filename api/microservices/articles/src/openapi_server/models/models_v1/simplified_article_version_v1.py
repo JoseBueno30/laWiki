@@ -21,21 +21,21 @@ import json
 
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from openapi_server.models.author_v2 import AuthorV2
+from openapi_server.models.models_v1.author_v1 import AuthorV1
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SimplifiedArticleVersionV2(BaseModel):
+class SimplifiedArticleVersionV1(BaseModel):
     """
     Simplification of an ArticleVersion object
     """ # noqa: E501
     id: StrictStr = Field(description="The ID of the article version.")
     title: StrictStr = Field(description="The title of the article version.")
-    author: Optional[AuthorV2] = None
+    author: Optional[AuthorV1] = None
     modification_date: datetime = Field(description="The date of modification of the article version.")
     __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
 
@@ -57,7 +57,7 @@ class SimplifiedArticleVersionV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SimplifiedArticleVersionV2 from a JSON string"""
+        """Create an instance of SimplifiedArticleVersionV1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,7 +83,7 @@ class SimplifiedArticleVersionV2(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SimplifiedArticleVersionV2 from a dict"""
+        """Create an instance of SimplifiedArticleVersionV1 from a dict"""
         if obj is None:
             return None
 
@@ -93,7 +93,7 @@ class SimplifiedArticleVersionV2(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "title": obj.get("title"),
-            "author": AuthorV2.from_dict(obj.get("author")) if obj.get("author") is not None else None,
+            "author": AuthorV1.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "modification_date": obj.get("modification_date")
         })
         return _obj

@@ -20,20 +20,25 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
-from openapi_server.models.tag_v2 import TagV2
+from pydantic import BaseModel, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from openapi_server.models.models_v2.simplified_article_version_v2 import SimplifiedArticleVersionV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class IdTagsBodyV2(BaseModel):
+class ArticleVersionListV2(BaseModel):
     """
-    IdTagsBodyV2
+    List of ArticleVersions. Supports pagination.
     """ # noqa: E501
-    tag_ids: List[TagV2] = Field(description="List of Tag IDs")
-    __properties: ClassVar[List[str]] = ["tag_ids"]
+    article_versions: List[SimplifiedArticleVersionV2]
+    total: StrictInt = Field(description="The total number of items available to return.")
+    offset: StrictInt = Field(description="The offset of the items returned (as set in the query or by default)")
+    limit: StrictInt = Field(description="The maximum number of items in the response (as set in the query or by default).")
+    previous: Optional[StrictStr] = Field(description="Request to the next page of items. ( null if none)")
+    next: Optional[StrictStr] = Field(description="Request to the next page of items. ( null if none) ")
+    __properties: ClassVar[List[str]] = ["article_versions", "total", "offset", "limit", "previous", "next"]
 
     model_config = {
         "populate_by_name": True,
@@ -53,7 +58,7 @@ class IdTagsBodyV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of IdTagsBodyV2 from a JSON string"""
+        """Create an instance of ArticleVersionListV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,18 +77,28 @@ class IdTagsBodyV2(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in tag_ids (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in article_versions (list)
         _items = []
-        if self.tag_ids:
-            for _item in self.tag_ids:
+        if self.article_versions:
+            for _item in self.article_versions:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['tag_ids'] = _items
+            _dict['article_versions'] = _items
+        # set to None if previous (nullable) is None
+        # and model_fields_set contains the field
+        if self.previous is None and "previous" in self.model_fields_set:
+            _dict['previous'] = None
+
+        # set to None if next (nullable) is None
+        # and model_fields_set contains the field
+        if self.next is None and "next" in self.model_fields_set:
+            _dict['next'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of IdTagsBodyV2 from a dict"""
+        """Create an instance of ArticleVersionListV2 from a dict"""
         if obj is None:
             return None
 
@@ -91,7 +106,12 @@ class IdTagsBodyV2(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "tag_ids": [TagV2.from_dict(_item) for _item in obj.get("tag_ids")] if obj.get("tag_ids") is not None else None
+            "article_versions": [SimplifiedArticleVersionV2.from_dict(_item) for _item in obj.get("article_versions")] if obj.get("article_versions") is not None else None,
+            "total": obj.get("total"),
+            "offset": obj.get("offset"),
+            "limit": obj.get("limit"),
+            "previous": obj.get("previous"),
+            "next": obj.get("next")
         })
         return _obj
 

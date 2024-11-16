@@ -20,25 +20,25 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from openapi_server.models.simplified_article_version_v2 import SimplifiedArticleVersionV2
+from openapi_server.models.models_v1.author_v1 import AuthorV1
+from openapi_server.models.models_v1.tag_v1 import TagV1
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class ArticleVersionListV2(BaseModel):
+class NewArticleV1(BaseModel):
     """
-    List of ArticleVersions. Supports pagination.
+    Data required to the user to create a new Article and its first version
     """ # noqa: E501
-    article_versions: List[SimplifiedArticleVersionV2]
-    total: StrictInt = Field(description="The total number of items available to return.")
-    offset: StrictInt = Field(description="The offset of the items returned (as set in the query or by default)")
-    limit: StrictInt = Field(description="The maximum number of items in the response (as set in the query or by default).")
-    previous: Optional[StrictStr] = Field(description="Request to the next page of items. ( null if none)")
-    next: Optional[StrictStr] = Field(description="Request to the next page of items. ( null if none) ")
-    __properties: ClassVar[List[str]] = ["article_versions", "total", "offset", "limit", "previous", "next"]
+    title: StrictStr = Field(description="The title of the version of the article.")
+    author: AuthorV1
+    tags: List[TagV1]
+    body: Optional[StrictStr] = Field(default=None, description="The body of the version.")
+    wiki_id: StrictStr = Field(description="The ID of the Wiki where the Article is created.")
+    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "wiki_id"]
 
     model_config = {
         "populate_by_name": True,
@@ -58,7 +58,7 @@ class ArticleVersionListV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ArticleVersionListV2 from a JSON string"""
+        """Create an instance of NewArticleV1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,28 +77,21 @@ class ArticleVersionListV2(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in article_versions (list)
+        # override the default output from pydantic by calling `to_dict()` of author
+        if self.author:
+            _dict['author'] = self.author.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
         _items = []
-        if self.article_versions:
-            for _item in self.article_versions:
+        if self.tags:
+            for _item in self.tags:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['article_versions'] = _items
-        # set to None if previous (nullable) is None
-        # and model_fields_set contains the field
-        if self.previous is None and "previous" in self.model_fields_set:
-            _dict['previous'] = None
-
-        # set to None if next (nullable) is None
-        # and model_fields_set contains the field
-        if self.next is None and "next" in self.model_fields_set:
-            _dict['next'] = None
-
+            _dict['tags'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ArticleVersionListV2 from a dict"""
+        """Create an instance of NewArticleV1 from a dict"""
         if obj is None:
             return None
 
@@ -106,12 +99,11 @@ class ArticleVersionListV2(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "article_versions": [SimplifiedArticleVersionV2.from_dict(_item) for _item in obj.get("article_versions")] if obj.get("article_versions") is not None else None,
-            "total": obj.get("total"),
-            "offset": obj.get("offset"),
-            "limit": obj.get("limit"),
-            "previous": obj.get("previous"),
-            "next": obj.get("next")
+            "title": obj.get("title"),
+            "author": AuthorV1.from_dict(obj.get("author")) if obj.get("author") is not None else None,
+            "tags": [TagV1.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "body": obj.get("body"),
+            "wiki_id": obj.get("wiki_id")
         })
         return _obj
 
