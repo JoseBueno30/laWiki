@@ -275,6 +275,9 @@ class DefaultArticleAPI(BaseV1PublicApi):
         if not articles[0]:
             raise Exception
 
+        for article in articles[0]["articles"]:
+            get_original_article_title(article)
+
         return articles[0]
 
     async def search_articles_v1(

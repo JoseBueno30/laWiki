@@ -8,7 +8,7 @@ from bson.errors import InvalidId
 from websockets import InvalidParameterValue
 
 from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
-import openapi_server.impl
+import openapi_server.impl.v1_apis_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -53,7 +53,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 async def get_article_by_author_v1(
     id: str = Path(..., description=""),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
-    limit: int = Query(0, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
+    limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
     order: str = Query(None, description="Sorts the articles by different criteria", alias="order"),
 ) -> ArticleListV1:
     """Get a list of Articles given an author&#39;s ID.  """

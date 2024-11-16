@@ -5,57 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a232b6ce-9f7e-4153-9161-1b8b651dd5d6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/impl/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api_base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api_base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_editors_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_editors_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_internal_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_internal_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_public_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_list_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_list_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_list_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/article_list_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/article_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_list_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_version_list_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_list_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/article_version_list_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/article_version_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/article_version_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/author_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/author_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/author_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/author_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/extra_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/extra_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_ratings_body_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/id_ratings_body_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_ratings_body_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/id_ratings_body_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_tags_body_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/id_tags_body_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/id_tags_body_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/id_tags_body_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/inline_response200_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/inline_response200_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/new_article_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/new_article_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/new_article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/new_article_version_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/new_article_version_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/simplified_article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/simplified_article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/simplified_article_version_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/simplified_article_version_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/tag_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/tag_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/tag_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/tag_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/security_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/security_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_v1_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_v1_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_v1_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_v2_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_v2_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_v2_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_v2_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_v2_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_v2_public_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_public_article_api.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,6 +49,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vparm\Documents\GitHub\laWiki\api\microservices\articles\src\openapi_server\impl\v1_apis_impl" />
       <recent name="C:\Users\vparm\Documents\GitHub\laWiki\api\microservices\articles\src\openapi_server\impl\v1_apis_iml" />
       <recent name="C:\Users\vparm\Documents\GitHub\laWiki\api\microservices\articles\src\openapi_server\impl" />
       <recent name="C:\Users\vparm\Documents\GitHub\laWiki\api\microservices\articles\src\openapi_server\models\models_v2" />
@@ -120,7 +75,7 @@
       <workItem from="1731682729124" duration="242000" />
       <workItem from="1731682993155" duration="84000" />
       <workItem from="1731683087754" duration="1922000" />
-      <workItem from="1731751481039" duration="2210000" />
+      <workItem from="1731751481039" duration="3261000" />
     </task>
     <servers />
   </component>

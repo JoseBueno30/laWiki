@@ -9,7 +9,7 @@ from pymongo import errors
 from starlette.responses import JSONResponse
 
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
-import openapi_server.impl
+import openapi_server.impl.v1_apis_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
