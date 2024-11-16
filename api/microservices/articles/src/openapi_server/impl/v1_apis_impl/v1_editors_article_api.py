@@ -4,7 +4,7 @@ from datetime import datetime, date
 from bson import ObjectId
 
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
-from openapi_server.impl.api_calls import delete_article_comments, check_if_wiki_exists
+from openapi_server.impl.utils.api_calls import delete_article_comments, check_if_wiki_exists
 from openapi_server.impl.v1_apis_impl.v1_public_article_api import mongodb
 from openapi_server.models.models_v1.article_v1 import ArticleV1
 from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
