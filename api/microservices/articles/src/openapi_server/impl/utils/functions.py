@@ -1,3 +1,5 @@
+from openapi_server.models.models_v1.simplified_article_version_v1 import SimplifiedArticleVersionV1
+
 transform_article_ids_pipeline = [
     {"$addFields": {
         "id": {"$toString": "$_id"},
@@ -60,7 +62,8 @@ def get_original_article_title(article):
     article_returned = article
     article_returned["title"] = article_returned["title"][article_returned["lan"]]
     for version in article_returned["versions"]:
-        version["title"] = version["title"][article_returned["lan"]]
+        #
+        if type(version["title"]) is dict: version["title"] = version["title"][article_returned["lan"]]
 
     return article_returned
 
@@ -137,3 +140,23 @@ def get_model_list_pipeline(match_query, offset, limit, order, total_documents, 
         }
     ]
     return pipeline
+
+def article_version_to_simplified_article_version(article_version):
+    if type(article_version) is not dict:
+        simplified_article_version = article_version.to_dict()
+    else:
+        simplified_article_version = article_version
+    #   Deletes the non-necessary attributes
+    simplified_article_version.pop("article_id", None)
+    simplified_article_version.pop("tags", None)
+    simplified_article_version.pop("body", None)
+
+    return simplified_article_version
+
+def parse_title_to_title_dict(article):
+    article["title"] = {
+        "en" : article["title"],
+        "es" : article["title"],
+        "fr" : article["title"],
+    }
+    article["lan"] = "es" # It doesn't care the language because they're going to be the same

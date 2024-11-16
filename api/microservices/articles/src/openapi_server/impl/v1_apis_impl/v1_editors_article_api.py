@@ -5,6 +5,8 @@ from bson import ObjectId
 
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
 from openapi_server.impl.utils.api_calls import delete_article_comments, check_if_wiki_exists
+from openapi_server.impl.utils.functions import article_version_to_simplified_article_version, \
+    parse_title_to_title_dict, get_original_article_title, get_original_article_version_title
 from openapi_server.impl.v1_apis_impl.v1_public_article_api import mongodb
 from openapi_server.models.models_v1.article_v1 import ArticleV1
 from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
@@ -13,18 +15,6 @@ from openapi_server.models.models_v1.new_article_version_v1 import NewArticleVer
 from openapi_server.models.models_v1.simplified_article_version_v1 import SimplifiedArticleVersionV1
 
 today = date.today()
-
-def article_version_to_simplified_article_version(article_version):
-    if type(article_version) is not dict:
-        simplified_article_version = article_version.to_dict()
-    else:
-        simplified_article_version = article_version
-    #   Deletes the non-necessary attributes
-    simplified_article_version.pop("article_id", None)
-    simplified_article_version.pop("tags", None)
-    simplified_article_version.pop("body", None)
-
-    return SimplifiedArticleVersionV1.from_dict(simplified_article_version)
 
 class EditorArticleAPI(BaseV1EditorsApi):
     def __init__(self, **kwargs):
@@ -42,9 +32,11 @@ class EditorArticleAPI(BaseV1EditorsApi):
         #   Deletes the body key from the article json
         new_article_json.pop("body", None)
 
-        #   Checks if the wiki exists
-        if not await check_if_wiki_exists(new_article_json["wiki_id"]):
-            raise Exception("Wiki does not exist")
+        parse_title_to_title_dict(new_article_json)
+
+        # TODO  Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
+        # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
+        #     raise Exception("Wiki does not exist")
 
         #   Changes the id type and inserts other attributes
         new_article_json["wiki_id"] = ObjectId(new_article_json["wiki_id"])
@@ -80,6 +72,9 @@ class EditorArticleAPI(BaseV1EditorsApi):
             tag["id"] = str(tag.pop("_id"))
 
         new_article_json["id"] = str(article_result.inserted_id)
+
+        get_original_article_title(new_article_json)
+
         return ArticleV1.from_dict(new_article_json)
 
     async def create_article_version_v1(
@@ -90,6 +85,9 @@ class EditorArticleAPI(BaseV1EditorsApi):
 
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version.to_dict()
+
+        #   Sets the title to dict
+        parse_title_to_title_dict(new_article_version_json)
 
         #   Changes the id types in order to insert the document
         new_article_version_json["article_id"] = ObjectId(id)
@@ -111,14 +109,10 @@ class EditorArticleAPI(BaseV1EditorsApi):
         for tag in new_article_version_json["tags"]:
             tag["id"] = str(tag.pop("_id"))
 
-        #   Generates the returning ArticleVersion value
-        article_version = ArticleVersionV1.from_dict(new_article_version_json)
-
         #   Generates a simplified article version
-        simplified_article_version = article_version_to_simplified_article_version(new_article_version_json)
+        simplified_article_version_dict = article_version_to_simplified_article_version(copy.deepcopy(new_article_version_json))
 
         #   Add the simplified version to the Article document
-        simplified_article_version_dict = simplified_article_version.to_dict()
         simplified_article_version_dict["_id"] = ObjectId(simplified_article_version_dict.pop("id"))
         simplified_article_version_dict["author"]["_id"] = (
             ObjectId(simplified_article_version_dict["author"].pop("id")))
@@ -131,6 +125,12 @@ class EditorArticleAPI(BaseV1EditorsApi):
              "$set": {"title": new_article_version_json["title"],
                       "tags": article_tags}},
         )
+
+
+
+        get_original_article_version_title(new_article_version_json)
+        #   Generates the returning ArticleVersion value
+        article_version = ArticleVersionV1.from_dict(new_article_version_json)
 
         return article_version
 
