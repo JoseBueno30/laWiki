@@ -5,12 +5,12 @@ from bson import ObjectId
 
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
 from openapi_server.impl.api_calls import delete_article_comments, check_if_wiki_exists
-from openapi_server.impl.v1_public_article_api import mongodb
-from openapi_server.models.article_v1 import ArticleV1
-from openapi_server.models.article_version_v1 import ArticleVersionV1
-from openapi_server.models.new_article_v1 import NewArticleV1
-from openapi_server.models.new_article_version_v1 import NewArticleVersionV1
-from openapi_server.models.simplified_article_version_v1 import SimplifiedArticleVersionV1
+from openapi_server.impl.v1_apis_impl.v1_public_article_api import mongodb
+from openapi_server.models.models_v1.article_v1 import ArticleV1
+from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
+from openapi_server.models.models_v1.new_article_v1 import NewArticleV1
+from openapi_server.models.models_v1.new_article_version_v1 import NewArticleVersionV1
+from openapi_server.models.models_v1.simplified_article_version_v1 import SimplifiedArticleVersionV1
 
 today = date.today()
 

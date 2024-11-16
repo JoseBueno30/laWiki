@@ -3,10 +3,10 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.article_v2 import ArticleV2  # noqa: F401
-from openapi_server.models.article_version_v2 import ArticleVersionV2  # noqa: F401
-from openapi_server.models.new_article_v2 import NewArticleV2  # noqa: F401
-from openapi_server.models.new_article_version_v2 import NewArticleVersionV2  # noqa: F401
+from openapi_server.models.models_v2.article_v2 import ArticleV2  # noqa: F401
+from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2  # noqa: F401
+from openapi_server.models.models_v2.new_article_v2 import NewArticleV2  # noqa: F401
+from openapi_server.models.models_v2.new_article_version_v2 import NewArticleVersionV2  # noqa: F401
 
 
 def test_create_article_v2(client: TestClient):

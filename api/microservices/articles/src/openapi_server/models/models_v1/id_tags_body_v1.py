@@ -20,34 +20,25 @@ import json
 
 
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, Field
 from typing import Any, ClassVar, Dict, List
-from openapi_server.models.author_v1 import AuthorV1
-from openapi_server.models.tag_v1 import TagV1
+from openapi_server.models.models_v1.tag_v1 import TagV1
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class ArticleVersionV1(BaseModel):
+class IdTagsBodyV1(BaseModel):
     """
-    Concrete version of an Article object 
+    IdTagsBodyV1
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the version of the article.")
-    article_id: StrictStr = Field(description="The ID of the article.")
-    author: AuthorV1
-    title: StrictStr = Field(description="The title of the version of the article.")
-    modification_date: datetime = Field(description="The date of modification the article that created the version.")
-    body: StrictStr = Field(description="The body of the version.")
-    tags: List[TagV1] = Field(description="Array of the tags of the version of the article.")
-    __properties: ClassVar[List[str]] = ["id", "article_id", "author", "title", "modification_date", "body", "tags"]
+    tag_ids: List[TagV1] = Field(description="List of Tag IDs")
+    __properties: ClassVar[List[str]] = ["tag_ids"]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
-        "extra":  "ignore"
     }
 
 
@@ -62,7 +53,7 @@ class ArticleVersionV1(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ArticleVersionV1 from a JSON string"""
+        """Create an instance of IdTagsBodyV1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,21 +72,18 @@ class ArticleVersionV1(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of author
-        if self.author:
-            _dict['author'] = self.author.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in tag_ids (list)
         _items = []
-        if self.tags:
-            for _item in self.tags:
+        if self.tag_ids:
+            for _item in self.tag_ids:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['tags'] = _items
+            _dict['tag_ids'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ArticleVersionV1 from a dict"""
+        """Create an instance of IdTagsBodyV1 from a dict"""
         if obj is None:
             return None
 
@@ -103,13 +91,7 @@ class ArticleVersionV1(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "article_id": obj.get("article_id"),
-            "author": AuthorV1.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "title": obj.get("title"),
-            "modification_date": obj.get("modification_date"),
-            "body": obj.get("body"),
-            "tags": [TagV1.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None
+            "tag_ids": [TagV1.from_dict(_item) for _item in obj.get("tag_ids")] if obj.get("tag_ids") is not None else None
         })
         return _obj
 

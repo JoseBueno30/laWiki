@@ -6,10 +6,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
 from openapi_server.impl.api_calls import get_user_comments
-from openapi_server.models.article_list_v1 import ArticleListV1
-from openapi_server.models.article_v1 import ArticleV1
-from openapi_server.models.article_version_list_v1 import ArticleVersionListV1
-from openapi_server.models.article_version_v1 import ArticleVersionV1
+from openapi_server.models.models_v1.article_list_v1 import ArticleListV1
+from openapi_server.models.models_v1.article_v1 import ArticleV1
+from openapi_server.models.models_v1.article_version_list_v1 import ArticleVersionListV1
+from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
 
 mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 mongodb = mongodb_client.get_database("laWikiV2BD")
@@ -248,12 +248,12 @@ class DefaultArticleAPI(BaseV1PublicApi):
 
         article_version = await mongodb["article_version"].aggregate(pipeline).to_list(length=1)
 
-        print(article_version)
-
         if not article_version[0]:
             raise Exception
 
-        return article_version[0]
+        article_version = get_original_article_version_title(article_version[0])
+
+        return article_version
 
     async def get_article_by_author_v1(
             self,

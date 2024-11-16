@@ -20,26 +20,24 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from datetime import datetime
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
-from openapi_server.models.article_v2 import ArticleV2
+from openapi_server.models.models_v1.author_v1 import AuthorV1
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class ArticleListV2(BaseModel):
+class SimplifiedArticleVersionV1(BaseModel):
     """
-    List of Articles. Supports pagination.
+    Simplification of an ArticleVersion object
     """ # noqa: E501
-    articles: List[ArticleV2]
-    total: StrictInt = Field(description="The total number of items available to return.")
-    offset: StrictInt = Field(description="The offset of the items returned (as set in the query or by default)")
-    limit: Annotated[int, Field(strict=True, ge=0)] = Field(description="The maximum number of items in the response (as set in the query or by default).")
-    previous: Optional[StrictStr] = Field(description="Request to the previous page of items. ( null if none)")
-    next: Optional[StrictStr] = Field(description="Request to the next page of items. ( null if none) ")
-    __properties: ClassVar[List[str]] = ["articles", "total", "offset", "limit", "previous", "next"]
+    id: StrictStr = Field(description="The ID of the article version.")
+    title: StrictStr = Field(description="The title of the article version.")
+    author: Optional[AuthorV1] = None
+    modification_date: datetime = Field(description="The date of modification of the article version.")
+    __properties: ClassVar[List[str]] = ["id", "title", "author", "modification_date"]
 
     model_config = {
         "populate_by_name": True,
@@ -59,7 +57,7 @@ class ArticleListV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ArticleListV2 from a JSON string"""
+        """Create an instance of SimplifiedArticleVersionV1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,28 +76,14 @@ class ArticleListV2(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in articles (list)
-        _items = []
-        if self.articles:
-            for _item in self.articles:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['articles'] = _items
-        # set to None if previous (nullable) is None
-        # and model_fields_set contains the field
-        if self.previous is None and "previous" in self.model_fields_set:
-            _dict['previous'] = None
-
-        # set to None if next (nullable) is None
-        # and model_fields_set contains the field
-        if self.next is None and "next" in self.model_fields_set:
-            _dict['next'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of author
+        if self.author:
+            _dict['author'] = self.author.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ArticleListV2 from a dict"""
+        """Create an instance of SimplifiedArticleVersionV1 from a dict"""
         if obj is None:
             return None
 
@@ -107,12 +91,10 @@ class ArticleListV2(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "articles": [ArticleV2.from_dict(_item) for _item in obj.get("articles")] if obj.get("articles") is not None else None,
-            "total": obj.get("total"),
-            "offset": obj.get("offset"),
-            "limit": obj.get("limit"),
-            "previous": obj.get("previous"),
-            "next": obj.get("next")
+            "id": obj.get("id"),
+            "title": obj.get("title"),
+            "author": AuthorV1.from_dict(obj.get("author")) if obj.get("author") is not None else None,
+            "modification_date": obj.get("modification_date")
         })
         return _obj
 

@@ -6,8 +6,8 @@ from bson import ObjectId
 
 
 from openapi_server.apis.v1_internal_api_base import BaseV1InternalApi
-from openapi_server.models.id_ratings_body_v1 import IdRatingsBodyV1
-from openapi_server.models.id_tags_body_v1 import IdTagsBodyV1
+from openapi_server.models.models_v1.id_ratings_body_v1 import IdRatingsBodyV1
+from openapi_server.models.models_v1.id_tags_body_v1 import IdTagsBodyV1
 
 mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 mongodb = mongodb_client.get_database("laWikiDB")

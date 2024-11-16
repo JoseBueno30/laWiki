@@ -2,8 +2,8 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
-from openapi_server.models.id_ratings_body_v1 import IdRatingsBodyV1
-from openapi_server.models.id_tags_body_v1 import IdTagsBodyV1
+from openapi_server.models.models_v1.id_ratings_body_v1 import IdRatingsBodyV1
+from openapi_server.models.models_v1.id_tags_body_v1 import IdTagsBodyV1
 
 
 class BaseV1InternalApi:

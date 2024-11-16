@@ -3,8 +3,8 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.id_ratings_body_v2 import IdRatingsBodyV2  # noqa: F401
-from openapi_server.models.id_tags_body_v2 import IdTagsBodyV2  # noqa: F401
+from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2  # noqa: F401
+from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2  # noqa: F401
 
 
 def test_assign_article_tags_v2(client: TestClient):

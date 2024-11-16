@@ -26,14 +26,14 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.id_ratings_body_v1 import IdRatingsBodyV1
-from openapi_server.models.id_tags_body_v1 import IdTagsBodyV1
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v1.id_ratings_body_v1 import IdRatingsBodyV1
+from openapi_server.models.models_v1.id_tags_body_v1 import IdTagsBodyV1
 
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v1_apis_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 

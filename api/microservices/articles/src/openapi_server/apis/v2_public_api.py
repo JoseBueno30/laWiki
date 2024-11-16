@@ -25,12 +25,12 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.article_list_v2 import ArticleListV2
-from openapi_server.models.article_v2 import ArticleV2
-from openapi_server.models.article_version_list_v2 import ArticleVersionListV2
-from openapi_server.models.article_version_v2 import ArticleVersionV2
-from openapi_server.models.inline_response200_v2 import InlineResponse200V2
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
+from openapi_server.models.models_v2.article_v2 import ArticleV2
+from openapi_server.models.models_v2.article_version_list_v2 import ArticleVersionListV2
+from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
+from openapi_server.models.models_v2.inline_response200_v2 import InlineResponse200V2
 
 
 router = APIRouter()

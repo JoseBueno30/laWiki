@@ -2,10 +2,10 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
-from openapi_server.models.article_list_v1 import ArticleListV1
-from openapi_server.models.article_v1 import ArticleV1
-from openapi_server.models.article_version_list_v1 import ArticleVersionListV1
-from openapi_server.models.article_version_v1 import ArticleVersionV1
+from openapi_server.models.models_v1.article_list_v1 import ArticleListV1
+from openapi_server.models.models_v1.article_v1 import ArticleV1
+from openapi_server.models.models_v1.article_version_list_v1 import ArticleVersionListV1
+from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
 
 
 class BaseV1PublicApi:

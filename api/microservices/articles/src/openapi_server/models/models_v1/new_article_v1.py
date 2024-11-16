@@ -20,24 +20,25 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
-from openapi_server.models.author_v1 import AuthorV1
-from openapi_server.models.tag_v1 import TagV1
+from pydantic import BaseModel, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from openapi_server.models.models_v1.author_v1 import AuthorV1
+from openapi_server.models.models_v1.tag_v1 import TagV1
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class NewArticleVersionV1(BaseModel):
+class NewArticleV1(BaseModel):
     """
-    Data required to the user to create a new ArticleVersion of an Article (given in the path of the endpoint)
+    Data required to the user to create a new Article and its first version
     """ # noqa: E501
     title: StrictStr = Field(description="The title of the version of the article.")
     author: AuthorV1
     tags: List[TagV1]
-    body: StrictStr = Field(description="The body of the version.")
-    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body"]
+    body: Optional[StrictStr] = Field(default=None, description="The body of the version.")
+    wiki_id: StrictStr = Field(description="The ID of the Wiki where the Article is created.")
+    __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "wiki_id"]
 
     model_config = {
         "populate_by_name": True,
@@ -57,7 +58,7 @@ class NewArticleVersionV1(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of NewArticleVersionV1 from a JSON string"""
+        """Create an instance of NewArticleV1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -90,7 +91,7 @@ class NewArticleVersionV1(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of NewArticleVersionV1 from a dict"""
+        """Create an instance of NewArticleV1 from a dict"""
         if obj is None:
             return None
 
@@ -101,7 +102,8 @@ class NewArticleVersionV1(BaseModel):
             "title": obj.get("title"),
             "author": AuthorV1.from_dict(obj.get("author")) if obj.get("author") is not None else None,
             "tags": [TagV1.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
-            "body": obj.get("body")
+            "body": obj.get("body"),
+            "wiki_id": obj.get("wiki_id")
         })
         return _obj
 

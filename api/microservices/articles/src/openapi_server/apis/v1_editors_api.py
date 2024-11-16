@@ -26,16 +26,16 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.article_v1 import ArticleV1
-from openapi_server.models.article_version_v1 import ArticleVersionV1
-from openapi_server.models.new_article_v1 import NewArticleV1
-from openapi_server.models.new_article_version_v1 import NewArticleVersionV1
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v1.article_v1 import ArticleV1
+from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
+from openapi_server.models.models_v1.new_article_v1 import NewArticleV1
+from openapi_server.models.models_v1.new_article_version_v1 import NewArticleVersionV1
 
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v1_apis_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
