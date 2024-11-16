@@ -300,10 +300,14 @@ class DefaultArticleAPI(BaseV1PublicApi):
             url_filters += "wiki_id=" + wiki_id + "&"
 
         if name is not None:
-            matching_variables["title"] = {
-                "$regex": ".*" + name + ".*",
-                "$options": "i"
-            }
+            # matching_variables["title"] = {
+            #     "$regex": ".*" + name + ".*",
+            #     "$options": "i"
+            # }
+            matching_variables["$or"] = [
+                {"title." + key: {"$regex": ".*" + name + ".*", "$options": "i"}}
+                for key in ["en", "es", "fr"]
+            ]
             url_filters += "name=" + name + "&"
 
         if tags is not None:
@@ -398,6 +402,9 @@ class DefaultArticleAPI(BaseV1PublicApi):
         if not articles:
             raise Exception
 
+        for article in articles[0]["articles"]:
+            get_original_article_title(article)
+
         return articles[0]
 
     async def get_article_version_list_by_article_idv1(
@@ -418,6 +425,9 @@ class DefaultArticleAPI(BaseV1PublicApi):
 
         if not article_versions[0]:
             raise Exception
+
+        for article in article_versions[0]["article_versions"]:
+            get_original_article_version_title(article)
 
         return article_versions[0]
 
@@ -444,5 +454,8 @@ class DefaultArticleAPI(BaseV1PublicApi):
 
         if not article_list[0]:
             raise Exception
+
+        for article in articles_list[0]["article_versions"]:
+            get_original_article_version_title(article)
 
         return article_list[0]

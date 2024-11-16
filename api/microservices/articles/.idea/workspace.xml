@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a232b6ce-9f7e-4153-9161-1b8b651dd5d6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_public_article_api.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,7 +72,7 @@
       <workItem from="1731682729124" duration="242000" />
       <workItem from="1731682993155" duration="84000" />
       <workItem from="1731683087754" duration="1922000" />
-      <workItem from="1731751481039" duration="3261000" />
+      <workItem from="1731751481039" duration="5917000" />
     </task>
     <servers />
   </component>
