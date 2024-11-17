@@ -16,7 +16,7 @@ from openapi_server.models.models_v1.simplified_article_version_v1 import Simpli
 
 today = date.today()
 
-class EditorArticleAPI(BaseV1EditorsApi):
+class EditorArticleAPIV1(BaseV1EditorsApi):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -146,7 +146,9 @@ class EditorArticleAPI(BaseV1EditorsApi):
         for version in article_result["versions"]:
             await self.delete_article_version_by_id_v1(str(version["_id"]))
 
-        await delete_article_comments(id)
+        #   Commented until it's launched
+        # await delete_article_comments(id)
+        #   TODO await delete_article_ratings()
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 

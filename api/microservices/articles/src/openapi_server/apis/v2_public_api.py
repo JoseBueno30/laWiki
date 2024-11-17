@@ -8,7 +8,7 @@ from bson.errors import InvalidId
 from websockets import InvalidParameterValue
 
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
-import openapi_server.impl
+import openapi_server.impl.v2_apis_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -35,7 +35,7 @@ from openapi_server.models.models_v2.inline_response200_v2 import InlineResponse
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v2_apis_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 

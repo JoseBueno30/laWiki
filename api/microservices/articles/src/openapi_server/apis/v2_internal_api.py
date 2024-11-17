@@ -3,9 +3,13 @@
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+from xml.dom import NotFoundErr
+
+from bson.errors import InvalidId
+from starlette.responses import JSONResponse
 
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
-import openapi_server.impl
+import openapi_server.impl.v2_apis_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -29,7 +33,7 @@ from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v2_apis_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
@@ -54,7 +58,7 @@ async def assign_article_tags_v2(
     if not BaseV2InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV2InternalApi.subclasses[0]().assign_article_tags(id, id_tags_body) is None:
+        if await BaseV2InternalApi.subclasses[0]().assign_article_tags(id, id_tags_body_v2) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
@@ -136,7 +140,7 @@ async def update_rating_v2(
     if not BaseV2InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV2InternalApi.subclasses[0]().update_rating(id, id_ratings_body) is None:
+        if await BaseV2InternalApi.subclasses[0]().update_rating(id, id_ratings_body_v2) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")
@@ -158,6 +162,6 @@ async def update_rating_v2(
 async def delete_articles_from_wiki(
     id: str = Path(..., description=""),
 ) -> None:
-    if not BaseInternalApi.subclasses:
+    if not BaseV2InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalApi.subclasses[0]().delete_articles_from_wiki(id)
+    return await BaseV2InternalApi.subclasses[0]().delete_articles_from_wiki(id)

@@ -13,7 +13,7 @@ mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mo
 mongodb = mongodb_client.get_database("laWikiDB")
 
 
-class InternalArticleAPI(BaseV1InternalApi):
+class InternalArticleAPIV1(BaseV1InternalApi):
 
     def __init__(self):
         super().__init__()

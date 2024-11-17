@@ -19,7 +19,7 @@ from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
 mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 mongodb = mongodb_client.get_database("laWikiV2BD")
 
-class DefaultArticleAPI(BaseV1PublicApi):
+class PublicArticleAPIV1(BaseV1PublicApi):
 
     def __init__(self):
         super().__init__()

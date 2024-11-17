@@ -45,3 +45,10 @@ class BaseV2InternalApi:
     ) -> None:
         """Update the rating of an Article give its unique ID and a rating"""
         ...
+
+    async def delete_articles_from_wiki(
+        self,
+        id: str
+    ) -> None:
+        """Delete all articles from Wiki"""
+        ...

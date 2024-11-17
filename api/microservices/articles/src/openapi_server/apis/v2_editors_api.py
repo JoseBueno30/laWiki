@@ -4,8 +4,12 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+from pymongo import errors
+from starlette.responses import JSONResponse
+
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
-import openapi_server.impl
+import openapi_server.impl.v2_apis_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -31,7 +35,7 @@ from openapi_server.models.models_v2.new_article_version_v2 import NewArticleVer
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v2_apis_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
@@ -54,7 +58,7 @@ async def create_article_v2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2EditorsApi.subclasses[0]().create_article(new_article)
+        return await BaseV2EditorsApi.subclasses[0]().create_article(new_article_v2)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
@@ -80,7 +84,7 @@ async def create_article_version_v2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2EditorsApi.subclasses[0]().    create_article_version(id, new_article_version)
+        return await BaseV2EditorsApi.subclasses[0]().    create_article_version(id, new_article_version_v2)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
