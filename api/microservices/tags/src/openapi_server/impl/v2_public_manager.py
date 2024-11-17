@@ -1,24 +1,26 @@
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
 from openapi_server.impl import api_calls
-from openapi_server.models.tag import Tag
-from openapi_server.models.tag_list import TagList
-from openapi_server.apis.default_api_base import BaseDefaultApi
+from openapi_server.models.tag_list_v2 import TagListV2
+from openapi_server.models.tag_v2 import TagV2
 
 mongodb_client = AsyncIOMotorClient(
         "mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 
-mongodb = mongodb_client.get_database("laWikiDB")
-class DefaultManager(BaseDefaultApi):
-    async def get_articles_tags(
-            self,
-            id: str,
-            limit: int,
-            offset: int
-    ) -> TagList:
-        """Retrieves all the tags from an article and returns them with full details."""
+mongodb = mongodb_client.get_database("laWikiV2BD")
+class PublicManagerV2(BaseV2PublicApi):
+    def __init__(self):
+        super().__init__()
 
+    async def get_articles_tags_v2(
+        self,
+        id: str,
+        limit: int,
+        offset: int,
+    ) -> TagListV2:
+        """Retrieves all the tags from an article."""
         article_id = ObjectId(id)
 
         if not await api_calls.check_article(id):
@@ -48,6 +50,12 @@ class DefaultManager(BaseDefaultApi):
                                 "name": "$$article.name"
                             }
                         }
+                    },
+                    "translations": {
+                        "en": "$translations.en",
+                        "es": "$translations.es",
+                        "fr": "$translations.fr",
+                        "it": "$translations.it"
                     }
                 }
             }
@@ -55,8 +63,8 @@ class DefaultManager(BaseDefaultApi):
 
         result = await mongodb["tag"].aggregate(pipeline).to_list(None)
 
-        return TagList(
-            articles=[Tag.from_dict(tag) for tag in result],
+        return TagListV2(
+            articles=[TagV2.from_dict(tag) for tag in result],
             total=total_tags,
             offset=offset,
             limit=limit,
@@ -65,11 +73,11 @@ class DefaultManager(BaseDefaultApi):
         )
 
 
-    async def get_tag(
-            self,
-            id: str,
-    ) -> Tag:
-        """Get a tag by ID."""
+    async def get_tag_v2(
+        self,
+        id: str,
+    ) -> TagV2:
+        """Get a tag by ID. """
         object_id = ObjectId(id)
         pipeline = [
             {
@@ -90,6 +98,12 @@ class DefaultManager(BaseDefaultApi):
                                 "name": "$$article.name"
                             }
                         }
+                    },
+                    "translations": {
+                        "en": "$translations.en",
+                        "es": "$translations.es",
+                        "fr": "$translations.fr",
+                        "it": "$translations.it"
                     }
                 }
             },
@@ -103,15 +117,15 @@ class DefaultManager(BaseDefaultApi):
         if not tag_data:
             raise KeyError
 
-        return Tag.from_dict(tag_data[0])
+        return TagV2.from_dict(tag_data[0])
 
 
-    async def get_wiki_tags(
+    async def get_wiki_tags_v2(
         self,
         id: str,
         limit: int,
         offset: int,
-    ) -> TagList:
+    ) -> TagListV2:
         """Retrieve all the tags from a wiki."""
         wiki_id = ObjectId(id)
 
@@ -142,6 +156,12 @@ class DefaultManager(BaseDefaultApi):
                                 "name": "$$article.name"
                             }
                         }
+                    },
+                    "translations": {
+                        "en": "$translations.en",
+                        "es": "$translations.es",
+                        "fr": "$translations.fr",
+                        "it": "$translations.it"
                     }
                 }
             }
@@ -149,8 +169,8 @@ class DefaultManager(BaseDefaultApi):
 
         result = await mongodb["tag"].aggregate(pipeline).to_list(None)
 
-        return TagList(
-            articles=[Tag.from_dict(tag) for tag in result],
+        return TagListV2(
+            articles=[TagV2.from_dict(tag) for tag in result],
             total=total_tags,
             offset=offset,
             limit=limit,

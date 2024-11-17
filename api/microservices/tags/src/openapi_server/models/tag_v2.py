@@ -22,18 +22,22 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from openapi_server.models.article import Article
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class Article(BaseModel):
+class TagV2(BaseModel):
     """
-    Article entity.
+    Tag entity.
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the article.")
-    name: StrictStr = Field(description="The name of the article.")
-    __properties: ClassVar[List[str]] = ["id", "name"]
+    id: StrictStr = Field(description="The ID of the tag.")
+    tag: StrictStr = Field(description="The name of the tag.")
+    wiki_id: StrictStr = Field(description="The ID corresponding to the wiki the tag belongs to.")
+    articles: List[Article] = Field(description="Array of articles that have the tag.")
+    translations: Dict[str, StrictStr] = Field(description="A dictionary with tag translations to other languages.")
+    __properties: ClassVar[List[str]] = ["id", "tag", "wiki_id", "articles", "translations"]
 
     model_config = {
         "populate_by_name": True,
@@ -53,7 +57,7 @@ class Article(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Article from a JSON string"""
+        """Create an instance of TagV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,11 +76,18 @@ class Article(BaseModel):
             },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in articles (list)
+        _items = []
+        if self.articles:
+            for _item in self.articles:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['articles'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Article from a dict"""
+        """Create an instance of TagV2 from a dict"""
         if obj is None:
             return None
 
@@ -85,7 +96,10 @@ class Article(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "name": obj.get("name")
+            "tag": obj.get("tag"),
+            "wiki_id": obj.get("wiki_id"),
+            "articles": [Article.from_dict(_item) for _item in obj.get("articles")] if obj.get("articles") is not None else None,
+            "translations": obj.get("translations")
         })
         return _obj
 
