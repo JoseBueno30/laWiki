@@ -16,6 +16,8 @@ To run the server, please execute the following from the root directory:
 
 ```bash
 pip3 install -r requirements.txt
+pip install motor
+pip install python-dotenv
 
 # Set the path to the src directory
 

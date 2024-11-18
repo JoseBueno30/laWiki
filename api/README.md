@@ -11,7 +11,7 @@ Python >= 3.7. Recommened Python 3.12
 To run an specific server, please execute the following from the root directory:
 
 ```bash
-cd {microservice}
+cd {microservices/specifici_microservice}
 pip3 install -r requirements.txt
 
 # Set the path to the src directory

@@ -1,10 +1,7 @@
 from typing import List
 
-import httpx
-from httpx import Response
-
 from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
-from openapi_server.impl.microservices_ports import ARTICLES_URL,COMMENTS_URL,RATINGS_URL,TAGS_URL,WIKIS_URL
+from openapi_server.impl.utils import ARTICLES_URL,COMMENTS_URL,RATINGS_URL,TAGS_URL,WIKIS_URL
 from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
@@ -21,20 +18,17 @@ from openapi_server.models.tag_list import TagList
 from openapi_server.models.wiki import Wiki
 from openapi_server.models.wiki_list import WikiList
 
+from openapi_server.impl.utils import forward_request
 
 class APIGatewayPublicV1(BaseV1PublicApi):
-
-    def __init__(self, **kwargs):
-        super.__init__(**kwargs)
+    #TODO: replace prev and next base urls with the gateway url
 
     async def delete_comment(
         self,
         comment_id: str,
-    ) -> Response:
+    ) -> None:
         """Deletes an article&#39;s comment"""
-        async with httpx.AsyncClient() as client:
-            response = await client.delete(f"{COMMENTS_URL}/comments/{comment_id}")
-            return response
+        return await forward_request("DELETE", f"{COMMENTS_URL}/comments/{comment_id}")
 
 
     async def delete_rating(
@@ -42,7 +36,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         id: str,
     ) -> None:
         """Delete the rating associated with the selected ID"""
-        ...
+        return await forward_request("DELETE", f"{RATINGS_URL}/ratings/{id}")
 
 
     async def edit_article_rating(
@@ -51,7 +45,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         rating: Rating,
     ) -> Rating:
         """Update the value of an already existing Rating"""
-        ...
+        return await forward_request(method="PUT",url=f"{RATINGS_URL}/ratings/articles/{id}",json=rating.to_dict())
 
 
     async def get_article_average_rating(
@@ -59,9 +53,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         id: str,
     ) -> AverageRating:
         """Get data about the average rating of the article"""
-        async with httpx.AsyncClient() as client:
-            wiki_response = await client.head(f"{RATINGS_URL}/v1/ratings/articles/{id}/average")
-            return wiki_response.json()
+        return await forward_request(method="GET",url=f"{RATINGS_URL}/ratings/articles/{id}/average")
 
 
     async def get_article_by_author(
@@ -72,7 +64,12 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         order: str,
     ) -> ArticleList:
         """Get a list of Articles given an author&#39;s ID.  """
-        ...
+        query_params = {"offset": offset, "limit":limit, "order":order}
+        response = await forward_request(method="GET",url=f"{ARTICLES_URL}/v2/articles/author/{id}", query_params=query_params)
+        response["next"] = response["next"].replace("/v2/", "/v1/")
+        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+
+        return response
 
 
     async def get_article_by_id(
@@ -80,7 +77,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         id: str,
     ) -> Article:
         """Get an Article identified by it&#39;s unique ID"""
-        ...
+        return await forward_request(method="GET",url=f"{ARTICLES_URL}/v2/articles/{id}")
 
 
     async def get_article_by_name(
@@ -90,7 +87,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         lan: str,
     ) -> ArticleVersion:
         """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
-        ...
+        query_params={"wiki":wiki, "lan":lan}
+        return await forward_request(method="GET",url=f"{ARTICLES_URL}/v2/articles/versions/by-name{name}", query_params=query_params)
 
 
     async def get_article_comments(
@@ -102,8 +100,12 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         creation_date: str,
     ) -> CommentListResponse:
         """Retrieves all comments from an articles"""
-        ...
+        query_params = {"order": order, "limit": limit, "offset":offset, "creation_date":creation_date}
+        response = await forward_request(method="GET",url=f"{COMMENTS_URL}/comments/articles/{article_id}",query_params=query_params)
+        response["next"] = "/v1" + response["next"]
+        response["previous"] = "/v1" + response["previous"]
 
+        return response
 
     async def get_article_from_specific_wiki(
         self,
@@ -112,7 +114,10 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         lan: str,
     ) -> ArticleVersion:
         """Get the most recent ArticleVersion the Article with the given name from the Wiki with the given name. Endpoint thought to access articles when only the names of the Wiki and Article are known, with a textual URL for example."""
-        ...
+        query_params = {"lan": lan}
+        wiki = await forward_request(method="GET",url=f"{WIKIS_URL}/v2/wikis/{wiki_name}",query_params=query_params)
+        query_params = {"lan": lan, "wiki_id":wiki["id"]}
+        return await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles/versions/by-name/{article_name}", query_params=query_params)
 
 
     async def get_article_version_body_by_id(
@@ -121,7 +126,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         parsed: bool,
         lan: str,
     ) -> ArticleVersionBody:
-        ...
+        query_params = {"parsed": parsed, "lan": lan}
+        return await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles/versions/{id}/body",query_params=query_params)
 
 
     async def get_article_version_by_id(
@@ -130,7 +136,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         lan: str,
     ) -> ArticleVersion:
         """Get an ArticleVersion identified by it&#39;s unique ID"""
-        ...
+        query_params = {"lan": lan}
+        return await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles/versions/{id}",query_params=query_params)
 
 
     async def get_article_version_list_by_article_id(
@@ -141,7 +148,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         order: str,
     ) -> ArticleVersionList:
         """Get a list of ArticleVersions of a given Article. Results can be sorted by creation date adn support pagination."""
-        ...
+        query_params = {"offset": offset, "limit":limit, "order":order}
+        return await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles/{id}/versions",query_params=query_params)
 
 
     async def get_articles_commented_by_user(
@@ -152,7 +160,12 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         order: str,
     ) -> ArticleList:
         """Get a list of the Articles commented by a given user."""
-        ...
+        query_params = {"offset": offset, "limit":limit, "order":order}
+        response = await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles/commented_by/{id}",query_params=query_params)
+        response["next"] = response["next"].replace("/v2/", "/v1/")
+        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+
+        return response
 
 
     async def get_articles_tags(
@@ -162,15 +175,19 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         offset: int,
     ) -> TagList:
         """Retrieves all the tags from an article."""
-        ...
+        query_params = {"offset": offset, "limit": limit}
+        response = await forward_request(method="GET", url=f"{TAGS_URL}/v2/tags/articles/{id}",query_params=query_params)
+        response["next"] = response["next"].replace("/v2/", "/v1/")
+        response["previous"] = response["previous"].replace("/v2/", "/v1/")
 
+        return response
 
     async def get_rating(
         self,
         id: str,
     ) -> Rating:
         """Get the Rating with the provided ID"""
-        ...
+        return await forward_request(method="GET", url=f"{RATINGS_URL}/ratings/{id}")
 
 
     async def get_ratings_bu_user_on_article(
@@ -178,16 +195,14 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         articleId: str,
         userId: str,
     ) -> Rating:
-        ...
-
+        return await forward_request(method="GET", url=f"{RATINGS_URL}/ratings/article/{articleId}/users/{userId}")
 
     async def get_tag(
         self,
         id: str,
     ) -> Tag:
         """Get a tag by ID. """
-        ...
-
+        return await forward_request(method="GET", url=f"{TAGS_URL}/v2/tags/{id}")
 
     async def get_users_comments(
         self,
@@ -199,7 +214,12 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         creation_date: str,
     ) -> CommentListResponse:
         """Retrieves all comments from an user"""
-        ...
+        query_params = {"article_id":article_id, "order":order, "limit":limit, "offset":offset, "creation_date":creation_date}
+        response = await forward_request(method="GET", url=f"{COMMENTS_URL}/comments/users/{user_id}", query_params=query_params)
+        response["next"] = "/v1" + response["next"]
+        response["previous"] = "/v1" + response["previous"]
+
+        return response
 
 
     async def get_wiki(
@@ -208,7 +228,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         lang: str,
     ) -> Wiki:
         """Get Wiki with the matching ID."""
-        ...
+        query_params = {"lang": lang}
+        return await forward_request(method="GET", url=f"{WIKIS_URL}/v2/wikis/{id_name}", query_params=query_params)
 
 
     async def get_wiki_tags(
@@ -218,8 +239,12 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         offset: int,
     ) -> TagList:
         """Retrieve all the tags from a wiki."""
-        ...
+        query_params = {"limit": limit, "offset": offset}
+        response = await forward_request(method="GET", url=f"{TAGS_URL}/v2/tags/wikis/{id}", query_params=query_params)
+        response["next"] = response["next"].replace("/v2/", "/v1/")
+        response["previous"] = response["previous"].replace("/v2/", "/v1/")
 
+        return response
 
     async def post_comment(
         self,
@@ -227,7 +252,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         new_comment: NewComment,
     ) -> Comment:
         """Posts a new comment in an article"""
-        ...
+        return await forward_request(method="POST", url=f"{COMMENTS_URL}/comments/articles/{article_id}", json=new_comment.to_dict())
 
 
     async def rate_article(
@@ -236,7 +261,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         new_rating: NewRating,
     ) -> Rating:
         """Create a rating for a given Article"""
-        ...
+        return await forward_request(method="POST", url=f"{RATINGS_URL}/ratings/articles/{id}", json=new_rating.to_dict())
 
 
     async def search_articles(
@@ -253,7 +278,12 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         lan: str,
     ) -> ArticleList:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-        ...
+        query_params = {"wiki_id":wiki_id, "name": name, "tags":tags, "offset": offset, "limit": limit, "order": order, "creation_date": creation_date,"author_name": author_name, "editor_name":editor_name, "lan": lan}
+        response = await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles", query_params=query_params)
+        response["next"] = response["next"].replace("/v2/", "/v1/")
+        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+
+        return response
 
 
     async def search_wikis(
@@ -267,4 +297,9 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         lang: str,
     ) -> WikiList:
         """Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-        ...
+        query_params = {"name":name, "offset": offset, "limit": limit, "order":order, "creation_date":creation_date, "author_name":author_name, "lang":lang}
+        response = await forward_request(method="GET", url=f"{WIKIS_URL}/v2/wikis", query_params=query_params)
+        response["next"] = response["next"].replace("/v2/", "/v1/")
+        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+
+        return response
