@@ -7,8 +7,8 @@ from openapi_server.models.tag import Tag  # noqa: F401
 from openapi_server.models.tag_list import TagList  # noqa: F401
 
 
-def test_get_articles_tags(client: TestClient):
-    """Test case for get_articles_tags
+def test_get_articles_tags_v1(client: TestClient):
+    """Test case for get_articles_tags_v1
 
     Get Articles Tag
     """
@@ -18,7 +18,7 @@ def test_get_articles_tags(client: TestClient):
     # uncomment below to make a request
     #response = client.request(
     #    "GET",
-    #    "/tags/articles/{id}".format(id='id_example'),
+    #    "/v1/tags/articles/{id}".format(id='id_example'),
     #    headers=headers,
     #    params=params,
     #)
@@ -27,8 +27,8 @@ def test_get_articles_tags(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_get_tag(client: TestClient):
-    """Test case for get_tag
+def test_get_tag_v1(client: TestClient):
+    """Test case for get_tag_v1
 
     Get Tag
     """
@@ -38,7 +38,7 @@ def test_get_tag(client: TestClient):
     # uncomment below to make a request
     #response = client.request(
     #    "GET",
-    #    "/tags/{id}".format(id='id_example'),
+    #    "/v1/tags/{id}".format(id='id_example'),
     #    headers=headers,
     #)
 
@@ -46,8 +46,8 @@ def test_get_tag(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_get_wiki_tags(client: TestClient):
-    """Test case for get_wiki_tags
+def test_get_wiki_tags_v1(client: TestClient):
+    """Test case for get_wiki_tags_v1
 
     Get Wikis Tags
     """
@@ -57,7 +57,7 @@ def test_get_wiki_tags(client: TestClient):
     # uncomment below to make a request
     #response = client.request(
     #    "GET",
-    #    "/tags/wikis/{id}".format(id='id_example'),
+    #    "/v1/tags/wikis/{id}".format(id='id_example'),
     #    headers=headers,
     #    params=params,
     #)

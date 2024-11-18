@@ -23,17 +23,17 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from openapi_server.models.tag import Tag
+from openapi_server.models.tag_v2 import TagV2
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class TagList(BaseModel):
+class TagListV2(BaseModel):
     """
     List of Tags. Supports pagination.
     """ # noqa: E501
-    articles: List[Tag]
+    articles: List[TagV2]
     total: StrictInt = Field(description="The total number of items available to return.")
     offset: StrictInt = Field(description="The offset of the items returned (as set in the query or by default)")
     limit: Annotated[int, Field(strict=True, ge=0)] = Field(description="The maximum number of items in the response (as set in the query or by default).")
@@ -59,7 +59,7 @@ class TagList(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of TagList from a JSON string"""
+        """Create an instance of TagListV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -99,7 +99,7 @@ class TagList(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of TagList from a dict"""
+        """Create an instance of TagListV2 from a dict"""
         if obj is None:
             return None
 
@@ -107,7 +107,7 @@ class TagList(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "articles": [Tag.from_dict(_item) for _item in obj.get("articles")] if obj.get("articles") is not None else None,
+            "articles": [TagV2.from_dict(_item) for _item in obj.get("articles")] if obj.get("articles") is not None else None,
             "total": obj.get("total"),
             "offset": obj.get("offset"),
             "limit": obj.get("limit"),

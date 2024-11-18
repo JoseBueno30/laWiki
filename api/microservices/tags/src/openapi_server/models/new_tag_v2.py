@@ -20,20 +20,21 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class Article(BaseModel):
+class NewTagV2(BaseModel):
     """
-    Article entity.
+    Model for a new Tag
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the article.")
-    name: StrictStr = Field(description="The name of the article.")
-    __properties: ClassVar[List[str]] = ["id", "name"]
+    tag: StrictStr = Field(description="The name of the tag.")
+    translation: StrictBool = Field(description="It indicates if the translation is needed.")
+    language: StrictStr = Field(description="The original language of the tag.")
+    __properties: ClassVar[List[str]] = ["tag", "translation", "language"]
 
     model_config = {
         "populate_by_name": True,
@@ -53,7 +54,7 @@ class Article(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Article from a JSON string"""
+        """Create an instance of NewTagV2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +77,7 @@ class Article(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Article from a dict"""
+        """Create an instance of NewTagV2 from a dict"""
         if obj is None:
             return None
 
@@ -84,8 +85,9 @@ class Article(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name")
+            "tag": obj.get("tag"),
+            "translation": obj.get("translation"),
+            "language": obj.get("language")
         })
         return _obj
 
