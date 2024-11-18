@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import List
 
 from bson import ObjectId
-from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
 from openapi_server.impl.utils.api_calls import get_user_comments
@@ -10,14 +9,12 @@ from openapi_server.impl.utils.functions import (
     get_original_article_title,
     get_original_article_version_title,
     get_total_number_of_documents, get_model_list_pipeline,
-    transform_article_ids_pipeline, transform_version_ids_pipeline)
+    transform_article_ids_pipeline, transform_version_ids_pipeline, mongodb, get_original_tags)
 from openapi_server.models.models_v1.article_list_v1 import ArticleListV1
 from openapi_server.models.models_v1.article_v1 import ArticleV1
 from openapi_server.models.models_v1.article_version_list_v1 import ArticleVersionListV1
 from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
 
-mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
-mongodb = mongodb_client.get_database("laWikiV2BD")
 
 class PublicArticleAPIV1(BaseV1PublicApi):
 
@@ -39,6 +36,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
             raise Exception
 
         article = get_original_article_title(article[0])
+        article = get_original_tags(article)
 
         return article
 
@@ -97,6 +95,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
         if not article_version[0]:
             raise Exception
         article_version = get_original_article_version_title(article_version[0])
+        article_version = get_original_tags(article_version)
 
         return article_version
 
@@ -115,6 +114,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
             raise Exception
 
         article_version = get_original_article_version_title(article_version[0])
+        article_version = get_original_tags(article_version)
 
         return article_version
 
@@ -140,6 +140,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         for article in articles[0]["articles"]:
             get_original_article_title(article)
+            get_original_tags(article)
 
         return articles[0]
 
@@ -267,6 +268,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         for article in articles[0]["articles"]:
             get_original_article_title(article)
+            get_original_tags(article)
 
         return articles[0]
 
@@ -291,6 +293,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         for article in article_versions[0]["article_versions"]:
             get_original_article_version_title(article)
+            get_original_tags(article)
 
         return article_versions[0]
 
@@ -320,5 +323,6 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         for article in articles_list[0]["article_versions"]:
             get_original_article_version_title(article)
+            get_original_tags(article)
 
         return article_list[0]

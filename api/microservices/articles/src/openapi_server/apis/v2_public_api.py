@@ -61,7 +61,7 @@ async def get_article_by_author_v2(
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2PublicApi.subclasses[0]().get_article_by_author(id, offset, limit, order)
+        return await BaseV2PublicApi.subclasses[0]().get_article_by_author_v2(id, offset, limit, order)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Author ID format.")
     except Exception as e:
@@ -86,7 +86,7 @@ async def get_article_by_id_v2(
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2PublicApi.subclasses[0]().get_article_by_id(id)
+        return await BaseV2PublicApi.subclasses[0]().get_article_by_id_v2(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:
@@ -115,7 +115,7 @@ async def get_article_by_name_v2(
     
     #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
     try:
-        return await BaseV2PublicApi.subclasses[0]().get_article_by_name(name, wiki, lan)
+        return await BaseV2PublicApi.subclasses[0]().get_article_by_name_v2(name, wiki, lan)
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
     except Exception as e:
@@ -241,7 +241,7 @@ async def search_articles_v2(
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2PublicApi.subclasses[0]().search_articles(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name, lan)
+        return await BaseV2PublicApi.subclasses[0]().search_articles_v2(wiki_id, name, tags, offset, limit, order, creation_date, author_name, editor_name, lan)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid input parameters.")
     except Exception as e:

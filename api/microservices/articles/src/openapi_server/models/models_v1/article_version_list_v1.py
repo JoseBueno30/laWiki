@@ -44,6 +44,7 @@ class ArticleVersionListV1(BaseModel):
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
+        "extra": "ignore"
     }
 
 

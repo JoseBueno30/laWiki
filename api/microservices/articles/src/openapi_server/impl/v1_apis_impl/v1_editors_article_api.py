@@ -6,8 +6,8 @@ from bson import ObjectId
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
 from openapi_server.impl.utils.api_calls import delete_article_comments, check_if_wiki_exists
 from openapi_server.impl.utils.functions import article_version_to_simplified_article_version, \
-    parse_title_to_title_dict, get_original_article_title, get_original_article_version_title
-from openapi_server.impl.v1_apis_impl.v1_public_article_api import mongodb
+    parse_title_to_title_dict, get_original_article_title, get_original_article_version_title, mongodb, \
+    get_original_tags
 from openapi_server.models.models_v1.article_v1 import ArticleV1
 from openapi_server.models.models_v1.article_version_v1 import ArticleVersionV1
 from openapi_server.models.models_v1.new_article_v1 import NewArticleV1
@@ -41,8 +41,14 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
         #   Changes the id type and inserts other attributes
         new_article_json["wiki_id"] = ObjectId(new_article_json["wiki_id"])
         new_article_json["author"]["_id"] = ObjectId(new_article_json["author"].pop("id"))
+        new_article_json["author"]["image"] = "default_image_url"
         for tag in new_article_json["tags"]:
             tag["_id"] = ObjectId(tag.pop("id"))
+            tag["tag"] = {
+                "en" : tag["tag"],
+                "es" : tag["tag"],
+                "fr" : tag["tag"]
+            }
 
         new_article_json["creation_date"] = datetime.now()
         new_article_json["rating"] = 0
@@ -74,6 +80,7 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
         new_article_json["id"] = str(article_result.inserted_id)
 
         get_original_article_title(new_article_json)
+        get_original_tags(new_article_json)
 
         return ArticleV1.from_dict(new_article_json)
 
@@ -92,12 +99,17 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
         #   Changes the id types in order to insert the document
         new_article_version_json["article_id"] = ObjectId(id)
         new_article_version_json["author"]["_id"] = ObjectId(new_article_version_json["author"].pop("id"))
+        new_article_version_json["author"]["image"] = "default_image_url"
         new_article_version_json["modification_date"] = datetime.now()
         for tag in new_article_version_json["tags"]:
             tag["_id"] = ObjectId(tag.pop("id"))
+            tag["tag"] = {
+                "en": tag["tag"],
+                "es": tag["tag"],
+                "fr": tag["tag"]
+            }
 
         article_tags = copy.deepcopy(new_article_version_json["tags"])
-        print(article_tags)
 
         #   MongoDB query
         article_version_result = await mongodb["article_version"].insert_one(new_article_version_json)
@@ -129,6 +141,7 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
 
 
         get_original_article_version_title(new_article_version_json)
+        get_original_tags(new_article_version_json)
         #   Generates the returning ArticleVersion value
         article_version = ArticleVersionV1.from_dict(new_article_version_json)
 

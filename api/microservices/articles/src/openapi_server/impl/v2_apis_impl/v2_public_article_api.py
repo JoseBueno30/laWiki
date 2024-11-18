@@ -1,9 +1,13 @@
+from bson import ObjectId
+
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
+from openapi_server.impl.utils.functions import transform_article_ids_pipeline, mongodb
 from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
 from openapi_server.models.models_v2.article_v2 import ArticleV2
 from openapi_server.models.models_v2.article_version_list_v2 import ArticleVersionListV2
 from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
 from openapi_server.models.models_v2.inline_response200_v2 import InlineResponse200V2
+
 
 
 class PublicArticleAPIV2(BaseV2PublicApi):
@@ -15,7 +19,18 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         self,
         id: str,
     ) -> ArticleV2:
-        return None
+
+        pipeline = [
+            {"$match": {"_id": ObjectId(id)}},
+            *transform_article_ids_pipeline
+        ]
+
+        article = await mongodb["article"].aggregate(pipeline).to_list(length=1)
+
+        if not article[0]:
+            raise Exception
+
+        return article[0]
 
     async def get_article_by_name_v2(
         self,

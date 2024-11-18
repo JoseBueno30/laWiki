@@ -1,3 +1,5 @@
+from motor.motor_asyncio import AsyncIOMotorClient
+
 from openapi_server.models.models_v1.simplified_article_version_v1 import SimplifiedArticleVersionV1
 
 transform_article_ids_pipeline = [
@@ -24,8 +26,10 @@ transform_article_ids_pipeline = [
                     "modification_date": "$$version.modification_date",
                     "author": {
                         "id": {"$toString": "$$version.author._id"},
-                        "name": "$$version.author.name"
-                    }
+                        "name": "$$version.author.name",
+                        "image": "$$version.author.image",
+                    },
+                    "lan": "$$version.lan"
                 }
             }
         },
@@ -72,6 +76,15 @@ def get_original_article_version_title(article):
     version_returned["title"] = version_returned["title"][version_returned["lan"]]
 
     return version_returned
+
+def get_original_tags(article):
+    article_returned = article
+    for tag in article_returned["tags"]:
+        tag["tag"] = tag["tag"][article_returned["lan"]]
+
+    return article_returned
+
+
 
 def get_model_list_pipeline(match_query, offset, limit, order, total_documents, list_name, pagination_path):
     """
@@ -160,3 +173,7 @@ def parse_title_to_title_dict(article):
         "fr" : article["title"],
     }
     article["lan"] = "es" # It doesn't care the language because they're going to be the same
+
+
+mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
+mongodb = mongodb_client.get_database("laWikiV2BD")
