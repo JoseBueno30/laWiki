@@ -138,8 +138,6 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
                       "tags": article_tags}},
         )
 
-
-
         get_original_article_version_title(new_article_version_json)
         get_original_tags(new_article_version_json)
         #   Generates the returning ArticleVersion value
