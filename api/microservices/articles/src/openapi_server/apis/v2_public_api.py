@@ -119,7 +119,6 @@ async def get_article_by_name_v2(
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
     except Exception as e:
-        print(e)
         raise HTTPException(status_code=404, detail="Article Not Found")
 
 

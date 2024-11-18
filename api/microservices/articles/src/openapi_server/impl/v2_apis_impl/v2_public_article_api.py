@@ -74,8 +74,6 @@ class PublicArticleAPIV2(BaseV2PublicApi):
             }
         ]
 
-        print(version_id_pipeline)
-
         version_object_id = await mongodb["article"].aggregate(version_id_pipeline).to_list(length=1)
 
         if not version_object_id[0]:
@@ -104,6 +102,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleVersionListV2:
+
         return None
 
     async def get_article_version_by_id_v2(
@@ -111,7 +110,19 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         id: str,
         lan: str,
     ) -> ArticleVersionV2:
-        return None
+        pipeline = [
+            {"$match": {"_id": ObjectId(id)}},
+            *transform_version_ids_pipeline
+        ]
+
+        article_version = await mongodb["article_version"].aggregate(pipeline).to_list(length=1)
+
+        if not article_version[0]:
+            raise Exception
+
+        #TODO Parsear el body al lenguaje especificado?
+
+        return article_version[0]
 
     async def get_article_by_author_v2(
         self,
