@@ -103,7 +103,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleVersionListV2:
-
+        
         return None
 
     async def get_article_version_by_id_v2(
@@ -153,6 +153,9 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         parsed: bool,
         lan: str,
     ) -> InlineResponse200V2:
+
+        #TODO implementar parseo + traduccion
+
         return None
 
     async def get_articles_commented_by_user_v2(
@@ -162,7 +165,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleListV2:
-        return None
+        return
 
     async def search_articles_v2(
         self,
@@ -175,5 +178,120 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         creation_date: str,
         author_name: str,
         editor_name: str,
+        lan: str
     ) -> ArticleListV2:
-        return None
+        """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
+        url_filters = "/articles?"
+        matching_variables = {}
+        if wiki_id is not None:
+            matching_variables["wiki_id"] = ObjectId(wiki_id)
+            url_filters += "wiki_id=" + wiki_id + "&"
+
+        if name is not None:
+            # matching_variables["title"] = {
+            #     "$regex": ".*" + name + ".*",
+            #     "$options": "i"
+            # }
+            matching_variables["$or"] = [
+                {"title." + key: {"$regex": ".*" + name + ".*", "$options": "i"}}
+                for key in ["en", "es", "fr"]
+            ]
+            url_filters += "name=" + name + "&"
+
+        if tags is not None:
+            tag_ids = []
+            for tag in tags:
+                tag_ids.append(ObjectId(tag))
+                url_filters += "tags=" + tag + "&"
+
+            matching_variables["tags._id"] = {"$all": tag_ids}
+
+        if creation_date is not None:
+            dates = creation_date.split("-")
+            if len(dates) == 1:
+                matching_variables["creation_date"] = datetime.strptime(dates[0], "%Y/%m/%d")
+            elif len(dates) == 2:
+                matching_variables["creation_date"] = {
+                    "$gte": datetime.strptime(dates[0], "%Y/%m/%d"),
+                    "$lte": datetime.strptime(dates[1], "%Y/%m/%d")
+                }
+
+            url_filters += "creation_date=" + creation_date + "&"
+
+        if author_name is not None:
+            matching_variables["author.name"] = author_name
+            url_filters += "author_name=" + author_name + "&"
+        if editor_name is not None:
+            matching_variables["versions.author.name"] = editor_name
+            url_filters += "editor_name=" + editor_name + "&"
+
+        if lan is not None:
+            matching_variables["lan"] = lan
+            url_filters += "lan=" + lan + "&"
+
+        sorting_variables = {}
+        if order is not None:
+            if order == "recent":
+                sorting_variables["creation_date"] = -1
+            elif order == "oldest":
+                sorting_variables["creation_date"] = 1
+            elif order == "unpopular":
+                sorting_variables["rating"] = 1
+            else:
+                sorting_variables["rating"] = -1
+
+            url_filters += "order=" + order + "&"
+        else:
+            sorting_variables["rating"] = -1
+
+        total_count = await mongodb['article'].count_documents(matching_variables)
+
+        next_url = (url_filters + "offset=" + str(offset + limit) + "&limit=" + str(limit)) if (
+                                                                                                       offset + limit) < total_count else None
+        previous_url = (url_filters + "offset=" + str(max(offset - limit, 0)) + "&limit=" + str(
+            limit)) if offset > 0 else None
+
+        group_articles_pipeline = [
+            {
+                "$group": {
+                    "_id": None,
+                    "articles": {
+                        "$push": "$$ROOT"
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                }
+            }
+        ]
+
+        pagination_pipeline = [
+            {
+                "$addFields": {
+                    "total": total_count,
+                    "offset": offset,
+                    "limit": limit,
+                    "next": next_url,
+                    "previous": previous_url,
+                }
+            }
+        ]
+
+        query_pipeline = [
+            {"$match": matching_variables},
+            {"$sort": sorting_variables},
+            {"$skip": offset},
+            {"$limit": limit},
+            *transform_article_ids_pipeline,
+            *group_articles_pipeline,
+            *pagination_pipeline
+        ]
+
+        articles = await mongodb["article"].aggregate(query_pipeline).to_list(length=None)
+
+        if not articles:
+            raise Exception
+
+        return articles[0]

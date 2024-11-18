@@ -95,6 +95,7 @@ class BaseV2PublicApi:
         creation_date: str,
         author_name: str,
         editor_name: str,
+        lan: str
     ) -> ArticleListV2:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
         ...
