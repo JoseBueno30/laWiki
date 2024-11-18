@@ -38,6 +38,7 @@ class BaseV2PublicApi:
         self,
         name: str,
         wiki: str,
+        lan: str
     ) -> ArticleVersionV2:
         """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
         ...

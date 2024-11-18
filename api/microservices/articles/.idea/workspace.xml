@@ -7,16 +7,8 @@
     <list default="true" id="a232b6ce-9f7e-4153-9161-1b8b651dd5d6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_apis_impl/v1_public_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_public_api_base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_list_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_list_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_version_list_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/article_version_list_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v1/author_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/author_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v1/new_article_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/new_article_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v1/new_article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/new_article_version_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v1/simplified_article_version_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v1/simplified_article_version_v1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,19 +33,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/vparm/Documents/GitHub/laWiki/api/microservices/articles/src/openapi_server/impl/utils/functions.py",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ArticleAPI&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vparm/Documents/GitHub/laWiki/api/microservices/articles/src/openapi_server/impl/utils/functions.py&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\vparm\Documents\GitHub\laWiki\api\microservices\articles\src\openapi_server\impl\utils" />
@@ -84,7 +76,8 @@
       <workItem from="1731683087754" duration="1922000" />
       <workItem from="1731751481039" duration="11285000" />
       <workItem from="1731853255123" duration="4190000" />
-      <workItem from="1731925028261" duration="4402000" />
+      <workItem from="1731925028261" duration="5304000" />
+      <workItem from="1731947520652" duration="1492000" />
     </task>
     <servers />
   </component>
