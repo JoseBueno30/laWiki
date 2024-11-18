@@ -131,7 +131,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
                                            offset, limit, order, total_documents, "articles",
-                                           "articles/author/")
+                                           "v1/articles/author/"+id)
 
         articles = await mongodb["article"].aggregate(pipeline).to_list(None)
 

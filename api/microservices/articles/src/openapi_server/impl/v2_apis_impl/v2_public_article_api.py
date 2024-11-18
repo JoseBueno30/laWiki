@@ -1,7 +1,8 @@
 from bson import ObjectId
 
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
-from openapi_server.impl.utils.functions import transform_article_ids_pipeline, mongodb, transform_version_ids_pipeline
+from openapi_server.impl.utils.functions import transform_article_ids_pipeline, mongodb, transform_version_ids_pipeline, \
+    get_total_number_of_documents, get_model_list_pipeline
 from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
 from openapi_server.models.models_v2.article_v2 import ArticleV2
 from openapi_server.models.models_v2.article_version_list_v2 import ArticleVersionListV2
@@ -131,7 +132,20 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleListV2:
-        return None
+        # TODO Cambiar especificacion -> mal valor default del limite
+        total_documents = await get_total_number_of_documents(mongodb["article"],
+                                                              {"author._id": ObjectId(id)})
+
+        pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
+                                           offset, limit, order, total_documents, "articles",
+                                           "v2/articles/author/"+id)
+
+        articles = await mongodb["article"].aggregate(pipeline).to_list(None)
+
+        if not articles[0]:
+            raise Exception
+
+        return articles[0]
 
     async def get_article_version_body_by_idv2(
         self,
