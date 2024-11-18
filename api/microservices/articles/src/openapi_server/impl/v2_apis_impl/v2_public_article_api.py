@@ -103,8 +103,20 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleVersionListV2:
-        
-        return None
+
+        total_documents = await get_total_number_of_documents(mongodb["article_version"],
+                                                              {"article_id": ObjectId(id)})
+
+        pipeline = get_model_list_pipeline({"article_id": ObjectId(id)},
+                                           offset, limit, order, total_documents, "article_versions",
+                                           f"v2/articles/{id}/versions")
+
+        article_versions = await mongodb["article_version"].aggregate(pipeline).to_list(length=None)
+
+        if not article_versions[0]:
+            raise Exception
+
+        return article_versions[0]
 
     async def get_article_version_by_id_v2(
         self,
