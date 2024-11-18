@@ -1,0 +1,3999 @@
+openapi: 3.0.0
+info:
+  contact:
+    name: ""
+  description: "The Articles API provides endpoints for managing and retrieving articles\
+    \ and article versions within the wiki application. It supports core CRUD (Create,\
+    \ Read, Update, Delete) operations, search functionality, and versioning."
+  license:
+    name: ""
+  title: laWiki API Gateway
+  version: "1.0"
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/JABR3830/ArticlesAPI/1.0
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/JABR3830/ArticleAPI/1.0
+paths:
+  /v1/articles/{id}:
+    delete:
+      description: Delete an Article identified by it's unique ID
+      operationId: deleteArticleByID
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Article successfully deleted.
+        "400":
+          description: "Bad Request, invalid Article ID format. "
+        "403":
+          description: Forbidden
+        "404":
+          description: Article Not Found
+      summary: Delete Article
+      tags:
+      - v1/editors
+    get:
+      description: Get an Article identified by it's unique ID
+      operationId: getArticleById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                    title:
+                      property1: string
+                      property2: string
+                    creation_date: 2019-08-24T14:15:22Z
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    versions:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title:
+                        property1: string
+                        property2: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      modification_date: 2019-08-24T14:15:22Z
+                      lan: string
+                    rating: 0
+                    lan: string
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: OK
+        "400":
+          description: "Bad Request, invalid Article ID format. "
+        "404":
+          description: Article Not Found
+      summary: Get Article
+      tags:
+      - v1/public
+  /v1/articles/versions/by-name/{name}:
+    get:
+      description: Get the most recent ArticleVersion the Article with the given name
+        from the specified Wiki.
+      operationId: getArticleByName
+      parameters:
+      - explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the wiki of the Article
+        explode: true
+        in: query
+        name: wiki
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: form
+      - description: "Language of the ArticleVersion, if none, the original language\
+          \ will be returned"
+        example: "en, es, fr"
+        explode: true
+        in: query
+        name: lan
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    title:
+                      property1: string
+                      property2: string
+                    modification_date: 2019-08-24T14:15:22Z
+                    body: string
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    lan: string
+              schema:
+                $ref: '#/components/schemas/ArticleVersion'
+          description: OK
+        "400":
+          description: "Bad Request, invalid Article name format. "
+        "404":
+          description: Article Not Found
+      summary: Get ArticleVersion by name
+      tags:
+      - v1/public
+  /v1/articles:
+    get:
+      description: "Get a list of Articles from a given Wiki that match a keyword\
+        \ string. Results can by filtered by tags, sorted by different parameters\
+        \ and support pagination."
+      operationId: searchArticles
+      parameters:
+      - description: The ID of the wiki where the serch will be made
+        explode: true
+        in: query
+        name: wiki_id
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      - description: Search query for the name of the article
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          example: name
+          type: string
+        style: form
+      - description: A comma-separated list of tag IDs to search for
+        explode: false
+        in: query
+        name: tags
+        required: false
+        schema:
+          example:
+          - tag1
+          - tag2
+          items:
+            type: string
+          type: array
+          uniqueItems: true
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 10
+          minimum: 0
+          type: integer
+        style: form
+      - description: The maximum number of results to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: Sorts the articles by different criteria
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: none
+          example: "recent, oldest, popular, unpopular"
+          type: string
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - description: Filter for the author of the Article
+        explode: true
+        in: query
+        name: author_name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter for the editors of the Article
+        explode: true
+        in: query
+        name: editor_name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "Language of the ArticleVersion, if none, the original language\
+          \ will be returned"
+        example: "en, es, fr"
+        explode: true
+        in: query
+        name: lan
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      title:
+                        property1: string
+                        property2: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                        wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                        articles:
+                        - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        translations:
+                          property1: string
+                          property2: string
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title:
+                          property1: string
+                          property2: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                          image: http://example.com
+                        modification_date: 2019-08-24T14:15:22Z
+                        lan: string
+                      rating: 0
+                      lan: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/ArticleList'
+          description: OK
+        "400":
+          content: {}
+          description: "Bad Request, invalid input paramaters"
+        "404":
+          description: Article Not Found
+      summary: Search for Articles
+      tags:
+      - v1/public
+    post:
+      description: Create a new Article in a given wiki
+      operationId: createArticle
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  title: string
+                  author:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: string
+                    image: http://example.com
+                  tags:
+                  - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                    translations:
+                      property1: string
+                      property2: string
+                  body: string
+                  wiki_id: string
+                  lan: string
+                  trasnlate_title: true
+            schema:
+              $ref: '#/components/schemas/NewArticle'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                    title:
+                      property1: string
+                      property2: string
+                    creation_date: 2019-08-24T14:15:22Z
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    versions:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title:
+                        property1: string
+                        property2: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      modification_date: 2019-08-24T14:15:22Z
+                      lan: string
+                    rating: 0
+                    lan: string
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: Created
+        "400":
+          description: "Bad Request, invalid paramaters"
+        "403":
+          description: Forbidden
+      summary: Create Article
+      tags:
+      - v1/editors
+  /v1/articles/versions/{id}:
+    delete:
+      description: Delete an ArticleVersion identified by it's unique ID
+      operationId: deleteArticleVersionById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ArticleVersion successfully deleted.
+        "400":
+          description: "Bad Request, invalid ArticleVersion ID format. "
+        "403":
+          description: Forbidden
+        "404":
+          description: ArticleVersion Not Found
+      summary: Delete ArticleVersion
+      tags:
+      - v1/editors
+    get:
+      description: Get an ArticleVersion identified by it's unique ID
+      operationId: getArticleVersionById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Language of the ArticleVersion, if none, the original language\
+          \ will be returned"
+        example: "en, es, fr"
+        explode: true
+        in: query
+        name: lan
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    title:
+                      property1: string
+                      property2: string
+                    modification_date: 2019-08-24T14:15:22Z
+                    body: string
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    lan: string
+              schema:
+                $ref: '#/components/schemas/ArticleVersion'
+          description: OK
+        "400":
+          description: "Bad Request, invalid ArticleVersion ID format. "
+        "404":
+          description: Article Version Not Found
+      summary: Get ArticleVersion
+      tags:
+      - v1/public
+  /v1/articles/{id}/versions:
+    get:
+      description: Get a list of ArticleVersions of a given Article. Results can be
+        sorted by creation date adn support pagination.
+      operationId: getArticleVersionListByArticleID
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 10
+          type: integer
+        style: form
+      - description: The maximum number of results to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 50
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: Sorts the articles by different criteria
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          example: "recent, oldest"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    article_versions:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      title:
+                        property1: string
+                        property2: string
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      modification_date: 2019-08-24T14:15:22Z
+                      lan: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/ArticleVersionList'
+          description: OK
+        "400":
+          description: "Bad Request, invalid input paramaters"
+        "404":
+          description: Article not Found
+      summary: Get Article's ArticleVersions
+      tags:
+      - v1/public
+    post:
+      description: Create an ArticleVersion for a given Article and adds it to the
+        list of versions of the Article.
+      operationId: createArticleVersion
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                  title: string
+                  author:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: string
+                  tags:
+                  - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    tag: string
+                  body: string
+            schema:
+              $ref: '#/components/schemas/NewArticleVersion'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    title:
+                      property1: string
+                      property2: string
+                    modification_date: 2019-08-24T14:15:22Z
+                    body: string
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    lan: string
+              schema:
+                $ref: '#/components/schemas/ArticleVersion'
+          description: Version successfully created.
+        "400":
+          description: "Bad Request, Invalid Parameters"
+        "403":
+          description: Forbidden
+      summary: Create ArticleVersion for an Article
+      tags:
+      - v1/editors
+  /v1/articles/{article_id}/versions/{version_id}:
+    put:
+      description: Restore an older ArticleVersion of an Article.
+      operationId: restoreArticleVersion
+      parameters:
+      - explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: version_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ArticleVersion successfully restored
+        "400":
+          description: invalid Article or ArticleVersion ID format
+        "403":
+          description: Forbidden
+        "404":
+          description: Article Version Not Found
+      summary: Restore ArticleVersion
+      tags:
+      - v1/editors
+  /v1/articles/commented_by/{id}:
+    get:
+      description: Get a list of the Articles commented by a given user.
+      operationId: getArticlesCommentedByUser
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: The maximum number of results to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: Sorts the articles by different criteria
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          example: "recent, oldest"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      title:
+                        property1: string
+                        property2: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                        wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                        articles:
+                        - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        translations:
+                          property1: string
+                          property2: string
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title:
+                          property1: string
+                          property2: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                          image: http://example.com
+                        modification_date: 2019-08-24T14:15:22Z
+                        lan: string
+                      rating: 0
+                      lan: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/ArticleList'
+          description: OK
+        "400":
+          description: "Bad Request, inavalid User ID format"
+        "404":
+          description: User Not Found
+      summary: Get Articles commented by User
+      tags:
+      - v1/public
+  /v1/articles/author/{id}:
+    get:
+      description: 'Get a list of Articles given an author''s ID.  '
+      operationId: GetArticleByAuthor
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: The maximum number of results to return.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 0
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: Sorts the articles by different criteria
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          example: "recent, oldest"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      title:
+                        property1: string
+                        property2: string
+                      creation_date: 2019-08-24T14:15:22Z
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      tags:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                        wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                        articles:
+                        - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                        translations:
+                          property1: string
+                          property2: string
+                      versions:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        title:
+                          property1: string
+                          property2: string
+                        author:
+                          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                          name: string
+                          image: http://example.com
+                        modification_date: 2019-08-24T14:15:22Z
+                        lan: string
+                      rating: 0
+                      lan: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/ArticleList'
+          description: OK
+        "400":
+          description: "Bad Request, The given ID was not correct."
+        "404":
+          description: Author Not Found.
+      summary: Get Articles by Author
+      tags:
+      - v1/public
+  /v1/articles/versions/{id}/body:
+    get:
+      operationId: GetArticleVersionBodyByID
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: It indicates if the body must be parsed.
+        explode: true
+        in: query
+        name: parsed
+        required: false
+        schema:
+          default: false
+          example: false
+          type: boolean
+        style: form
+      - description: "Language of the body, if parsed, original language if not specified"
+        explode: true
+        in: query
+        name: lan
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    body: string
+              schema:
+                $ref: '#/components/schemas/ArticleVersionBody'
+          description: OK. Parsed Succesfully.
+        "404":
+          description: ArticleVersion Not Found
+      summary: Get ArticleVersion body
+      tags:
+      - v1/public
+  /v1/comments/users/{user_id}:
+    get:
+      description: Retrieves all comments from an user
+      operationId: get-users-comments
+      parameters:
+      - description: The unique ID of the user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Fillters the results by the article's ID
+        explode: true
+        in: query
+        name: article_id
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      - description: Set the order the comments will be shown. It is determined by
+          date
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: recent
+          example: recent - oldest
+          type: string
+        style: form
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    comments:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      body: string
+                      creation_date: 2019-08-24
+                    limit: 20
+                    offset: 0
+                    total: 100
+                    next: http://example.com
+                    previous: http://example.com
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+          description: OK
+        "400":
+          description: "Bad Request, invalid User ID format"
+        "404":
+          description: Not Found
+      summary: Get Users Comments
+      tags:
+      - v1/public
+  /v1/comments/articles/{article_id}:
+    get:
+      description: Retrieves all comments from an articles
+      operationId: get_article_comments
+      parameters:
+      - description: The unique ID of the article
+        explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Set the order the comments will be shown. It is determined by
+          date
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: recent
+          example: recent - oldest
+          type: string
+        style: form
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    comments:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      body: string
+                      creation_date: 2019-08-24
+                    limit: 20
+                    offset: 0
+                    total: 100
+                    next: http://example.com
+                    previous: http://example.com
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+          description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
+        "404":
+          description: Not Found
+      summary: Get Articles Comments
+      tags:
+      - v1/public
+    post:
+      description: Posts a new comment in an article
+      operationId: post_comment
+      parameters:
+      - description: The unique ID of the article
+        explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
+                  body: string
+            schema:
+              $ref: '#/components/schemas/NewComment'
+        description: JSON object that contains the author and content of the comment
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    body: string
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: Comment successufully created
+        "400":
+          description: "Bad Request, wrong content structure"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or Author not found
+      summary: Post Comment
+      tags:
+      - v1/public
+  /v1/comments/{comment_id}:
+    delete:
+      description: Deletes an article's comment
+      operationId: delete_comment
+      parameters:
+      - description: The unique ID of the article
+        explode: false
+        in: path
+        name: comment_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, comment deleted successfully"
+        "400":
+          description: "Bad Request, invalid Comment ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Comment not found
+      summary: Delete Comment
+      tags:
+      - v1/public
+  /v1/wikis:
+    description: Search for wikis using the below query parameters.
+    get:
+      description: "Get a list of Wikis that match a keyword string. Results can by\
+        \ filtered by tags, sorted by different parameters and support pagination."
+      operationId: searchWikis
+      parameters:
+      - description: String to be searched within the wiki's name.
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Maximum amount of results to be returned.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 0
+          example: 10
+          minimum: 0
+          type: integer
+        style: form
+      - description: Sorts the wikis by different criteria
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          example: "2024/01/01, 2023/01/01-2024/01/01"
+          type: string
+        style: form
+      - description: Filter for the author of the Wiki
+        explode: true
+        in: query
+        name: author_name
+        required: false
+        schema:
+          example: author_name
+          type: string
+        style: form
+      - description: Language of the wiki to retrieve.
+        explode: false
+        in: query
+        name: lang
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    wikis:
+                    - id: string
+                      name:
+                        property1: string
+                        property2: string
+                      description: string
+                      creation_date: string
+                      rating: 4.5
+                      author:
+                        id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                        image: http://example.com
+                      lang: string
+                      image: http://example.com
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/WikiList'
+          description: Succesful operation.
+        "400":
+          description: "Bad Request, invalid parameters"
+        "418":
+          description: "The server refused to brew coffee. <br/> *Yes, this is a joke.\
+            \ Yes, this is a reserved HTTP response code since 1998.* <br/> *See [RFC\
+            \ 2324](https://datatracker.ietf.org/doc/html/rfc2324) for more information.\
+            \ Actually, do not.*"
+      summary: Search for Wikis
+      tags:
+      - v1/public
+    post:
+      description: Create a new Wiki
+      operationId: createWiki
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  name:
+                  - en: Wiki name
+                    es: Nombre de wiki
+                  description: string
+                  author: string
+                  lang: string
+                  image: http://example.com
+                  translate: true
+            schema:
+              $ref: '#/components/schemas/NewWiki'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: "1"
+                    name: Example wiki
+                    description: This is an example of a response when getting a wiki
+                    author: "Someone, change when user return is finalized"
+                    tags:
+                    - id: "1"
+                      name: Gift cards
+                      wiki_id: "1"
+                    - id: "2"
+                      name: Stores
+                      wiki_id: "1"
+                    lang: en
+                    image: https://picsum.photos/200
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Created succesfully.
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+      summary: Create Wiki
+      tags:
+      - v1/admins
+  /v1/wikis/{id_name}:
+    delete:
+      description: Remove Wiki with the matching ID.
+      operationId: removeWiki
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: id_name
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content: {}
+          description: Removed successfully. Returned deleted item.
+        "400":
+          description: Bad Request.
+        "403":
+          description: Forbidden. User is not authorized to delete wikis.
+        "404":
+          description: Wiki not found.
+      summary: Remove Wiki
+      tags:
+      - v1/admins
+    get:
+      description: Get Wiki with the matching ID.
+      operationId: getWiki
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: id_name
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Language of the wiki to retrieve.
+        explode: false
+        in: query
+        name: lang
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: "1"
+                    name: Example wiki
+                    description: This is an example of a response when getting a wiki
+                    author: "Someone, change when user return is finalized"
+                    tags:
+                    - id: "1"
+                      name: Gift cards
+                      wiki_id: "1"
+                    - id: "2"
+                      name: Stores
+                      wiki_id: "1"
+                    lang: en
+                    image: https://picsum.photos/200
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Succesful operation.
+        "400":
+          description: Bad Request
+        "404":
+          description: Bad Request. Wiki not found.
+      summary: Get Wiki
+      tags:
+      - v1/public
+    put:
+      description: Update Wiki with wiki the matching ID
+      operationId: updateWiki
+      parameters:
+      - description: "Identifier of the requested wiki, may be its name or its ID.\
+          \ Keep in mind wiki names may be modified."
+        explode: false
+        in: path
+        name: id_name
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewWiki'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: "1"
+                    name: Example wiki
+                    description: This is an example of a response when getting a wiki
+                    author: "Someone, change when user return is finalized"
+                    tags:
+                    - id: "1"
+                      name:
+                        en: Gift Cards
+                        es: Tarjetas de regalo
+                      wiki_id: "1"
+                    - id: "2"
+                      name:
+                        en: Stores
+                        es: Tiendas
+                      wiki_id: "1"
+              schema:
+                $ref: '#/components/schemas/Wiki'
+          description: Succesful operation.
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden. User is not authorized to edit wiki the requested
+            wiki.
+        "404":
+          description: Bad Request. Wiki not found.
+      summary: Update Wiki
+      tags:
+      - v1/admins
+  /v1/tags/{id}:
+    delete:
+      description: Delete a wiki tag.
+      operationId: delete-tag
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, tag deleted succesfully"
+        "400":
+          description: "Bad Request, invalid ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+      summary: Delete Tag
+      tags:
+      - v1/admins
+    get:
+      description: 'Get a tag by ID. '
+      operationId: get-tag
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                    translations:
+                      property1: string
+                      property2: string
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: OK
+        "400":
+          description: "Bad Request, invalid Tag ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+      summary: Get Tag
+      tags:
+      - v1/public
+  /v1/tags/wikis/{id}:
+    get:
+      description: Retrieve all the tags from a wiki.
+      operationId: get-wiki-tags
+      parameters:
+      - description: The unique ID of the wiki.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/TagList'
+          description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
+        "404":
+          description: Wiki not found
+      summary: Get Wikis Tags
+      tags:
+      - v1/public
+    post:
+      description: Create a new tag in a given wiki.
+      operationId: post-wiki-tag
+      parameters:
+      - description: The unique ID of the wiki.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  tag: string
+                  translation: true
+                  lan: string
+            schema:
+              $ref: '#/components/schemas/NewTag'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                    wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                    translations:
+                      property1: string
+                      property2: string
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: OK
+        "400":
+          description: "Bad Request, wrong content structure"
+        "403":
+          description: Forbidden
+      summary: Create Tag
+      tags:
+      - v1/admins
+  /v1/tags/articles/{id}:
+    delete:
+      description: "Unassigns a list of tags, given their IDs to an article."
+      operationId: unassign-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of Tag IDs
+        explode: false
+        in: query
+        name: ids
+        required: true
+        schema:
+          example:
+          - tag1
+          - tag2
+          items:
+            type: string
+          maxItems: 50
+          type: array
+          uniqueItems: true
+        style: form
+      responses:
+        "204":
+          description: "No Content, tag unassigned succesfully"
+        "400":
+          description: "Bad Request, invalid invalid paramaters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Unassign Tags
+      tags:
+      - v1/editors
+    get:
+      description: Retrieves all the tags from an article.
+      operationId: get-articles-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    articles:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    total: 0
+                    offset: 0
+                    limit: 0
+                    previous: http://example.com
+                    next: http://example.com
+              schema:
+                $ref: '#/components/schemas/TagList'
+          description: OK
+        "404":
+          description: Article not found
+      summary: Get Articles Tag
+      tags:
+      - v1/public
+    put:
+      description: "Assigns a list of tags, given their IDs, to an article."
+      operationId: assign-tags
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  tag_ids:
+                  - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            schema:
+              $ref: '#/components/schemas/TagIDList'
+      responses:
+        "204":
+          description: "No Content, tags assigned"
+        "400":
+          description: "Bad Request, invalid paramaters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Assign Tags
+      tags:
+      - v1/editors
+  /v1/ratings/{id}:
+    delete:
+      description: Delete the rating associated with the selected ID
+      operationId: delete-rating
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted successfully
+        "400":
+          description: "Bad Request, invalid Rating ID format"
+        "403":
+          description: No permissions to delete
+        "404":
+          description: Rating Not Found
+      summary: Delete Rating
+      tags:
+      - v1/public
+    get:
+      description: Get the Rating with the provided ID
+      operationId: get-rating
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    Author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    value: 0
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Rating found and returned
+        "400":
+          description: "Bad Request, invalid Rating ID format"
+        "404":
+          description: Rating Not Found
+      summary: Get Rating
+      tags:
+      - v1/public
+  /v1/ratings/articles/{id}:
+    post:
+      description: Create a rating for a given Article
+      operationId: rate-article
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
+                  value: 0
+            schema:
+              $ref: '#/components/schemas/NewRating'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    Author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    value: 0
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Rating created
+        "400":
+          description: "Bad Request, invalid Article ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      summary: Rate Article
+      tags:
+      - v1/public
+    put:
+      description: Update the value of an already existing Rating
+      operationId: edit-article-rating
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                  Author:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    name: string
+                    image: http://example.com
+                  value: 0
+                  creation_date: 2019-08-24
+            schema:
+              $ref: '#/components/schemas/Rating'
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    Author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    value: 0
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Rating edited
+        "400":
+          description: "Bad Request, invalid Article ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      summary: Edit Article's Rating
+      tags:
+      - v1/public
+  /v1/ratings/articles/{id}/average:
+    get:
+      description: Get data about the average rating of the article
+      operationId: get-article-average-rating
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    average: 0
+                    total: 0
+                    five_count: 0
+                    four_count: 0
+                    three_count: 0
+                    two_count: 0
+                    one_count: 0
+                    total_sum: 0
+              schema:
+                $ref: '#/components/schemas/AverageRating'
+          description: OK
+        "400":
+          description: "Bad Request, invalid Article ID format"
+      summary: Get Article's average rating
+      tags:
+      - v1/public
+  /v1/ratings/articles/{articleId}/users/{userId}:
+    get:
+      operationId: get-ratings-bu-user-on-article
+      parameters:
+      - explode: false
+        in: path
+        name: articleId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    Author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    value: 0
+                    creation_date: 2019-08-24
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: OK
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity (WebDAV)
+      summary: Get rating made by an user in an article
+      tags:
+      - v1/public
+  /v1/wikis/{wiki_name}/articles/{article_name}:
+    get:
+      description: "Get the most recent ArticleVersion the Article with the given\
+        \ name from the Wiki with the given name. Endpoint thought to access articles\
+        \ when only the names of the Wiki and Article are known, with a textual URL\
+        \ for example."
+      operationId: getArticleFromSpecificWiki
+      parameters:
+      - description: Name of the wiki
+        explode: false
+        in: path
+        name: wiki_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Name of the article
+        explode: false
+        in: path
+        name: article_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Language of the ArticleVersion, if none, the original language\
+          \ will be returned"
+        explode: true
+        in: query
+        name: lan
+        required: false
+        schema:
+          example: "en, es, fr"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    article_id: e4aad634-3311-4e79-b165-3911549b3b29
+                    author:
+                      id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      name: string
+                      image: http://example.com
+                    title:
+                      property1: string
+                      property2: string
+                    modification_date: 2019-08-24T14:15:22Z
+                    body: string
+                    tags:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+                      wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+                      articles:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        name: string
+                      translations:
+                        property1: string
+                        property2: string
+                    lan: string
+              schema:
+                $ref: '#/components/schemas/ArticleVersion'
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get Article From Specific Wiki
+      tags:
+      - v1/public
+  /v1/upload-image:
+    post:
+      description: Uploads an image file and returns the URL.
+      operationId: uploadImage
+      requestBody:
+        content:
+          multipart/form-data:
+            examples:
+              Example 1:
+                value:
+                  file: string
+            schema:
+              $ref: '#/components/schemas/v1_uploadimage_body'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Example 1:
+                  value:
+                    url: string
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: Successfully uploaded
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      summary: Upload Image
+      tags:
+      - v1/editors
+components:
+  requestBodies: {}
+  schemas:
+    Article:
+      description: Article of a Wiki
+      example:
+        versions:
+        - author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          modification_date: 2000-01-23T04:56:07.000+00:00
+          lan: lan
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          title:
+            key: title
+        - author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          modification_date: 2000-01-23T04:56:07.000+00:00
+          lan: lan
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          title:
+            key: title
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rating: 0.08008281904610115
+        lan: lan
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        creation_date: 2000-01-23T04:56:07.000+00:00
+        title:
+          key: title
+        wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        tags:
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The ID of the article
+          format: uuid
+          title: id
+          type: string
+        wiki_id:
+          description: The ID corresponding to the wiki the article belongs to.
+          format: uuid
+          title: wiki_id
+          type: string
+        title:
+          additionalProperties:
+            type: string
+            x-stoplight:
+              id: tuicihxn740u5
+          description: Dictionary of the title of the version of the article in the
+            different supported languages. The same as the title of the most recent
+            version.
+          title: title
+          type: object
+        creation_date:
+          description: The date of creation of the article.
+          format: date-time
+          title: creation_date
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        tags:
+          description: Array of the tags of the article. The same as the array of
+            tags of the most recent version.
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: tags
+          type: array
+        versions:
+          description: Array of simplified articleversions
+          items:
+            $ref: '#/components/schemas/SimplifiedArticleVersion'
+          title: versions
+          type: array
+        rating:
+          description: Average rating of the Article
+          format: double
+          minimum: 0
+          title: rating
+          type: number
+          x-stoplight:
+            id: 102q2hlty1t4n
+        lan:
+          description: Original language of the Article
+          title: lan
+          type: string
+          x-stoplight:
+            id: 08dmmixrlawd4
+      required:
+      - author
+      - creation_date
+      - id
+      - lan
+      - rating
+      - tags
+      - title
+      - versions
+      - wiki_id
+      title: Article
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+          title:
+            property1: string
+            property2: string
+          creation_date: 2019-08-24T14:15:22Z
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          tags:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+            articles:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            translations:
+              property1: string
+              property2: string
+          versions:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            title:
+              property1: string
+              property2: string
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            modification_date: 2019-08-24T14:15:22Z
+            lan: string
+          rating: 0
+          lan: string
+    ArticleVersion:
+      description: 'Concrete version of an Article object '
+      example:
+        article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        modification_date: 2000-01-23T04:56:07.000+00:00
+        lan: lan
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        title:
+          key: title
+        body: body
+        tags:
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The ID of the version of the article.
+          format: uuid
+          title: id
+          type: string
+        article_id:
+          description: The ID of the article.
+          format: uuid
+          title: article_id
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        title:
+          additionalProperties:
+            type: string
+            x-stoplight:
+              id: gdam73pkwpvxp
+          description: Dictionary of the title of the version of the article in the
+            different supported languages.
+          title: title
+          type: object
+        modification_date:
+          description: The date of modification the article that created the version.
+          format: date-time
+          title: modification_date
+          type: string
+        body:
+          description: The body of the version.
+          title: body
+          type: string
+        tags:
+          description: Array of the tags of the version of the article.
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: tags
+          type: array
+        lan:
+          description: Original language of the ArticleVersion
+          title: lan
+          type: string
+          x-stoplight:
+            id: 4q7rih86ockg4
+      required:
+      - article_id
+      - author
+      - body
+      - id
+      - lan
+      - modification_date
+      - tags
+      - title
+      title: ArticleVersion
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          article_id: e4aad634-3311-4e79-b165-3911549b3b29
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          title:
+            property1: string
+            property2: string
+          modification_date: 2019-08-24T14:15:22Z
+          body: string
+          tags:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+            articles:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            translations:
+              property1: string
+              property2: string
+          lan: string
+    SimplifiedArticleVersion:
+      description: Simplification of an ArticleVersion object
+      example:
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        modification_date: 2000-01-23T04:56:07.000+00:00
+        lan: lan
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        title:
+          key: title
+      properties:
+        id:
+          description: The ID of the article version.
+          format: uuid
+          title: id
+          type: string
+        title:
+          additionalProperties:
+            type: string
+            x-stoplight:
+              id: txndikiet9kii
+          description: Dictionary of the title of the version of the article in the
+            different supported languages.
+          title: title
+          type: object
+        author:
+          $ref: '#/components/schemas/Author'
+        modification_date:
+          description: The date of modification of the article version.
+          format: date-time
+          title: modification_date
+          type: string
+        lan:
+          description: Original language of the ArticleVersion
+          title: lan
+          type: string
+          x-stoplight:
+            id: l2iy9pb5pe9xh
+      required:
+      - author
+      - id
+      - lan
+      - modification_date
+      - title
+      title: SimplifiedArticleVersion
+      type: object
+      x-examples: {}
+    SimplifiedTag:
+      description: Keywords for identifying articles
+      properties:
+        id:
+          description: The name of the tag.
+          format: uuid
+          title: id
+          type: string
+        tag:
+          additionalProperties:
+            type: string
+            x-stoplight:
+              id: wu2il8qpp7cz6
+          description: The traductions of the tag.
+          title: tag
+          type: object
+          x-stoplight:
+            id: 28n4e2xedche5
+      required:
+      - id
+      - tag
+      title: SimplifiedTag
+      type: object
+      x-examples:
+        Example 2:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          tag:
+            property1: string
+            property2: string
+    ArticleList:
+      description: List of Articles. Supports pagination.
+      example:
+        next: https://openapi-generator.tech
+        total: 0
+        offset: 6
+        previous: https://openapi-generator.tech
+        limit: 0
+        articles:
+        - versions:
+          - author:
+              image: https://openapi-generator.tech
+              name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            modification_date: 2000-01-23T04:56:07.000+00:00
+            lan: lan
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            title:
+              key: title
+          - author:
+              image: https://openapi-generator.tech
+              name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            modification_date: 2000-01-23T04:56:07.000+00:00
+            lan: lan
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            title:
+              key: title
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          rating: 0.08008281904610115
+          lan: lan
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23T04:56:07.000+00:00
+          title:
+            key: title
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tags:
+          - translations:
+              key: translations
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            articles:
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - translations:
+              key: translations
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            articles:
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - versions:
+          - author:
+              image: https://openapi-generator.tech
+              name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            modification_date: 2000-01-23T04:56:07.000+00:00
+            lan: lan
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            title:
+              key: title
+          - author:
+              image: https://openapi-generator.tech
+              name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            modification_date: 2000-01-23T04:56:07.000+00:00
+            lan: lan
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            title:
+              key: title
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          rating: 0.08008281904610115
+          lan: lan
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23T04:56:07.000+00:00
+          title:
+            key: title
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tags:
+          - translations:
+              key: translations
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            articles:
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - translations:
+              key: translations
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            articles:
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - name: name
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        articles:
+          items:
+            $ref: '#/components/schemas/Article'
+          title: articles
+          type: array
+          x-stoplight:
+            id: qmckelb8p9agh
+        total:
+          description: The total number of items available to return.
+          title: total
+          type: integer
+          x-stoplight:
+            id: ceyp9h3u6pq3t
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          title: offset
+          type: integer
+          x-stoplight:
+            id: y8f5uy4secbdp
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          example: 0
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: mli08w7p9m5ct
+        previous:
+          description: Request to the previous page of items. ( null if none)
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: fr352m14ihvc7
+        next:
+          description: 'Request to the next page of items. ( null if none) '
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: d6rwzi2d4o45u
+      required:
+      - articles
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      title: ArticleList
+      type: object
+      x-examples:
+        Example 1:
+          articles:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+            title:
+              property1: string
+              property2: string
+            creation_date: 2019-08-24T14:15:22Z
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            tags:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+              wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+              articles:
+              - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                name: string
+              translations:
+                property1: string
+                property2: string
+            versions:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              title:
+                property1: string
+                property2: string
+              author:
+                id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                name: string
+                image: http://example.com
+              modification_date: 2019-08-24T14:15:22Z
+              lan: string
+            rating: 0
+            lan: string
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
+    ArticleVersionList:
+      description: List of ArticleVersions. Supports pagination.
+      example:
+        next: https://openapi-generator.tech
+        total: 0
+        offset: 6
+        previous: https://openapi-generator.tech
+        article_versions:
+        - author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          modification_date: 2000-01-23T04:56:07.000+00:00
+          lan: lan
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          title:
+            key: title
+        - author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          modification_date: 2000-01-23T04:56:07.000+00:00
+          lan: lan
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          title:
+            key: title
+        limit: 1
+      properties:
+        article_versions:
+          items:
+            $ref: '#/components/schemas/SimplifiedArticleVersion'
+          title: article_versions
+          type: array
+          x-stoplight:
+            id: dytirb2nopmcp
+        total:
+          description: The total number of items available to return.
+          title: total
+          type: integer
+          x-stoplight:
+            id: nyqo2igxm0plp
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          title: offset
+          type: integer
+          x-stoplight:
+            id: cy8nldi2is9br
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          title: limit
+          type: integer
+          x-stoplight:
+            id: p51ex5e7pdmzw
+        previous:
+          description: Request to the next page of items. ( null if none)
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: tlbg5auyullr7
+        next:
+          description: 'Request to the next page of items. ( null if none) '
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: rc3t7xs8w8yr3
+      required:
+      - article_versions
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      title: ArticleVersionList
+      type: object
+      x-examples:
+        Example 1:
+          article_versions:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            title:
+              property1: string
+              property2: string
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            modification_date: 2019-08-24T14:15:22Z
+            lan: string
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
+    NewArticleVersion:
+      description: Data required to the user to create a new ArticleVersion of an
+        Article (given in the path of the endpoint)
+      example:
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        lan: lan
+        translate_title: true
+        title: title
+        body: body
+        tags:
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        title:
+          description: The title of the version of the article.
+          title: title
+          type: string
+          x-stoplight:
+            id: 3ec4vruerwwxz
+        author:
+          $ref: '#/components/schemas/Author'
+        tags:
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: tags
+          type: array
+          x-stoplight:
+            id: gn4btncpluv0e
+        body:
+          description: The body of the version.
+          title: body
+          type: string
+          x-stoplight:
+            id: sdqsmbl8khsan
+        lan:
+          description: Original language of the ArticleVersion
+          title: lan
+          type: string
+          x-stoplight:
+            id: w1699vlft1zfv
+        translate_title:
+          default: true
+          description: Indicates if the title of the ArticleVersion should be translated
+            in the different translations of the Article
+          title: translate_title
+          type: boolean
+          x-stoplight:
+            id: qpn3ctbm62gek
+      required:
+      - author
+      - body
+      - lan
+      - tags
+      - title
+      - translate_title
+      title: NewArticleVersion
+      type: object
+      x-examples:
+        Example 1:
+          title: string
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          tags:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag:
+              property1: string
+              property2: string
+          body: string
+          lan: string
+          translate_title: true
+    NewArticle:
+      description: Data required to the user to create a new Article and its first
+        version
+      example:
+        trasnlate_title: true
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        lan: lan
+        title: title
+        body: body
+        wiki_id: wiki_id
+        tags:
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        title:
+          description: The title of the version of the article.
+          title: title
+          type: string
+          x-stoplight:
+            id: 3ec4vruerwwxz
+        author:
+          $ref: '#/components/schemas/Author'
+        tags:
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: tags
+          type: array
+          x-stoplight:
+            id: gn4btncpluv0e
+        body:
+          description: The body of the version.
+          title: body
+          type: string
+          x-stoplight:
+            id: sdqsmbl8khsan
+        wiki_id:
+          description: The ID of the Wiki where the Article is created.
+          title: wiki_id
+          type: string
+          x-stoplight:
+            id: sdqsmbl8khsan
+        lan:
+          description: Original language of the first ArticleVersion of the Article
+          title: lan
+          type: string
+          x-stoplight:
+            id: 5wqtaanmqegme
+        trasnlate_title:
+          default: true
+          description: Indicates if the title of the ArticleVersion of the Artivle
+            should be translated in the different translations of the ArticleVersion
+          title: trasnlate_title
+          type: boolean
+          x-stoplight:
+            id: 2jvszjhf1etrp
+      required:
+      - author
+      - lan
+      - tags
+      - title
+      - trasnlate_title
+      - wiki_id
+      title: NewArticle
+      type: object
+      x-examples:
+        Example 1:
+          title: string
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          tags:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+            articles:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            translations:
+              property1: string
+              property2: string
+          body: string
+          wiki_id: string
+          lan: string
+          trasnlate_title: true
+    ArticleVersionBody:
+      example:
+        body: body
+      properties:
+        body:
+          title: body
+          type: string
+          x-stoplight:
+            id: i3lbzx86wf1aw
+      title: ArticleVersionBody
+      type: object
+      x-examples:
+        Example 1:
+          body: string
+    Comment:
+      description: Comment entity response
+      example:
+        article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        creation_date: 2000-01-23
+        body: body
+      properties:
+        id:
+          description: The unique ID of the comment
+          format: uuid
+          title: id
+          type: string
+        article_id:
+          description: The unique ID of the article
+          format: uuid
+          title: article_id
+          type: string
+          x-stoplight:
+            id: mey6f99yvxfp2
+        author:
+          $ref: '#/components/schemas/Author'
+        body:
+          description: The content of the comment
+          title: body
+          type: string
+          x-stoplight:
+            id: bi45nhz9oxg6k
+        creation_date:
+          description: The date of creation of the comment
+          format: date
+          title: creation_date
+          type: string
+          x-stoplight:
+            id: 4h2c96nqmlraq
+      required:
+      - article_id
+      - author
+      - body
+      - creation_date
+      - id
+      title: Comment
+      type: object
+      x-internal: false
+      x-examples:
+        Example 2:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          article_id: e4aad634-3311-4e79-b165-3911549b3b29
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          body: string
+          creation_date: 2019-08-24
+    Author:
+      description: User object containing details of the author
+      example:
+        image: https://openapi-generator.tech
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The unique ID of the user author
+          format: uuid
+          title: id
+          type: string
+        name:
+          description: The username of the user
+          title: name
+          type: string
+          x-stoplight:
+            id: x4btzoftqh54q
+        image:
+          description: The avatar image of the user
+          format: uri
+          title: image
+          type: string
+          x-stoplight:
+            id: l0rfzjtnhrem5
+      required:
+      - id
+      - image
+      - name
+      title: Author
+      type: object
+      x-examples:
+        Example 2:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: string
+          image: http://example.com
+    NewComment:
+      description: New comment info for creating a new entry in the database
+      example:
+        author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        body: body
+      properties:
+        author_id:
+          description: The unique ID of the user author
+          format: uuid
+          title: author_id
+          type: string
+          x-stoplight:
+            id: r0fl6y1rs0hck
+        body:
+          description: The content of the commment
+          title: body
+          type: string
+          x-stoplight:
+            id: ax8pi9hleeuof
+      required:
+      - author_id
+      - body
+      title: NewComment
+      type: object
+      x-examples:
+        Example 1:
+          author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
+          body: string
+    CommentListResponse:
+      description: Response entity that returns the comments and the pagination info.
+      example:
+        next: https://openapi-generator.tech
+        total: 100
+        comments:
+        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23
+          body: body
+        - article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          creation_date: 2000-01-23
+          body: body
+        offset: 0
+        previous: https://openapi-generator.tech
+        limit: 20
+      properties:
+        comments:
+          items:
+            $ref: '#/components/schemas/Comment'
+          title: comments
+          type: array
+        limit:
+          default: 20
+          description: The maximum of responses to be returned
+          example: 20
+          maximum: 100
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: ni4x3zmmfzw10
+        offset:
+          default: 0
+          description: The index of the first result to return. Use with limit to
+            get the next page of search results.
+          minimum: 0
+          title: offset
+          type: integer
+          x-stoplight:
+            id: w4f7vrojx5mi8
+        total:
+          description: The total number of results of the query
+          example: 100
+          minimum: 0
+          title: total
+          type: integer
+          x-stoplight:
+            id: m9i5ksjg4zx3v
+        next:
+          description: The url to request the next batch of results
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: gtd0na0za72eu
+        previous:
+          description: The url to request the previous batch of results
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: auv9fi5lbur9r
+      required:
+      - comments
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      title: CommentListResponse
+      type: object
+      x-examples:
+        Example 1:
+          comments:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            article_id: e4aad634-3311-4e79-b165-3911549b3b29
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            body: string
+            creation_date: 2019-08-24
+          limit: 20
+          offset: 0
+          total: 100
+          next: http://example.com
+          previous: http://example.com
+    NewWiki:
+      description: Model of a new wiki
+      example:
+        image: https://openapi-generator.tech
+        author: author
+        name: "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+        description: description
+        lang: lang
+        translate: true
+      properties:
+        name:
+          description: Name of the wiki.
+          example: "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+          title: name
+          type: string
+        description:
+          description: Details of the wiki set by its editors.
+          title: description
+          type: string
+        author:
+          description: Creator of the wiki. Should not remain a string.
+          title: author
+          type: string
+        lang:
+          description: Language of the wiki.
+          title: lang
+          type: string
+        image:
+          description: Link to the wiki banner image.
+          format: uri
+          title: image
+          type: string
+        translate:
+          description: Indicates if the Wiki shall be translated to the supported
+            languages
+          title: translate
+          type: boolean
+          x-stoplight:
+            id: xicwyll9xtrfl
+      required:
+      - author
+      - description
+      - image
+      - lang
+      - name
+      - translate
+      title: NewWiki
+      type: object
+      x-examples:
+        Example 1:
+          name:
+          - en: Wiki name
+            es: Nombre de wiki
+          description: string
+          author: string
+          lang: string
+          image: http://example.com
+          translate: true
+    Wiki:
+      example:
+        id: "1"
+        name: Example wiki
+        description: This is an example of a response when getting a wiki
+        author: "Someone, change when user return is finalized"
+        tags:
+        - id: "1"
+          name: Gift cards
+          wiki_id: "1"
+        - id: "2"
+          name: Stores
+          wiki_id: "1"
+        lang: en
+        image: https://picsum.photos/200
+      properties:
+        id:
+          description: Unique identifier for the wiki.
+          type: string
+        name:
+          additionalProperties:
+            type: string
+          description: Name of the wiki in different languages.
+          type: object
+        description:
+          description: Details of the wiki set by its editors.
+          type: string
+        creation_date:
+          description: Date of creation of the wiki.
+          format: date_time
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        tags:
+          items:
+            $ref: '#/components/schemas/SimplifiedTag'
+          type: array
+        rating:
+          description: Average rating of the wiki
+          example: 4.5
+          format: double
+          maximum: 5
+          minimum: 0
+          type: number
+          x-stoplight:
+            id: n41bjowninj5a
+        lang:
+          description: Language of the wiki.
+          type: string
+        image:
+          description: Link to the wiki banner image.
+          format: uri
+          type: string
+      required:
+      - author
+      - creation_date
+      - description
+      - id
+      - image
+      - lang
+      - name
+      - rating
+      - tags
+      title: Wiki
+      type: object
+      x-examples:
+        Example 1:
+          id: "1"
+          name: Example wiki
+          description: This is an example of a response when getting a wiki
+          author: "Someone, change when user return is finalized"
+          tags:
+          - id: "1"
+            name: Gift cards
+            wiki_id: "1"
+          - id: "2"
+            name: Stores
+            wiki_id: "1"
+          lang: en
+          image: https://picsum.photos/200
+    WikiList:
+      description: List of Wikis. Supports pagination.
+      example:
+        next: https://openapi-generator.tech
+        total: 0
+        offset: 6
+        previous: https://openapi-generator.tech
+        limit: 0
+        wikis:
+        - image: https://openapi-generator.tech
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          name:
+            key: name
+          rating: 4.5
+          description: description
+          id: id
+          creation_date: creation_date
+          lang: lang
+        - image: https://openapi-generator.tech
+          author:
+            image: https://openapi-generator.tech
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          name:
+            key: name
+          rating: 4.5
+          description: description
+          id: id
+          creation_date: creation_date
+          lang: lang
+      properties:
+        wikis:
+          items:
+            $ref: '#/components/schemas/SimplifiedWiki'
+          title: wikis
+          type: array
+          x-stoplight:
+            id: qmckelb8p9agh
+        total:
+          description: The total number of items available to return.
+          title: total
+          type: integer
+          x-stoplight:
+            id: ceyp9h3u6pq3t
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          title: offset
+          type: integer
+          x-stoplight:
+            id: y8f5uy4secbdp
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          example: 0
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: mli08w7p9m5ct
+        previous:
+          description: Request to the previous page of items. ( null if none)
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: fr352m14ihvc7
+        next:
+          description: 'Request to the next page of items. ( null if none) '
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: d6rwzi2d4o45u
+      required:
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      - wikis
+      title: WikiList
+      type: object
+      x-examples:
+        Example 1:
+          wikis:
+          - id: string
+            name:
+              property1: string
+              property2: string
+            description: string
+            creation_date: string
+            rating: 4.5
+            author:
+              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+              image: http://example.com
+            lang: string
+            image: http://example.com
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
+    SimplifiedWiki:
+      example:
+        image: https://openapi-generator.tech
+        author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        name:
+          key: name
+        rating: 4.5
+        description: description
+        id: id
+        creation_date: creation_date
+        lang: lang
+      properties:
+        id:
+          description: Unique identifier for the wiki.
+          title: id
+          type: string
+        name:
+          additionalProperties:
+            type: string
+            x-stoplight:
+              id: 1uipxzv6uj856
+          description: Name of the wiki.
+          title: name
+          type: object
+        description:
+          description: Details of the wiki set by its editors.
+          title: description
+          type: string
+        creation_date:
+          description: Date of creation of the wiki.
+          format: date_time
+          title: creation_date
+          type: string
+        rating:
+          description: Average rating of the wiki
+          example: 4.5
+          format: double
+          maximum: 5
+          minimum: 0
+          title: rating
+          type: number
+          x-stoplight:
+            id: n41bjowninj5a
+        author:
+          $ref: '#/components/schemas/Author'
+        lang:
+          description: Language of the wiki.
+          title: lang
+          type: string
+        image:
+          description: Link to the wiki banner image.
+          format: uri
+          title: image
+          type: string
+      required:
+      - author
+      - creation_date
+      - description
+      - id
+      - image
+      - lang
+      - name
+      title: SimplifiedWiki
+      type: object
+      x-examples:
+        Example 1:
+          id: string
+          name:
+            property1: string
+            property2: string
+          description: string
+          creation_date: string
+          rating: 4.5
+          author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          lang: string
+          image: http://example.com
+    Tag:
+      description: Tag entity.
+      example:
+        translations:
+          key: translations
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        articles:
+        - name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The ID of the tag.
+          format: uuid
+          title: id
+          type: string
+        tag:
+          description: The name of the tag.
+          format: uuid
+          title: tag
+          type: string
+          x-stoplight:
+            id: g3ziz7fieuzmb
+        wiki_id:
+          description: The ID corresponding to the wiki the tag belongs to.
+          format: uuid
+          title: wiki_id
+          type: string
+          x-stoplight:
+            id: ynzgbowu7wnwm
+        articles:
+          description: Array of articles that have the tag.
+          items:
+            $ref: '#/components/schemas/SimplifiedArticle'
+          title: articles
+          type: array
+          x-stoplight:
+            id: 3qq291kyraib9
+        translations:
+          additionalProperties:
+            type: string
+            x-stoplight:
+              id: cjfxqma13emzt
+          description: A dictionary with tag translations to other languages.
+          title: translations
+          type: object
+          x-stoplight:
+            id: rqnw1ssgln7sp
+      required:
+      - articles
+      - id
+      - tag
+      - translations
+      - wiki_id
+      title: Tag
+      type: object
+      x-examples:
+        Example 2:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+          wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+          articles:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+          translations:
+            property1: string
+            property2: string
+    SimplifiedArticle:
+      description: Article entity.
+      example:
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: The ID of the article.
+          format: uuid
+          title: id
+          type: string
+        name:
+          description: The original name of the article.
+          title: name
+          type: string
+          x-stoplight:
+            id: 7riv8a15yswa9
+      required:
+      - id
+      - name
+      title: SimplifiedArticle
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          name: string
+    NewTag:
+      description: Model for a new Tag
+      example:
+        translation: true
+        lan: lan
+        tag: tag
+      properties:
+        tag:
+          description: The name of the tag.
+          title: tag
+          type: string
+          x-stoplight:
+            id: yfh5p42q7b13x
+        translation:
+          description: It indicates if the translation is needed.
+          title: translation
+          type: boolean
+          x-stoplight:
+            id: o93iohhqtu5pf
+        lan:
+          description: The original language of the tag.
+          title: lan
+          type: string
+          x-stoplight:
+            id: hmq3ll11m1qoy
+      required:
+      - lan
+      - tag
+      - translation
+      title: NewTag
+      type: object
+      x-examples:
+        Example 1:
+          tag: string
+          translation: true
+          lan: string
+    TagIDList:
+      example:
+        tag_ids:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        tag_ids:
+          description: List of Tag IDs
+          items:
+            format: uuid
+            type: string
+          title: tag_ids
+          type: array
+          x-stoplight:
+            id: kmi9kpdl1ztoh
+      required:
+      - tag_ids
+      title: TagIDsList
+      type: object
+      x-examples:
+        Example 2:
+          tag_ids:
+          - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+    TagList:
+      description: List of Tags. Supports pagination.
+      example:
+        next: https://openapi-generator.tech
+        total: 0
+        offset: 6
+        previous: https://openapi-generator.tech
+        limit: 0
+        articles:
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - translations:
+            key: translations
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          articles:
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        articles:
+          items:
+            $ref: '#/components/schemas/Tag'
+          title: articles
+          type: array
+          x-stoplight:
+            id: qmckelb8p9agh
+        total:
+          description: The total number of items available to return.
+          title: total
+          type: integer
+          x-stoplight:
+            id: ceyp9h3u6pq3t
+        offset:
+          description: The offset of the items returned (as set in the query or by
+            default)
+          title: offset
+          type: integer
+          x-stoplight:
+            id: y8f5uy4secbdp
+        limit:
+          description: The maximum number of items in the response (as set in the
+            query or by default).
+          example: 0
+          minimum: 0
+          title: limit
+          type: integer
+          x-stoplight:
+            id: mli08w7p9m5ct
+        previous:
+          description: Request to the previous page of items. ( null if none)
+          format: uri
+          nullable: true
+          title: previous
+          type: string
+          x-stoplight:
+            id: fr352m14ihvc7
+        next:
+          description: 'Request to the next page of items. ( null if none) '
+          format: uri
+          nullable: true
+          title: next
+          type: string
+          x-stoplight:
+            id: d6rwzi2d4o45u
+      required:
+      - articles
+      - limit
+      - next
+      - offset
+      - previous
+      - total
+      title: TagList
+      type: object
+      x-examples:
+        Example 2:
+          articles:
+          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            tag: ac5f6b7f-bb01-4c1e-a5c0-7a9f62d81c22
+            wiki_id: 9a3179cd-aa83-4a5b-a08a-5c794d4020a8
+            articles:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              name: string
+            translations:
+              property1: string
+              property2: string
+          total: 0
+          offset: 0
+          limit: 0
+          previous: http://example.com
+          next: http://example.com
+    NewRating:
+      description: "New Rating, created by one user associated with one article (Article\
+        \ ID is obtained in path)"
+      example:
+        author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        value: 0.8008281904610115
+      properties:
+        author_id:
+          description: "Author ID: ID of the person who publish the rating"
+          format: uuid
+          title: author_id
+          type: string
+          x-stoplight:
+            id: q4bc1zm0v0tt4
+        value:
+          description: "Value: The value of the rating published"
+          title: value
+          type: number
+          x-stoplight:
+            id: b3wl5oq26a7ik
+      required:
+      - author_id
+      - value
+      title: NewRating
+      type: object
+      x-examples:
+        Example 1:
+          author_id: 78424c75-5c41-4b25-9735-3c9f7d05c59e
+          value: 0
+    Rating:
+      description: Rating of an Article
+      example:
+        article_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        Author:
+          image: https://openapi-generator.tech
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        creation_date: 2000-01-23
+        value: 0.8008281904610115
+      properties:
+        id:
+          description: "Rating ID\r\n"
+          format: uuid
+          title: id
+          type: string
+        article_id:
+          description: Article ID where the rating is published
+          format: uuid
+          title: article_id
+          type: string
+          x-stoplight:
+            id: uzi095sjp0udm
+        Author:
+          $ref: '#/components/schemas/Author'
+        value:
+          description: Rating's value
+          title: value
+          type: number
+          x-stoplight:
+            id: 2n2knofgepww9
+        creation_date:
+          description: Date where the rating was published
+          format: date
+          title: creation_date
+          type: string
+          x-stoplight:
+            id: s2jphmehddzvv
+      required:
+      - Author
+      - article_id
+      - creation_date
+      - id
+      - value
+      title: Rating
+      type: object
+      x-examples:
+        Example 1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          article_id: e4aad634-3311-4e79-b165-3911549b3b29
+          Author:
+            id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            name: string
+            image: http://example.com
+          value: 0
+          creation_date: 2019-08-24
+    AverageRating:
+      description: Data of the average rating of an Article
+      example:
+        one_count: 7
+        average: 0.8008281904610115
+        total: 6
+        four_count: 5
+        two_count: 2
+        five_count: 1
+        total_sum: 9
+        three_count: 5
+      properties:
+        average:
+          description: Average rating of an Article
+          format: double
+          title: average
+          type: number
+          x-stoplight:
+            id: xc8d4rg2zmeoe
+        total:
+          description: Total number of Ratings of an Article
+          title: total
+          type: integer
+          x-stoplight:
+            id: 1hpzs5e0yz51f
+        five_count:
+          description: Number of 5-star ratings of an Article
+          title: five_count
+          type: integer
+          x-stoplight:
+            id: tgwuumk1xy9rq
+        four_count:
+          description: Number of 4-star ratings of an Article
+          title: four_count
+          type: integer
+          x-stoplight:
+            id: v5hqxo4zght6z
+        three_count:
+          description: Number of 3-star ratings of an Article
+          title: three_count
+          type: integer
+          x-stoplight:
+            id: q3vgda4tu3qrf
+        two_count:
+          description: Number of 2-star ratings of an Article
+          title: two_count
+          type: integer
+          x-stoplight:
+            id: yt0gl4isfgmc8
+        one_count:
+          description: Number of 1-star ratings of an Article
+          title: one_count
+          type: integer
+          x-stoplight:
+            id: 4rssmlpes2jtm
+        total_sum:
+          title: total_sum
+          type: integer
+          x-stoplight:
+            id: yjg5812o4dc9c
+      required:
+      - average
+      - five_count
+      - four_count
+      - one_count
+      - three_count
+      - total
+      - total_sum
+      - two_count
+      title: AverageRatingData
+      type: object
+      x-examples:
+        Example 2:
+          average: 0
+          total: 0
+          five_count: 0
+          four_count: 0
+          three_count: 0
+          two_count: 0
+          one_count: 0
+          total_sum: 0
+    v1_uploadimage_body:
+      properties:
+        file:
+          format: binary
+          type: string
+      type: object
+    inline_response_200:
+      example:
+        url: url
+      properties:
+        url:
+          description: URL of the uploaded image
+          title: url
+          type: string
+      title: inline_response_200
+      type: object
+  securitySchemes: {}

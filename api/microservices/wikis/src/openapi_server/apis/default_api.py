@@ -37,7 +37,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 
 
 @router.get(
-    "/wikis/{name}",
+    "/v1/wikis/{name}",
     responses={
         200: {"model": Wiki, "description": "Succesful operation."},
         400: {"model": Wiki, "description": "Bad Request"},
@@ -64,7 +64,7 @@ async def get_one_wiki_by_name(
 
 # Never called, for modelling purposes
 @router.get(
-    "/wikis/{id}",
+    "/v1/wikis/{id}",
     responses={
         200: {"model": Wiki, "description": "Succesful operation."},
         400: {"description": "Bad Request"},
@@ -84,7 +84,7 @@ async def get_wiki(
 
 
 @router.get(
-    "/wikis",
+    "/v1/wikis",
     responses={
         200: {"model": WikiList, "description": "Succesful operation."},
         400: {"description": "Bad Request, invalid parameters"},

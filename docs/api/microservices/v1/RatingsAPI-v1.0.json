@@ -223,6 +223,34 @@
             "description": "Not Found"
           }
         }
+      },
+      "delete": {
+        "tags": [],
+        "summary": "Delete all ratings associated to an article",
+        "operationId": "delete-ratings-articles-id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
       }
     },
     "/ratings/articles/{id}/average": {

@@ -67,6 +67,25 @@ paths:
       summary: Get Rating
       tags: []
   /ratings/articles/{id}:
+    delete:
+      operationId: delete-ratings-articles-id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Delete all ratings associated to an article
+      tags: []
     post:
       description: Create a rating for a given Article
       operationId: rate-article
@@ -151,32 +170,6 @@ paths:
           description: Not Found
       summary: Edit Article's Rating
       tags: []
-  /ratings/users/{id}:
-    get:
-      description: Get the average rating of an User based on the Ratings of the Articles
-        he made
-      operationId: get-user-rating
-      parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: number
-          description: Return the user rating
-        "400":
-          description: "Bad Request, invalid User ID format"
-        "404":
-          description: Not Found
-      summary: Get User rating
-      tags: []
   /ratings/articles/{id}/average:
     get:
       description: Get data about the average rating of the article
@@ -200,36 +193,9 @@ paths:
           description: "Bad Request, invalid Article ID format"
       summary: Get Article's average rating
       tags: []
-  /ratings/wikis/{id}:
-    get:
-      description: Get the average rating of a Wiki based on the Ratings of the Articles
-        it has
-      operationId: get-ratings-wikis-id
-      parameters:
-      - explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                Example 1:
-                  value: 0
-              schema:
-                type: number
-          description: OK
-        "404":
-          description: Not Found
-      summary: Get Wiki rating
-      tags: []
   /ratings/articles/{articleId}/users/{userId}:
     get:
-      operationId: get-ratings-articles-id-users-id
+      operationId: get-ratings-bu-user-on-article
       parameters:
       - explode: false
         in: path
@@ -256,7 +222,7 @@ paths:
           description: Not Found
         "422":
           description: Unprocessable Entity (WebDAV)
-      summary: Your GET endpoint
+      summary: Get rating made by an user in an article
       tags: []
 components:
   schemas:
@@ -382,71 +348,6 @@ components:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
           name: string
           image: http://example.com
-    RatingList:
-      description: List of Ratings. Supports pagination.
-      properties:
-        ratings:
-          items:
-            $ref: '#/components/schemas/Rating'
-          type: array
-          x-stoplight:
-            id: d5eh6v2k20xgj
-        total:
-          description: The total number of items available to return.
-          type: integer
-          x-stoplight:
-            id: 72gdqe1ngz9hq
-        offset:
-          description: The offset of the items returned (as set in the query or by
-            default)
-          type: integer
-          x-stoplight:
-            id: qdopqbxi79y5p
-        limit:
-          description: The maximum number of items in the response (as set in the
-            query or by default).
-          type: integer
-          x-stoplight:
-            id: 3zrcx11uhb527
-        next:
-          description: Request to the next page of items. ( null if none)
-          format: uri
-          nullable: true
-          type: string
-          x-stoplight:
-            id: no5svtesm8hk2
-        previous:
-          description: Request to the next page of items. ( null if none)
-          format: uri
-          nullable: true
-          type: string
-          x-stoplight:
-            id: lu2ppdfowvavf
-      required:
-      - limit
-      - next
-      - offset
-      - previous
-      - ratings
-      - total
-      title: RatingList
-      type: object
-      x-examples:
-        Example 1:
-          ratings:
-          - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-            article_id: e4aad634-3311-4e79-b165-3911549b3b29
-            Author:
-              id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-              name: string
-              image: http://example.com
-            value: 0
-            creation_date: 2019-08-24
-          limit: 0
-          offset: 0
-          total: 0
-          next: http://example.com
-          previous: http://example.com
     AverageRating:
       description: Data of the average rating of an Article
       example:
@@ -456,6 +357,7 @@ components:
         four_count: 5
         two_count: 2
         five_count: 1
+        total_sum: 9
         three_count: 5
       properties:
         average:
@@ -501,6 +403,11 @@ components:
           type: integer
           x-stoplight:
             id: 4rssmlpes2jtm
+        total_sum:
+          title: total_sum
+          type: integer
+          x-stoplight:
+            id: yjg5812o4dc9c
       required:
       - average
       - five_count
@@ -508,6 +415,7 @@ components:
       - one_count
       - three_count
       - total
+      - total_sum
       - two_count
       title: AverageRatingData
       type: object

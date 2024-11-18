@@ -36,7 +36,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 
 
 @router.put(
-    "/wikis/{id}/tags",
+    "/v1/wikis/{id}/tags",
     responses={
         204: {"description": "No Content, tags assigned"},
         400: {"description": "Bad Request, invalid parameters format"},
@@ -67,7 +67,7 @@ async def assign_wiki_tags(
 
 
 @router.head(
-    "/wikis/{id}",
+    "/v1/wikis/{id}",
     responses={
         200: {"description": "OK"},
         400: {"description": "Bad Request, invalid Wiki ID"},
@@ -78,7 +78,6 @@ async def assign_wiki_tags(
     response_model_by_alias=True,
 )
 async def check_wiki_by_id(
-    response: Response,
     id: str = Path(..., description=""),
 ) -> None:
     """Check if a Wiki exits given its unique ID. """
@@ -92,7 +91,7 @@ async def check_wiki_by_id(
 
 
 @router.delete(
-    "/wikis/{id}/tags",
+    "/v1/wikis/{id}/tags",
     responses={
         204: {"description": "No Content, tags unassigned"},
         400: {"description": "Bad Request, invalid parameters format"},
@@ -123,7 +122,7 @@ async def unassign_article_tags(
 
 
 @router.put(
-    "/wikis/{id}/ratings",
+    "/v1/wikis/{id}/ratings",
     responses={
         204: {"description": "No Content, rating updated"},
         400: {"description": "Bad Request, invalid parameter format"},

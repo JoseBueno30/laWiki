@@ -1,0 +1,1959 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wiki API",
+    "description": "This API is used to perform operations on the wikis of laWiki",
+    "version": "2.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/JoseMiguelPrietoPaez/wiki/0.1.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "default"
+    },
+    {
+      "name": "internal"
+    },
+    {
+      "name": "admins"
+    },
+    {
+      "name": "defaultV2"
+    },
+    {
+      "name": "internalV2"
+    },
+    {
+      "name": "adminsV2"
+    }
+  ],
+  "paths": {
+    "/v1/wikis": {
+      "description": "Search for wikis using the below query parameters.",
+      "get": {
+        "summary": "Search for Wikis",
+        "description": "Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination.",
+        "operationId": "searchWikis",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "String to be searched within the wiki's name.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Maximum amount of results to be returned.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "example": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the articles by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "creation_date",
+            "in": "query",
+            "description": "Single date or range",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "2024/01/01, 2023/01/01-2024/01/01"
+            }
+          },
+          {
+            "name": "author_name",
+            "in": "query",
+            "description": "Filter for the author of the Wiki",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "author_name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WikiList"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "articles": [
+                        {
+                          "id": "string",
+                          "name": "string",
+                          "description": "string",
+                          "author": {
+                            "id": "string",
+                            "name": "string"
+                          }
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters"
+          },
+          "418": {
+            "description": "The server refused to brew coffee. <br/> *Yes, this is a joke. Yes, this is a reserved HTTP response code since 1998.* <br/> *See [RFC 2324](https://datatracker.ietf.org/doc/html/rfc2324) for more information. Actually, do not.*"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admins"
+        ],
+        "summary": "Create Wiki",
+        "description": "Create a new Wiki",
+        "operationId": "createWiki",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "String to be searched within the wiki's name.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum amount of results to be returned.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "example": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWiki"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "name": "string",
+                    "description": "string",
+                    "author": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created succesfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v1/wikis/{id}": {
+      "get": {
+        "summary": "Get Wiki",
+        "description": "Get Wiki with the matching ID.",
+        "operationId": "getWiki",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Bad Request. Wiki not found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "admins"
+        ],
+        "summary": "Update Wiki",
+        "description": "Update Wiki with wiki the matching ID",
+        "operationId": "updateWiki",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWiki"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden. User is not authorized to edit wiki the requested wiki."
+          },
+          "404": {
+            "description": "Bad Request. Wiki not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "admins"
+        ],
+        "summary": "Remove Wiki",
+        "description": "Remove Wiki with the matching ID.",
+        "operationId": "removeWiki",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removed successfully. Returned deleted item.",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request."
+          },
+          "403": {
+            "description": "Forbidden. User is not authorized to delete wikis."
+          },
+          "404": {
+            "description": "Wiki not found."
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Check Wiki",
+        "description": "Check if a Wiki exits given its unique ID. ",
+        "operationId": "checkWikiByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request, invalid Wiki ID"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        }
+      }
+    },
+    "/v1/wikis/{name}": {
+      "get": {
+        "summary": "Get Wiki by name",
+        "description": "Get the Wiki with the given name.",
+        "operationId": "getOneWikiByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wiki"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        }
+      }
+    },
+    "/v1/wikis/{id}/ratings": {
+      "put": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Update Rating",
+        "description": "Update the rating of a Wiki give its unique ID and a rating",
+        "operationId": "updateRating",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_ratings_body"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "rating": 4.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, rating updated"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameter format"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    },
+    "/v1/wikis/{id}/tags": {
+      "put": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Assign Tags",
+        "description": "Assigns a list of tags, given their IDs, to a wiki",
+        "operationId": "assignWikiTags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_tags_body"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "tag_ids": [
+                      [
+                        {
+                          "id": "1",
+                          "name": "Gift cards",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": "Stores",
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "1",
+                          "name": "Sports cars",
+                          "wiki_id": "2"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, tags assigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": false
+      },
+      "delete": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Unassign Tags",
+        "description": "Unassigns a list of tags, given their IDs to a Wiki.",
+        "operationId": "unassignArticleTags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of Tag IDs",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "maxItems": 50,
+              "uniqueItems": true,
+              "type": "array",
+              "example": [
+                "tag1",
+                "tag2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content, tags unassigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    },
+    "/v2/wikis": {
+      "description": "Search for wikis using the below query parameters.",
+      "get": {
+        "tags": [
+          "defaultV2"
+        ],
+        "summary": "Search for Wikis",
+        "description": "Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination.",
+        "operationId": "searchWikisV2",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "String to be searched within the wiki's name.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Maximum amount of results to be returned.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "example": 20,
+              "default": 20
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The index of the first result to return. Use with limit to get the next page of search results.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "example": 10,
+              "default": 0
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sorts the wikis by different criteria",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "creation_date",
+            "in": "query",
+            "description": "Single date or range",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "2024/01/01, 2023/01/01-2024/01/01"
+            }
+          },
+          {
+            "name": "author_name",
+            "in": "query",
+            "description": "Filter for the author of the Wiki",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "author_name"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Language of the wiki to retrieve.",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WikiListV2"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "wikis": [
+                        {
+                          "id": "string",
+                          "name": {
+                            "es": "string",
+                            "en": "string"
+                          },
+                          "description": "string",
+                          "author": {
+                            "id": "string",
+                            "name": "string"
+                          },
+                          "lang": "string",
+                          "image": "url"
+                        }
+                      ],
+                      "total": 0,
+                      "offset": 0,
+                      "limit": 0,
+                      "previous": "http://example.com",
+                      "next": "http://example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters"
+          },
+          "418": {
+            "description": "The server refused to brew coffee. <br/> *Yes, this is a joke. Yes, this is a reserved HTTP response code since 1998.* <br/> *See [RFC 2324](https://datatracker.ietf.org/doc/html/rfc2324) for more information. Actually, do not.*"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "defaultV2"
+        ],
+        "summary": "Create Wiki",
+        "description": "Create a new Wiki",
+        "operationId": "createWikiV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWikiV2"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "name": {
+                      "en": "string",
+                      "es": "string"
+                    },
+                    "description": "string",
+                    "author": "string",
+                    "lang": "string",
+                    "image": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created succesfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WikiV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v2/wikis/{id_name}": {
+      "get": {
+        "tags": [
+          "defaultV2"
+        ],
+        "summary": "Get Wiki",
+        "description": "Get Wiki with the matching ID.",
+        "operationId": "getWikiV2",
+        "parameters": [
+          {
+            "name": "id_name",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Language of the wiki to retrieve.",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WikiV2"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": {
+                            "en": "Gift Cards",
+                            "es": "Tarjetas de regalo"
+                          },
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": {
+                            "en": "Stores",
+                            "es": "Tiendas"
+                          },
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Bad Request. Wiki not found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "adminsV2"
+        ],
+        "summary": "Update Wiki",
+        "description": "Update Wiki with wiki the matching ID",
+        "operationId": "updateWikiV2",
+        "parameters": [
+          {
+            "name": "id_name",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWikiV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succesful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WikiV2"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "1",
+                      "name": "Example wiki",
+                      "description": "This is an example of a response when getting a wiki",
+                      "author": "Someone, change when user return is finalized",
+                      "tags": [
+                        {
+                          "id": "1",
+                          "name": {
+                            "en": "Gift Cards",
+                            "es": "Tarjetas de regalo"
+                          },
+                          "wiki_id": "1"
+                        },
+                        {
+                          "id": "2",
+                          "name": {
+                            "en": "Stores",
+                            "es": "Tiendas"
+                          },
+                          "wiki_id": "1"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden. User is not authorized to edit wiki the requested wiki."
+          },
+          "404": {
+            "description": "Bad Request. Wiki not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "adminsV2"
+        ],
+        "summary": "Remove Wiki",
+        "description": "Remove Wiki with the matching ID.",
+        "operationId": "removeWikiV2",
+        "parameters": [
+          {
+            "name": "id_name",
+            "in": "path",
+            "description": "Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removed successfully. Returned deleted item.",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request."
+          },
+          "403": {
+            "description": "Forbidden. User is not authorized to delete wikis."
+          },
+          "404": {
+            "description": "Wiki not found."
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "internalV2"
+        ],
+        "summary": "Check Wiki",
+        "description": "Check if a Wiki exits given its unique ID. ",
+        "operationId": "checkWikiByIDV2",
+        "parameters": [
+          {
+            "name": "id_name",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request, invalid Wiki ID"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        }
+      }
+    },
+    "/v2/wikis/{id}/ratings": {
+      "put": {
+        "tags": [
+          "internalV2"
+        ],
+        "summary": "Update Rating",
+        "description": "Update the rating of a Wiki give its unique ID and a rating",
+        "operationId": "updateRatingV2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_ratings_body"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "rating": 4.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, rating updated"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameter format"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    },
+    "/v2/wikis/{id}/tags": {
+      "put": {
+        "tags": [
+          "internalV2"
+        ],
+        "summary": "Assign Tags",
+        "description": "Assigns a list of tags, given their IDs, to a wiki",
+        "operationId": "assignWikiTagsV2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/id_tags_bodyV2"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "tag_ids": [
+                      {
+                        "id": "1",
+                        "name": {
+                          "en": "Gift Cards",
+                          "es": "Tarjetas de regalo"
+                        },
+                        "wiki_id": "1"
+                      },
+                      {
+                        "id": "2",
+                        "name": {
+                          "en": "Stores",
+                          "es": "Tiendas"
+                        },
+                        "wiki_id": "1"
+                      },
+                      {
+                        "id": "1",
+                        "name": {
+                          "en": "Sports cars",
+                          "es": "Coches deportivo"
+                        },
+                        "wiki_id": "2"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content, tags assigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": false
+      },
+      "delete": {
+        "tags": [
+          "internalV2"
+        ],
+        "summary": "Unassign Tags",
+        "description": "Unassigns a list of tags, given their IDs to a Wiki.",
+        "operationId": "unassignWikiTagsV2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "List of Tag IDs",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "maxItems": 50,
+              "uniqueItems": true,
+              "type": "array",
+              "example": [
+                "tag1",
+                "tag2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content, tags unassigned"
+          },
+          "400": {
+            "description": "Bad Request, invalid parameters format"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Wiki Not Found"
+          }
+        },
+        "x-internal": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewWiki": {
+        "required": [
+          "author",
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "author": {
+            "type": "string",
+            "description": "Creator of the wiki. Should not remain a string."
+          }
+        },
+        "description": "Model of a new wiki"
+      },
+      "NewWikiV2": {
+        "required": [
+          "author",
+          "description",
+          "image",
+          "lang",
+          "name",
+          "translate"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki.",
+            "example": "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "author": {
+            "type": "string",
+            "description": "Creator of the wiki. Should not remain a string."
+          },
+          "lang": {
+            "type": "string",
+            "description": "Language of the wiki."
+          },
+          "image": {
+            "type": "string",
+            "description": "Link to the wiki banner image.",
+            "format": "uri"
+          },
+          "translate": {
+            "type": "boolean",
+            "description": "Indicates if the Wiki shall be translated to the supported languages",
+            "x-stoplight": {
+              "id": "xicwyll9xtrfl"
+            }
+          }
+        },
+        "description": "Model of a new wiki"
+      },
+      "Wiki": {
+        "required": [
+          "author",
+          "creation_date",
+          "description",
+          "id",
+          "name",
+          "rating",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date of creation of the wiki.",
+            "format": "date_time"
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "n41bjowninj5a"
+            }
+          }
+        },
+        "example": {
+          "id": "1",
+          "name": "Example wiki",
+          "description": "This is an example of a response when getting a wiki",
+          "author": "Someone, change when user return is finalized",
+          "tags": [
+            {
+              "id": "1",
+              "name": "Gift cards",
+              "wiki_id": "1"
+            },
+            {
+              "id": "2",
+              "name": "Stores",
+              "wiki_id": "1"
+            }
+          ]
+        }
+      },
+      "WikiV2": {
+        "required": [
+          "author",
+          "creation_date",
+          "description",
+          "id",
+          "image",
+          "lang",
+          "name",
+          "rating",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki."
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Name of the wiki in different languages."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date of creation of the wiki.",
+            "format": "date_time"
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV2"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagV2"
+            }
+          },
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "n41bjowninj5a"
+            }
+          },
+          "lang": {
+            "type": "string",
+            "description": "Language of the wiki."
+          },
+          "image": {
+            "type": "string",
+            "description": "Link to the wiki banner image.",
+            "format": "uri"
+          }
+        },
+        "example": {
+          "id": "1",
+          "name": "Example wiki",
+          "description": "This is an example of a response when getting a wiki",
+          "author": "Someone, change when user return is finalized",
+          "tags": [
+            {
+              "id": "1",
+              "name": "Gift cards",
+              "wiki_id": "1"
+            },
+            {
+              "id": "2",
+              "name": "Stores",
+              "wiki_id": "1"
+            }
+          ],
+          "lang": "en",
+          "image": "https://picsum.photos/200"
+        }
+      },
+      "Tag": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the tag."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the tag."
+          }
+        },
+        "example": [
+          {
+            "id": "1",
+            "name": "Gift cards",
+            "wiki_id": "1"
+          },
+          {
+            "id": "2",
+            "name": "Stores",
+            "wiki_id": "1"
+          },
+          {
+            "id": "1",
+            "name": "Sports cars",
+            "wiki_id": "2"
+          }
+        ]
+      },
+      "TagV2": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the tag."
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Name of the tag."
+          }
+        },
+        "example": [
+          {
+            "id": "1",
+            "name": {
+              "en": "Gift Cards",
+              "es": "Tarjetas de regalo"
+            }
+          },
+          {
+            "id": "2",
+            "name": {
+              "en": "Stores",
+              "es": "Tiendas"
+            }
+          },
+          {
+            "id": "3",
+            "name": {
+              "en": "Sports cars",
+              "es": "Coches deportivo"
+            }
+          }
+        ]
+      },
+      "Author": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user."
+          }
+        },
+        "description": "Schema for the user, temporary as we do not know how the user will be modelled."
+      },
+      "AuthorV2": {
+        "required": [
+          "id",
+          "image",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user."
+          },
+          "image": {
+            "type": "string",
+            "description": "Link to the author's profile picture",
+            "format": "uri"
+          }
+        },
+        "description": "Schema for the user, temporary as we do not know how the user will be modelled."
+      },
+      "WikiList": {
+        "required": [
+          "articles",
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedWiki"
+            },
+            "x-stoplight": {
+              "id": "qmckelb8p9agh"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "ceyp9h3u6pq3t"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "y8f5uy4secbdp"
+            }
+          },
+          "limit": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "example": 0,
+            "x-stoplight": {
+              "id": "mli08w7p9m5ct"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the previous page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "fr352m14ihvc7"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "d6rwzi2d4o45u"
+            }
+          }
+        },
+        "description": "List of Wikis. Supports pagination."
+      },
+      "WikiListV2": {
+        "required": [
+          "limit",
+          "next",
+          "offset",
+          "previous",
+          "total",
+          "wikis"
+        ],
+        "type": "object",
+        "properties": {
+          "wikis": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimplifiedWikiV2"
+            },
+            "x-stoplight": {
+              "id": "qmckelb8p9agh"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items available to return.",
+            "x-stoplight": {
+              "id": "ceyp9h3u6pq3t"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The offset of the items returned (as set in the query or by default)",
+            "x-stoplight": {
+              "id": "y8f5uy4secbdp"
+            }
+          },
+          "limit": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "The maximum number of items in the response (as set in the query or by default).",
+            "example": 0,
+            "x-stoplight": {
+              "id": "mli08w7p9m5ct"
+            }
+          },
+          "previous": {
+            "type": "string",
+            "description": "Request to the previous page of items. ( null if none)",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "fr352m14ihvc7"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "Request to the next page of items. ( null if none) ",
+            "format": "uri",
+            "nullable": true,
+            "x-stoplight": {
+              "id": "d6rwzi2d4o45u"
+            }
+          }
+        },
+        "description": "List of Wikis. Supports pagination."
+      },
+      "SimplifiedWiki": {
+        "title": "SimplifiedWiki",
+        "required": [
+          "author",
+          "creation_date",
+          "description",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date of creation of the wiki.",
+            "format": "date_time"
+          },
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "n41bjowninj5a"
+            }
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          }
+        }
+      },
+      "SimplifiedWikiV2": {
+        "title": "SimplifiedWiki",
+        "required": [
+          "author",
+          "creation_date",
+          "description",
+          "id",
+          "image",
+          "lang",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the wiki."
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "x-stoplight": {
+                "id": "1uipxzv6uj856"
+              }
+            },
+            "description": "Name of the wiki."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the wiki set by its editors."
+          },
+          "creation_date": {
+            "type": "string",
+            "description": "Date of creation of the wiki.",
+            "format": "date_time"
+          },
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "n41bjowninj5a"
+            }
+          },
+          "author": {
+            "$ref": "#/components/schemas/AuthorV2"
+          },
+          "lang": {
+            "type": "string",
+            "description": "Language of the wiki."
+          },
+          "image": {
+            "type": "string",
+            "description": "Link to the wiki banner image.",
+            "format": "uri"
+          }
+        }
+      },
+      "id_ratings_body": {
+        "required": [
+          "rating"
+        ],
+        "type": "object",
+        "properties": {
+          "rating": {
+            "maximum": 5,
+            "minimum": 0,
+            "type": "number",
+            "description": "Average rating of the wiki",
+            "format": "double",
+            "example": 4.5,
+            "x-stoplight": {
+              "id": "e861y8ux0w86b"
+            }
+          }
+        }
+      },
+      "id_tags_body": {
+        "required": [
+          "tag_ids"
+        ],
+        "type": "object",
+        "properties": {
+          "tag_ids": {
+            "type": "array",
+            "description": "List of Tag IDs",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "x-stoplight": {
+              "id": "w0pyzqdbvcjuk"
+            }
+          }
+        }
+      },
+      "id_tags_bodyV2": {
+        "required": [
+          "tag_ids"
+        ],
+        "type": "object",
+        "properties": {
+          "tag_ids": {
+            "type": "array",
+            "description": "List of Tag IDs",
+            "items": {
+              "$ref": "#/components/schemas/TagV2"
+            }
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "Wiki_Post": {
+        "description": "Body of a post request to upload a new wiki.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NewWiki"
+            }
+          }
+        },
+        "required": true
+      },
+      "Wiki_PostV2": {
+        "description": "Body of a post request to upload a new wiki.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NewWikiV2"
+            }
+          }
+        },
+        "required": true
+      }
+    }
+  }
+}

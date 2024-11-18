@@ -3,16 +3,13 @@ from typing import List
 import httpx
 
 ARTICLES_PORT = 8081
-ARTICLES_URL = "articles_api"
-# ARTICLES_URL = "localhost"
+#ARTICLES_URL = "articles_api"
+ARTICLES_URL = "localhost"
 
 WIKIS_PORT = 8084
-WIKIS_URL = "wikis_api"
-# WIKIS_URL = "localhost"
+#WIKIS_URL = "wikis_api"
+WIKIS_URL = "localhost"
 
-
-"""if not await api_calls.check_article(article_id):
-            raise Exception("Article not found")"""
 
 # Article microservice api calls
 async def check_article(article_id: str) -> bool:
