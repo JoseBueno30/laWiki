@@ -1,6 +1,6 @@
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
-from openapi_server.impl import api_calls
+from openapi_server.impl import api_calls_v1
 from openapi_server.models.new_tag import NewTag
 from openapi_server.models.tag import Tag
 from openapi_server.models.tag_id_list import TagIDList
@@ -26,10 +26,10 @@ class EditorsManagerV1(BaseV1EditorsApi):
         existing_tags = await mongodb["tag"].find({"_id": {"$in": tag_ids}}).to_list(length=None)
         existing_tag_ids = [tag["_id"] for tag in existing_tags]
 
-        if not await api_calls.check_article(id):
+        if not await api_calls_v1.check_article(id):
             raise KeyError
 
-        article = await api_calls.get_article(id)
+        article = await api_calls_v1.get_article(id)
 
         await mongodb["tag"].update_many(
             {"_id": {"$in": existing_tag_ids}},
@@ -46,7 +46,7 @@ class EditorsManagerV1(BaseV1EditorsApi):
             ]
         }
 
-        await api_calls.assign_article_tags(id, id_tags_body)
+        await api_calls_v1.assign_article_tags(id, id_tags_body)
 
         return None
 
@@ -68,10 +68,10 @@ class EditorsManagerV1(BaseV1EditorsApi):
         await mongodb["tag"].delete_one({"_id": tag_id})
         ids = [id]
 
-        await api_calls.unassign_wiki_tags(wiki_id, ids)
+        await api_calls_v1.unassign_wiki_tags(wiki_id, ids)
 
         for article in articles:
-            await api_calls.unassign_article_tags(article.get("_id"), ids)
+            await api_calls_v1.unassign_article_tags(article.get("_id"), ids)
 
         return None
 
@@ -84,7 +84,7 @@ class EditorsManagerV1(BaseV1EditorsApi):
         """Create a new tag in a given wiki."""
         wiki_id = ObjectId(id)
 
-        if not await api_calls.check_wiki(id):
+        if not await api_calls_v1.check_wiki(id):
             raise KeyError
 
         tag_document = {
@@ -112,7 +112,7 @@ class EditorsManagerV1(BaseV1EditorsApi):
             ]
         }
 
-        await api_calls.assign_wiki_tags(id, id_tags_body)
+        await api_calls_v1.assign_wiki_tags(id, id_tags_body)
 
         return new_tag_instance
 
@@ -125,7 +125,7 @@ class EditorsManagerV1(BaseV1EditorsApi):
         """Unassigns a list of tags, given their IDs to an article."""
         article_id = ObjectId(id)
 
-        if not await api_calls.check_article(id):
+        if not await api_calls_v1.check_article(id):
             raise KeyError
 
         tag_ids = [ObjectId(tag_id) for tag_id in ids or []]
@@ -139,6 +139,6 @@ class EditorsManagerV1(BaseV1EditorsApi):
             {"$pull": {"articles": {"_id": article_id}}}
         )
 
-        await api_calls.unassign_article_tags(id, existing_tag_ids_str)
+        await api_calls_v1.unassign_article_tags(id, existing_tag_ids_str)
 
         return None

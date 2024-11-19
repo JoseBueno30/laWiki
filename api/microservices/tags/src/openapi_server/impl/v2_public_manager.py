@@ -2,7 +2,7 @@ from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
-from openapi_server.impl import api_calls
+from openapi_server.impl import api_calls_v2
 from openapi_server.models.tag_list_v2 import TagListV2
 from openapi_server.models.tag_v2 import TagV2
 
@@ -23,7 +23,7 @@ class PublicManagerV2(BaseV2PublicApi):
         """Retrieves all the tags from an article."""
         article_id = ObjectId(id)
 
-        if not await api_calls.check_article(id):
+        if not await api_calls_v2.check_article(id):
             raise KeyError
 
         total_tags = await mongodb["tag"].count_documents({"articles._id": article_id})
@@ -68,8 +68,8 @@ class PublicManagerV2(BaseV2PublicApi):
             total=total_tags,
             offset=offset,
             limit=limit,
-            previous=None if offset == 0 else f"/tags?offset={max(0, offset - limit)}&limit={limit}",
-            next=None if offset + limit >= total_tags else f"/tags?offset={offset + limit}&limit={limit}"
+            previous=None if offset == 0 else f"v2/tags/articles/{id}?offset={max(0, offset - limit)}&limit={limit}",
+            next=None if offset + limit >= total_tags else f"v2/tags/articles/{id}?offset={offset + limit}&limit={limit}"
         )
 
 
@@ -129,7 +129,7 @@ class PublicManagerV2(BaseV2PublicApi):
         """Retrieve all the tags from a wiki."""
         wiki_id = ObjectId(id)
 
-        if not await api_calls.check_wiki(id):
+        if not await api_calls_v2.check_wiki(id):
             raise KeyError
 
         total_tags = await mongodb["tag"].count_documents({"wiki_id": wiki_id})
@@ -174,6 +174,6 @@ class PublicManagerV2(BaseV2PublicApi):
             total=total_tags,
             offset=offset,
             limit=limit,
-            previous=None if offset == 0 else f"/tags?offset={max(0, offset - limit)}&limit={limit}",
-            next=None if offset + limit >= total_tags else f"/tags?offset={offset + limit}&limit={limit}"
+            previous=None if offset == 0 else f"v2/tags/wikis/{id}?offset={max(0, offset - limit)}&limit={limit}",
+            next=None if offset + limit >= total_tags else f"v2/tags/wikis/{id}?offset={offset + limit}&limit={limit}"
         )
