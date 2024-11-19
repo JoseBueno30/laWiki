@@ -1,6 +1,8 @@
 from bson import ObjectId
+import mwparserfromhell, pypandoc
 
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
+from openapi_server.impl.utils.api_calls import translate_body_to_lan
 from openapi_server.impl.utils.functions import transform_article_ids_pipeline, mongodb, transform_version_ids_pipeline, \
     get_total_number_of_documents, get_model_list_pipeline
 from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
@@ -94,6 +96,10 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         if not article_version[0]:
             raise Exception
 
+        body_translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
+        if body_translation:
+            article_version[0]["body"] = body_translation["body"]
+
         return article_version[0]
 
     async def get_article_version_list_by_article_idv2(
@@ -133,7 +139,11 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         if not article_version[0]:
             raise Exception
 
-        #TODO Parsear el body al lenguaje especificado?
+        #TODO devolver body traducido a lan
+
+        body_translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
+        if body_translation:
+            article_version[0]["body"] = body_translation["body"]
 
         return article_version[0]
 
@@ -166,9 +176,17 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         lan: str,
     ) -> InlineResponse200V2:
 
-        #TODO implementar parseo + traduccion
+        article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
 
-        return None
+        response = mwparserfromhell.parse(article_version["body"])
+        if parsed:
+            response = pypandoc.convert_text(response, 'html', format='mediawiki')
+
+        #TODO implementar traduccion
+        if lan is not article_version["lan"]:
+            response = await translate_body_to_lan(response, lan)
+
+        return InlineResponse200V2.from_dict({"body": response})
 
     async def get_articles_commented_by_user_v2(
         self,
@@ -177,7 +195,25 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleListV2:
-        return
+        comment_list = await get_user_comments(id)
+
+        article_ids_list = []
+        for comment in comment_list["comments"]:
+            article_ids_list.append(ObjectId(comment["article_id"]))
+
+        total_articles = await get_total_number_of_documents(mongodb["article"],
+                                                             {"_id": {"$in": article_ids_list}})
+
+        pipeline = get_model_list_pipeline({"_id": {"$in": article_ids_list}},
+                                           offset, limit, order, total_articles, "articles",
+                                           f"v2/articles/commented_by/{id}")
+
+        article_list = await mongodb["article"].aggregate(pipeline).to_list(length=None)
+
+        if not article_list[0]:
+            raise Exception
+
+        return article_list[0]
 
     async def search_articles_v2(
         self,

@@ -144,6 +144,7 @@ async def get_article_version_body_by_idv2(
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid ArticleVersion ID format.")
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
 
 

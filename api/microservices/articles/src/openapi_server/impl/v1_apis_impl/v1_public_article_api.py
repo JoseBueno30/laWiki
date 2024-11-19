@@ -284,7 +284,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         pipeline = get_model_list_pipeline({"article_id": ObjectId(id)},
                                            offset, limit, order, total_documents, "article_versions",
-                                           f"articles/{id}/versions")
+                                           f"v1/articles/{id}/versions")
 
         article_versions = await mongodb["article_version"].aggregate(pipeline).to_list(length=None)
 
@@ -314,7 +314,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         pipeline = get_model_list_pipeline({"_id": {"$in": article_ids_list}},
                                            offset, limit, order, total_articles, "articles",
-                                           f"articles/commented_by/{id}")
+                                           f"v1/articles/commented_by/{id}")
 
         article_list = await mongodb["article"].aggregate(pipeline).to_list(length=None)
 

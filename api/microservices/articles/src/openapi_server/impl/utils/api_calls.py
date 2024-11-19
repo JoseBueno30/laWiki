@@ -33,3 +33,14 @@ async def delete_article_comments(article_id : str):
     async with httpx.AsyncClient() as client:
         delete_response = await client.delete(f"http://{COMMENTS_URL}:{COMMENTS_PORT}/comments/articles/{article_id}")
         return delete_response.status_code == 204
+
+async def translate_body_to_lan(body, lan):
+    async with httpx.AsyncClient() as client:
+        body_params = {
+            "q": body,
+            "source": "auto",
+            "target": lan,
+            "format": "html"
+        }
+        translation = await client.post("https://libretranslate.com/translate", params=body_params)
+        return translation
