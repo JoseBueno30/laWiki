@@ -10,6 +10,10 @@ WIKIS_PORT = 8084
 WIKIS_URL = "wikis_api"
 #WIKIS_URL = "localhost"
 
+TRANSLATION_PORT = 5000
+#TRANSLATION_URL = "wikis_api"
+TRANSLATION_URL = "localhost"
+
 
 # Article microservice api calls
 async def check_article(article_id: str) -> bool:
@@ -53,3 +57,23 @@ async def unassign_wiki_tags(wiki_id: str, ids: List[str]) -> bool:
         response = await client.delete(f"http://{WIKIS_URL}:{WIKIS_PORT}/v2/wikis/{wiki_id}/tags",
                                        params=params)
         return response.status_code == 200
+
+# Translation microservice api calls
+async def translate(text: str, source: str, target: str) -> str:
+    data = {
+        "q": text,
+        "source": source,
+        "target": target
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"http://{TRANSLATION_URL}:{TRANSLATION_PORT}/translate",
+            data=data
+        )
+
+    if response.status_code == 200:
+        print(response.json())
+        return response.json()
+    else:
+        raise Exception(f"Error while translating: {response.status_code} {response.text}")

@@ -96,20 +96,21 @@ class EditorManagerV2(BaseV2EditorsApi):
                 "translations": {
                     "en" : new_tag_v2.tag,
                     "es" : new_tag_v2.tag,
-                    "fr" : new_tag_v2.tag,
-                    "it" : new_tag_v2.tag
+                    "fr" : new_tag_v2.tag
                 }
             }
         else: # The original tag needs to be translated into the other languages
+            english = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.language, "en")
+            spanish = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.language, "es")
+            french = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.language, "fr")
             tag_document = {
                 "tag": new_tag_v2.tag,
                 "wiki_id": wiki_id,
                 "articles": [],
                 "translations": {
-                    "en": new_tag_v2.tag,
-                    "es": new_tag_v2.tag,
-                    "fr": new_tag_v2.tag,
-                    "it": new_tag_v2.tag
+                    "en": english["translatedText"],
+                    "es": spanish["translatedText"],
+                    "fr": french["translatedText"]
                 }
             }
 
