@@ -50,3 +50,9 @@
     cursor: pointer;
 }
 
+.header-title:hover{
+    cursor: pointer;
+    color: rgb(0, 179, 255);
+}
+
+
