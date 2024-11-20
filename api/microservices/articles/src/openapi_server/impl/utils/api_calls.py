@@ -1,4 +1,5 @@
 import httpx
+import json
 
 COMMENTS_PORT = 8080
 COMMENTS_URL = "comments_api"
@@ -38,9 +39,11 @@ async def translate_body_to_lan(body, lan):
     async with httpx.AsyncClient() as client:
         body_params = {
             "q": body,
-            "source": "auto",
+            "source": "es",
             "target": lan,
             "format": "html"
         }
-        translation = await client.post("https://libretranslate.com/translate", params=body_params)
-        return translation
+        translation = await client.post("http://localhost:5000/translate", params=body_params)
+        print(translation.content.decode())
+        translated_text = json.loads(translation.content.decode())
+        return translated_text["translatedText"]

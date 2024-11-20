@@ -182,7 +182,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         if parsed:
             response = pypandoc.convert_text(response, 'html', format='mediawiki')
 
-        #TODO implementar traduccion
+        #TODO añadir parsed a la llamada para que no quite el formato mediawiki
         if lan is not article_version["lan"]:
             response = await translate_body_to_lan(response, lan)
 
