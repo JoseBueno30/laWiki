@@ -1,4 +1,4 @@
-import { Layout, Flex, Input, Button, Badge, Avatar } from "antd";
+import { Flex, Input, Button, Badge, Avatar } from "antd";
 import {
   ControlOutlined,
   PlusOutlined,
@@ -36,10 +36,9 @@ const LaWikiClickHandler = () => {
   console.log("LaWiki clicked");
 }
 
-const MainHeader = ({ children }) => {
+const MainHeader = () => {
   return (
-    <Layout className="app-layout">
-      <Layout.Header className="app-header">
+      <>
         <Flex gap='large'>
           <Title style={{ marginTop: "0.5em" }} onClick={LaWikiClickHandler} className="header-title">LaWiki</Title>
         </Flex>
@@ -68,9 +67,7 @@ const MainHeader = ({ children }) => {
             <Avatar size="large" icon={<UserOutlined/>}/>
           </div>
         </Flex>
-      </Layout.Header>
-      <Layout.Content className="app-content">{children}</Layout.Content>
-    </Layout>
+      </>
   );
 };
 

@@ -1,19 +1,18 @@
 import PropTypes from "prop-types";
 import "./PageHeader.css";
+import { Layout } from "antd";
 import MainHeader from "./MainHeader";
 import WikiHeader from "./WikiHeader";
 
 
-const PageHeader = ({ children }) => {
+const PageHeader = () => {
   return (
-    // Coger path del url para saber qué header mostrar
-    // <MainHeader>
-    //     {children}
-    // </MainHeader>
+    <Layout.Header className="app-header">
+       {/* Coger path del url para saber qué header mostrar
+       <MainHeader/> */}
 
-    <WikiHeader>
-        {children}
-    </WikiHeader>
+      <WikiHeader/>
+    </Layout.Header>
   );
 };
 
