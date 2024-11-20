@@ -54,8 +54,7 @@ class PublicManagerV2(BaseV2PublicApi):
                     "translations": {
                         "en": "$translations.en",
                         "es": "$translations.es",
-                        "fr": "$translations.fr",
-                        "it": "$translations.it"
+                        "fr": "$translations.fr"
                     }
                 }
             }
@@ -102,8 +101,7 @@ class PublicManagerV2(BaseV2PublicApi):
                     "translations": {
                         "en": "$translations.en",
                         "es": "$translations.es",
-                        "fr": "$translations.fr",
-                        "it": "$translations.it"
+                        "fr": "$translations.fr"
                     }
                 }
             },
@@ -160,8 +158,7 @@ class PublicManagerV2(BaseV2PublicApi):
                     "translations": {
                         "en": "$translations.en",
                         "es": "$translations.es",
-                        "fr": "$translations.fr",
-                        "it": "$translations.it"
+                        "fr": "$translations.fr"
                     }
                 }
             }
