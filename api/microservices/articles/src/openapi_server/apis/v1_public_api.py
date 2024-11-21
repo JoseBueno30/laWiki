@@ -4,6 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson import ObjectId
 from bson.errors import InvalidId
 from websockets import InvalidParameterValue
 
@@ -110,9 +111,11 @@ async def get_article_by_name_v1(
     """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    
-    #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
+
     try:
+        if ObjectId.is_valid(name) or not ObjectId.is_valid(wiki):
+            raise InvalidParameterValue
+
         return await BaseV1PublicApi.subclasses[0]().get_article_by_name_v1(name, wiki)
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
