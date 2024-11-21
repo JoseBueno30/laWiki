@@ -1,6 +1,7 @@
 from xml.dom import NotFoundErr
 
 from bson import ObjectId
+from typing import List
 
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
 from openapi_server.impl.v1_apis_impl.v1_internal_article_api import mongodb
@@ -37,7 +38,7 @@ class InternalArticleAPIV2(BaseV2InternalApi):
     async def unassign_article_tags_v2(
         self,
         id: str,
-        ids: list[str],
+        ids: List[str],
     ) -> None:
 
         tag_ids = [ObjectId(tag_id) for tag_id in ids or []]

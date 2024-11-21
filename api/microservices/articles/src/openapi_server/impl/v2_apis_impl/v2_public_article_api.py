@@ -1,5 +1,6 @@
 from bson import ObjectId
 import mwparserfromhell, pypandoc
+from typing import List
 
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
 from openapi_server.impl.utils.api_calls import translate_body_to_lan
@@ -192,7 +193,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         comment_list = await get_user_comments(id)
 
         article_ids_list = []
-        for comment in comment_list["comments"]:
+        for comment in comment_List["comments"]:
             article_ids_list.append(ObjectId(comment["article_id"]))
 
         total_articles = await get_total_number_of_documents(mongodb["article"],
@@ -204,16 +205,16 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         article_list = await mongodb["article"].aggregate(pipeline).to_list(length=None)
 
-        if not article_list[0]:
+        if not article_List[0]:
             raise Exception
 
-        return article_list[0]
+        return article_List[0]
 
     async def search_articles_v2(
         self,
         wiki_id: str,
         name: str,
-        tags: list[str],
+        tags: List[str],
         offset: int,
         limit: int,
         order: str,
