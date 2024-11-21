@@ -3,7 +3,7 @@ import { Avatar, Flex, Typography } from 'antd';
 
 const { Text } = Typography;
 
-const AuthorAvatar = ({ image, username, role }) => {
+const RoleAvatar = ({ image, username, role }) => {
   return (
     <Flex gap='small' align='center'>
       <Avatar
@@ -21,4 +21,4 @@ const AuthorAvatar = ({ image, username, role }) => {
 };
 
 
-export default AuthorAvatar;
+export default RoleAvatar;
