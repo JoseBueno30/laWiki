@@ -4,7 +4,8 @@ from datetime import datetime
 from bson import ObjectId
 
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
-from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings
+from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
+    check_if_tag_exists
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2
@@ -58,6 +59,13 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         new_article_json = new_article_v2.to_dict()
         new_article_version_json = new_article_v2.to_dict()
 
+        # Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
+        # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
+        #     raise Exception("Wiki does not exist")
+        # for tag in new_article_json["tags"]:
+        #     if not check_if_tag_exists(tag["id"]):
+        #         raise Exception("Tag does not exist")
+
         if new_article_json["translate_title"]:
             title = new_article_json.pop("title")
             new_article_json["title"]={
@@ -70,10 +78,6 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
 
         #   Deletes the body key from the article json
         new_article_json.pop("body", None)
-
-        # Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
-        # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
-        #     raise Exception("Wiki does not exist")
 
         #   Changes the id type and inserts other attributes
         new_article_json["wiki_id"] = ObjectId(new_article_json["wiki_id"])

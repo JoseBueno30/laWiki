@@ -33,6 +33,11 @@ async def check_if_wiki_exists(wiki_id : str):
         wiki_response = await client.head(f"http://{WIKI_URL}:{WIKI_PORT}/wikis/{wiki_id}")
         return wiki_response.status_code == 200
 
+async def check_if_tag_exists(tag_id : str):
+    async with httpx.AsyncClient() as client:
+        #   It's not implemented in tags api
+        return True
+
 async def delete_article_comments(article_id : str):
     async with httpx.AsyncClient() as client:
         delete_response = await client.delete(f"http://{COMMENTS_URL}:{COMMENTS_PORT}/comments/articles/{article_id}")
