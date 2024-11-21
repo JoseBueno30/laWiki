@@ -14,10 +14,7 @@ function App() {
 
         <Layout.Content className="app-content">
           <h1>Contenido</h1>
-          <UserAvatar
-            image="https://yt3.googleusercontent.com/qk8AlThEihBfAmEgkgJRnKG1sQbsuSDfG4ejMS8o_dxDBkVM_1sKIB4fsHoVDvj_w9gjoxO_jQ=s900-c-k-c0x00ffffff-no-rj"
-            username="TheGrefg"
-          />
+          <UserAvatar/>
           <AuthorAvatar
             image="https://yt3.googleusercontent.com/qk8AlThEihBfAmEgkgJRnKG1sQbsuSDfG4ejMS8o_dxDBkVM_1sKIB4fsHoVDvj_w9gjoxO_jQ=s900-c-k-c0x00ffffff-no-rj"
             username="TheGrefg"
