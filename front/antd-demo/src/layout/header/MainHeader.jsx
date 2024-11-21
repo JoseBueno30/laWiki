@@ -8,7 +8,6 @@ import {
 import PropTypes from "prop-types";
 import "./PageHeader.css";
 import Title from "antd/es/typography/Title";
-import React from "react";
 
 const FilterIcon = () => {
   return (
