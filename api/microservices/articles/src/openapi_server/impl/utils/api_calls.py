@@ -7,6 +7,9 @@ COMMENTS_URL = "comments_api"
 WIKI_PORT = 8084
 WIKI_URL = "wikis_api"
 
+RATINGS_PORT = 8081
+RATINGS_URL = "ratings_api"
+
 async def get_user_comments(usr_id : str, order : str=None, limit : int=None, offset : int=None):
     async with httpx.AsyncClient() as client:
         query_params = {}
@@ -33,6 +36,11 @@ async def check_if_wiki_exists(wiki_id : str):
 async def delete_article_comments(article_id : str):
     async with httpx.AsyncClient() as client:
         delete_response = await client.delete(f"http://{COMMENTS_URL}:{COMMENTS_PORT}/comments/articles/{article_id}")
+        return delete_response.status_code == 204
+
+async def delete_article_ratings(article_id : str):
+    async with httpx.AsyncClient() as client:
+        delete_response = await client.delete(f"http://{RATINGS_URL}:{RATINGS_PORT}/ratings/articles/{article_id}")
         return delete_response.status_code == 204
 
 async def translate_body_to_lan(body, lan):

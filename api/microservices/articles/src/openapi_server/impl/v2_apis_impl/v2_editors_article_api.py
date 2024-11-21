@@ -4,7 +4,7 @@ from datetime import datetime
 from bson import ObjectId
 
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
-from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan
+from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2
@@ -71,7 +71,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         #   Deletes the body key from the article json
         new_article_json.pop("body", None)
 
-        # TODO  Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
+        # Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
         # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
         #     raise Exception("Wiki does not exist")
 
@@ -201,7 +201,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
 
         #   Commented until it's launched
         # await delete_article_comments(id)
-        #   TODO await delete_article_ratings()
+        # await delete_article_ratings(id)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 

@@ -34,7 +34,7 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
 
         parse_title_to_title_dict(new_article_json)
 
-        # TODO  Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
+        # Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
         # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
         #     raise Exception("Wiki does not exist")
 
@@ -159,7 +159,7 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
 
         #   Commented until it's launched
         # await delete_article_comments(id)
-        #   TODO await delete_article_ratings()
+        # await delete_article_ratings(id)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 

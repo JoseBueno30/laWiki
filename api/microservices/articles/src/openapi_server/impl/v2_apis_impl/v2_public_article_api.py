@@ -42,8 +42,6 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         match_stage = {"wiki_id": ObjectId(wiki)}
 
-        #   TODO Cambar especificacion para que sea con ccualquier idioma si lan es none
-
         if not lan:
             match_stage["$or"] = [
                 {"title.en": name},
@@ -138,8 +136,6 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         if not article_version[0]:
             raise Exception
 
-        #TODO devolver body traducido a lan
-
         body_translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
         if body_translation:
             article_version[0]["body"] = body_translation["body"]
@@ -153,7 +149,6 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         limit: int,
         order: str,
     ) -> ArticleListV2:
-        # TODO Cambiar especificacion -> mal valor default del limite
         total_documents = await get_total_number_of_documents(mongodb["article"],
                                                               {"author._id": ObjectId(id)})
 
@@ -177,7 +172,6 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
 
-        # TODO añadir parsed a la llamada para que no quite el formato mediawiki
         body = article_version["body"]
         if lan is not article_version["lan"]:
             body = await translate_body_to_lan(body, lan)
