@@ -3,6 +3,9 @@
 from fastapi.testclient import TestClient
 
 
+from pydantic import Field, StrictBytes, StrictStr  # noqa: F401
+from typing import Any, List, Optional, Tuple, Union  # noqa: F401
+from typing_extensions import Annotated  # noqa: F401
 from openapi_server.models.article import Article  # noqa: F401
 from openapi_server.models.article_version import ArticleVersion  # noqa: F401
 from openapi_server.models.inline_response200 import InlineResponse200  # noqa: F401
@@ -37,7 +40,7 @@ def test_create_article(client: TestClient):
 
     Create Article
     """
-    new_article = {"trasnlate_title":1,"author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"lan":"lan","title":"title","body":"body","wiki_id":"wiki_id","tags":[{"translations":{"key":"translations"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","wiki_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","articles":[{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"}]},{"translations":{"key":"translations"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","wiki_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","articles":[{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"}]}]}
+    new_article = {"trasnlate_title":1,"author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"lan":"lan","title":"title","body":"body","wiki_id":"wiki_id","tags":[{"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":{"key":"tag"}},{"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":{"key":"tag"}}]}
 
     headers = {
     }
@@ -58,7 +61,7 @@ def test_create_article_version(client: TestClient):
 
     Create ArticleVersion for an Article
     """
-    new_article_version = {"author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"lan":"lan","translate_title":1,"title":"title","body":"body","tags":[{"translations":{"key":"translations"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","wiki_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","articles":[{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"}]},{"translations":{"key":"translations"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","wiki_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","articles":[{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},{"name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"}]}]}
+    new_article_version = {"author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"lan":"lan","translate_title":1,"title":"title","body":"body","tags":[{"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":{"key":"tag"}},{"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","tag":{"key":"tag"}}]}
 
     headers = {
     }

@@ -8,6 +8,48 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/.flake8" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/.flake8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/.openapi-generator-ignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/.openapi-generator-ignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/.openapi-generator/VERSION" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/.openapi-generator/VERSION" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/openapi.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/setup.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/setup.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_editors_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_version_body.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_version_body.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_version_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/article_version_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/author.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/author.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/average_rating.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/average_rating.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/comment.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/comment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/comment_list_response.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/comment_list_response.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/extra_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/extra_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/inline_response200.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/inline_response200.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_article.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_article.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_article_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_article_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_comment.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_comment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_rating.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_rating.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_tag.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_tag.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_wiki.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/rating.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/rating.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_article.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_article.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_article_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_article_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_tag.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_tag.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/simplified_wiki.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/tag.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/tag.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/tag_id_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/tag_id_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/tag_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/tag_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/wiki.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/wiki.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/wiki_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/wiki_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/security_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/security_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/tests/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_admins_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_admins_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_editors_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_public_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v1.0.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v1.0.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,18 +74,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;ArticleAPI&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/vparm/Documents/GitHub/laWiki/api/microservices/articles/src/openapi_server/impl/utils/functions.py&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/jabr3/Documents/GitHub/laWiki/api/api_gateway",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
 }</component>
   <component name="RecentsManager">
@@ -82,6 +123,8 @@
       <workItem from="1732038618126" duration="5777000" />
       <workItem from="1732094618867" duration="3695000" />
       <workItem from="1732132132336" duration="10540000" />
+      <workItem from="1731925028261" duration="4402000" />
+      <workItem from="1732178950561" duration="60000" />
     </task>
     <servers />
   </component>

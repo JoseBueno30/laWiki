@@ -3,6 +3,9 @@
 from fastapi.testclient import TestClient
 
 
+from pydantic import Field, StrictStr  # noqa: F401
+from typing import Any, Optional  # noqa: F401
+from typing_extensions import Annotated  # noqa: F401
 from openapi_server.models.new_tag import NewTag  # noqa: F401
 from openapi_server.models.new_wiki import NewWiki  # noqa: F401
 from openapi_server.models.tag import Tag  # noqa: F401

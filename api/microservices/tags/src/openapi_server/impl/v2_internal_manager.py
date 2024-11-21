@@ -2,7 +2,7 @@ from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
-from openapi_server.impl import api_calls
+from openapi_server.impl import api_calls_v2
 
 from openapi_server.apis.v1_public_api import get_wiki_tags_v1
 
@@ -21,7 +21,7 @@ class InternalManagerV2(BaseV2InternalApi):
         """Delete all tags from a wiki."""
         wiki_id = ObjectId(id)
 
-        if not await api_calls.check_wiki(id):
+        if not await api_calls_v2.check_wiki(id):
             raise KeyError
 
         tag_list_completed = await get_wiki_tags_v1(id, None, None)
@@ -30,7 +30,7 @@ class InternalManagerV2(BaseV2InternalApi):
         for tag in tags:
             articles = tag.articles
             for article in articles:
-                await api_calls.unassign_article_tags(article.id, [tag.id])
+                await api_calls_v2.unassign_article_tags(article.id, [tag.id])
 
             await mongodb["tag"].delete_one({"_id": tag.id})
 

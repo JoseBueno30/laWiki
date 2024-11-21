@@ -3,6 +3,10 @@
 from fastapi.testclient import TestClient
 
 
+from datetime import date  # noqa: F401
+from pydantic import Field, StrictBool, StrictInt, StrictStr  # noqa: F401
+from typing import Any, List, Optional  # noqa: F401
+from typing_extensions import Annotated  # noqa: F401
 from openapi_server.models.article import Article  # noqa: F401
 from openapi_server.models.article_list import ArticleList  # noqa: F401
 from openapi_server.models.article_version import ArticleVersion  # noqa: F401

@@ -31,6 +31,7 @@ from openapi_server.models.article_version_list import ArticleVersionList
 from openapi_server.models.average_rating import AverageRating
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
+from openapi_server.models.inline_response200 import InlineResponse200
 from openapi_server.models.new_comment import NewComment
 from openapi_server.models.new_rating import NewRating
 from openapi_server.models.rating import Rating
@@ -61,8 +62,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 )
 async def delete_comment(
     comment_id: str = Path(..., description="The unique ID of the article"),
-) -> Response:
-    #TODO: it should return None as generated, this is a test to se if the response of the microservice can be sent forward
+) -> InlineResponse200:
     """Deletes an article&#39;s comment"""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")

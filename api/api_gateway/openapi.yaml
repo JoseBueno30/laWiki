@@ -2176,26 +2176,12 @@ components:
           key: title
         wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         tags:
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
       properties:
         id:
           description: The ID of the article
@@ -2228,7 +2214,7 @@ components:
           description: Array of the tags of the article. The same as the array of
             tags of the most recent version.
           items:
-            $ref: '#/components/schemas/Tag'
+            $ref: '#/components/schemas/SimplifiedTag'
           title: tags
           type: array
         versions:
@@ -2313,26 +2299,12 @@ components:
           key: title
         body: body
         tags:
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
       properties:
         id:
           description: The ID of the version of the article.
@@ -2367,7 +2339,7 @@ components:
         tags:
           description: Array of the tags of the version of the article.
           items:
-            $ref: '#/components/schemas/Tag'
+            $ref: '#/components/schemas/SimplifiedTag'
           title: tags
           type: array
         lan:
@@ -2462,6 +2434,10 @@ components:
       x-examples: {}
     SimplifiedTag:
       description: Keywords for identifying articles
+      example:
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        tag:
+          key: tag
       properties:
         id:
           description: The name of the tag.
@@ -2529,26 +2505,12 @@ components:
             key: title
           wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           tags:
-          - translations:
-              key: translations
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            articles:
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - translations:
-              key: translations
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            articles:
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag:
+              key: tag
+          - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag:
+              key: tag
         - versions:
           - author:
               image: https://openapi-generator.tech
@@ -2580,26 +2542,12 @@ components:
             key: title
           wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           tags:
-          - translations:
-              key: translations
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            articles:
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - translations:
-              key: translations
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            articles:
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            - name: name
-              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag:
+              key: tag
+          - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            tag:
+              key: tag
       properties:
         articles:
           items:
@@ -2807,26 +2755,12 @@ components:
         title: title
         body: body
         tags:
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
       properties:
         title:
           description: The title of the version of the article.
@@ -2838,7 +2772,7 @@ components:
           $ref: '#/components/schemas/Author'
         tags:
           items:
-            $ref: '#/components/schemas/Tag'
+            $ref: '#/components/schemas/SimplifiedTag'
           title: tags
           type: array
           x-stoplight:
@@ -2901,26 +2835,12 @@ components:
         body: body
         wiki_id: wiki_id
         tags:
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        - translations:
-            key: translations
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          tag: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          wiki_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          articles:
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          - name: name
-            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
+        - id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          tag:
+            key: tag
       properties:
         title:
           description: The title of the version of the article.
@@ -2932,7 +2852,7 @@ components:
           $ref: '#/components/schemas/Author'
         tags:
           items:
-            $ref: '#/components/schemas/Tag'
+            $ref: '#/components/schemas/SimplifiedTag'
           title: tags
           type: array
           x-stoplight:

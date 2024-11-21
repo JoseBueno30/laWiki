@@ -4,6 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
 import openapi_server.impl
 
@@ -19,7 +20,7 @@ from fastapi import (  # noqa: F401
     Query,
     Response,
     Security,
-    status,
+    status, File, UploadFile
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
@@ -196,10 +197,10 @@ async def unassign_tags(
     },
     tags=["v1/editors"],
     summary="Upload Image",
-    response_model_by_alias=True,
+    response_model_by_alias=True
 )
 async def upload_image(
-    file: str = Form(None, description=""),
+    file: UploadFile = File(..., description="Image to upload")
 ) -> InlineResponse200:
     """Uploads an image file and returns the URL."""
     if not BaseV1EditorsApi.subclasses:
