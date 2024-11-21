@@ -127,6 +127,10 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version_v2.to_dict()
 
+        # for tag in new_article_version_json["tags"]:
+        #     if not check_if_tag_exists(tag["id"]):
+        #         raise Exception("Tag does not exist")
+
         if new_article_version_json["translate_title"]:
             title = new_article_version_json.pop("title")
             new_article_version_json["title"] = {
