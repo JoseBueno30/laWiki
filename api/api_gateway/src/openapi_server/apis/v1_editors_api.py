@@ -197,12 +197,11 @@ async def unassign_tags(
     },
     tags=["v1/editors"],
     summary="Upload Image",
-    response_model_by_alias=True,
-    response_model=None
+    response_model_by_alias=True
 )
 async def upload_image(
     file: UploadFile = File(..., description="Image to upload")
-) -> None:
+) -> InlineResponse200:
     """Uploads an image file and returns the URL."""
     if not BaseV1EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")

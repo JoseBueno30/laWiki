@@ -23,7 +23,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from openapi_server.models.author import Author
-from openapi_server.models.tag import Tag
+from openapi_server.models.simplified_tag import SimplifiedTag
 try:
     from typing import Self
 except ImportError:
@@ -35,7 +35,7 @@ class NewArticle(BaseModel):
     """ # noqa: E501
     title: StrictStr = Field(description="The title of the version of the article.")
     author: Author
-    tags: List[Tag]
+    tags: List[SimplifiedTag]
     body: Optional[StrictStr] = Field(default=None, description="The body of the version.")
     wiki_id: StrictStr = Field(description="The ID of the Wiki where the Article is created.")
     lan: StrictStr = Field(description="Original language of the first ArticleVersion of the Article")
@@ -103,7 +103,7 @@ class NewArticle(BaseModel):
         _obj = cls.model_validate({
             "title": obj.get("title"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "tags": [SimplifiedTag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
             "body": obj.get("body"),
             "wiki_id": obj.get("wiki_id"),
             "lan": obj.get("lan"),

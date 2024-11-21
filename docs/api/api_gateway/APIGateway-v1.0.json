@@ -3133,7 +3133,7 @@
             "type": "array",
             "description": "Array of the tags of the article. The same as the array of tags of the most recent version.",
             "items": {
-              "$ref": "#/components/schemas/Tag"
+              "$ref": "#/components/schemas/SimplifiedTag"
             }
           },
           "versions": {
@@ -3262,7 +3262,7 @@
             "type": "array",
             "description": "Array of the tags of the version of the article.",
             "items": {
-              "$ref": "#/components/schemas/Tag"
+              "$ref": "#/components/schemas/SimplifiedTag"
             }
           },
           "lan": {
@@ -3628,7 +3628,7 @@
           "tags": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Tag"
+              "$ref": "#/components/schemas/SimplifiedTag"
             },
             "x-stoplight": {
               "id": "gn4btncpluv0e"
@@ -3706,7 +3706,7 @@
           "tags": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Tag"
+              "$ref": "#/components/schemas/SimplifiedTag"
             },
             "x-stoplight": {
               "id": "gn4btncpluv0e"

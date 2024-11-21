@@ -24,7 +24,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from openapi_server.models.author import Author
-from openapi_server.models.tag import Tag
+from openapi_server.models.simplified_tag import SimplifiedTag
 try:
     from typing import Self
 except ImportError:
@@ -40,7 +40,7 @@ class ArticleVersion(BaseModel):
     title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages.")
     modification_date: datetime = Field(description="The date of modification the article that created the version.")
     body: StrictStr = Field(description="The body of the version.")
-    tags: List[Tag] = Field(description="Array of the tags of the version of the article.")
+    tags: List[SimplifiedTag] = Field(description="Array of the tags of the version of the article.")
     lan: StrictStr = Field(description="Original language of the ArticleVersion")
     __properties: ClassVar[List[str]] = ["id", "article_id", "author", "title", "modification_date", "body", "tags", "lan"]
 
@@ -109,7 +109,7 @@ class ArticleVersion(BaseModel):
             "title": obj.get("title"),
             "modification_date": obj.get("modification_date"),
             "body": obj.get("body"),
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "tags": [SimplifiedTag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
             "lan": obj.get("lan")
         })
         return _obj

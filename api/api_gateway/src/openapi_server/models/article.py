@@ -26,7 +26,7 @@ from typing import Any, ClassVar, Dict, List, Union
 from typing_extensions import Annotated
 from openapi_server.models.author import Author
 from openapi_server.models.simplified_article_version import SimplifiedArticleVersion
-from openapi_server.models.tag import Tag
+from openapi_server.models.simplified_tag import SimplifiedTag
 try:
     from typing import Self
 except ImportError:
@@ -41,7 +41,7 @@ class Article(BaseModel):
     title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages. The same as the title of the most recent version.")
     creation_date: datetime = Field(description="The date of creation of the article.")
     author: Author
-    tags: List[Tag] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
+    tags: List[SimplifiedTag] = Field(description="Array of the tags of the article. The same as the array of tags of the most recent version.")
     versions: List[SimplifiedArticleVersion] = Field(description="Array of simplified articleversions")
     rating: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]] = Field(description="Average rating of the Article")
     lan: StrictStr = Field(description="Original language of the Article")
@@ -118,7 +118,7 @@ class Article(BaseModel):
             "title": obj.get("title"),
             "creation_date": obj.get("creation_date"),
             "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
+            "tags": [SimplifiedTag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
             "versions": [SimplifiedArticleVersion.from_dict(_item) for _item in obj.get("versions")] if obj.get("versions") is not None else None,
             "rating": obj.get("rating"),
             "lan": obj.get("lan")

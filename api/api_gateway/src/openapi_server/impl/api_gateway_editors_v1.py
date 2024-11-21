@@ -24,6 +24,7 @@ dotenv_path = os.path.abspath(os.path.join(__file__, "../../../../config.env"))
 load_dotenv(dotenv_path=dotenv_path)
 DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 
+
 class APIGatewayEditorsV1(BaseV1EditorsApi):
 
     async def assign_tags(
@@ -91,6 +92,11 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
         file: UploadFile,
     ) -> InlineResponse200:
         """Uploads an image file and returns the URL."""
+        print("---------------")
+        print(DROPBOX_ACCESS_TOKEN)
+        print("---------------")
+        print(file.filename)
+
         file_name = file.filename
         content_type = file.content_type
 
