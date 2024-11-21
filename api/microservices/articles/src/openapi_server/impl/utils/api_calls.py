@@ -39,11 +39,23 @@ async def translate_body_to_lan(body, lan):
     async with httpx.AsyncClient() as client:
         body_params = {
             "q": body,
-            "source": "es",
+            "source": "auto",
             "target": lan,
             "format": "html"
         }
-        translation = await client.post("http://localhost:5000/translate", params=body_params)
-        print(translation.content.decode())
+        translation = await client.post("http://localhost:5000/translate", params=body_params, timeout=httpx.Timeout(180))
+        # print(translation.content.decode())
+        translated_text = json.loads(translation.content.decode())
+        return translated_text["translatedText"]
+
+async def translate_text_to_lan(text, lan):
+    async with httpx.AsyncClient() as client:
+        text_params = {
+            "q": text,
+            "source": "auto",
+            "target": lan,
+            "format": "text"
+        }
+        translation = await client.post("http://localhost:5000/translate", params=text_params)
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]

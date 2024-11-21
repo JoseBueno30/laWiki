@@ -11,8 +11,6 @@ from openapi_server.models.models_v2.article_version_list_v2 import ArticleVersi
 from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
 from openapi_server.models.models_v2.inline_response200_v2 import InlineResponse200V2
 
-
-
 class PublicArticleAPIV2(BaseV2PublicApi):
 
     def __init__(self):
@@ -45,6 +43,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         match_stage = {"wiki_id": ObjectId(wiki)}
 
         #   TODO Cambar especificacion para que sea con ccualquier idioma si lan es none
+
         if not lan:
             match_stage["$or"] = [
                 {"title.en": name},
@@ -178,13 +177,14 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
 
-        response = mwparserfromhell.parse(article_version["body"])
+        # TODO añadir parsed a la llamada para que no quite el formato mediawiki
+        body = article_version["body"]
+        if lan is not article_version["lan"]:
+            body = await translate_body_to_lan(body, lan)
+
+        response = mwparserfromhell.parse(body)
         if parsed:
             response = pypandoc.convert_text(response, 'html', format='mediawiki')
-
-        #TODO añadir parsed a la llamada para que no quite el formato mediawiki
-        if lan is not article_version["lan"]:
-            response = await translate_body_to_lan(response, lan)
 
         return InlineResponse200V2.from_dict({"body": response})
 

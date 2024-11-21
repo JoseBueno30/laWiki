@@ -1,15 +1,47 @@
-import copy
+import copy, mwparserfromhell, pypandoc
 from datetime import datetime
 
 from bson import ObjectId
 
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
+from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
-    parse_title_to_title_dict
+    parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2
 from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
 from openapi_server.models.models_v2.new_article_v2 import NewArticleV2
 from openapi_server.models.models_v2.new_article_version_v2 import NewArticleVersionV2
+
+
+async def _create_article_tranlation(
+        new_lan: str,
+        title: str,
+        og_body: str,
+        article_version_id: str,
+        translate: bool
+) -> None:
+    body_translated = copy.deepcopy(og_body)
+
+    body_translated = mwparserfromhell.parse(body_translated)
+    body_translated = pypandoc.convert_text(body_translated, to='html', format='mediawiki')
+
+    if translate:
+        body_translated = await translate_body_to_lan(body_translated, new_lan)
+
+    article_translation = {
+        "lan": new_lan,
+        "title": title,
+        "body": body_translated,
+        "article_version_id": ObjectId(article_version_id),
+    }
+
+    await mongodb["article_translation"].insert_one(article_translation)
+
+
+async def _delete_article_translation(
+        article_version_id: str
+) -> None:
+    await mongodb["article_translation"].delete_many({"article_version_id": ObjectId(article_version_id)})
 
 
 class EditorsArticleAPIV2(BaseV2EditorsApi):
@@ -27,8 +59,12 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         new_article_version_json = new_article_v2.to_dict()
 
         if new_article_json["translate_title"]:
-            #TODO llamar a api de traduccion
-            parse_title_to_title_dict(new_article_json) # Mientras no este la api de traduccion
+            title = new_article_json.pop("title")
+            new_article_json["title"]={
+                "en": await translate_text_to_lan(title, "en"),
+                "es" : await translate_text_to_lan(title, "es"),
+                "fr" : await translate_text_to_lan(title, "fr")
+            }
         else:
             parse_title_to_title_dict(new_article_json)
 
@@ -52,6 +88,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
 
         #   MongoDB query
         article_result = await mongodb["article"].insert_one(new_article_json)
+        print(article_result)
 
         #   Deletes the wiki_id from the articleVersion json
         new_article_version_json.pop("wiki_id", None)
@@ -85,7 +122,16 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
     ) -> ArticleVersionV2:
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version_v2.to_dict()
-        parse_title_to_title_dict(new_article_version_json)
+
+        if new_article_version_json["translate_title"]:
+            title = new_article_version_json.pop("title")
+            new_article_version_json["title"] = {
+                "en": await translate_text_to_lan(title, "en"),
+                "es": await translate_text_to_lan(title, "es"),
+                "fr": await translate_text_to_lan(title, "fr")
+            }
+        else:
+            parse_title_to_title_dict(new_article_version_json)
 
         #   Changes the id types in order to insert the document
         new_article_version_json["article_id"] = ObjectId(id)
@@ -98,6 +144,20 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
 
         #   MongoDB query
         article_version_result = await mongodb["article_version"].insert_one(new_article_version_json)
+
+        #   Generate translations
+        await _create_article_tranlation(new_article_version_json["lan"],new_article_version_json["title"],
+                                         new_article_version_json["body"], article_version_result.inserted_id, False)
+
+        if new_article_version_json["lan"] != "es":
+            await _create_article_tranlation("es", new_article_version_json["title"],
+                                             new_article_version_json["body"], article_version_result.inserted_id, True)
+        if new_article_version_json["lan"] != "en":
+            await _create_article_tranlation("en", new_article_version_json["title"],
+                                             new_article_version_json["body"], article_version_result.inserted_id, True)
+        if new_article_version_json["lan"] != "fr":
+            await _create_article_tranlation("fr", new_article_version_json["title"],
+                                             new_article_version_json["body"], article_version_result.inserted_id, True)
 
         #   Undo the changes to id in order to return the ArticleVersion object
         new_article_version_json["id"] = str(article_version_result.inserted_id)
@@ -152,6 +212,8 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         result = await mongodb["article_version"].delete_one({"_id": ObjectId(id)})
         if result.deleted_count == 0:
             raise Exception("Article Not Found")
+
+        await _delete_article_translation(id)
 
     async def restore_article_version_v2(
         self,
