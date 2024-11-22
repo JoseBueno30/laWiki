@@ -1,10 +1,18 @@
-import React from 'react';
-import { HomeOutlined, UserOutlined, SettingOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import React from "react";
+import {
+  HomeOutlined,
+  UserOutlined,
+  SettingOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  ControlOutlined,
+} from "@ant-design/icons";
 
-const iconStyle = { color: 'var(--ant-primary-color)' };
-
-export const HomeIcon = () => <HomeOutlined style={iconStyle} />;
-export const UserIcon = () => <UserOutlined style={iconStyle} />;
-export const SettingIcon = () => <SettingOutlined style={iconStyle} />;
-export const AddIcon = () => <PlusOutlined style={iconStyle}/>;
-export const SearchIcon = () => <SearchOutlined style={iconStyle}/>;
+export const HomeIcon = () => <HomeOutlined />;
+export const UserIcon = () => <UserOutlined />;
+export const SettingIcon = () => <SettingOutlined />;
+export const AddIcon = () => <PlusOutlined />;
+export const SearchIcon = () => <SearchOutlined />;
+export const FilterIcon = () => (
+  <ControlOutlined style={{ fontSize: "24px" }} />
+);

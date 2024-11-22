@@ -36,7 +36,13 @@
   overflow: hidden;
 }
 
+.header-title{
+  margin-top: 0.5em !important;
+  cursor: pointer;
+}
+
 .wiki-title {
+  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
