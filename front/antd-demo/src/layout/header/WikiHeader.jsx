@@ -8,7 +8,7 @@ import {
 import PropTypes from "prop-types";
 import "./PageHeader.css";
 import Title from "antd/es/typography/Title";
-
+import { Link } from "react-router-dom";
 const FilterIcon = () => {
   return (
     <div className="icon-container" onClick={FilterClickHandler}>
@@ -42,7 +42,9 @@ const WikiHeader = () => {
   return (
     <>
       <Flex gap='large'>
-        <Title style={{ marginTop: "0.5em" }} onClick={LaWikiClickHandler} className="header-title">LaWiki</Title>
+        <Link to="/">
+          <Title style={{ marginTop: "0.5em" }} onClick={LaWikiClickHandler} className="header-title">LaWiki</Title>
+        </Link>
         {/* Depende de la información que le venga de la ruta */}
         <Title style={{ marginTop: "0.5em" }}>/</Title>
         <Title style={{ marginTop: "0.5em" }} onClick={WikiClickHandler} className="header-title">JoJoWiki</Title>

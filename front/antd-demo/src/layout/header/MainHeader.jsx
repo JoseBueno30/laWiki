@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import "./PageHeader.css";
 import Title from "antd/es/typography/Title";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const FilterIcon = () => {
   return (
@@ -40,7 +41,9 @@ const MainHeader = () => {
   return (
       <>
         <Flex gap='large'>
-          <Title style={{ marginTop: "0.5em" }} onClick={LaWikiClickHandler} className="header-title">LaWiki</Title>
+          <Link to='/home'>
+            <Title style={{ marginTop: "0.5em" }} onClick={LaWikiClickHandler} className="header-title">LaWiki</Title>
+          </Link>
         </Flex>
         <Flex gap={50}>
           <Input.Search
