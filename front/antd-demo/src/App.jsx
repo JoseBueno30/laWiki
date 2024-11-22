@@ -3,10 +3,23 @@ import { Layout } from "antd";
 import PageHeader from "./layout/header/PageHeader";
 import UserAvatar from "./modules/wiki/avatar/user-avatar";
 import RoleAvatar from "./modules/wiki/avatar/role-avatar";
+import Comment from "./modules/article/components/comment/comment";
 
 function App() {
   // Sólo muestra el header con un contenido random
   // Todo el contenido debe ser children del header
+  const comment = {
+    id: "673101ecdfbf37502ca360e5",
+    article_id: "672f950ef345b60e372e34d8",
+    author: {
+      id: "672272c65150a9cd3f46599e",
+      name: "author_name",
+      image: "author_image"
+    },
+    body: "COMENTARIO PRUEBA ART2 1",
+    creation_date: "2024-11-08"
+  }
+
   return (
     <>
       <Layout className="app-layout">
@@ -20,6 +33,7 @@ function App() {
             username="TheGrefg"
             role="Author"
           />
+          <Comment comment={comment}/>
         </Layout.Content>
       </Layout>
     </>
