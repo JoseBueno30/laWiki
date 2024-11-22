@@ -1,0 +1,32 @@
+.article {
+    width: 80%;
+    border-radius: 6px;
+    border: 1px solid #c7c7c7;
+    height: auto;
+    padding: 10px;
+    background-color: #ededed;
+    min-width: 300px;
+}
+
+.article-title{
+    padding: 5px;
+    font-size: 1.3em;
+    font-weight: bold;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+
+.article-author{
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+
+.article-date{
+    padding: 5px;
+}
+
+.article-rating{
+    padding: 5;
+}
