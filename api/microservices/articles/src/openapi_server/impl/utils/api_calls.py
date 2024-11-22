@@ -10,6 +10,9 @@ WIKI_URL = "wikis_api"
 RATINGS_PORT = 8081
 RATINGS_URL = "ratings_api"
 
+LIBRETRANSLATE_URL = "host.docker.internal"
+LIBRETRANSLATE_PORT = 5000
+
 async def get_user_comments(usr_id : str, order : str=None, limit : int=None, offset : int=None):
     async with httpx.AsyncClient() as client:
         query_params = {}
@@ -56,8 +59,7 @@ async def translate_body_to_lan(body, lan):
             "target": lan,
             "format": "html"
         }
-        translation = await client.post("http://localhost:5000/translate", params=body_params, timeout=httpx.Timeout(180))
-        # print(translation.content.decode())
+        translation = await client.post(f"http://{LIBRETRANSLATE_URL}:{LIBRETRANSLATE_PORT}/translate", params=body_params, timeout=httpx.Timeout(180))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
@@ -69,6 +71,6 @@ async def translate_text_to_lan(text, lan):
             "target": lan,
             "format": "text"
         }
-        translation = await client.post("http://localhost:5000/translate", params=text_params)
+        translation = await client.post(f"http://{LIBRETRANSLATE_URL}:{LIBRETRANSLATE_PORT}/translate", params=text_params)
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]

@@ -170,17 +170,18 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         parsed: bool,
         lan: str,
     ) -> InlineResponse200V2:
-
-        article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
-
-        body = article_version["body"]
-        if lan is not article_version["lan"]:
-            body = await translate_body_to_lan(body, lan)
-
-        response = mwparserfromhell.parse(body)
         if parsed:
-            response = pypandoc.convert_text(response, 'html', format='mediawiki')
+            translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
+            response = translation["body"]
+        else:
+            article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
 
+            body = article_version["body"]
+            if lan is not article_version["lan"]:
+                body = await translate_body_to_lan(body, lan)
+
+            response = mwparserfromhell.parse(body)
+            response = str(response)
         return InlineResponse200V2.from_dict({"body": response})
 
     async def get_articles_commented_by_user_v2(
@@ -193,7 +194,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         comment_list = await get_user_comments(id)
 
         article_ids_list = []
-        for comment in comment_List["comments"]:
+        for comment in comment_list["comments"]:
             article_ids_list.append(ObjectId(comment["article_id"]))
 
         total_articles = await get_total_number_of_documents(mongodb["article"],
@@ -205,10 +206,10 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         article_list = await mongodb["article"].aggregate(pipeline).to_list(length=None)
 
-        if not article_List[0]:
+        if not article_list[0]:
             raise Exception
 
-        return article_List[0]
+        return article_list[0]
 
     async def search_articles_v2(
         self,
