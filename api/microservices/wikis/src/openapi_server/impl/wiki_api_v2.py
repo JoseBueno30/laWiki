@@ -11,8 +11,9 @@ from openapi_server.models.new_wiki_v2 import NewWikiV2
 from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import HTTPException
-from openapi_server.impl.misc import MESSAGE_NOT_FOUND, MESSAGE_UNEXPECTED, MESSAGE_NOT_FOUND_NESTED, ARTICLES_PORT, ARTICLES_ROUTE, HTTP_REQUEST_FORMAT,REMOVE_ALL_ARTICLES
+from openapi_server.impl.misc import *
 import httpx
+from pymongo.errors import InvalidOperation
 
 from datetime import datetime
 
@@ -65,12 +66,13 @@ class WikiApi(BaseDefaultV2Api):
         result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(id_wiki=id)).to_list(length=1)
         
         if result.__len__() != 1:
-            raise LookupError()
+            raise LookupError("Error finding by ID")
 
-        return result[0]
+        return result
 
     async def get_wiki_v2(self, id_name: str, lang: str) -> WikiV2:
         print(id_name)
+        print(lang)
         if ObjectId.is_valid(id_name):
             result = await self.get_wiki(id_name)
         else:
@@ -80,18 +82,18 @@ class WikiApi(BaseDefaultV2Api):
         print(result)
         
         if result.__len__() != 1:
-            raise LookupError()
+            raise LookupError("Error finding")
 
         result: WikiV2 = result[0] 
 
-        if lang != result.lang:
-            translation = await mongodb["wiki_translation"].find_one({"wiki_id" : ObjectId(result.id), "lang" : "en"})
+        if lang != result["lang"] and lang is not None:
+            translation = await mongodb["wiki_translation"].find_one({"wiki_id" : ObjectId(result["id"]), "lang" : "en"})
 
             if translation is not None:
-                result.description = translation.description
+                result["description"] = translation["description"]
 
 
-        return result[0]
+        return result
     
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
         final_wiki = WikiV2(id='0'
@@ -100,7 +102,9 @@ class WikiApi(BaseDefaultV2Api):
                          , rating=0
                          , author=AuthorV2(id='0',name=new_wiki_v2.author, image="")
                          , tags=[]
-                         , creation_date=str(datetime.now()))
+                         , creation_date=str(datetime.now())
+                         , lang=new_wiki_v2.lang
+                         , image=new_wiki_v2.image)
         idless = final_wiki
         del idless.id
         del idless.author.id
@@ -120,12 +124,13 @@ class WikiApiAdmins(BaseAdminsV2Api):
         delete_articles_response = httpx.delete(HTTP_REQUEST_FORMAT.format(host=ARTICLES_ROUTE,port=ARTICLES_PORT,method=REMOVE_ALL_ARTICLES.format(id=id_name)))
         if delete_articles_response.status_code in range(400,500):
             raise LookupError()
-        elif delete_articles_response not in range(200,300):
+        elif delete_articles_response.status_code not in range(200,300):
             raise Exception()
 
-        result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id)})
+        result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id_name)})
 
-        result._raise_if_unacknowledged()
+        if not result.acknowledged:
+            raise InvalidOperation()
 
     async def update_wiki(self, id: str, new_wiki: NewWikiV2) -> WikiV2:
         result = await mongodb["wiki"].update_one({"_id" : ObjectId(id)}
@@ -166,7 +171,7 @@ class WikiApiInternal(BaseInternalV2Api):
         for obj in id_tags_body_v2.tag_ids:
             uploaded_obj.append({
             "_id" : ObjectId(obj.id),
-            "name" : obj.name
+            "name" : obj.tag
         })
         add_tags_object = [
             { "_id" : ObjectId(id) }

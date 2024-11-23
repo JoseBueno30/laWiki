@@ -10,7 +10,7 @@ MESSAGE_UNAKCNOWLEDGED = "Request for operation was unacknowledged"
 ARTICLES_PORT = 8081
 ARTICLES_ROUTE = "127.0.0.1"
 HTTP_REQUEST_FORMAT = "http://{host}:{port}/{method}"
-REMOVE_ALL_ARTICLES = "articles/wiki/{id}"
+REMOVE_ALL_ARTICLES = "v2/articles/wiki/{id}"
 
 def raise_http_exception(code : int, message : str, e: Exception):
     print(e)

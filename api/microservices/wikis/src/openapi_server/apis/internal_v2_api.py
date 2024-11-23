@@ -116,7 +116,7 @@ async def unassign_wiki_tags_v2(
     if not BaseInternalV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseInternalV2Api.subclasses[0]().unassign_article_tags_v2(id, ids)
+        await BaseInternalV2Api.subclasses[0]().unassign_wiki_tags_v2(id, ids)
         response.status_code = 204
     except LookupError:
         response.status_code = 404
