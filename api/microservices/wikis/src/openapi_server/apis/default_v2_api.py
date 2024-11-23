@@ -6,6 +6,9 @@ import pkgutil
 
 from openapi_server.apis.default_v2_api_base import BaseDefaultV2Api
 import openapi_server.impl
+from openapi_server.impl.misc import *
+
+from pymongo.errors import DuplicateKeyError
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -47,12 +50,22 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def create_wiki_v2(
+    response: Response,
     new_wiki_v2: NewWikiV2 = Body(None, description=""),
 ) -> WikiV2:
     """Create a new Wiki"""
     if not BaseDefaultV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultV2Api.subclasses[0]().create_wiki_v2(new_wiki_v2)
+    try:
+        result = await BaseDefaultV2Api.subclasses[0]().create_wiki_v2(new_wiki_v2)
+        response.status_code = 201
+    except DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Wiki name unavailable")
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+
+    return result
 
 
 @router.get(
@@ -73,7 +86,14 @@ async def get_wiki_v2(
     """Get Wiki with the matching ID."""
     if not BaseDefaultV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultV2Api.subclasses[0]().get_wiki_v2(id_name, lang)
+    try:
+        result = await BaseDefaultV2Api.subclasses[0]().get_wiki_v2(id_name,lang)
+    except LookupError as e:
+        raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"),e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED,e)
+
+    return result
 
 
 @router.get(
