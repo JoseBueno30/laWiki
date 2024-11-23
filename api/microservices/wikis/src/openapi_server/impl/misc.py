@@ -6,6 +6,8 @@ MESSAGE_BAD_FORMAT = "Malformed request, check ID formatting or other fields"
 MESSAGE_NOT_FOUND = "{resource} not found"
 MESSAGE_NOT_FOUND_NESTED = "Server error, may be caused by invalid properties such as invalid ID"
 MESSAGE_UNAKCNOWLEDGED = "Request for operation was unacknowledged"
+MESSAGE_NAME_WHEN_ID = "Argument must be a valid ID, cannot be name"
+MESSAGE_CANT_RETURN = "Cannot return content currently, operation processed"
 
 ARTICLES_PORT = 8081
 ARTICLES_ROUTE = "127.0.0.1"

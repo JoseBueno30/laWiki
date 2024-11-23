@@ -2,17 +2,19 @@
 from typing import Any, Coroutine, List
 
 from bson import ObjectId
+from pymongo import ReturnDocument
 from openapi_server.apis.default_v2_api_base import BaseDefaultV2Api
 from openapi_server.apis.admins_v2_api_base import BaseAdminsV2Api
 from openapi_server.apis.internal_v2_api_base import BaseInternalV2Api
 from openapi_server.models.id_ratings_body import IdRatingsBody
 from openapi_server.models.id_tags_body_v2 import IdTagsBodyV2
 from openapi_server.models.new_wiki_v2 import NewWikiV2
+from openapi_server.models.tag_v2 import TagV2
 from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import HTTPException
 from openapi_server.impl.misc import *
-import httpx
+from openapi_server.impl.api_calls import delete_articles_from_wiki
 from pymongo.errors import InvalidOperation
 
 from datetime import datetime
@@ -57,6 +59,10 @@ def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
         *partial_pipeline_filter
     ]
 
+def raise_if_not_id(value: str):
+    if not ObjectId.is_valid(value):
+        raise TypeError("Must be valid ID")
+
 class WikiApi(BaseDefaultV2Api):
 
     def __init__(self):
@@ -84,10 +90,13 @@ class WikiApi(BaseDefaultV2Api):
         if result.__len__() != 1:
             raise LookupError("Error finding")
 
-        result: WikiV2 = result[0] 
+        result = result[0]
 
         if lang != result["lang"] and lang is not None:
-            translation = await mongodb["wiki_translation"].find_one({"wiki_id" : ObjectId(result["id"]), "lang" : "en"})
+            print(result["id"])
+            translation = await mongodb["wiki_translation"].find_one({"wiki_id" : ObjectId(result["id"]), "lang" : lang})
+
+            print("Translation:" + str(translation))
 
             if translation is not None:
                 result["description"] = translation["description"]
@@ -96,7 +105,7 @@ class WikiApi(BaseDefaultV2Api):
         return result
     
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
-        final_wiki = WikiV2(id='0'
+        final_wiki = WikiV2(id='1'
                          , name=new_wiki_v2.name
                          , description=new_wiki_v2.description
                          , rating=0
@@ -109,8 +118,14 @@ class WikiApi(BaseDefaultV2Api):
         del idless.id
         del idless.author.id
         result = await mongodb["wiki"].insert_one(idless.to_dict())
+        author_id = ObjectId()
+        await mongodb["wiki"].update_one({"_id" : result.inserted_id}, {"$set": {"author._id" : author_id}})
         final_wiki.id = str(result.inserted_id)
+        final_wiki.author.id = str(author_id)
         return final_wiki
+
+def conditional_field(name: str, value):
+    return {name : value} if value is not None else None
 
 class WikiApiAdmins(BaseAdminsV2Api):
 
@@ -119,32 +134,52 @@ class WikiApiAdmins(BaseAdminsV2Api):
     
     
     async def remove_wiki_v2(self, id_name: str) -> None:
-        if not ObjectId.is_valid(id_name):
-            raise TypeError()
-        delete_articles_response = httpx.delete(HTTP_REQUEST_FORMAT.format(host=ARTICLES_ROUTE,port=ARTICLES_PORT,method=REMOVE_ALL_ARTICLES.format(id=id_name)))
-        if delete_articles_response.status_code in range(400,500):
-            raise LookupError()
-        elif delete_articles_response.status_code not in range(200,300):
-            raise Exception()
+        raise_if_not_id(id_name)
+        
+        delete_articles_from_wiki(id_name)
 
         result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id_name)})
 
         if not result.acknowledged:
             raise InvalidOperation()
 
-    async def update_wiki(self, id: str, new_wiki: NewWikiV2) -> WikiV2:
-        result = await mongodb["wiki"].update_one({"_id" : ObjectId(id)}
+    async def update_wiki_v2(self, id: str, new_wiki: NewWikiV2) -> WikiV2:
+        raise_if_not_id(id)
+
+        print(new_wiki)
+
+        result = await mongodb["wiki"].find_one_and_update({"_id" : ObjectId(id)}
                                             ,
                                             {
                                                 "$set": {
                                                     "name" : new_wiki.name,
-                                                    "description" : new_wiki.description,
-                                                    "author" : {"name" : new_wiki.author}
+                                                    "description": new_wiki.description,
+                                                    "author.name": new_wiki.author,
+                                                    "image": new_wiki.image,
+                                                    "lang": new_wiki.lang
                                                 }
                                             }
-                                            ,upsert=False)
+                                            ,upsert=False
+                                            ,return_document=ReturnDocument.AFTER)
 
-        result._raise_if_unacknowledged()
+        print("Documento: " + str(result))
+
+        if result is None:
+            raise LookupError("Cannot find wiki")
+        
+        raise UnicodeError("I can't figure this out, but it does update")
+        
+        #final_wiki = WikiV2(id=str(result["_id"])
+        #                 , name=new_wiki.name
+        #                 , description=new_wiki.description
+        #                 , rating=result["rating"]
+        #                 , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
+        #                 , tags=result["tags"]
+        #                 , creation_date=result["creation_date"]
+        #                 , lang=new_wiki.lang
+        #                 , image=new_wiki.image)
+        #
+        #return final_wiki
     
 class WikiApiInternal(BaseInternalV2Api):
 
