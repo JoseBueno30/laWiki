@@ -45,12 +45,12 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         if not lan:
             match_stage["$or"] = [
-                {"title.en": name},
-                {"title.es": name},
-                {"title.fr": name}
+                {"title.en": name.strip()},
+                {"title.es": name.strip()},
+                {"title.fr": name.strip()},
             ]
         else:
-            match_stage["title."+lan] = name
+            match_stage["title."+lan] = name.strip()
 
         version_id_pipeline = [
             {
@@ -75,10 +75,15 @@ class PublicArticleAPIV2(BaseV2PublicApi):
             }
         ]
 
+        print(version_id_pipeline)
+
         version_object_id = await mongodb["article"].aggregate(version_id_pipeline).to_list(length=1)
 
         if not version_object_id[0]:
             raise Exception
+
+        print("Version id encontrado")
+        print(version_object_id)
 
         version_pipeline = [
             {
@@ -91,12 +96,19 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         article_version = await mongodb["article_version"].aggregate(version_pipeline).to_list(length=1)
 
+        print("version encontrado")
+
         if not article_version[0]:
             raise Exception
 
-        body_translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
-        if body_translation:
-            article_version[0]["body"] = body_translation["body"]
+        try:
+            body_translation = await mongodb["article_translation"].find_one(
+                {"article_version_id": ObjectId(str(version_object_id[0]["_id"]))})
+            print("traduccion encontrada")
+            if body_translation:
+                article_version[0]["body"] = body_translation["body"]
+        except:
+            print("No hay traduccion")
 
         return article_version[0]
 
@@ -134,7 +146,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
 
         article_version = await mongodb["article_version"].aggregate(pipeline).to_list(length=1)
 
-        if not article_version[0]:
+        if article_version is []:
             raise Exception
 
         body_translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
@@ -171,17 +183,22 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         lan: str,
     ) -> InlineResponse200V2:
         if parsed:
-            translation = await mongodb["article_translation"].find_one({"article_version_id": ObjectId(id)})
+            match_stage = {"article_version_id": ObjectId(id)}
+            if lan:
+                match_stage["lan"] = lan.strip()
+
+            translation = await mongodb["article_translation"].find_one(match_stage)
             response = translation["body"]
         else:
             article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
 
             body = article_version["body"]
-            if lan is not article_version["lan"]:
+            if lan and lan is not article_version["lan"]:
                 body = await translate_body_to_lan(body, lan)
 
-            response = mwparserfromhell.parse(body)
-            response = str(response)
+            # response = mwparserfromhell.parse(body)
+            #  response = str(response)
+            response = body
         return InlineResponse200V2.from_dict({"body": response})
 
     async def get_articles_commented_by_user_v2(
