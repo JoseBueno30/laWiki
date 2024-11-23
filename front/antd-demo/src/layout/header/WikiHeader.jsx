@@ -1,4 +1,6 @@
-import { Flex, Input, Button, Badge, Avatar } from "antd";
+import { Flex, Input, Button, Badge, Avatar, Popover, Menu } from "antd";
+import React, { useState, useContext } from 'react';
+import { ThemeContext } from "../../context/theme-context";
 import {
   ControlOutlined,
   PlusOutlined,
@@ -39,6 +41,61 @@ const WikiClickHandler = () => {
 }
 
 const WikiHeader = () => {
+
+  const { colorTheme, toggleTheme } = useContext(ThemeContext);
+  const [theme, setTheme] = useState(colorTheme === 'dark' ? 'Dark' : 'Light');
+
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    toggleTheme();
+  };
+  const [notifications, setNotifications] = useState('After login');
+  const [language, setLanguage] = useState('English');
+
+  const popoverContent = (
+    <Menu className="user-profile-menu">
+      <Menu.Item key="1" className="profile-item">
+        <strong>See profile</strong>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.SubMenu key="2" title={`Theme: ${theme}`}>
+        <Menu.Item key="2-1" onClick={() => handleThemeChange('Light')}>
+          Light
+        </Menu.Item>
+        <Menu.Item key="2-2" onClick={() => handleThemeChange('Dark')}>
+          Dark
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.SubMenu key="3" title={`Notifications: ${notifications}`}>
+        <Menu.Item key="3-1" onClick={() => setNotifications('Always')}>
+          Always
+        </Menu.Item>
+        <Menu.Item key="3-2" onClick={() => setNotifications('After login')}>
+          After login
+        </Menu.Item>
+        <Menu.Item key="3-3" onClick={() => setNotifications('Never')}>
+          Never
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.SubMenu key="4" title={`Language: ${language}`}>
+        <Menu.Item key="4-1" onClick={() => setLanguage('English')}>
+          English
+        </Menu.Item>
+        <Menu.Item key="4-2" onClick={() => setLanguage('Español')}>
+          Español
+        </Menu.Item>
+        <Menu.Item key="4-3" onClick={() => setLanguage('Français')}>
+          Français
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.Divider />
+      <Menu.Item key="5" danger>
+        Log out
+      </Menu.Item>
+    </Menu>
+  );
+
+
   return (
     <>
       <Flex gap='large'>
@@ -71,9 +128,16 @@ const WikiHeader = () => {
           <BellOutlined style={{ fontSize: "24px" }} />
           </div>
         </Badge>
-        <div className="icon-container" onClick={ProfileClickHandler}>
-          <Avatar size="large" icon={<UserOutlined/>}/>
-        </div>
+        <Popover
+        content={popoverContent}
+        trigger="click"
+        placement="bottomRight"
+        overlayStyle={{ width: 220 }}
+      >
+        <Avatar size="large" icon={<UserOutlined/>}>
+          A
+        </Avatar>
+      </Popover>
       </Flex>
     </>
   );

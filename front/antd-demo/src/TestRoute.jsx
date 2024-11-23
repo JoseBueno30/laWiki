@@ -4,6 +4,7 @@ import { useContext } from "react"
 import { ThemeContext } from "./context/theme-context"
 
 import ArticleList from "./modules/articles/components/article-list/article-list";
+import WikiEditPage from "./modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 
 const TestRoute = () => {
     const {colorTheme, toggleTheme} = useContext(ThemeContext)
@@ -108,11 +109,13 @@ const TestRoute = () => {
         <>
         
         <div>
-            <h1>{location.pathname}</h1>
+            {/* <h1>{location.pathname}</h1>
             <Button onClick={toggleTheme}>
                 Toggle theme
             </Button>
-            <ArticleList articleList={article}/>
+            <ArticleList articleList={article}/> */}
+            <WikiEditPage></WikiEditPage>
+
         </div>
         </>
     )
