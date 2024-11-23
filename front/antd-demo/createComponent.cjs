@@ -20,7 +20,7 @@ const camelCaseName = toCamelCase(componentName);
 // Plantilla para el archivo .jsx
 const jsxContent = `
 import React from 'react';
-import './${camelCaseName}.css';
+import './${componentName}.css';
 
 const ${camelCaseName} = () => {
   return (
