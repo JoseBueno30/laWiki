@@ -16,14 +16,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  background-color: #f5f5f5;
+  background-color: var(--ant-color-text-quaternary);
 }
 
 .app-content {
   padding-top: var(
     --header-height
   ); /* Altura del header, al poner position fixed */
-  background: #f5f5f5; /* Fondo claro */
 }
 
 .header-tools {
@@ -52,7 +51,7 @@
 
 .header-title:hover{
     cursor: pointer;
-    color: rgb(0, 179, 255);
+    color: var(--ant-color-link);
 }
 
 
