@@ -1,1 +1,8 @@
-.ArticlesSearchResultPage {}
+.article-search-results-title {
+    width: 80%;
+}
+
+.article-search-results-info{
+    width: 80%;
+    margin-top: 0;
+}

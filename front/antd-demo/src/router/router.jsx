@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
+import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
 
 // The structure of the application's routes
 
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <TestRoute /> }, // Página principal de la wiki
               { path: "edit", element: <TestRoute /> }, // Editar wiki
-              { path: "search", element: <TestRoute /> }, // Buscar artículos en la wiki
+              { path: "search", element: <ArticlesSearchResultPage /> }, // Buscar artículos en la wiki
               {
                 path: "articles",
                 children: [

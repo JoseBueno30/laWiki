@@ -54,4 +54,10 @@
     color: var(--ant-color-link);
 }
 
+.header-title{
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  overflow:hidden;
+}
+
 

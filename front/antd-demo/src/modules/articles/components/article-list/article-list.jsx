@@ -9,7 +9,7 @@ const ArticleList = ({ articleList }) => {
   const screens = useBreakpoint();
 
   return (
-    <Flex vertical gap="small" align="center" style={{ minWidth: 400 }}>
+    <Flex className="article-list" vertical gap="small" align="center">
       <Row className="article-info" justify="space-around" align="center">
         <Col md={8} sm={9} xs={24} align="center">
           Title
