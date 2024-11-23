@@ -84,7 +84,7 @@ async def check_article_by_idv2(
     if not BaseV2InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if not await BaseV2InternalApi.subclasses[0]().check_article_by_id(id):
+        if not await BaseV2InternalApi.subclasses[0]().check_article_by_idv2(id):
             raise HTTPException(status_code=404, detail="Artcile Not Found")
         else:
             return
@@ -106,13 +106,13 @@ async def check_article_by_idv2(
 )
 async def unassign_article_tags_v2(
     id: str = Path(..., description=""),
-    ids: list[str] = Query(None, description="List of Tag IDs", alias="ids"),
+    ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseV2InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV2InternalApi.subclasses[0]().unassign_article_tags(id, ids) is None:
+        if await BaseV2InternalApi.subclasses[0]().unassign_article_tags_v2(id, ids) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameters format")
@@ -140,7 +140,7 @@ async def update_rating_v2(
     if not BaseV2InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV2InternalApi.subclasses[0]().update_rating(id, id_ratings_body_v2) is None:
+        if await BaseV2InternalApi.subclasses[0]().update_rating_v2(id, id_ratings_body_v2) is None:
             return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")

@@ -58,7 +58,7 @@ async def create_article_v2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2EditorsApi.subclasses[0]().create_article(new_article_v2)
+        return await BaseV2EditorsApi.subclasses[0]().create_article_v2(new_article_v2)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
@@ -84,7 +84,7 @@ async def create_article_version_v2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseV2EditorsApi.subclasses[0]().    create_article_version(id, new_article_version_v2)
+        return await BaseV2EditorsApi.subclasses[0]().create_article_version_v2(id, new_article_version_v2)
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Duplicate Key")
     except errors.PyMongoError as e:
@@ -110,10 +110,11 @@ async def delete_article_by_idv2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseV2EditorsApi.subclasses[0]().delete_article_by_id(id)
+        await BaseV2EditorsApi.subclasses[0]().delete_article_by_idv2(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail="Article Not Found")
 
 
@@ -136,7 +137,7 @@ async def delete_article_version_by_id_v2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseV2EditorsApi.subclasses[0]().delete_article_version_by_id(id)
+        await BaseV2EditorsApi.subclasses[0]().delete_article_version_by_idv2(id)
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article ID format.")
     except Exception as e:

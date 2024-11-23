@@ -4,6 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson import ObjectId
 from bson.errors import InvalidId
 from websockets import InvalidParameterValue
 
@@ -54,7 +55,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 async def get_article_by_author_v2(
     id: str = Path(..., description=""),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
-    limit: int = Query(0, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
+    limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
     order: str = Query(None, description="Sorts the articles by different criteria", alias="order"),
 ) -> ArticleListV2:
     """Get a list of Articles given an author&#39;s ID.  """
@@ -113,8 +114,10 @@ async def get_article_by_name_v2(
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     
-    #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
     try:
+        if not ObjectId.is_valid(wiki) or ObjectId.is_valid(name):
+            raise InvalidParameterValue
+
         return await BaseV2PublicApi.subclasses[0]().get_article_by_name_v2(name, wiki, lan)
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
@@ -144,6 +147,7 @@ async def get_article_version_body_by_idv2(
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid ArticleVersion ID format.")
     except Exception as e:
+        # print("Excepcion: ",e)
         raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
 
 
@@ -228,7 +232,7 @@ async def get_articles_commented_by_user_v2(
 async def search_articles_v2(
     wiki_id: str = Query(None, description="The ID of the wiki where the serch will be made", alias="wiki_id"),
     name: str = Query(None, description="Search query for the name of the article", alias="name"),
-    tags: list[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
+    tags: List[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
     limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
     order: str = Query('none', description="Sorts the articles by different criteria", alias="order"),

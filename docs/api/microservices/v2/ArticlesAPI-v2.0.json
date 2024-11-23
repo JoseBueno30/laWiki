@@ -1390,7 +1390,7 @@
           {
             "name": "lan",
             "in": "query",
-            "description": "Language of the ArticleVersion, original language if not specified",
+            "description": "Language of the ArticleVersion, any language if not specified",
             "required": false,
             "style": "form",
             "explode": true,
@@ -2293,7 +2293,7 @@
               "maximum": 100,
               "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 20
             }
           },
           {
