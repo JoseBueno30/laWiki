@@ -48,7 +48,7 @@ const WikiClickHandler = () => {
 
 const WikiHeader = () => {
   const { colorTheme, toggleTheme } = useContext(ThemeContext);
-  const [notifications, setNotifications] = useState("After login");
+  const [notifications, setNotifications] = useState("Email");
   const [language, setLanguage] = useState("English");
 
   const popoverContent = (
@@ -66,14 +66,11 @@ const WikiHeader = () => {
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu key="3" title={`Notifications: ${notifications}`}>
-        <Menu.Item key="3-1" onClick={() => setNotifications("Always")}>
-          Always
+        <Menu.Item key="3-1" onClick={() => setNotifications("Email")}>
+          Email
         </Menu.Item>
         <Menu.Item key="3-2" onClick={() => setNotifications("After login")}>
           After login
-        </Menu.Item>
-        <Menu.Item key="3-3" onClick={() => setNotifications("Never")}>
-          Never
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu key="4" title={`Language: ${language}`}>
