@@ -10,6 +10,7 @@ from openapi_server.models.id_ratings_body import IdRatingsBody
 from openapi_server.models.id_tags_body_v2 import IdTagsBodyV2
 from openapi_server.models.new_wiki_v2 import NewWikiV2
 from openapi_server.models.tag_v2 import TagV2
+from openapi_server.models.wiki_list_v2 import WikiListV2
 from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import HTTPException
@@ -17,7 +18,7 @@ from openapi_server.impl.misc import *
 from openapi_server.impl.api_calls import delete_articles_from_wiki
 from pymongo.errors import InvalidOperation
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 
@@ -47,6 +48,43 @@ partial_pipeline_filter = [{'$addFields': {
                 "author.id": {"$toString": "$author._id"},
                 "id": {'$toString': '$_id'}
                 }
+        },
+        {'$unset': ["_id", "author._id"]}]
+
+move_name_filter = [{'$addFields': {
+                "tags": {
+                    "$map": {
+                        "input": "$tags",
+                        "as": "tag",
+                        "in": {
+                            "id": {"$toString": "$$tag._id"},
+                            "tag": "$$tag.tag"
+                        }
+                    }
+                },
+                "name": { "$arrayElemAt":
+                         [{ "$objectToArray": "$name" },
+                          { "$indexOfArray":
+                            [{ "$objectToArray": "$name" }, { "k": "$lang" }] 
+                            }
+                            ]
+                        },
+                "author.id": {"$toString": "$author._id"},
+                "id": {'$toString': '$_id'}
+                }
+        },
+        {
+            "$project": {
+                "name": "$name.v",
+                "id": 1,
+                "lang": 1,
+                "author": 1,
+                "rating": 1,
+                "tags": 1,
+                "description": 1,
+                "creation_date": 1,
+                "image": 1
+            }
         },
         {'$unset': ["_id", "author._id"]}]
 
@@ -123,6 +161,112 @@ class WikiApi(BaseDefaultV2Api):
         final_wiki.id = str(result.inserted_id)
         final_wiki.author.id = str(author_id)
         return final_wiki
+
+    async def search_wikis_v2(self, name: str, offset: int, limit: int, order: str, creation_date: str, author_name: str, lang: str) -> WikiListV2:
+        filters = {}
+        url_filters = "/wikis?"
+
+        if author_name is not None:
+            filters["author.name"] = author_name
+            url_filters += "author_name=" + author_name + "&"
+
+        if name is not None:
+            filters["$or"] = [
+                {"name." + key: {"$regex": ".*" + name + ".*", "$options": "i"}}
+                for key in SUPPORTED_LANGUAGES
+            ]
+            url_filters += "name=" + name + "&"
+
+        if creation_date is not None:
+            dates = creation_date.split("-")
+            if len(dates) == 1:
+                filters["creation_date"] = { #Todo el día elegido
+                    "$gte": (datetime.strptime(dates[0] , "%Y/%m/%d")),
+                    "$lt": (datetime.strptime(dates[0] , "%Y/%m/%d") + timedelta(1))
+                }
+            elif len(dates) == 2:
+                filters["creation_date"] = {
+                    "$gte": dates[0].replace("/","-"),
+                    "$lte": dates[1].replace("/","-")
+                }
+
+            url_filters += "creation_date=" + creation_date + "&"
+
+        if lang is not None:
+            filters["lang"] = lang
+            url_filters += "lang=" + lang + "&"
+        
+        sorting_variables = {}
+        if order is not None:
+            if order == "recent":
+                sorting_variables["creation_date"] = -1
+            elif order == "oldest":
+                sorting_variables["creation_date"] = 1
+            elif order == "unpopular":
+                sorting_variables["rating"] = 1
+            else:
+                sorting_variables["rating"] = -1
+
+            url_filters += "order=" + order + "&"
+        else:
+            sorting_variables["rating"] = -1
+
+        total_count = await mongodb['wiki'].count_documents(filters)
+
+        next_url = (url_filters + 
+                    "offset=" + str(offset + limit) + 
+                    "&limit=" + str(limit)) if (offset + limit) < total_count else None
+        previous_url = (url_filters + "offset=" + str(max(offset - limit, 0)) + 
+                        "&limit=" + str(limit)) if offset > 0 else None
+
+        # https://www.google.com/search?q=paging+meaning
+        paging_pipeline = [
+            {
+                "$addFields": {
+                    "total": total_count,
+                    "offset": offset,
+                    "limit": limit,
+                    "next": next_url,
+                    "previous": previous_url,
+                }
+            }
+        ]
+
+        group_articles_pipeline = [
+            {
+                "$group": {
+                    "_id": None,
+                    "wikis": {
+                        "$push": "$$ROOT"
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                }
+            }
+        ]
+
+        query_pipeline = [
+            {"$match": filters},
+            {"$sort": sorting_variables},
+            {"$skip": offset},
+            {"$limit": limit},
+            *move_name_filter,
+            *group_articles_pipeline,
+            *paging_pipeline
+        ]
+
+        wikis = await mongodb["wiki"].aggregate(query_pipeline).to_list(length=None)
+
+        print(query_pipeline, end="\n\n")
+        print(wikis)
+
+        if not wikis:
+            raise LookupError("Cannot find Wiki")
+
+        return wikis[0]
 
 def conditional_field(name: str, value):
     return {name : value} if value is not None else None

@@ -14,6 +14,8 @@ ARTICLES_ROUTE = "127.0.0.1"
 HTTP_REQUEST_FORMAT = "http://{host}:{port}/{method}"
 REMOVE_ALL_ARTICLES = "v2/articles/wiki/{id}"
 
+SUPPORTED_LANGUAGES = ["en", "es", "fr"]
+
 def raise_http_exception(code : int, message : str, e: Exception):
     print(e)
     print(type(e))
