@@ -15,7 +15,7 @@ from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import HTTPException
 from openapi_server.impl.misc import *
-from openapi_server.impl.api_calls import delete_articles_from_wiki
+from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan
 from pymongo.errors import InvalidOperation
 
 from datetime import datetime, timedelta
@@ -101,6 +101,19 @@ def raise_if_not_id(value: str):
     if not ObjectId.is_valid(value):
         raise TypeError("Must be valid ID")
 
+async def translate_wiki(languages : list[str], wiki_lang: str, name: dict[str, str], description: str, target_wiki: ObjectId):
+    names = name
+    for lang in [x for x in languages if x != name.keys()]:
+        names[lang] = await translate_text_to_lan(name[wiki_lang], lang)
+    for lang in [x for x in languages if x != wiki_lang]:
+        translation = {}
+        translation["wiki_id"] = target_wiki
+        translation["description"] = await translate_text_to_lan(description, lang)
+        translation["lang"] = lang
+        translation["name"] = names[lang]
+        upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : lang}, translation,upsert=True)
+
+
 class WikiApi(BaseDefaultV2Api):
 
     def __init__(self):
@@ -137,6 +150,7 @@ class WikiApi(BaseDefaultV2Api):
             print("Translation:" + str(translation))
 
             if translation is not None:
+                result["name"][lang] = translation["name"]
                 result["description"] = translation["description"]
 
 
@@ -160,6 +174,10 @@ class WikiApi(BaseDefaultV2Api):
         await mongodb["wiki"].update_one({"_id" : result.inserted_id}, {"$set": {"author._id" : author_id}})
         final_wiki.id = str(result.inserted_id)
         final_wiki.author.id = str(author_id)
+
+        if new_wiki_v2.translate:
+            await translate_wiki(SUPPORTED_LANGUAGES, new_wiki_v2.lang, new_wiki_v2.name, new_wiki_v2.description, result.inserted_id)
+
         return final_wiki
 
     async def search_wikis_v2(self, name: str, offset: int, limit: int, order: str, creation_date: str, author_name: str, lang: str) -> WikiListV2:
@@ -271,6 +289,9 @@ class WikiApi(BaseDefaultV2Api):
 def conditional_field(name: str, value):
     return {name : value} if value is not None else None
 
+async def delete_translations(wiki_id):
+    await mongodb["wiki_translation"].delete_many({"wiki_id" : ObjectId(wiki_id)})
+
 class WikiApiAdmins(BaseAdminsV2Api):
 
     def __init__(self):
@@ -281,6 +302,8 @@ class WikiApiAdmins(BaseAdminsV2Api):
         raise_if_not_id(id_name)
         
         delete_articles_from_wiki(id_name)
+
+        await delete_translations(id_name)
 
         result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id_name)})
 
@@ -310,6 +333,9 @@ class WikiApiAdmins(BaseAdminsV2Api):
 
         if result is None:
             raise LookupError("Cannot find wiki")
+        
+        if new_wiki.translate:
+            await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], new_wiki.name, new_wiki.description, result["_id"])
         
         raise UnicodeError("I can't figure this out, but it does update")
         
