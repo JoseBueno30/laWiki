@@ -98,5 +98,7 @@ async def update_wiki_v2(
         raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"), e)
     except UnicodeError as e:
         raise_http_exception(204, MESSAGE_CANT_RETURN, e)
+    except ConnectionError as e:
+        raise_http_exception(500, MESSAGE_CANT_TRANSLATE, e)
     except Exception as e:
         raise_http_exception(500, MESSAGE_UNEXPECTED, e)

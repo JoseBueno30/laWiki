@@ -88,9 +88,22 @@ move_name_filter = [{'$addFields': {
         },
         {'$unset': ["_id", "author._id"]}]
 
+def pipepline_remove_id_auto(id_name: str):
+        if ObjectId.is_valid(id_name):
+            return pipeline_remove_id_filter_name(id_wiki=id_name)
+        else:
+            return pipeline_remove_id_filter_name(name=id_name)
+
+def match_by_name_or_id(name : str = "", id_wiki : str = ""):
+    return {"$expr": {
+        "$eq": [
+          { "$getField": { "field": "$lang", "input": "$name" } }, name
+        ]
+      }} if name else ({"_id" : ObjectId(id_wiki)})
+
 # Removes ObjectID fields and converts them to string
 def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
-    filter = ({"name" : name}) if name else ({"_id" : ObjectId(id_wiki)})
+    filter = match_by_name_or_id(name,id_wiki)
     print(filter)
     return [
         {'$match' : filter},
@@ -130,11 +143,8 @@ class WikiApi(BaseDefaultV2Api):
     async def get_wiki_v2(self, id_name: str, lang: str) -> WikiV2:
         print(id_name)
         print(lang)
-        if ObjectId.is_valid(id_name):
-            result = await self.get_wiki(id_name)
-        else:
-            print("By name:")
-            result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(name=id_name)).to_list(length=1)
+        print("By name:")
+        result = await mongodb["wiki"].aggregate(pipepline_remove_id_auto(id_name)).to_list(length=1)
 
         print(result)
         
@@ -292,6 +302,10 @@ def conditional_field(name: str, value):
 async def delete_translations(wiki_id):
     await mongodb["wiki_translation"].delete_many({"wiki_id" : ObjectId(wiki_id)})
 
+async def get_id(name: str):
+    result = await mongodb["wiki"].find_one(match_by_name_or_id(name,""),{"_id" : 0, "id" : {"$toString" :"$_id"}})
+    return result["id"]
+
 class WikiApiAdmins(BaseAdminsV2Api):
 
     def __init__(self):
@@ -299,7 +313,8 @@ class WikiApiAdmins(BaseAdminsV2Api):
     
     
     async def remove_wiki_v2(self, id_name: str) -> None:
-        raise_if_not_id(id_name)
+        if not ObjectId.is_valid(id_name): # Si es nombre se cambia por id
+            id_name = await get_id(id_name)
         
         delete_articles_from_wiki(id_name)
 
@@ -311,11 +326,14 @@ class WikiApiAdmins(BaseAdminsV2Api):
             raise InvalidOperation()
 
     async def update_wiki_v2(self, id: str, new_wiki: NewWikiV2) -> WikiV2:
-        raise_if_not_id(id)
+        if ObjectId.is_valid(id):
+            name = ""
+        else:
+            name = id
 
         print(new_wiki)
 
-        result = await mongodb["wiki"].find_one_and_update({"_id" : ObjectId(id)}
+        result = await mongodb["wiki"].find_one_and_update(match_by_name_or_id(name,id)
                                             ,
                                             {
                                                 "$set": {
@@ -334,8 +352,11 @@ class WikiApiAdmins(BaseAdminsV2Api):
         if result is None:
             raise LookupError("Cannot find wiki")
         
-        if new_wiki.translate:
-            await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], new_wiki.name, new_wiki.description, result["_id"])
+        try:
+            if new_wiki.translate:
+                await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], new_wiki.name, new_wiki.description, result["_id"])
+        except:
+            raise ConnectionError("Cannot connect to translator")
         
         raise UnicodeError("I can't figure this out, but it does update")
         

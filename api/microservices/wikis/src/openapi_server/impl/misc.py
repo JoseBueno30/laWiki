@@ -8,6 +8,7 @@ MESSAGE_NOT_FOUND_NESTED = "Server error, may be caused by invalid properties su
 MESSAGE_UNAKCNOWLEDGED = "Request for operation was unacknowledged"
 MESSAGE_NAME_WHEN_ID = "Argument must be a valid ID, cannot be name"
 MESSAGE_CANT_RETURN = "Cannot return content currently, operation processed"
+MESSAGE_CANT_TRANSLATE = "Failed to translate wiki, update succesful"
 
 ARTICLES_PORT = 8081
 ARTICLES_ROUTE = "127.0.0.1"
