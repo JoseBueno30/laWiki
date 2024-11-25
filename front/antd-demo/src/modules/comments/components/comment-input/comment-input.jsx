@@ -8,11 +8,11 @@ const {TextArea} = Input
 
 const CommentInput = ({user}) => {
   return (
-    <Flex>
+    <Flex style={{paddingBottom: "1.5rem"}}>
       <Avatar className='comment-avatar' src={user.image} alt={user.name} />
       <div style={{width: "100%"}}>
-        <Space style={{width: "100%", paddingRight: "100px"}} direction="vertical">
-          <TextArea showCount maxLength={100} size='large' autoSize = {{minRows: 3}}/>
+        <Space style={{width: "100%"}} direction="vertical">
+          <TextArea showCount maxLength={200} size='large' autoSize = {{minRows: 3}}/>
           <Button type='primary'>Subir</Button>
         </Space>
       </div>

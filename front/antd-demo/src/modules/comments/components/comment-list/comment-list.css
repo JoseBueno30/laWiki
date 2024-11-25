@@ -1,0 +1,12 @@
+.comment-list-options{
+    /* column-gap: 1.5rem; */
+    display: flex;
+    justify-content: space-between;
+}
+.filter-group{
+    margin-left: auto;
+}
+
+.icon{
+    font-size: 25px;
+}

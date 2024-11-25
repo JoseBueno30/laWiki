@@ -5,6 +5,7 @@ import UserAvatar from "./modules/wiki/avatar/user-avatar";
 import RoleAvatar from "./modules/wiki/avatar/role-avatar";
 import Comment from "./modules/comments/components/comment/comment";
 import CommentInput from "./modules/comments/components/comment-input/comment-input";
+import CommentList from "./modules/comments/components/comment-list/comment-list";
 
 function App() {
   // Sólo muestra el header con un contenido random
@@ -15,7 +16,7 @@ function App() {
     author: {
       id: "672272c65150a9cd3f46599e",
       name: "author_name",
-      image: "author_image"
+      image: "https://i.pinimg.com/originals/1c/5d/45/1c5d45a9c08ce419addfd557757fc58c.jpg"
     },
     body: "COMENTARIO PRUEBA ART2 1",
     creation_date: "2024-11-08"
@@ -34,9 +35,11 @@ function App() {
             username="TheGrefg"
             role="Author"
           />
-          <Comment comment={comment}/>
+          {/* <Comment comment={comment}/>
           
-          <CommentInput user={comment.author}/>
+          <CommentInput user={comment.author}/> */}
+
+          <CommentList commentList={[comment, comment]}></CommentList>
         </Layout.Content>
       </Layout>
     </>
