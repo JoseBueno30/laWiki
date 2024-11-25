@@ -1,24 +1,30 @@
 import React, { useState } from "react";
-import { Tag, Input, Button } from "antd";
+import { Tag, Select, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import './article-edit-page.css';
 
+const { Option } = Select;
+
 const ArticleEditPage = () => {
   const [tags, setTags] = useState(["Tag 1", "Tag 2", "Tag 3"]);
-  const [newTag, setNewTag] = useState("");
-  const [isInputVisible, setIsInputVisible] = useState(false);
+  const [availableTags, setAvailableTags] = useState([
+    "Tag 1",
+    "Tag 2",
+    "Tag 3",
+    "Tag 4",
+    "Tag 5",
+  ]);
 
-  const addTag = () => {
-    if (newTag.trim() && !tags.includes(newTag)) {
-      setTags([...tags, newTag]);
-      setNewTag("");
-      setIsInputVisible(false);
+  const addTag = (value) => {
+    if (value && !tags.includes(value)) {
+      setTags([...tags, value]);
     }
   };
 
   const removeTag = (tag) => {
     setTags(tags.filter((t) => t !== tag));
   };
+
   return (
     <section className="edit-article-section">
       <div className="edit-article-container">
@@ -57,26 +63,20 @@ const ArticleEditPage = () => {
               </Tag>
             ))}
 
-            {isInputVisible ? (
-              <Input
-                size="small"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onPressEnter={addTag}
-                onBlur={addTag}
-                placeholder="New Tag"
-                className="tag-input"
-              />
-            ) : (
-              <Button
-                size="small"
-                icon={<PlusOutlined />}
-                onClick={() => setIsInputVisible(true)}
-                className="add-tag-button"
-              >
-                New Tag
-              </Button>
-            )}
+            <Select
+              placeholder="Select a tag"
+              style={{ width: 200 }}
+              onChange={addTag}
+              className="tag-select"
+            >
+              {availableTags
+                .filter((tag) => !tags.includes(tag))
+                .map((tag) => (
+                  <Option key={tag} value={tag}>
+                    {tag}
+                  </Option>
+                ))}
+            </Select>
           </div>
         </div>
 
