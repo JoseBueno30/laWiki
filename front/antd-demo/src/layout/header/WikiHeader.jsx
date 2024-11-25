@@ -138,7 +138,7 @@ const WikiHeader = () => {
           content={popoverContent}
           trigger="click"
           placement="bottomRight"
-          overlayStyle={{ width: 220 }}
+          overlayStyle={{ width: 250 }}
         >
           <Avatar size="large" icon={<UserOutlined />}>
             A
