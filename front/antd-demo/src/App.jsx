@@ -3,7 +3,8 @@ import { Layout } from "antd";
 import PageHeader from "./layout/header/PageHeader";
 import UserAvatar from "./modules/wiki/avatar/user-avatar";
 import RoleAvatar from "./modules/wiki/avatar/role-avatar";
-import Comment from "./modules/article/components/comment/comment";
+import Comment from "./modules/comments/components/comment/comment";
+import CommentInput from "./modules/comments/components/comment-input/comment-input";
 
 function App() {
   // Sólo muestra el header con un contenido random
@@ -34,6 +35,8 @@ function App() {
             role="Author"
           />
           <Comment comment={comment}/>
+          
+          <CommentInput user={comment.author}/>
         </Layout.Content>
       </Layout>
     </>
