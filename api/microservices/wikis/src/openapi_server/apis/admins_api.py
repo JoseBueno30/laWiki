@@ -5,7 +5,7 @@ import importlib
 import pkgutil
 from bson.errors import InvalidId
 
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, InvalidOperation
 from openapi_server.apis.admins_api_base import BaseAdminsApi
 import openapi_server.impl
 
@@ -96,6 +96,8 @@ async def remove_wiki(
         response.status_code = 404
     except InvalidId as e:
         raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except InvalidOperation as e:
+        raise_http_exception(500, MESSAGE_UNAKCNOWLEDGED, e)
     except Exception as e:
         raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 

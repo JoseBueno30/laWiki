@@ -4,6 +4,7 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson import ObjectId
 from bson.errors import InvalidId
 from websockets import InvalidParameterValue
 
@@ -110,9 +111,11 @@ async def get_article_by_name_v1(
     """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    
-    #TODO: throw InvalidParameterValue if the name or wiki_id is invalid
+
     try:
+        if ObjectId.is_valid(name) or not ObjectId.is_valid(wiki):
+            raise InvalidParameterValue
+
         return await BaseV1PublicApi.subclasses[0]().get_article_by_name_v1(name, wiki)
     except InvalidParameterValue:
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article name format.")
@@ -205,7 +208,7 @@ async def get_articles_commented_by_user_v1(
 async def search_articles_v1(
     wiki_id: str = Query(None, description="The ID of the wiki where the serch will be made", alias="wiki_id"),
     name: str = Query(None, description="Search query for the name of the article", alias="name"),
-    tags: list[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
+    tags: List[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
     limit: int = Query(20, description="The maximum number of results to return.", alias="limit", ge=0, le=100),
     order: str = Query('none', description="Sorts the articles by different criteria", alias="order"),

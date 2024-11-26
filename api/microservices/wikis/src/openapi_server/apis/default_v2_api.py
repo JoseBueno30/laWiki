@@ -6,6 +6,10 @@ import pkgutil
 
 from openapi_server.apis.default_v2_api_base import BaseDefaultV2Api
 import openapi_server.impl
+from openapi_server.impl.misc import *
+
+from bson.errors import InvalidId
+from pymongo.errors import DuplicateKeyError
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -47,12 +51,22 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def create_wiki_v2(
+    response: Response,
     new_wiki_v2: NewWikiV2 = Body(None, description=""),
 ) -> WikiV2:
     """Create a new Wiki"""
     if not BaseDefaultV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultV2Api.subclasses[0]().create_wiki_v2(new_wiki_v2)
+    try:
+        result = await BaseDefaultV2Api.subclasses[0]().create_wiki_v2(new_wiki_v2)
+        response.status_code = 201
+    except DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Wiki name unavailable")
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+
+    return result
 
 
 @router.get(
@@ -73,7 +87,14 @@ async def get_wiki_v2(
     """Get Wiki with the matching ID."""
     if not BaseDefaultV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultV2Api.subclasses[0]().get_wiki_v2(id_name, lang)
+    try:
+        result = await BaseDefaultV2Api.subclasses[0]().get_wiki_v2(id_name,lang)
+    except LookupError as e:
+        raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"),e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED,e)
+
+    return result
 
 
 @router.get(
@@ -88,14 +109,23 @@ async def get_wiki_v2(
     response_model_by_alias=True,
 )
 async def search_wikis_v2(
+    response: Response,
     name: str = Query(None, description="String to be searched within the wiki&#39;s name.", alias="name"),
-    offset: int = Query(20, description="Maximum amount of results to be returned.", alias="offset", ge=1, le=100),
-    limit: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="limit", ge=0),
+    offset: int = Query(0, description="Maximum amount of results to be returned.", alias="offset", ge=1, le=100),
+    limit: int = Query(20, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="limit", ge=0, le=100),
     order: str = Query(None, description="Sorts the wikis by different criteria", alias="order"),
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Wiki", alias="author_name"),
+    lang: str = Query(None, description="Language of the wiki to retrieve.")
 ) -> WikiListV2:
     """Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
     if not BaseDefaultV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultV2Api.subclasses[0]().search_wikis_v2(name, offset, limit, order, creation_date, author_name)
+    try:
+        result = await BaseDefaultV2Api.subclasses[0]().search_wikis_v2(name, offset, limit, order, creation_date, author_name, lang)
+    except (InvalidId, TypeError) as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except LookupError as e:
+        raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"), e)
+
+    return result

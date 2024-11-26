@@ -1,4 +1,5 @@
 from bson import ObjectId
+from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.impl import api_calls_v1
