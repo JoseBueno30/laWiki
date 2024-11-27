@@ -61,8 +61,8 @@ async def remove_wiki_v2(
         await BaseAdminsV2Api.subclasses[0]().remove_wiki_v2(id_name)
     except LookupError:
         response.status_code = 404
-    except LookupError:
-        raise_http_exception(400, "Argument must be a valid ID, cannot be name")
+    except TypeError as e:
+        raise_http_exception(400, MESSAGE_NAME_WHEN_ID, e)
     except InvalidId as e:
         raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
     except InvalidOperation as e:
@@ -90,4 +90,15 @@ async def update_wiki_v2(
     """Update Wiki with wiki the matching ID"""
     if not BaseAdminsV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseAdminsV2Api.subclasses[0]().update_wiki_v2(id_name, new_wiki_v2)
+    try:
+        await BaseAdminsV2Api.subclasses[0]().update_wiki_v2(id_name, new_wiki_v2)
+    except TypeError as e:
+        raise_http_exception(400, MESSAGE_NAME_WHEN_ID, e)
+    except LookupError as e:
+        raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"), e)
+    except UnicodeError as e:
+        raise_http_exception(204, MESSAGE_CANT_RETURN, e)
+    except ConnectionError as e:
+        raise_http_exception(500, MESSAGE_CANT_TRANSLATE, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)

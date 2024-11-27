@@ -19,7 +19,7 @@ import json
 
 
 
-
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
@@ -36,7 +36,7 @@ class SimplifiedWikiV2(BaseModel):
     id: StrictStr = Field(description="Unique identifier for the wiki.")
     name: StrictStr = Field(description="Name of the wiki.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
-    creation_date: StrictStr = Field(description="Date of creation of the wiki.")
+    creation_date: datetime = Field(description="Date of creation of the wiki.")
     rating: Optional[Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]]] = Field(default=None, description="Average rating of the wiki")
     author: AuthorV2
     lang: StrictStr = Field(description="Language of the wiki.")

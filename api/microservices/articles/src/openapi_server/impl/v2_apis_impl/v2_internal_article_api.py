@@ -82,7 +82,7 @@ class InternalArticleAPIV2(BaseV2InternalApi):
             }
         ]
 
-        id_list = await mongodb["article"].append(pipeline).to_list(None)
+        id_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         for article_id in id_list:
             async with httpx.AsyncClient() as client:
