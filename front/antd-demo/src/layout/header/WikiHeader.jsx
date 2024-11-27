@@ -30,7 +30,12 @@ const WikiHeader = () => {
   const screens = useBreakpoint();
   const [showSearchHeader, setSearchHeader] = useState(true);
 
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    order: 'recent',
+    tags: [],
+    author: '',
+    editor: '',
+  });
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSearchHeader = () => {
@@ -106,6 +111,5 @@ const WikiHeader = () => {
     </>
   );
 };
-
 
 export default WikiHeader;
