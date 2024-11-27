@@ -115,8 +115,8 @@ const TestRoute = () => {
                 Toggle theme
             </Button>
             <ArticleList articleList={article}/> */}
-            {/* <WikiEditPage></WikiEditPage> */}
-            <ArticleEditPage></ArticleEditPage>
+            <WikiEditPage></WikiEditPage>
+            {/* <ArticleEditPage></ArticleEditPage> */}
 
         </div>
         </>
