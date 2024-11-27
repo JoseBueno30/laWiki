@@ -16,14 +16,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  background-color: #f5f5f5;
+  background-color: var(--ant-color-text-quaternary);
 }
 
 .app-content {
   padding-top: var(
     --header-height
   ); /* Altura del header, al poner position fixed */
-  background: #f5f5f5; /* Fondo claro */
 }
 
 .header-title-container {
@@ -38,19 +37,20 @@
 
 .header-title{
   margin-top: 0.5em !important;
-  cursor: pointer;
 }
 
 .wiki-title {
+  transition: 0.1s ease-in-out;
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
-.header-title:hover{
-  cursor: pointer;
-  color: rgb(0, 179, 255);
+.wiki-title:hover{
+  transition: 0.1s ease-in-out;
+  color: var(--ant-color-link);
 }
 
 .header-tools {
@@ -85,8 +85,8 @@
   .header-tools {
     gap: 20px;
   }
-
-
 }
+
+
 
 

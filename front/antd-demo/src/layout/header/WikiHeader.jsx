@@ -1,19 +1,14 @@
 import { Flex, Input, Button, Badge, Avatar, Grid, Space } from "antd";
-import {
-  BellOutlined,
-  UserOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import PropTypes from "prop-types";
+import { BellOutlined, UserOutlined, CloseOutlined } from "@ant-design/icons";
 import "./PageHeader.css";
 import Title from "antd/es/typography/Title";
+import { FilterIcon } from "../../utils/icons";
+import { useState } from "react";
+const { useBreakpoint } = Grid;
+import { Link } from "react-router-dom";
 
 import CreateButton from "./buttons/create-button";
 import SearchButton from "./buttons/search-button";
-import { FilterIcon } from "../../utils/icons";
-
-import { useState } from "react";
-const { useBreakpoint } = Grid
 
 const ProfileClickHandler = () => {
   console.log("Profile clicked");
@@ -47,19 +42,18 @@ const WikiHeader = () => {
       {showSearchHeader ? (
         <>
           <div className="header-title-container">
-            <Title
-              level={3}
-              onClick={LaWikiClickHandler}
-              className="header-title"
-            >
-              LaWiki
-            </Title>
+            <Link to="/">
+              <Title
+                level={3}
+                onClick={LaWikiClickHandler}
+                className="header-title wiki-title"
+              >
+                LaWiki
+              </Title>
+            </Link>
             {/* Depende de la información que le venga de la ruta */}
 
-            <Title
-              level={3}
-              className="header-title"
-            >
+            <Title level={3} className="header-title">
               /
             </Title>
             <Title
@@ -113,8 +107,5 @@ const WikiHeader = () => {
   );
 };
 
-WikiHeader.propTypes = {
-  children: PropTypes.node,
-};
 
 export default WikiHeader;

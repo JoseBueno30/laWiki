@@ -131,7 +131,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         pipeline = get_model_list_pipeline({"author._id": ObjectId(id)},
                                            offset, limit, order, total_documents, "articles",
-                                           "articles/author/")
+                                           "v1/articles/author/"+id)
 
         articles = await mongodb["article"].aggregate(pipeline).to_list(None)
 
@@ -284,7 +284,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         pipeline = get_model_list_pipeline({"article_id": ObjectId(id)},
                                            offset, limit, order, total_documents, "article_versions",
-                                           f"articles/{id}/versions")
+                                           f"v1/articles/{id}/versions")
 
         article_versions = await mongodb["article_version"].aggregate(pipeline).to_list(length=None)
 
@@ -306,7 +306,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
     ) -> ArticleListV1:
         comment_list = await get_user_comments(id)
         article_ids_list = []
-        for comment in comment_list["comments"]:
+        for comment in comment_List["comments"]:
             article_ids_list.append(ObjectId(comment["article_id"]))
 
         total_articles = await get_total_number_of_documents(mongodb["article"],
@@ -314,15 +314,15 @@ class PublicArticleAPIV1(BaseV1PublicApi):
 
         pipeline = get_model_list_pipeline({"_id": {"$in": article_ids_list}},
                                            offset, limit, order, total_articles, "articles",
-                                           f"articles/commented_by/{id}")
+                                           f"v1/articles/commented_by/{id}")
 
         article_list = await mongodb["article"].aggregate(pipeline).to_list(length=None)
 
-        if not article_list[0]:
+        if not article_List[0]:
             raise Exception
 
-        for article in articles_list[0]["article_versions"]:
+        for article in articles_List[0]["article_versions"]:
             get_original_article_version_title(article)
             get_original_tags(article)
 
-        return article_list[0]
+        return article_List[0]

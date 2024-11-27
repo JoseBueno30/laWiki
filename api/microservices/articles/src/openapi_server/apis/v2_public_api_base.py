@@ -38,6 +38,7 @@ class BaseV2PublicApi:
         self,
         name: str,
         wiki: str,
+        lan: str
     ) -> ArticleVersionV2:
         """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
         ...
@@ -87,13 +88,14 @@ class BaseV2PublicApi:
         self,
         wiki_id: str,
         name: str,
-        tags: list[str],
+        tags: List[str],
         offset: int,
         limit: int,
         order: str,
         creation_date: str,
         author_name: str,
         editor_name: str,
+        lan: str
     ) -> ArticleListV2:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
         ...
