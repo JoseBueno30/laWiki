@@ -8,7 +8,9 @@ const { useBreakpoint } = Grid;
 import { Link } from "react-router-dom";
 
 import CreateButton from "./buttons/create-button";
-import SearchButton from "./buttons/search-button";
+import SearchInput from "./buttons/search-input";
+import ArticlesFilterPopover from "./popovers/articles-filter-popover";
+import CompactSearchInput from "./buttons/compact-search-input";
 
 const ProfileClickHandler = () => {
   console.log("Profile clicked");
@@ -26,21 +28,27 @@ const WikiClickHandler = () => {
   console.log("Wiki clicked");
 };
 
+// Aqui seguramente se pase la informacion de la wiki, como el nombre, id y tags.
 const WikiHeader = () => {
   const screens = useBreakpoint();
   const [showSearchHeader, setSearchHeader] = useState(true);
-
+  const wikiTags = ["Tag 1", "Tag 2", "Tag 3", "Tag 4", "Tag 5"];
   const [filters, setFilters] = useState({
-    order: 'recent',
+    order: "recent",
     tags: [],
-    author: '',
-    editor: '',
+    author: "",
+    editor: "",
+    startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSearchHeader = () => {
     setSearchHeader(!showSearchHeader);
   };
+
+  // Hay que definir una funcion de searchFunction(), la cual se pasará a los componentes de input
+  // Esa funcion hará uso de un useNavigate de React router, el cual tiene el mismo efecto
+  // que el <Link to>. Esto facilita mucho el añadido de parametros a la URL. 
 
   return (
     <>
@@ -71,13 +79,19 @@ const WikiHeader = () => {
           </div>
 
           <div className="header-tools">
-            <SearchButton
+            <SearchInput
               searchPlaceholder="search for articles"
               toggleHeader={toggleSearchHeader}
-              filters={filters}
-              setFilters={setFilters}
               query={searchQuery}
               setQuery={setSearchQuery}
+              popover={
+                <ArticlesFilterPopover
+                  filters={filters}
+                  setFilters={setFilters}
+                  wikiTags={wikiTags}
+                />
+              }
+              searchFunction={() => console.log("Searching...")}
             />
             <CreateButton text="Create Article" />
             <Badge count={9} size="large">
@@ -94,19 +108,20 @@ const WikiHeader = () => {
           </div>
         </>
       ) : (
-        <Space.Compact style={{ width: "100%" }}>
-          <Button
-            size="large"
-            icon={<CloseOutlined />}
-            onClick={toggleSearchHeader}
-          />
-          <Input.Search
-            placeholder="search for articles"
-            allowClear
-            suffix={FilterIcon()}
-            size="large"
-          />
-        </Space.Compact>
+        <CompactSearchInput
+          searchPlaceholder="search for articles"
+          query={searchQuery}
+          setQuery={setSearchQuery}
+          toggleHeader={toggleSearchHeader}
+          popover={
+            <ArticlesFilterPopover
+              filters={filters}
+              setFilters={setFilters}
+              wikiTags={wikiTags}
+            />
+          }
+          searchFunction={() => console.log("Searching...")}
+        />
       )}
     </>
   );
