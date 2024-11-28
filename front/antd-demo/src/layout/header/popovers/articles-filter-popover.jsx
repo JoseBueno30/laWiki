@@ -6,6 +6,7 @@ const ArticlesFilterPopover = ({ filters, setFilters, wikiTags }) => {
   return (
     <Popover
       trigger="click"
+      overlayStyle={{ width: 350 }}
       content={
         <ArticlesFilterPanel
           filters={filters}

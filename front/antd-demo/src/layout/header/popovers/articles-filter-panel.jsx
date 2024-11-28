@@ -53,7 +53,7 @@ import {
     };
   
     return (
-      <Flex vertical style={{ width: "325px" }} align="center">
+      <Flex vertical align="center">
         <Divider>Order</Divider>
         <Radio.Group
           optionType="button"
