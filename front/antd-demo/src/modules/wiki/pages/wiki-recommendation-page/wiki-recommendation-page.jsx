@@ -106,7 +106,7 @@ const WikiRecommendationPage = () => {
   return (
     <>
       <div className="page-wrapper">
-          <div className="page-header">
+          <div className="md-flex">
               {/* TODO: Translate title */}
               <h1>Highest Rated Wikis</h1>
           </div>

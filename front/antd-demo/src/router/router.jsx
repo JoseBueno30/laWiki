@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
+import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 
 // The structure of the application's routes
 
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
-      { path: "", element: <TestRoute /> }, // Página principal
+      { path: "", element: <WikiRecommendationPage /> }, // Página principal
       {
         path: "wikis",
         children: [
