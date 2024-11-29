@@ -6,7 +6,7 @@ import {
   GlobalOutlined,
   EnterOutlined,
 } from "@ant-design/icons";
-import { ThemeContext } from "../../context/theme-context";
+import { ThemeContext } from "../../../context/theme-context";
 
 const UserProfilePopover = () => {
   const { colorTheme, toggleTheme } = useContext(ThemeContext);
@@ -14,7 +14,7 @@ const UserProfilePopover = () => {
   const [language, setLanguage] = useState("English");
 
   return (
-    <Menu className="user-profile-menu">
+    <Menu className="user-profile-menu" mode="inline">
       <Menu.Item key="1" className="profile-item">
         <strong>See profile</strong>
       </Menu.Item>

@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import CreateButton from "./buttons/create-button";
 import SearchInput from "./buttons/search-input";
 import ArticlesFilterPopover from "./popovers/articles-filter-popover";
-import UserProfilePopover from "./UserProfilePopover";
+import UserProfilePopover from "./popovers/UserProfilePopover";
 import CompactSearchInput from "./buttons/compact-search-input";
 
 const NotificationsClickHandler = () => {
@@ -92,7 +92,7 @@ const WikiHeader = () => {
               content={<UserProfilePopover />}
               trigger="click"
               placement="bottomRight"
-              overlayStyle={{ width: 260 }}
+              overlayStyle={{ width: 270 }}
             >
               <Avatar size="large" icon={<UserOutlined />} />
             </Popover>
