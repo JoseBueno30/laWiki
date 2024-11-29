@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Tag, Input, Button } from "antd";
+import { Tag, Input, Button} from "antd";
+const { TextArea } = Input;
 import { PlusOutlined } from "@ant-design/icons";
 import "./wiki-edit-page.css";
 
@@ -29,17 +30,17 @@ const WikiEditPage = () => {
           <label htmlFor="edit-wiki-title" className="edit-wiki-label">
             Title
           </label>
-          <input type="text" id="edit-wiki-title" className="edit-wiki-text" />
+          <Input id="edit-wiki-title"></Input>
         </div>
 
         <div className="edit-wiki-item">
           <label htmlFor="edit-wiki-description" className="edit-wiki-label">
             Description
           </label>
-          <textarea
-            id="edit-wiki-description"
-            className="edit-wiki-textarea"
-          />
+          <TextArea
+              id="edit-wiki-description" 
+              autoSize={{ minRows: 6, maxRows: 10 }}
+            />
         </div>
 
         <div className="edit-wiki-item">
