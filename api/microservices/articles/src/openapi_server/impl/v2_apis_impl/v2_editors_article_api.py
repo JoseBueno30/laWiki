@@ -6,7 +6,7 @@ from bson import ObjectId
 
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
 from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
-    check_if_tag_exists
+    check_if_tag_exists, check_if_wiki_exists
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2
@@ -15,7 +15,7 @@ from openapi_server.models.models_v2.new_article_v2 import NewArticleV2
 from openapi_server.models.models_v2.new_article_version_v2 import NewArticleVersionV2
 
 
-async def _create_article_tranlation(
+async def _create_article_translation(
         new_lan: str,
         title: str,
         og_body: str,
@@ -60,12 +60,12 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         new_article_json = new_article_v2.to_dict()
         new_article_version_json = new_article_v2.to_dict()
 
-        # Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
-        # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
-        #     raise Exception("Wiki does not exist")
-        # for tag in new_article_json["tags"]:
-        #     if not check_if_tag_exists(tag["id"]):
-        #         raise Exception("Tag does not exist")
+
+        if not await check_if_wiki_exists(new_article_json["wiki_id"]):
+            raise Exception("Wiki does not exist")
+        for tag in new_article_json["tags"]:
+            if not check_if_tag_exists(tag["id"]):
+                raise Exception("Tag does not exist")
 
         if new_article_json["translate_title"]:
             title = new_article_json.pop("title")
@@ -128,9 +128,9 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version_v2.to_dict()
 
-        # for tag in new_article_version_json["tags"]:
-        #     if not check_if_tag_exists(tag["id"]):
-        #         raise Exception("Tag does not exist")
+        for tag in new_article_version_json["tags"]:
+            if not check_if_tag_exists(tag["id"]):
+                raise Exception("Tag does not exist")
 
         if new_article_version_json["translate_title"]:
             title = new_article_version_json.pop("title")
@@ -155,17 +155,17 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         article_version_result = await mongodb["article_version"].insert_one(new_article_version_json)
 
         #   Generate translations
-        await _create_article_tranlation(new_article_version_json["lan"],new_article_version_json["title"],
+        await _create_article_translation(new_article_version_json["lan"],new_article_version_json["title"],
                                          new_article_version_json["body"], article_version_result.inserted_id, False)
 
         if new_article_version_json["lan"] != "es":
-            await _create_article_tranlation("es", new_article_version_json["title"],
+            await _create_article_translation("es", new_article_version_json["title"],
                                              new_article_version_json["body"], article_version_result.inserted_id, True)
         if new_article_version_json["lan"] != "en":
-            await _create_article_tranlation("en", new_article_version_json["title"],
+            await _create_article_translation("en", new_article_version_json["title"],
                                              new_article_version_json["body"], article_version_result.inserted_id, True)
         if new_article_version_json["lan"] != "fr":
-            await _create_article_tranlation("fr", new_article_version_json["title"],
+            await _create_article_translation("fr", new_article_version_json["title"],
                                              new_article_version_json["body"], article_version_result.inserted_id, True)
 
         #   Undo the changes to id in order to return the ArticleVersion object
