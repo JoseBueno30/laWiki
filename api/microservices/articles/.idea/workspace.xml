@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_public_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_public_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/articles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/articles.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/.idea/wikis.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/.idea/wikis.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +66,7 @@
       <updated>1732213686923</updated>
       <workItem from="1732213688158" duration="727000" />
       <workItem from="1732356407794" duration="3473000" />
-      <workItem from="1732649861109" duration="645000" />
+      <workItem from="1732868074866" duration="791000" />
     </task>
     <servers />
   </component>
