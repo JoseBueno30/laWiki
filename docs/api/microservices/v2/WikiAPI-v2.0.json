@@ -1344,7 +1344,7 @@
           "name": {
             "type": "string",
             "description": "Name of the wiki.",
-            "example": "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+            "example": "Nombre de wiki"
           },
           "description": {
             "type": "string",

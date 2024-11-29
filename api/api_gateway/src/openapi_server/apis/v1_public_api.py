@@ -535,7 +535,7 @@ async def rate_article(
     response_model_by_alias=True,
 )
 async def search_articles(
-    wiki_id: str = Query(None, description="The ID of the wiki where the serch will be made", alias="wiki_id"),
+    wiki_id: str = Query(..., description="The ID of the wiki where the serch will be made", alias="wiki_id"),
     name: str = Query(None, description="Search query for the name of the article", alias="name"),
     tags: List[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
@@ -565,8 +565,8 @@ async def search_articles(
 )
 async def search_wikis(
     name: str = Query(None, description="String to be searched within the wiki&#39;s name.", alias="name"),
-    offset: int = Query(20, description="Maximum amount of results to be returned.", alias="offset", ge=1, le=100),
-    limit: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="limit", ge=0),
+    limit: int = Query(20, description="Maximum amount of results to be returned.", alias="limit", ge=1, le=100),
+    offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
     order: str = Query(None, description="Sorts the wikis by different criteria", alias="order"),
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Wiki", alias="author_name"),
@@ -575,4 +575,4 @@ async def search_wikis(
     """Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1PublicApi.subclasses[0]().search_wikis(name, offset, limit, order, creation_date, author_name, lang)
+    return await BaseV1PublicApi.subclasses[0]().search_wikis(name, limit, offset, order, creation_date, author_name, lang)
