@@ -42,7 +42,7 @@ const CommentList = ({commentList = [   ]}) => {
           </Space>
           <Space className='filter-group'>
               <ControlOutlined className='icon comment-list-son'/>
-              <Text className='comment-list-son' strong style={{paddingRight: "1.5rem"}}>Filter</Text>
+              <Text className='comment-list-son' strong>Filter</Text>
               <Text className='comment-list-son'>Date Range</Text>
               <RangePicker/>
           </Space>
