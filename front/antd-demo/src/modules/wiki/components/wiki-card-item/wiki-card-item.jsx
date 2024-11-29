@@ -15,7 +15,7 @@ const WikiCardItem = ({title, description, rating, image}) => {
         <Meta title={title} description={description} />
         <div className='rating-container'>
           {rating}
-          <Rate style={{ marginLeft: 10 }} disabled allowHalf value={rating} />
+          <Rate style={{ marginLeft: 10}} disabled allowHalf value={rating} />
         </div>
       </Card>
     </>

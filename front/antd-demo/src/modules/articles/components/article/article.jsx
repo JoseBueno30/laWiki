@@ -1,7 +1,7 @@
 import React from "react";
 import "./article.css";
 import { Grid, Flex, Rate, Row, Col } from "antd";
-import UserAvatar from "../../../wiki/avatar/user-avatar";
+import UserAvatar from "../../../wiki/components/avatar/user-avatar";
 
 const { useBreakpoint } = Grid;
 
