@@ -12,7 +12,7 @@ const WikiRecommendationPage = () => {
   useEffect(() => {
     const fetchHighestRatedWikis = async () => {
       // TODO dbc: proper api call;
-        const response = await apiClient.get("/v1/articles/?wiki_id=672c8721ba3ae42bd5985361");
+        const response = await WikiService.getRatedWikis();
         setWikiList([ {
           id: 1,
           title: "React ReactReactReactReactReactReactReactReactReactReactReact",
