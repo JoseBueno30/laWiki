@@ -1,0 +1,9 @@
+.article-info {
+    width: 80%;
+    border-radius: 6px;
+    border: 1px solid #c7c7c7;
+    height: auto;
+    padding: 10px;
+    background-color: #c4c4c4;
+    min-width: 300px;
+}

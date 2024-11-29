@@ -13,6 +13,7 @@
 
 
 from __future__ import annotations
+from datetime import datetime
 import pprint
 import re  # noqa: F401
 import json
@@ -37,7 +38,7 @@ class WikiV2(BaseModel):
     id: StrictStr = Field(description="Unique identifier for the wiki.")
     name: Dict[str, StrictStr] = Field(description="Name of the wiki in different languages.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
-    creation_date: StrictStr = Field(description="Date of creation of the wiki.")
+    creation_date: datetime = Field(description="Date of creation of the wiki.")
     author: AuthorV2
     tags: List[TagV2]
     rating: Union[Annotated[float, Field(le=5, strict=True, ge=0)], Annotated[int, Field(le=5, strict=True, ge=0)]] = Field(description="Average rating of the wiki")

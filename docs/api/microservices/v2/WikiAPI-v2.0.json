@@ -62,7 +62,7 @@
               "minimum": 1,
               "type": "integer",
               "example": 20,
-              "default": 20
+              "default": 0
             }
           },
           {
@@ -74,9 +74,10 @@
             "explode": true,
             "schema": {
               "minimum": 0,
+              "maximum": 100,
               "type": "integer",
               "example": 10,
-              "default": 0
+              "default": 20
             }
           },
           {
@@ -1343,7 +1344,7 @@
           "name": {
             "type": "string",
             "description": "Name of the wiki.",
-            "example": "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+            "example": "Nombre de wiki"
           },
           "description": {
             "type": "string",

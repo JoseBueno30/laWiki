@@ -253,8 +253,8 @@ class BaseV1PublicApi:
     async def search_wikis(
         self,
         name: str,
-        offset: int,
         limit: int,
+        offset: int,
         order: str,
         creation_date: str,
         author_name: str,

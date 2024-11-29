@@ -1,5 +1,6 @@
 import copy
 from datetime import datetime, date
+from typing import List
 
 from bson import ObjectId
 
@@ -34,7 +35,7 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
 
         parse_title_to_title_dict(new_article_json)
 
-        # TODO  Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
+        # Checks if the wiki exists (COMMENTED UNTIL IT IS LAUNCHED)
         # if not await check_if_wiki_exists(new_article_json["wiki_id"]):
         #     raise Exception("Wiki does not exist")
 
@@ -138,8 +139,6 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
                       "tags": article_tags}},
         )
 
-
-
         get_original_article_version_title(new_article_version_json)
         get_original_tags(new_article_version_json)
         #   Generates the returning ArticleVersion value
@@ -161,7 +160,7 @@ class EditorArticleAPIV1(BaseV1EditorsApi):
 
         #   Commented until it's launched
         # await delete_article_comments(id)
-        #   TODO await delete_article_ratings()
+        # await delete_article_ratings(id)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 

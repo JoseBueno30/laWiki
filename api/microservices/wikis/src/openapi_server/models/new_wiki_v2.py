@@ -31,12 +31,13 @@ class NewWikiV2(BaseModel):
     """
     Model of a new wiki
     """ # noqa: E501
-    name: Dict[str, StrictStr] = Field(description="Name of the wiki in different languages.")
+    name: StrictStr = Field(description="Name of the wiki in different languages.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
     author: StrictStr = Field(description="Creator of the wiki. Should not remain a string.")
     lang: StrictStr = Field(description="Language of the wiki.")
     image: StrictStr = Field(description="Link to the wiki banner image.")
-    __properties: ClassVar[List[str]] = ["name", "description", "author", "lang", "image"]
+    translate: bool = Field(description="Indicates if the Wiki shall be translated to the supported languages.")
+    __properties: ClassVar[List[str]] = ["name", "description", "author", "lang", "image","translate"]
 
     model_config = {
         "populate_by_name": True,
@@ -91,7 +92,8 @@ class NewWikiV2(BaseModel):
             "description": obj.get("description"),
             "author": obj.get("author"),
             "lang": obj.get("lang"),
-            "image": obj.get("image")
+            "image": obj.get("image"),
+            "translate": obj.get("translate")
         })
         return _obj
 
