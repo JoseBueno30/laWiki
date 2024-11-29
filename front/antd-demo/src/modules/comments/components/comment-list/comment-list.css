@@ -1,11 +1,29 @@
+.comment-list{
+    padding: 20px;
+    width: 100%;
+}
+
 .comment-list-options{
     /* column-gap: 1.5rem; */
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.comment-list-son{
+    flex-shrink: 0;
+    min-width: fit-content;
+    white-space: nowrap;
 }
 .filter-group{
     margin-left: auto;
+
+    @media (max-width: 690px) {
+        padding-top: 10px;
+        margin-left: 0;
+    }
 }
+
 
 .icon{
     font-size: 25px;

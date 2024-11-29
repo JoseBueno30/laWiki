@@ -7,7 +7,7 @@ const { Text, Paragraph } = Typography;
 
 const Comment = ({comment}) => {
   return (
-    <Flex>
+    <Flex className='comment-list-son'>
       <Avatar className='comment-avatar' src={comment.author.image} alt={comment.author.name} />
       <div>
         <Space direction="vertical">

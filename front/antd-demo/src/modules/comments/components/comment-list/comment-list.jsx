@@ -24,9 +24,9 @@ const CommentList = ({commentList = [   ]}) => {
   console.log(commentList)
   return (
     
-    <Flex  style={{padding: "20px", width: "80%"}}>
+    <Flex className='comment-list'>
       <Space direction='vertical' style={{width: "100%"}}>
-        <Space className='comment-list-title'>
+        <Space className='comment-list-title comment-list-son'>
           <CommentOutlined className='icon'></CommentOutlined>
           <Text strong>Comments (3)</Text>
         </Space>
@@ -34,16 +34,16 @@ const CommentList = ({commentList = [   ]}) => {
         <CommentInput user={user}></CommentInput>
 
         <div className='comment-list-options'>
-          <Space className='comment-list-title'>
+          <Space className='comment-list-title comment-list-son'>
             <SortAscendingOutlined style={{fontSize: "25px"}}/>
             <Text strong>Order</Text>
       
             <Radio.Group block size='small' options={options} defaultValue="recent" optionType='button'/>
           </Space>
           <Space className='filter-group'>
-              <ControlOutlined className='icon'/>
-              <Text strong style={{paddingRight: "1.5rem"}}>Filter</Text>
-              <Text>Date Range</Text>
+              <ControlOutlined className='icon comment-list-son'/>
+              <Text className='comment-list-son' strong style={{paddingRight: "1.5rem"}}>Filter</Text>
+              <Text className='comment-list-son'>Date Range</Text>
               <RangePicker/>
           </Space>
         </div>

@@ -8,7 +8,7 @@ const {TextArea} = Input
 
 const CommentInput = ({user}) => {
   return (
-    <Flex style={{paddingBottom: "1.5rem"}}>
+    <Flex className='comment-input comment-list-son'>
       <Avatar className='comment-avatar' src={user.image} alt={user.name} />
       <div style={{width: "100%"}}>
         <Space style={{width: "100%"}} direction="vertical">
