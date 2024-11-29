@@ -50,10 +50,7 @@ const WikiHeader = () => {
         <>
           <div className="header-title-container">
             <Link to="/">
-              <Title
-                level={3}
-                className="header-title wiki-title"
-              >
+              <Title level={3} className="header-title wiki-title">
                 LaWiki
               </Title>
             </Link>
@@ -62,10 +59,7 @@ const WikiHeader = () => {
             <Title level={3} className="header-title">
               /
             </Title>
-            <Title
-              level={3}
-              className="header-title wiki-title"
-            >
+            <Title level={3} className="header-title wiki-title">
               JoJoWikideddedededdedededededddded
             </Title>
           </div>

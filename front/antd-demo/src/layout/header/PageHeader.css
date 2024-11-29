@@ -33,6 +33,7 @@
   margin-right: 8px;
   white-space: nowrap;
   overflow: hidden;
+  flex-grow: 1;
 }
 
 .header-title{
@@ -41,7 +42,6 @@
 
 .wiki-title {
   transition: 0.1s ease-in-out;
-  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -58,7 +58,7 @@
   align-items: center;
   justify-content: end;
   gap: 24px;
-  flex-grow: 1;
+  flex-grow: 0;
 }
 
 .icon-container{
