@@ -33,6 +33,13 @@
     gap: 20px;
     margin-top: 40px;
     width: 100%;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .edit-wiki-buttons-section {
+        gap: 10px;
+    }
 }
 
 .right-button {

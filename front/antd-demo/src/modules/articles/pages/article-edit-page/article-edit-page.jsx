@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Tag, Select, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import './article-edit-page.css';
+import MapComponent from "../MapComponent";
 
 const { Option } = Select;
 
@@ -79,8 +80,13 @@ const ArticleEditPage = () => {
             </Select>
           </div>
         </div>
+        
+        <div className="edit-article-item">
+          <h2>Selecciona una ubicación en el mapa:</h2>
+          <MapComponent />
+        </div>
 
-        <div className="edit-article-buttons-section">
+        <div className="edit-article-buttons-section ">
           <Button type="primary">Save article</Button>
           <Button>Cancel</Button>
           <Button danger className="right-button">
