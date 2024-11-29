@@ -1,4 +1,5 @@
 
+import json
 from typing import Any, Coroutine, List, Dict
 
 from bson import ObjectId
@@ -362,29 +363,29 @@ class WikiApiAdmins(BaseAdminsV2Api):
                                             ,upsert=False
                                             ,return_document=ReturnDocument.AFTER)
 
-        print("Documento: " + str(result))
-
         if result is None:
             raise LookupError("Cannot find wiki")
         
         try:
             await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], translated_name, new_wiki.description, result["_id"])
-        except:
+        except Exception as e:
+            print(e)
             raise ConnectionError("Cannot connect to translator")
         
-        raise UnicodeError("I can't figure this out, but it does update")
+        final_wiki = WikiV2(id=str(result["_id"])
+                         , name=translated_name
+                         , description=new_wiki.description
+                         , rating=result["rating"]
+                         , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
+                         , tags=result["tags"]
+                         , creation_date=str(result["creation_date"])
+                         , lang=new_wiki.lang
+                         , image=new_wiki.image)
         
-        #final_wiki = WikiV2(id=str(result["_id"])
-        #                 , name=new_wiki.name
-        #                 , description=new_wiki.description
-        #                 , rating=result["rating"]
-        #                 , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
-        #                 , tags=result["tags"]
-        #                 , creation_date=result["creation_date"]
-        #                 , lang=new_wiki.lang
-        #                 , image=new_wiki.image)
-        #
-        #return final_wiki
+        print(str(result["creation_date"]) + ": " + str(type(result["creation_date"])))
+        print(final_wiki)
+        
+        return final_wiki
     
 class WikiApiInternal(BaseInternalV2Api):
 

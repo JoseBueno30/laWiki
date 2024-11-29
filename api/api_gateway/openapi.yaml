@@ -3153,14 +3153,14 @@ components:
       example:
         image: https://openapi-generator.tech
         author: author
-        name: "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+        name: "Nombre de wiki"
         description: description
         lang: lang
         translate: true
       properties:
         name:
           description: Name of the wiki.
-          example: "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
+          example: "Nombre de wiki"
           title: name
           type: string
         description:
