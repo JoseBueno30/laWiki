@@ -31,7 +31,7 @@ class NewWikiV2(BaseModel):
     """
     Model of a new wiki
     """ # noqa: E501
-    name: Dict[str, StrictStr] = Field(description="Name of the wiki in different languages.")
+    name: StrictStr = Field(description="Name of the wiki in different languages.")
     description: StrictStr = Field(description="Details of the wiki set by its editors.")
     author: StrictStr = Field(description="Creator of the wiki. Should not remain a string.")
     lang: StrictStr = Field(description="Language of the wiki.")

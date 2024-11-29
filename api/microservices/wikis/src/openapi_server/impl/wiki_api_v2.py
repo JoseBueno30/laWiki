@@ -114,18 +114,30 @@ def raise_if_not_id(value: str):
     if not ObjectId.is_valid(value):
         raise TypeError("Must be valid ID")
 
+
 async def translate_wiki(languages : List[str], wiki_lang: str, name: Dict[str, str], description: str, target_wiki: ObjectId):
-    names = name
-    for lang in [x for x in languages if x != name.keys()]:
-        names[lang] = await translate_text_to_lan(name[wiki_lang], lang)
+    """Translates and uploads all necessary translations, name should be translated already"""
     for lang in [x for x in languages if x != wiki_lang]:
         translation = {}
         translation["wiki_id"] = target_wiki
         translation["description"] = await translate_text_to_lan(description, lang)
         translation["lang"] = lang
-        translation["name"] = names[lang]
+        translation["name"] = name[lang]
         upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : lang}, translation,upsert=True)
 
+async def translate_name(wiki: NewWikiV2):
+    if wiki.translate:
+        name = {}
+        name[wiki.lang] = wiki.name
+        for lang in [x for x in SUPPORTED_LANGUAGES if x != wiki.lang]:
+            name[lang] = await translate_text_to_lan(wiki.name,lang)
+    else:
+        name = {}
+        name["es"] = wiki.name
+        name["en"] = wiki.name
+        name["fr"] = wiki.name
+    print(name)
+    return name
 
 class WikiApi(BaseDefaultV2Api):
 
@@ -167,8 +179,10 @@ class WikiApi(BaseDefaultV2Api):
         return result
     
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
+        name = await translate_name(new_wiki_v2)
+
         final_wiki = WikiV2(id='1'
-                         , name=new_wiki_v2.name
+                         , name=name
                          , description=new_wiki_v2.description
                          , rating=0
                          , author=AuthorV2(id='0',name=new_wiki_v2.author, image="")
@@ -185,8 +199,7 @@ class WikiApi(BaseDefaultV2Api):
         final_wiki.id = str(result.inserted_id)
         final_wiki.author.id = str(author_id)
 
-        if new_wiki_v2.translate:
-            await translate_wiki(SUPPORTED_LANGUAGES, new_wiki_v2.lang, new_wiki_v2.name, new_wiki_v2.description, result.inserted_id)
+        await translate_wiki(SUPPORTED_LANGUAGES, new_wiki_v2.lang, name, new_wiki_v2.description, result.inserted_id)
 
         return final_wiki
 
@@ -333,11 +346,13 @@ class WikiApiAdmins(BaseAdminsV2Api):
 
         print(new_wiki)
 
+        translated_name = await translate_name(new_wiki)
+
         result = await mongodb["wiki"].find_one_and_update(match_by_name_or_id(name,id)
                                             ,
                                             {
                                                 "$set": {
-                                                    "name" : new_wiki.name,
+                                                    "name" : translated_name,
                                                     "description": new_wiki.description,
                                                     "author.name": new_wiki.author,
                                                     "image": new_wiki.image,
@@ -353,8 +368,7 @@ class WikiApiAdmins(BaseAdminsV2Api):
             raise LookupError("Cannot find wiki")
         
         try:
-            if new_wiki.translate:
-                await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], new_wiki.name, new_wiki.description, result["_id"])
+            await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], translated_name, new_wiki.description, result["_id"])
         except:
             raise ConnectionError("Cannot connect to translator")
         
