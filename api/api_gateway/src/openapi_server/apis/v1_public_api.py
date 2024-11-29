@@ -535,7 +535,7 @@ async def rate_article(
     response_model_by_alias=True,
 )
 async def search_articles(
-    wiki_id: str = Query(None, description="The ID of the wiki where the serch will be made", alias="wiki_id"),
+    wiki_id: str = Query(..., description="The ID of the wiki where the serch will be made", alias="wiki_id"),
     name: str = Query(None, description="Search query for the name of the article", alias="name"),
     tags: List[str] = Query(None, description="A comma-separated list of tag IDs to search for", alias="tags"),
     offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),

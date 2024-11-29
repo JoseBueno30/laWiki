@@ -1,5 +1,5 @@
 
-from typing import Any, Coroutine, List
+from typing import Any, Coroutine, List, Dict
 
 from bson import ObjectId
 from pymongo import ReturnDocument
@@ -114,7 +114,7 @@ def raise_if_not_id(value: str):
     if not ObjectId.is_valid(value):
         raise TypeError("Must be valid ID")
 
-async def translate_wiki(languages : list[str], wiki_lang: str, name: dict[str, str], description: str, target_wiki: ObjectId):
+async def translate_wiki(languages : List[str], wiki_lang: str, name: Dict[str, str], description: str, target_wiki: ObjectId):
     names = name
     for lang in [x for x in languages if x != name.keys()]:
         names[lang] = await translate_text_to_lan(name[wiki_lang], lang)
