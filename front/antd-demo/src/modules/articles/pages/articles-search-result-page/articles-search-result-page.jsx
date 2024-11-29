@@ -1,169 +1,119 @@
-
-import React, {useEffect, useState} from 'react';
-import './articles-search-result-page.css';
-import { Flex, Row, Col, Button } from 'antd';
-import { useSearchParams, useNavigate } from "react-router-dom";
-import ArticleList from '../../components/article-list/article-list';
+import React, { useEffect, useState } from "react";
+import "./articles-search-result-page.css";
+import { Flex, Row, Col, Button } from "antd";
+import { useSearchParams, useNavigate, useLocation, Link } from "react-router-dom";
+import ArticleList from "../../components/article-list/article-list";
 import axios from "axios";
 
-const articleList = [
-  {
-    id: "673e4ff8eb2c93347976b0df",
-    title: {
-      en: "Parkway Drive",
-      es: "Parkway Drive",
-      fr: "Parkway Drive"
-    },
-    author: {
-      name: "EdgyBoy",
-      image: "itachi.png",
-      id: "672901e41a1c2dc79c930ded"
-    },
-    tags: [
-      {
-        tag: {
-          en: "Tag 3",
-          es: "Tag 3",
-          fr: "Tag 3"
-        },
-        id: "67310684be72ea3d639689b2"
-      }
-    ],
-    wiki_id: "672c8721ba3ae42bd5985361",
-    lan: "es",
-    translate_title: false,
-    creation_date: "2024-11-20",
-    rating: 4.75,
-    versions: [
-      {
-        title: {
-          en: "Parkway Drive",
-          es: "Parkway Drive",
-          fr: "Parkway Drive"
-        },
-        author: {
-          name: "EdgyBoy",
-          image: "itachi.png",
-          id: "672901e41a1c2dc79c930ded"
-        },
-        lan: "es",
-        translate_title: false,
-        modification_date: "2024-11-20T22:09:13.574Z",
-        id:  "673e4ff9eb2c93347976b0e0"
-      }
-    ]
-  },
-  {
-    id: "673e4ff8eb2c93347976b0df",
-    title: {
-      en: "ARTICULO 2",
-      es: "AR \n  TICULOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
-      fr: "Parkway Drive"
-    },
-    author: {
-      name: "ADRIDUTY",
-      image: "itachi.png",
-      id: "672901e41a1c2dc79c930ded"
-    },
-    tags: [
-      {
-        tag: {
-          en: "Tag 3",
-          es: "Tag 3",
-          fr: "Tag 3"
-        },
-        id: "67310684be72ea3d639689b2"
-      }
-    ],
-    wiki_id: "672c8721ba3ae42bd5985361",
-    lan: "es",
-    translate_title: false,
-    creation_date: "2024-11-20",
-    rating: 0.75,
-    versions: [
-      {
-        title: {
-          en: "Parkway Drive",
-          es: "Parkway Drive",
-          fr: "Parkway Drive"
-        },
-        author: {
-          name: "EdgyBoy",
-          image: "itachi.png",
-          id: "672901e41a1c2dc79c930ded"
-        },
-        lan: "es",
-        translate_title: false,
-        modification_date: "2024-11-20T22:09:13.574Z",
-        id:  "673e4ff9eb2c93347976b0e0"
-      }
-    ]
-  },
-]
-
-const wiki_id = "672c8721ba3ae42bd5985361"
+const wiki_id = "672c8721ba3ae42bd5985361";
 
 const ArticlesSearchResultPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [loading, setLoading] = useState(false);
+  const basePath = useLocation().pathname;
+  const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState([]);
+  const [prevPageURL, setPrevPageURL] = useState(null);
+  const [nextPageURL, setNextPageURL] = useState(null);
+  const [response, setResponse] = useState(null);
+  const [filters, setFilters] = useState(null);
 
   // TODO: In order to search in a given wiki, should the gateway provide an endpoint to search having only the wiki name? or should the front handle this
 
   const searchArticles = async () => {
     setLoading(true);
-    try{
+    try {
       var params = {
         wiki_id: wiki_id,
         name: searchParams.get("name") || "",
         tags: searchParams.getAll("tags"),
-        offset: 0,
-        limit: 10,
+        offset: searchParams.get("offset") || 0,
+        limit: 1,
         order: searchParams.get("order") || "",
         creation_date: searchParams.get("creation_date") || "",
         author_name: searchParams.get("author_name") || "",
         editor_name: searchParams.get("editor_name") || "",
         lan: "es",
-      }
+      };
 
       params = Object.fromEntries(
-        Object.entries(params).filter(([_, value]) => value && value.length !== 0)
+        Object.entries(params).filter(
+          ([_, value]) => value && value.length !== 0
+        )
       );
 
-      const response = await axios.get("http://localhost:3000/v1/articles",{params:params})  
+      
+      
+      const HTTPresponse = await axios.get(
+        "http://localhost:3000/v1/articles",
+        { params: params }
+      );
+      
+      setArticles(HTTPresponse.data.articles);
+      setPrevPageURL(HTTPresponse.data.previous);
+      setNextPageURL(HTTPresponse.data.next);
+      setResponse(HTTPresponse.data);
+      
+      delete params.wiki_id;
+      delete params.name;
+      delete params.offset;
+      delete params.limit;
+      
+      setFilters(params);
 
-      setArticles(response.data.articles)
-
-    } catch (err){
+      console.log(params)
+      console.log(filters)
+    } catch (err) {
       console.log(err);
-    }finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     setLoading(true);
     searchArticles();
-  }, [wiki_id, searchParams])
-
+  }, [wiki_id, searchParams]);
 
   return (
-    <Flex vertical align="center" style={{minWidth:400}}>
-      <h2 className='article-search-results-title'>Search results for: (article_name)</h2>
-      <h3 className='article-search-results-info'>Total: (X) | Filters: (used_filters)</h3>
-      <ArticleList articleList={articles}/>
-      <Row align="middle" justify="space-around" style={{ width:"80%", marginTop:20}}>
-        <Col>
-          <Button type="primary">Previous</Button>
-        </Col>
-        <Col>
-          Page Nº
-        </Col>
-        <Col>
-          <Button type="primary">Next</Button>
-        </Col>
-      </Row>
-    </Flex>
+    <>
+      {loading ? (
+        <p>CARGANDO</p>
+      ) : (
+        <Flex vertical align="center" style={{ minWidth: 400 }}>
+          <h2 className="article-search-results-title">
+            Search results for: {searchParams.get("name") || ""}
+          </h2>
+          <h3 className="article-search-results-info">
+            Total: {response.total} | Filters: {new URLSearchParams(filters).toString().replaceAll("&", " | ").replaceAll("=", " : ")}{/* MAKE A VARIABLE THAT HAS THE PROPER STRING WITH THE DESIRED FILTERS */}
+          </h3>
+          <ArticleList articleList={articles} />
+          <Row
+            align="middle"
+            justify="space-around"
+            style={{ width: "80%", marginTop: 20 }}
+          >
+            <Col>
+              <Link to={basePath + "?" + new URLSearchParams(prevPageURL).toString()}>{/* SHOULD PAGINATION RELOAD THE PAGE OR JUST MAKE NEW PETITIONS? */}
+                <Button type="primary" disabled={prevPageURL == null}>
+                  Previous
+                </Button>
+              </Link>
+            </Col>
+            <Col>
+              Page {Math.ceil(response.offset + 1 / response.limit)} of {Math.ceil(response.total / response.limit)}
+            </Col>
+            <Col>
+            <Link to={basePath + "?" + new URLSearchParams(nextPageURL).toString()}>
+              {console.log(new URLSearchParams(nextPageURL.rem))}
+              <Button type="primary" disabled={nextPageURL == null}>
+                Next
+              </Button>
+            </Link>
+            </Col>
+          </Row>
+        </Flex>
+      )}
+    </>
   );
 };
 

@@ -45,10 +45,10 @@ const Article = ({ article }) => {
         sm={5}
         xs={24}
         className="article-date"
-        title={"Last modified: " + article.creation_date}
+        title={"Last modified: " + article.creation_date.split("T")[0]}
         align="center"
       >
-        {article.creation_date}
+        {article.creation_date.split("T")[0]}
       </Col>
       <Col md={7} sm={10} xs={24} className="article-rating" align="center">
         {article.rating}

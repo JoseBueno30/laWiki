@@ -7,7 +7,6 @@ const { useBreakpoint } = Grid;
 
 const ArticleList = ({ articleList }) => {
   const screens = useBreakpoint();
-
   return (
     <Flex className="article-list" vertical gap="small" align="center">
       <Row className="article-info" justify="space-around" align="center">
@@ -26,7 +25,7 @@ const ArticleList = ({ articleList }) => {
       </Row>
 
       {articleList.map((article) => (
-        <Article key={article} article={article} />
+        <Article key={article.id} article={article} />
       ))}
     </Flex>
   );
