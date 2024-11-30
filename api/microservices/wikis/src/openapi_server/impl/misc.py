@@ -20,4 +20,4 @@ SUPPORTED_LANGUAGES = ["en", "es", "fr"]
 def raise_http_exception(code : int, message : str, e: Exception):
     print(e)
     print(type(e))
-    raise HTTPException(status_code=code, detail=message)
+    raise HTTPException(status_code=code, detail=message + '. More details: ' + str(e))
