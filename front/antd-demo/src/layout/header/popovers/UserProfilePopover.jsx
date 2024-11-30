@@ -9,9 +9,8 @@ import {
 import { ThemeContext } from "../../../context/theme-context";
 
 const UserProfilePopover = () => {
-  const { colorTheme, toggleTheme } = useContext(ThemeContext);
+  const {colorTheme, locale, toggleTheme, changeLocale} = useContext(ThemeContext);
   const [notifications, setNotifications] = useState("Email");
-  const [language, setLanguage] = useState("English");
 
   return (
     <Menu className="user-profile-menu" mode="inline">
@@ -42,16 +41,16 @@ const UserProfilePopover = () => {
       </Menu.SubMenu>
       <Menu.SubMenu
         key="4"
-        title={`Language: ${language}`}
+        title={`Language: ${locale}`}
         icon={<GlobalOutlined />}
       >
-        <Menu.Item key="4-1" onClick={() => setLanguage("English")}>
+        <Menu.Item key="4-1" onClick={() => changeLocale("en")}>
           English
         </Menu.Item>
-        <Menu.Item key="4-2" onClick={() => setLanguage("Español")}>
+        <Menu.Item key="4-2" onClick={() => changeLocale("es")}>
           Español
         </Menu.Item>
-        <Menu.Item key="4-3" onClick={() => setLanguage("Français")}>
+        <Menu.Item key="4-3" onClick={() => changeLocale("fr")}>
           Français
         </Menu.Item>
       </Menu.SubMenu>
