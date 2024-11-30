@@ -63,7 +63,7 @@ const WikiHeader = () => {
               /
             </Title>
             <Title level={3} className="header-title wiki-title">
-              JoJoWikideddedededdedededededddded
+              JoJoWiki
             </Title>
           </div>
 

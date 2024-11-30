@@ -26,5 +26,7 @@
     "tags-addtag" : "Add tag",
     "daterange-divider" : "Date range",
     "author-divider" : "Author",
-    "editor-divider" : "Editor"
+    "author-placeholder" : "Author username",
+    "editor-divider" : "Editor",
+    "editor-placeholder" : "Editor username"
 }

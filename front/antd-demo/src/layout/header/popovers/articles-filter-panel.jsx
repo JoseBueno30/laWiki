@@ -97,7 +97,7 @@ import {
         <Divider>{t('author-divider')}</Divider>
         <Input
           defaultValue={filters.author}
-          placeholder="author_name"
+          placeholder={t('author-placeholder')}
           allowClear
           onChange={updateAuthor}
           style={{ width: "80%" }}
@@ -105,7 +105,7 @@ import {
         <Divider>{t('editor-divider')}</Divider>
         <Input
           defaultValue={filters.editor}
-          placeholder="editor_name"
+          placeholder={t('editor-placeholder')}
           allowClear
           onChange={updateEditor}
           style={{ width: "80%" }}

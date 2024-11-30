@@ -26,5 +26,7 @@
     "tags-addtag": "Ajouter une étiquette",
     "daterange-divider": "Plage de dates",
     "author-divider": "Auteur",
-    "editor-divider": "Éditeur"
+    "author-placeholder": "Nom d'utilisateur de l'auteur",
+    "editor-divider": "Éditeur",
+    "editor-placeholder": "Nom d'utilisateur de l'éditeur"
 }
