@@ -3,6 +3,7 @@ import { createContext, useState } from "react";
 import enUS from 'antd/es/locale/en_US';
 import esES from 'antd/es/locale/es_ES';
 import frFR from 'antd/es/locale/fr_FR';
+import i18n from "../i18n";
 
 export const ThemeContext = createContext();
 
@@ -22,6 +23,7 @@ export const ThemeProvider = ({ children }) => {
 
   const changeLocale = (newLocale) => {
     setLocale(newLocale);
+    i18n.changeLanguage(newLocale);
   }
   return (
     <ThemeContext.Provider value={{ colorTheme, locale, toggleTheme, changeLocale }}>

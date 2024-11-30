@@ -18,6 +18,8 @@ import ArticlesFilterPopover from "./popovers/articles-filter-popover";
 import UserProfilePopover from "./popovers/UserProfilePopover";
 import CompactSearchInput from "./buttons/compact-search-input";
 
+import { useTranslation } from "react-i18next";
+
 const NotificationsClickHandler = () => {
   console.log("Notifications clicked");
 };
@@ -35,6 +37,7 @@ const WikiHeader = () => {
     startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useTranslation('header-trans');
 
   const toggleSearchHeader = () => {
     setSearchHeader(!showSearchHeader);
@@ -66,7 +69,7 @@ const WikiHeader = () => {
 
           <div className="header-tools">
             <SearchInput
-              searchPlaceholder="search for articles"
+              searchPlaceholder={t('article-search-placeholder')}
               toggleHeader={toggleSearchHeader}
               query={searchQuery}
               setQuery={setSearchQuery}
@@ -79,7 +82,7 @@ const WikiHeader = () => {
               }
               searchFunction={() => console.log("Searching...")}
             />
-            <CreateButton text="Create Article" />
+            <CreateButton text={t('new-article')} />
             <Badge count={9} size="large">
               <div
                 className="icon-container"
@@ -102,7 +105,7 @@ const WikiHeader = () => {
         </>
       ) : (
         <CompactSearchInput
-          searchPlaceholder="search for articles"
+          searchPlaceholder={t('article-search-placeholder')}
           query={searchQuery}
           setQuery={setSearchQuery}
           toggleHeader={toggleSearchHeader}

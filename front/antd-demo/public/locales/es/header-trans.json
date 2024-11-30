@@ -1,0 +1,18 @@
+{
+    "new-wiki" : "Nueva Wiki",
+    "wiki-search-placeholder" : "Buscar wikis",
+    "new-article": "Nuevo Artículo",
+    "article-search-placeholder": "Buscar artículos",
+    "profile-link" : "Ver el perfil",
+    "theme-menu" : "Tema: {{theme}}",
+    "theme-light" : "Claro",
+    "theme-dark" : "Oscuro",
+    "notifications-menu" : "Notificaciones: {{notifications}}",
+    "notifications-email" : "Email",
+    "notifications-afterlogin" : "Despues de inicio sesión",
+    "language-menu" : "Idioma: {{language}}",
+    "language-en" : "Inglés",
+    "language-es" : "Español",
+    "language-fr" : "Francés",
+    "logout-link" : "Cerrar sesión"
+}
