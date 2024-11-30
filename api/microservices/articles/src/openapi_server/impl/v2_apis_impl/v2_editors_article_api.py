@@ -65,7 +65,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         new_article_json = new_article_v2.to_dict()
         new_article_version_json = new_article_v2.to_dict()
 
-        if not _is_valid_name(new_article_json["title"]):
+        if not _is_valid_name(new_article_json["title"]) and ObjectId.is_valid(new_article_json["title"]):
             raise Exception(f"Invalid article title: {new_article_json['title']}")
 
         if not await check_if_wiki_exists(new_article_json["wiki_id"]):
@@ -135,7 +135,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version_v2.to_dict()
 
-        if not _is_valid_name(new_article_version_json["title"]):
+        if not _is_valid_name(new_article_version_json["title"]) and ObjectId.is_valid(new_article_version_json["title"]):
             raise Exception(f"Invalid article title: {new_article_version_json['title']}")
 
         for tag in new_article_version_json["tags"]:
