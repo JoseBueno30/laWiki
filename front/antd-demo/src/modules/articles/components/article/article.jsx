@@ -51,7 +51,7 @@ const Article = ({ article }) => {
         {article.creation_date.split("T")[0]}
       </Col>
       <Col md={7} sm={10} xs={24} className="article-rating" align="center">
-        {article.rating}
+        {article.rating.toFixed(2)}
         <Rate
           style={{ marginLeft: 10 }}
           disabled
