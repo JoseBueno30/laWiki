@@ -1,7 +1,10 @@
 
-import React from 'react';
-import {Avatar, Button, Flex, Select,Typography} from "antd";
+import React, { useEffect, useState } from 'react';
+import {Avatar, Button, Flex, Grid, Select,Typography} from "antd";
+import { EditOutlined } from '@ant-design/icons';
 import './article-page.css';
+import Title from 'antd/es/typography/Title';
+const {useBreakpoint} = Grid
 
 const {Text, _} = Typography
 
@@ -15,7 +18,7 @@ const article =
     },
     author: {
       name: "EdgyBoy",
-      image: "itachi.png",
+      image: "https://i.imgur.com/zglEouG.jpeg",
       id: "672901e41a1c2dc79c930ded",
     },
     tags: [
@@ -54,23 +57,46 @@ const article =
   };
 
   const ArticlePage = ({/*article*/}) => {
+  const screen = useBreakpoint()
+  
+  const formatVersions = () => {
+    let simplifiedVersions = [] 
+
+    article.versions.forEach(element => {
+      const newVersion = {
+        value: element.id,
+        label: screen.md ? 
+          <span>{element.modification_date.substring(0,10) + " " + element.title[element.lan]}</span> 
+          :
+          <span>{element.modification_date.substring(0,10)}</span> 
+      }
+      simplifiedVersions.push(newVersion)
+    });
+    
+    return simplifiedVersions;
+  }
+
   console.log("titulo: " + article.title.es)
   return (
     <section className='article-page'>
       <Flex align='center' justify='space-between'>
-        <h1>
+        <Title>
           {article.title.es}
-        </h1>
-        <Flex gap={"middle"}>
-          <Flex >
-            {/* Ajustar Texto de author */}
-            <Avatar className='comment-avatar' src={article.author.image} alt={article.author.name} />
-            <Text>El coleccionista</Text>
-          </Flex>
+        </Title>
+        <Flex gap={screen.md ? 30 : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
+          <Button color='default' variant='text'>
+            <Flex align='center' gap={5}>
+              {/* Ajustar Texto de author */}
+              <Avatar className='comment-avatar' src={article.author.image} alt={article.author.name} />
+              {<Text className='article-prop-text'>{article.author.name}</Text>}
+            </Flex>
+          </Button>
           
           {/* Parsear versiones a opciones*/}
-          <Select options={article.versions}></Select> 
-          <Button type='secondary'>Editar</Button>
+          <Select title='Seleccionar version' options={formatVersions(article.versions)} defaultValue={article.versions[0].id}></Select> 
+          <Button title='Editar' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
+            {screen.md ? "Editar" : "Editar"}
+          </Button>
         </Flex>
         
       </Flex>
