@@ -8,7 +8,7 @@
 
 .app-header {
   position: fixed;
-  line-height: 1.5;
+  height: var(--header-height);
   z-index: 1;
   width: 100%;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
@@ -16,7 +16,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  background-color: var(--ant-color-text-quaternary);
+  background-color: var(--ant-layout-color-bg-body);
+  border-bottom: 1px solid var(--ant-color-border);
 }
 
 .app-content {

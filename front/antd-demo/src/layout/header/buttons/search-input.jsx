@@ -22,7 +22,7 @@ const SearchInput = ({
           allowClear
           suffix={popover}
           size="large"
-          style={{ maxWidth: "300px" }}
+          style={{ minWidth: "200px" }}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onSearch={searchFunction}
