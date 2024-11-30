@@ -37,7 +37,7 @@ const WikiHeader = () => {
     startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const { t } = useTranslation('header-trans');
+  const { t } = useTranslation('header');
 
   const toggleSearchHeader = () => {
     setSearchHeader(!showSearchHeader);

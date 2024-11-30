@@ -17,8 +17,10 @@ export const ThemeProvider = ({ children }) => {
   const [colorTheme, setTheme] = useState("light");
   const [locale, setLocale] = useState("en");
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  const toggleTheme = (newTheme) => {
+    if(newTheme === "light" || newTheme === "dark"){
+      setTheme(newTheme);
+    }
   };
 
   const changeLocale = (newLocale) => {

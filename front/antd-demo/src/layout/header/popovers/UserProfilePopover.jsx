@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 const UserProfilePopover = () => {
   const {colorTheme, locale, toggleTheme, changeLocale} = useContext(ThemeContext);
   const [notifications, setNotifications] = useState("Email");
-  const { t } = useTranslation('header-trans');
+  const { t } = useTranslation('header');
 
   return (
     <Menu className="user-profile-menu" mode="inline">
@@ -25,8 +25,11 @@ const UserProfilePopover = () => {
         title={t('theme-menu', {theme: colorTheme == "light" ? t('theme-light') : t('theme-dark')})}
         icon={<BulbOutlined />}
       >
-        <Menu.Item key="2-1" onClick={toggleTheme}>
-          {colorTheme === "light" ? "Switch to Dark" : "Switch to Light"}
+        <Menu.Item key="2-1" onClick={() => toggleTheme("light")}>
+          {t('theme-light')}
+        </Menu.Item>
+        <Menu.Item key="2-2" onClick={() => toggleTheme("dark")}>
+          {t('theme-dark')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu

@@ -3,6 +3,7 @@
     "wiki-search-placeholder": "Search for wikis",
     "new-article": "New Article",
     "article-search-placeholder": "Search for articles",
+
     "profile-link": "View profile",
     "theme-menu": "Theme: {{theme}}",
     "theme-light": "Light",
@@ -14,5 +15,16 @@
     "language-en": "English",
     "language-es": "Spanish",
     "language-fr": "French",
-    "logout-link": "Log out"
+    "logout-link": "Log out",
+
+    "order-divider": "Order",
+    "order-recent" : "Recent",
+    "order-oldest" : "Oldest",
+    "order-popular" : "Popular",
+    "order-unpopular" : "Unpopular",
+    "tags-divider" : "Tags",
+    "tags-addtag" : "Add tag",
+    "daterange-divider" : "Date range",
+    "author-divider" : "Author",
+    "editor-divider" : "Editor"
 }
