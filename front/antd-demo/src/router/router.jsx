@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
+import ArticlePage from "../modules/articles/pages/article-page/article-page";
 
 // The structure of the application's routes
 
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
                 path: "articles",
                 children: [
                   { path: "new", element: <TestRoute /> }, // Crear artículo
-                  { path: ":article_name", element: <TestRoute /> }, // Ver artículo
+                  { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
                   { path: ":article_name/edit", element: <TestRoute /> }, // Editar artículo
                 ],
               },
