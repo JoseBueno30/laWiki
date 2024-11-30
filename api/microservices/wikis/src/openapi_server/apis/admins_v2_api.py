@@ -91,7 +91,7 @@ async def update_wiki_v2(
     if not BaseAdminsV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseAdminsV2Api.subclasses[0]().update_wiki_v2(id_name, new_wiki_v2)
+        return await BaseAdminsV2Api.subclasses[0]().update_wiki_v2(id_name, new_wiki_v2)
     except TypeError as e:
         raise_http_exception(400, MESSAGE_NAME_WHEN_ID, e)
     except LookupError as e:

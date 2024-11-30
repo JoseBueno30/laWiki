@@ -345,9 +345,11 @@ class WikiApiAdmins(BaseAdminsV2Api):
         else:
             name = id
 
-        print(new_wiki)
+        new_wiki_dict = new_wiki.to_dict()
 
         translated_name = await translate_name(new_wiki)
+
+        new_wiki_dict["name"] = translated_name
 
         result = await mongodb["wiki"].find_one_and_update(match_by_name_or_id(name,id)
                                             ,
@@ -371,18 +373,35 @@ class WikiApiAdmins(BaseAdminsV2Api):
         except Exception as e:
             print(e)
             raise ConnectionError("Cannot connect to translator")
+
+        new_wiki_dict["id"] = str(result["_id"])
+        result["author"]["id"] = str(result["author"].pop("_id"))
+        new_wiki_dict["author"] = result["author"]
+
+        new_wiki_dict["tags"] = []
+        for tag in result["tags"]:
+            tag["id"] = str(tag.pop("_id"))
+            new_wiki_dict["tags"].append(tag)
+
+        new_wiki_dict["rating"] = result["rating"]
+        new_wiki_dict["creation_date"] = result["creation_date"]
+        new_wiki_dict["author"] = result["author"]
+
+        print(new_wiki_dict)
+        final_wiki = WikiV2.from_dict(new_wiki_dict)
+
+
+        # final_wiki = WikiV2(id=str(result["_id"])
+        #                  , name=translated_name
+        #                  , description=new_wiki.description
+        #                  , rating=result["rating"]
+        #                  , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
+        #                  , tags=result["tags"]
+        #                  , creation_date=str(result["creation_date"])
+        #                  , lang=new_wiki.lang
+        #                  , image=new_wiki.image)
         
-        final_wiki = WikiV2(id=str(result["_id"])
-                         , name=translated_name
-                         , description=new_wiki.description
-                         , rating=result["rating"]
-                         , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
-                         , tags=result["tags"]
-                         , creation_date=str(result["creation_date"])
-                         , lang=new_wiki.lang
-                         , image=new_wiki.image)
-        
-        print(str(result["creation_date"]) + ": " + str(type(result["creation_date"])))
+        # print(str(result["creation_date"]) + ": " + str(type(result["creation_date"])))
         print(final_wiki)
         
         return final_wiki
