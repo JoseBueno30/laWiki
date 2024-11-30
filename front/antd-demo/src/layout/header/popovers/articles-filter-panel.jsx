@@ -36,11 +36,11 @@ import {
       console.log(filters);
     };
   
-    const updateDateRange = (dates) => {
+    const updateDateRange = (_, dateStrings) => {
       setFilters({
         ...filters,
-        startDate: dates[0] ? dates[0].format(dateFormat) : null,
-        endDate: dates[1] ? dates[1].format(dateFormat) : null,
+        startDate: dateStrings[0] ? dateStrings[0] : null,
+        endDate: dateStrings[1] ? dateStrings[1]: null,
       });
     };
   
