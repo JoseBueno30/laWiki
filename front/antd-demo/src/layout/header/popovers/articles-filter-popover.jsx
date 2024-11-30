@@ -16,7 +16,7 @@ const ArticlesFilterPopover = ({ filters, setFilters, wikiTags }) => {
       }
     >
       {/* Debería cambiar en funcion de si es de wiki  */}
-      <Flex justify="center" align="center">
+      <Flex justify="center" align="center" className="icon-container">
         {FilterIcon()}
       </Flex>
     </Popover>
