@@ -21,7 +21,7 @@
 }
 
 .app-content {
-  padding-top: var(
+  margin-top: var(
     --header-height
   ); /* Altura del header, al poner position fixed */
 }
