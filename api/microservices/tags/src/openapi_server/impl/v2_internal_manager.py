@@ -25,14 +25,17 @@ class InternalManagerV2(BaseV2InternalApi):
         if not await api_calls_v2.check_wiki(id):
             raise KeyError
 
-        tag_list_completed = await get_wiki_tags_v1(id, None, None)
-        tags = tag_list_completed.articles
+        tags_data = await api_calls_v2.get_wiki_tags(id)
+        tags = tags_data.get("articles", [])
 
         for tag in tags:
-            articles = tag.articles
+            tag_id = tag["id"]
+            articles = tag.get("articles", [])
+            
             for article in articles:
-                await api_calls_v2.unassign_article_tags(article.id, [tag.id])
+                article_id = article["id"]
+                await api_calls_v2.unassign_article_tags(article_id, [tag_id])
 
-            await mongodb["tag"].delete_one({"_id": tag.id})
+            await mongodb["tag"].delete_one({"_id": ObjectId(tag_id)})
 
-        return None
+        return

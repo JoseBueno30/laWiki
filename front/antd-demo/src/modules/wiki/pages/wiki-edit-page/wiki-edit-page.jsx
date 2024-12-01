@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tag, Input, Button, message, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -8,7 +8,7 @@ import "./wiki-edit-page.css";
 const { TextArea } = Input;
 
 const WikiEditPage = () => {
-  const wikiId = "672c8721ba3ae42bd5985361";
+  const wikiId = "674c716c2c9c223912440f89";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [wikiData, setWikiData] = useState({
@@ -17,6 +17,7 @@ const WikiEditPage = () => {
     tags: [],
   });
   const [tags, setTags] = useState([]);
+  const [originalTags, setOriginalTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(false);
   const [language, setLanguage] = useState("es");
@@ -29,21 +30,18 @@ const WikiEditPage = () => {
       );
       const data = response.data;
 
+      const currentTags = data.tags.map((tagObj) => ({
+        id: tagObj.id,
+        name: tagObj.tag[language],
+      }));
+
       setWikiData({
         title: data.name[language] || "",
         description: data.description || "",
-        tags: data.tags.map((tagObj) => ({
-          id: tagObj.id,
-          name: tagObj.tag[language],
-        })),
+        tags: currentTags,
       });
-
-      setTags(
-        data.tags.map((tagObj) => ({
-          id: tagObj.id,
-          name: tagObj.tag[language],
-        }))
-      );
+      setTags(currentTags);
+      setOriginalTags(currentTags);
     } catch (error) {
       console.error("Error loading wiki data:", error);
       message.error("Failed to load wiki data.");
@@ -54,31 +52,47 @@ const WikiEditPage = () => {
 
   const saveWikiData = async () => {
     try {
+      setLoading(true);
+
+      const newTags = tags.filter(
+        (tag) => !originalTags.some((origTag) => origTag.name === tag.name)
+      );
+
+      const deletedTags = originalTags.filter(
+        (origTag) => !tags.some((tag) => tag.name === origTag.name)
+      );
+
+      for (const tag of newTags) {
+        await axios.post(`http://localhost:3000/v1/tags/wikis/${wikiId}`, {
+          tag: tag.name,
+          translation: true,
+          lan: language,
+        });
+      }
+
+      for (const tag of deletedTags) {
+        await axios.delete(
+          `http://localhost:3000/v1/tags/${tag.id}`
+        );
+      }
+
       const updatedData = {
         name: wikiData.title,
         description: wikiData.description,
-        author: "JuanLuis",
+        author: "DefaultAuthor",
         lang: language,
         image: "DefaultImage",
-        translate: true
+        translate: true,
       };
       await axios.put(`http://localhost:3000/v1/wikis/${wikiId}`, updatedData);
+
       message.success("Wiki updated successfully!");
       loadWikiData();
     } catch (error) {
       console.error("Error saving wiki data:", error);
       message.error("Failed to save wiki changes.");
-    }
-  };
-
-  const deleteWiki = async () => {
-    try {
-      await axios.delete(`http://localhost:3000/v1/wikis/${wikiId}`);
-      message.success("Wiki deleted successfully!");
-      navigate("/");
-    } catch (error) {
-      console.error("Error deleting wiki:", error);
-      message.error("Failed to delete wiki.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,9 +193,6 @@ const WikiEditPage = () => {
                 Save wiki
               </Button>
               <Button onClick={() => navigate("/")}>Cancel</Button>
-              <Button danger className="right-button" onClick={deleteWiki}>
-                Delete wiki
-              </Button>
             </div>
           </>
         )}

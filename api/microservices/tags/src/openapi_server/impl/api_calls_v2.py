@@ -10,6 +10,10 @@ WIKIS_PORT = 8084
 WIKIS_URL = "wikis_api"
 #WIKIS_URL = "localhost"
 
+TAGS_PORT = 8083
+TAGS_URL = "tags_api"
+#TAGS_URL = "localhost"
+
 TRANSLATION_PORT = 5000
 TRANSLATION_URL = "host.docker.internal"
 #TRANSLATION_URL = "localhost"
@@ -77,3 +81,10 @@ async def translate(text: str, source: str, target: str) -> str:
         return response.json()
     else:
         raise Exception(f"Error while translating: {response.status_code} {response.text}")
+    
+
+# Internal api call
+async def get_wiki_tags(id: str) -> str:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"http://{TAGS_URL}:{TAGS_PORT}/v2/tags/wikis/{id}")
+        return response.json()

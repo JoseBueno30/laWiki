@@ -118,6 +118,7 @@ const TestRoute = () => {
       <Button onClick={toggleTheme}>Toggle theme</Button>
       <RatingsSection/> */}
       <WikiCreatePage></WikiCreatePage>
+      {/* <WikiEditPage></WikiEditPage> */}
     </>
   );
 };
