@@ -4,6 +4,7 @@ import './wiki-main-page.css';
 import WikiSidebar from '../../components/wiki-sidebar/wiki-sidebar';
 import ArticleList from '../../../articles/components/article-list/article-list';
 import { Col, Flex, Row } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const example = {
     title: 'Angular',
@@ -16,7 +17,10 @@ const example = {
     }
 };
 
+
+
 const WikiMainPage = () => {
+  const { t } = useTranslation('wiki');
   return (
     <>
     <Flex className='wiki-page-wrapper'>
@@ -25,9 +29,9 @@ const WikiMainPage = () => {
           <WikiSidebar className="sidebar" {...example} />
         </Col>
         <Col className='wiki-content-wrapper'>
-          <h2>Highest Rated Articles</h2>
+          <h2>{t('highest-rated-articles')}</h2>
           <ArticleList articleList={[example, example, example, example, example]} />
-          <h2>Recent Articles</h2>
+          <h2>{t('recent-articles')}s</h2>
           <ArticleList articleList={[example, example, example, example, example]} />
         </Col>
       </Row>
