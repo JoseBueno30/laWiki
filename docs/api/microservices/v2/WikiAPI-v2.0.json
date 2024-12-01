@@ -73,8 +73,8 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "minimum": 0,
               "maximum": 100,
+              "minimum": 0,
               "type": "integer",
               "example": 10,
               "default": 20
@@ -719,21 +719,6 @@
           {
             "name": "offset",
             "in": "query",
-            "description": "Maximum amount of results to be returned.",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "maximum": 100,
-              "minimum": 1,
-              "type": "integer",
-              "example": 20,
-              "default": 20
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
             "description": "The index of the first result to return. Use with limit to get the next page of search results.",
             "required": false,
             "style": "form",
@@ -743,6 +728,21 @@
               "type": "integer",
               "example": 10,
               "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of results to return.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "example": 20,
+              "default": 20
             }
           },
           {
@@ -1344,7 +1344,7 @@
           "name": {
             "type": "string",
             "description": "Name of the wiki.",
-            "example": "Nombre de wiki"
+            "example": "[{\"en\":\"Wiki name\",\"es\":\"Nombre de wiki\"}]"
           },
           "description": {
             "type": "string",
