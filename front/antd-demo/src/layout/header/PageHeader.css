@@ -16,7 +16,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  background-color: var(--ant-color-text-quaternary);
+  background-color: var(--ant-layout-color-bg-body);
+  border-bottom: 1px solid var(--ant-color-border);
 }
 
 .app-content {
@@ -62,10 +63,7 @@
 }
 
 .icon-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

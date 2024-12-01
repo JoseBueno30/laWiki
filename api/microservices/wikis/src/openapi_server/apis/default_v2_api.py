@@ -9,7 +9,7 @@ import openapi_server.impl
 from openapi_server.impl.misc import *
 
 from bson.errors import InvalidId
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, InvalidOperation
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -62,6 +62,8 @@ async def create_wiki_v2(
         response.status_code = 201
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Wiki name unavailable")
+    except InvalidOperation as e:
+        raise raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)

@@ -1,0 +1,21 @@
+{
+    "edit-article-button": "Edit this article",
+
+    "comments-header": "Comments ({{count}})",
+    "post-comment-button": "Post comment",
+    "order-header" : "Order",
+    "order-recent" : "Recent",
+    "order-oldest" : "Oldest",
+    "filter-header" : "Filter",
+    "filter-daterange" : "Date range",
+
+    "user-rating-header": "Your rating",
+    "global-rating-value": "{{value}} of 5",
+    "global-rating header": "Other reader's rating",
+    "global-rating-count" : "{{count}} global ratings",
+    "num-stars": "{{count}} star",
+    "num-stars_plural": "{{count}} stars",
+
+    "next-page" : "Next page",
+    "previous-page" : "Previous page"
+}

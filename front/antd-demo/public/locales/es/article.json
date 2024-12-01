@@ -1,0 +1,21 @@
+{
+    "edit-article-button": "Editar este artículo",
+
+    "comments-header": "Comentarios ({{count}})",
+    "post-comment-button": "Publicar comentario",
+    "order-header": "Ordenar",
+    "order-recent": "Reciente",
+    "order-oldest": "Antiguo",
+    "filter-header": "Filtrar",
+    "filter-daterange": "Rango de fechas",
+
+    "user-rating-header": "Tu valoración",
+    "global-rating-value": "{{value}} de 5",
+    "global-rating header": "Valoración de otros lectores",
+    "global-rating-count": "{{count}} valoraciones globales",
+    "num-stars": "{{count}} estrella",
+    "num-stars_plural": "{{count}} estrellas",
+
+    "next-page": "Página siguiente",
+    "previous-page": "Página anterior"
+}

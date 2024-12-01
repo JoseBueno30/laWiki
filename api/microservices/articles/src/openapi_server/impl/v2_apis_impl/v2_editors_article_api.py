@@ -46,6 +46,11 @@ async def _delete_article_translation(
     await mongodb["article_translation"].delete_many({"article_version_id": ObjectId(article_version_id)})
 
 
+def _is_valid_name(name):
+    # Expresión regular que permite letras con tildes, ñ, números y espacios
+    pattern = r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]+$'
+    return bool(re.match(pattern, name))
+
 class EditorsArticleAPIV2(BaseV2EditorsApi):
 
     def __init__(self, **kwargs):
@@ -60,6 +65,8 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         new_article_json = new_article_v2.to_dict()
         new_article_version_json = new_article_v2.to_dict()
 
+        if not _is_valid_name(new_article_json["title"]) and ObjectId.is_valid(new_article_json["title"]):
+            raise Exception(f"Invalid article title: {new_article_json['title']}")
 
         if not await check_if_wiki_exists(new_article_json["wiki_id"]):
             raise Exception("Wiki does not exist")
@@ -127,6 +134,9 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
     ) -> ArticleVersionV2:
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version_v2.to_dict()
+
+        if not _is_valid_name(new_article_version_json["title"]) and ObjectId.is_valid(new_article_version_json["title"]):
+            raise Exception(f"Invalid article title: {new_article_version_json['title']}")
 
         for tag in new_article_version_json["tags"]:
             if not check_if_tag_exists(tag["id"]):

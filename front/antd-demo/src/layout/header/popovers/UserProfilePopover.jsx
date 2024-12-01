@@ -6,58 +6,62 @@ import {
   GlobalOutlined,
   EnterOutlined,
 } from "@ant-design/icons";
-import { ThemeContext } from "../../../context/theme-context";
+import SettingsContext from "../../../context/settings-context";
+import { useTranslation } from "react-i18next";
 
 const UserProfilePopover = () => {
-  const { colorTheme, toggleTheme } = useContext(ThemeContext);
+  const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
   const [notifications, setNotifications] = useState("Email");
-  const [language, setLanguage] = useState("English");
+  const { t } = useTranslation('header');
 
   return (
     <Menu className="user-profile-menu" mode="inline">
       <Menu.Item key="1" className="profile-item">
-        <strong>See profile</strong>
+        <strong>{t('profile-link')}</strong>
       </Menu.Item>
       <Menu.Divider />
       <Menu.SubMenu
         key="2"
-        title={`Theme: ${colorTheme === "light" ? "Light" : "Dark"}`}
+        title={t('theme-menu', {theme: colorTheme == "light" ? t('theme-light') : t('theme-dark')})}
         icon={<BulbOutlined />}
       >
-        <Menu.Item key="2-1" onClick={toggleTheme}>
-          {colorTheme === "light" ? "Switch to Dark" : "Switch to Light"}
+        <Menu.Item key="2-1" onClick={() => toggleTheme("light")}>
+          {t('theme-light')}
+        </Menu.Item>
+        <Menu.Item key="2-2" onClick={() => toggleTheme("dark")}>
+          {t('theme-dark')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu
         key="3"
-        title={`Notifications: ${notifications}`}
+        title={t('notifications-menu', {notifications: notifications == "Email" ? t('notifications-email') : t('notifications-afterlogin')})}
         icon={<BellOutlined />}
       >
         <Menu.Item key="3-1" onClick={() => setNotifications("Email")}>
-          Email
+          {t('notifications-email')}
         </Menu.Item>
         <Menu.Item key="3-2" onClick={() => setNotifications("After login")}>
-          After login
+          {t('notifications-afterlogin')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu
         key="4"
-        title={`Language: ${language}`}
+        title={t('language-menu', {language: locale == "en" ? t('language-en') : locale == "es" ? t('language-es') : t('language-fr')})}
         icon={<GlobalOutlined />}
       >
-        <Menu.Item key="4-1" onClick={() => setLanguage("English")}>
-          English
+        <Menu.Item key="4-1" onClick={() => changeLocale("en")}>
+          {t('language-en')}
         </Menu.Item>
-        <Menu.Item key="4-2" onClick={() => setLanguage("Español")}>
-          Español
+        <Menu.Item key="4-2" onClick={() => changeLocale("es")}>
+          {t('language-es')}
         </Menu.Item>
-        <Menu.Item key="4-3" onClick={() => setLanguage("Français")}>
-          Français
+        <Menu.Item key="4-3" onClick={() => changeLocale("fr")}>
+          {t('language-fr')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.Divider />
       <Menu.Item key="5" danger icon={<EnterOutlined />}>
-        Log out
+        {t('logout-link')}
       </Menu.Item>
     </Menu>
   );

@@ -353,6 +353,13 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         articles = await mongodb["article"].aggregate(query_pipeline).to_list(length=None)
 
         if not articles:
-            raise Exception
+            articles.append({
+                "articles": [],
+                "total": 0,
+                "offset": offset,
+                "limit": limit,
+                "next": None,
+                "previous": None,
+            })
 
         return articles[0]
