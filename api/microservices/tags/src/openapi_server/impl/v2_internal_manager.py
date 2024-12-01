@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
 from openapi_server.impl import api_calls_v2
 
-from openapi_server.apis.v1_public_api import get_wiki_tags_v1
+from openapi_server.apis.v2_public_api import get_wiki_tags_v2
 
 mongodb_client = AsyncIOMotorClient(
         "mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
@@ -25,17 +25,16 @@ class InternalManagerV2(BaseV2InternalApi):
         if not await api_calls_v2.check_wiki(id):
             raise KeyError
 
-        tags_data = await api_calls_v2.get_wiki_tags(id)
-        tags = tags_data.get("articles", [])
+        tag_list_completed = await get_wiki_tags_v2(id, 100, 0)
+        tags = tag_list_completed.articles
+        print(tags)
 
         for tag in tags:
-            tag_id = tag["id"]
-            articles = tag.get("articles", [])
-            
+            articles = tag.articles
+            tag_id = ObjectId(tag.id)
             for article in articles:
-                article_id = article["id"]
-                await api_calls_v2.unassign_article_tags(article_id, [tag_id])
+                await api_calls_v2.unassign_article_tags(article.id, [tag.id])
 
-            await mongodb["tag"].delete_one({"_id": ObjectId(tag_id)})
+            await mongodb["tag"].delete_one({"_id": tag_id})
 
-        return
+        return None
