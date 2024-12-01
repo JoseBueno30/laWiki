@@ -1,0 +1,95 @@
+.edit-wiki-section {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction:column;
+}
+  
+.edit-wiki-container {
+    width: 85vw;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+}
+
+.edit-wiki-item {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+
+.edit-wiki-item label {
+    font-weight: bold;
+}
+
+.edit-wiki-buttons-section {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.right-button {
+    margin-left: auto;
+}
+
+.edit-wiki-text{
+    width: 100%;
+    height: 30px;
+    border: 1px solid rgba(169, 169, 169, 0.5);
+}
+
+.edit-wiki-textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-shadow: none;
+    resize: none;
+  }
+  
+.tags-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+    align-items: center;
+    padding: 4px;
+}
+  
+.tag-item {
+    margin-bottom: 4px;
+    height: 28px;
+    line-height: 28px;
+}
+  
+.add-tag-button {
+    border: dashed 1px #d9d9d9;
+    background: #fafafa;
+    color: #8c8c8c;
+    height: 28px;
+    line-height: 28px;
+    margin-bottom: 4px;
+}
+  
+.tag-input {
+    width: 200px;
+    height: 28px;
+    line-height: 28px;
+    margin-bottom: 4px;
+}
+  
+  
+
+
+

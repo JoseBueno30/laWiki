@@ -1,5 +1,5 @@
 :root {
-  --header-height: 72px;
+  --header-height: 60px;
 }
 
 .app-layout {
@@ -16,42 +16,73 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  background-color: var(--ant-color-text-quaternary);
+  background-color: var(--ant-layout-color-bg-body);
+  border-bottom: 1px solid var(--ant-color-border);
 }
 
 .app-content {
-  padding-top: var(
+  margin-top: var(
     --header-height
   ); /* Altura del header, al poner position fixed */
+}
+
+.header-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 16px;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.header-title{
+  margin-top: 0.5em !important;
+}
+
+.wiki-title {
+  transition: 0.1s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.wiki-title:hover{
+  transition: 0.1s ease-in-out;
+  color: var(--ant-color-link);
 }
 
 .header-tools {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.ant-badge {
-  display: flex;
-  align-items: center;
-}
-
-.ant-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: end;
+  gap: 24px;
+  flex-grow: 0;
 }
 
 .icon-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.header-title:hover{
-    cursor: pointer;
-    color: var(--ant-color-link);
+@media (max-width: 768px) {
+
+  .app-header {
+    padding: 0 12px;
+  }
+  
+  .header-title-container {
+    gap: 5px;
+  }
+
+  .header-title {
+    font-size: 1.25rem !important;
+  }
+
+  .header-tools {
+    gap: 20px;
+  }
 }
 
 .header-title{
@@ -59,5 +90,7 @@
   text-overflow:ellipsis;
   overflow:hidden;
 }
+
+
 
 

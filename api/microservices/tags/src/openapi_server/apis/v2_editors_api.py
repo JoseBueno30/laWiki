@@ -136,7 +136,7 @@ async def post_wiki_tag_v2(
 )
 async def unassign_tags_v2(
     id: str = Path(..., description=""),
-    ids: list[str] = Query(None, description="List of Tag IDs", alias="ids"),
+    ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseV2EditorsApi.subclasses:

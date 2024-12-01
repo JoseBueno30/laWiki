@@ -21,7 +21,6 @@ from openapi_server.models.wiki_list import WikiList
 from openapi_server.impl.utils import forward_request
 
 class APIGatewayPublicV1(BaseV1PublicApi):
-    #TODO: replace prev and next base urls with the gateway url
 
     async def delete_comment(
         self,
@@ -66,8 +65,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Get a list of Articles given an author&#39;s ID.  """
         query_params = {"offset": offset, "limit":limit, "order":order}
         response = await forward_request(method="GET",url=f"{ARTICLES_URL}/v2/articles/author/{id}", query_params=query_params)
-        response["next"] = response["next"].replace("/v2/", "/v1/")
-        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+        response["next"] = response["next"].replace("/v2/", "/v1/") if response["next"] else None
+        response["previous"] = response["previous"].replace("/v2/", "/v1/") if response["previous"] else None
 
         return response
 
@@ -102,8 +101,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Retrieves all comments from an articles"""
         query_params = {"order": order, "limit": limit, "offset":offset, "creation_date":creation_date}
         response = await forward_request(method="GET",url=f"{COMMENTS_URL}/comments/articles/{article_id}",query_params=query_params)
-        response["next"] = "/v1" + response["next"]
-        response["previous"] = "/v1" + response["previous"]
+        response["next"] = "/v1" + response["next"] if response["next"] else None
+        response["previous"] = "/v1" + response["previous"] if response["previous"] else None
 
         return response
 
@@ -162,8 +161,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Get a list of the Articles commented by a given user."""
         query_params = {"offset": offset, "limit":limit, "order":order}
         response = await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles/commented_by/{id}",query_params=query_params)
-        response["next"] = response["next"].replace("/v2/", "/v1/")
-        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+        response["next"] = response["next"].replace("/v2/", "/v1/") if response["next"] else None
+        response["previous"] = response["previous"].replace("/v2/", "/v1/") if response["previous"] else None
 
         return response
 
@@ -177,8 +176,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Retrieves all the tags from an article."""
         query_params = {"offset": offset, "limit": limit}
         response = await forward_request(method="GET", url=f"{TAGS_URL}/v2/tags/articles/{id}",query_params=query_params)
-        response["next"] = response["next"].replace("/v2/", "/v1/")
-        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+        response["next"] = response["next"].replace("/v2/", "/v1/") if response["next"] else None
+        response["previous"] = response["previous"].replace("/v2/", "/v1/") if response["previous"] else None
 
         return response
 
@@ -216,8 +215,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Retrieves all comments from an user"""
         query_params = {"article_id":article_id, "order":order, "limit":limit, "offset":offset, "creation_date":creation_date}
         response = await forward_request(method="GET", url=f"{COMMENTS_URL}/comments/users/{user_id}", query_params=query_params)
-        response["next"] = "/v1" + response["next"]
-        response["previous"] = "/v1" + response["previous"]
+        response["next"] = "/v1" + response["next"] if response["next"] else None
+        response["previous"] = "/v1" + response["previous"] if response["previous"] else None
 
         return response
 
@@ -241,8 +240,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Retrieve all the tags from a wiki."""
         query_params = {"limit": limit, "offset": offset}
         response = await forward_request(method="GET", url=f"{TAGS_URL}/v2/tags/wikis/{id}", query_params=query_params)
-        response["next"] = response["next"].replace("/v2/", "/v1/")
-        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+        response["next"] = response["next"].replace("/v2/", "/v1/") if response["next"] else None
+        response["previous"] = response["previous"].replace("/v2/", "/v1/") if response["previous"] else None
 
         return response
 
@@ -280,8 +279,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
         query_params = {"wiki_id":wiki_id, "name": name, "tags":tags, "offset": offset, "limit": limit, "order": order, "creation_date": creation_date,"author_name": author_name, "editor_name":editor_name, "lan": lan}
         response = await forward_request(method="GET", url=f"{ARTICLES_URL}/v2/articles", query_params=query_params)
-        response["next"] = response["next"].replace("/v2/", "/v1/")
-        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+        response["next"] = response["next"].replace("/v2/", "/v1/") if response["next"] else None
+        response["previous"] = response["previous"].replace("/v2/", "/v1/") if response["previous"] else None
 
         return response
 
@@ -289,8 +288,8 @@ class APIGatewayPublicV1(BaseV1PublicApi):
     async def search_wikis(
         self,
         name: str,
-        offset: int,
         limit: int,
+        offset: int,
         order: str,
         creation_date: str,
         author_name: str,
@@ -299,7 +298,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         """Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
         query_params = {"name":name, "offset": offset, "limit": limit, "order":order, "creation_date":creation_date, "author_name":author_name, "lang":lang}
         response = await forward_request(method="GET", url=f"{WIKIS_URL}/v2/wikis", query_params=query_params)
-        response["next"] = response["next"].replace("/v2/", "/v1/")
-        response["previous"] = response["previous"].replace("/v2/", "/v1/")
+        response["next"] = response["next"].replace("/v2/", "/v1/") if response["next"] else None
+        response["previous"] = response["previous"].replace("/v2/", "/v1/") if response["previous"] else None
 
         return response

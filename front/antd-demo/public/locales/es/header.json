@@ -1,0 +1,32 @@
+{
+    "new-wiki" : "Nueva Wiki",
+    "wiki-search-placeholder" : "Buscar wikis",
+    "new-article": "Nuevo Artículo",
+    "article-search-placeholder": "Buscar artículos",
+    
+    "profile-link" : "Ver el perfil",
+    "theme-menu" : "Tema: {{theme}}",
+    "theme-light" : "Claro",
+    "theme-dark" : "Oscuro",
+    "notifications-menu" : "Notificaciones: {{notifications}}",
+    "notifications-email" : "Email",
+    "notifications-afterlogin" : "Despues de inicio sesión",
+    "language-menu" : "Idioma: {{language}}",
+    "language-en" : "Inglés",
+    "language-es" : "Español",
+    "language-fr" : "Francés",
+    "logout-link" : "Cerrar sesión",
+
+    "order-divider": "Orden",
+    "order-recent": "Reciente",
+    "order-oldest": "Antiguo",
+    "order-popular": "Popular",
+    "order-unpopular": "Impopular",
+    "tags-divider": "Etiquetas",
+    "tags-addtag": "Añadir etiqueta",
+    "daterange-divider": "Rango de fechas",
+    "author-divider": "Autor",
+    "author-placeholder": "Nombre de usuario del autor",
+    "editor-divider": "Editor",
+    "editor-placeholder": "Nombre de usuario del editor"
+}

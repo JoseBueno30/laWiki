@@ -4,8 +4,12 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
+from bson.errors import InvalidId
+
+from pymongo.errors import DuplicateKeyError, InvalidOperation
 from openapi_server.apis.internal_v2_api_base import BaseInternalV2Api
 import openapi_server.impl
+from openapi_server.impl.misc import *
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -47,13 +51,23 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def assign_wiki_tags_v2(
+    response: Response,
     id: str = Path(..., description=""),
     id_tags_body_v2: IdTagsBodyV2 = Body(None, description=""),
 ) -> None:
     """Assigns a list of tags, given their IDs, to a wiki"""
     if not BaseInternalV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalV2Api.subclasses[0]().assign_wiki_tags_v2(id, id_tags_body_v2)
+    try:
+        await BaseInternalV2Api.subclasses[0]().assign_wiki_tags_v2(id, id_tags_body_v2)
+        response.status_code = 204
+    except LookupError:
+        response.status_code = 404
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
+
 
 
 @router.head(
@@ -68,12 +82,17 @@ async def assign_wiki_tags_v2(
     response_model_by_alias=True,
 )
 async def check_wiki_by_idv2(
+    response : Response,
     id_name: str = Path(..., description=""),
 ) -> None:
     """Check if a Wiki exits given its unique ID. """
     if not BaseInternalV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalV2Api.subclasses[0]().check_wiki_by_idv2(id_name)
+    try:
+        if not await BaseInternalV2Api.subclasses[0]().check_wiki_by_idv2(id_name):
+            response.status_code = 404
+    except InvalidId:
+        raise HTTPException(status_code=400, detail=MESSAGE_BAD_FORMAT)
 
 
 @router.delete(
@@ -89,13 +108,22 @@ async def check_wiki_by_idv2(
     response_model_by_alias=True,
 )
 async def unassign_wiki_tags_v2(
+    response: Response,
     id: str = Path(..., description=""),
-    ids: list[str] = Query(None, description="List of Tag IDs", alias="ids"),
+    ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to a Wiki."""
     if not BaseInternalV2Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalV2Api.subclasses[0]().unassign_wiki_tags_v2(id, ids)
+    try:
+        await BaseInternalV2Api.subclasses[0]().unassign_wiki_tags_v2(id, ids)
+        response.status_code = 204
+    except LookupError:
+        response.status_code = 404
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
 
 @router.put(

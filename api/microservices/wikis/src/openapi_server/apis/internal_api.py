@@ -78,6 +78,7 @@ async def assign_wiki_tags(
     response_model_by_alias=True,
 )
 async def check_wiki_by_id(
+    response: Response,
     id: str = Path(..., description=""),
 ) -> None:
     """Check if a Wiki exits given its unique ID. """
