@@ -1,5 +1,6 @@
 
 import json
+import re
 from typing import Any, Coroutine, List, Dict
 
 from bson import ObjectId
@@ -140,6 +141,14 @@ async def translate_name(wiki: NewWikiV2):
     print(name)
     return name
 
+def discriminate_name(name: str):
+    if ObjectId.is_valid(name):
+        raise InvalidOperation("Name cannot be a valid 12-byte integer.")
+    
+    pattern = r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]+$'
+    if not bool(re.match(pattern, name)):
+        raise InvalidOperation("Name cannot contain special characters, such as \"_\". Only alphanumeric characters, and ñ, are allowed, they may be accented.")
+
 class WikiApi(BaseDefaultV2Api):
 
     def __init__(self):
@@ -180,6 +189,8 @@ class WikiApi(BaseDefaultV2Api):
         return result
     
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
+        discriminate_name(new_wiki_v2.name)
+
         name = await translate_name(new_wiki_v2)
 
         final_wiki = WikiV2(id='1'
@@ -340,6 +351,8 @@ class WikiApiAdmins(BaseAdminsV2Api):
             raise InvalidOperation()
 
     async def update_wiki_v2(self, id: str, new_wiki: NewWikiV2) -> WikiV2:
+        discriminate_name(new_wiki.name)
+
         if ObjectId.is_valid(id):
             name = ""
         else:

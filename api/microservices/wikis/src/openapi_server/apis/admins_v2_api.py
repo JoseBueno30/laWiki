@@ -94,6 +94,8 @@ async def update_wiki_v2(
         return await BaseAdminsV2Api.subclasses[0]().update_wiki_v2(id_name, new_wiki_v2)
     except TypeError as e:
         raise_http_exception(400, MESSAGE_NAME_WHEN_ID, e)
+    except InvalidOperation as e:
+        raise raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
     except LookupError as e:
         raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"), e)
     except UnicodeError as e:
