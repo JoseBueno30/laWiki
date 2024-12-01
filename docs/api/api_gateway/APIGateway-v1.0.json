@@ -3367,7 +3367,7 @@
             "description": "The name of the tag.",
             "format": "uuid"
           },
-          "tag": {
+          "name": {
             "type": "object",
             "additionalProperties": {
               "type": "string",
