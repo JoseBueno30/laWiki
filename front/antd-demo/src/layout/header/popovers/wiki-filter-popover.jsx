@@ -1,17 +1,16 @@
 import { Popover, Flex } from "antd";
 import { FilterIcon } from "../../../utils/icons";
-import ArticlesFilterPanel from "./articles-filter-panel";
+import WikiFilterPanel from "./wiki-filter-panel";
 
-const ArticlesFilterPopover = ({ filters, setFilters, wikiTags }) => {
+const WikiFilterPopover = ({ filters, setFilters}) => {
   return (
     <Popover
       trigger="click"
       overlayStyle={{ width: 350 }}
       content={
-        <ArticlesFilterPanel
+        <WikiFilterPanel
           filters={filters}
           setFilters={setFilters}
-          wikiTags={wikiTags}
         />
       }
     >
@@ -23,4 +22,4 @@ const ArticlesFilterPopover = ({ filters, setFilters, wikiTags }) => {
   );
 };
 
-export default ArticlesFilterPopover;
+export default WikiFilterPopover;
