@@ -1,0 +1,15 @@
+.wiki-page-wrapper {
+    height: 100%;
+    display: flex;
+    width: 100%;
+}
+
+.wiki-sidebar-container {
+    flex: 25% !important;
+}
+
+.wiki-content-wrapper {
+    flex: 75% !important;
+    padding-left: 7rem;
+    padding-right: 3rem;
+}
