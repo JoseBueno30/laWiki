@@ -1,94 +1,190 @@
-import React, { useState } from "react";
-import { Tag, Input, Button} from "antd";
-const { TextArea } = Input;
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Tag, Input, Button, message, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
 import "./wiki-edit-page.css";
 
+const { TextArea } = Input;
+
 const WikiEditPage = () => {
-  const [tags, setTags] = useState(["Tag 1", "Tag 2", "Tag 3"]);
+  const wikiId = "672c8721ba3ae42bd5985361";
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [wikiData, setWikiData] = useState({
+    title: "",
+    description: "",
+    tags: [],
+  });
+  const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(false);
+  const [language, setLanguage] = useState("es");
+
+  const loadWikiData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/v1/wikis/${wikiId}?lang=${language}`
+      );
+      const data = response.data;
+
+      setWikiData({
+        title: data.name[language] || "",
+        description: data.description || "",
+        tags: data.tags.map((tagObj) => ({
+          id: tagObj.id,
+          name: tagObj.tag[language],
+        })),
+      });
+
+      setTags(
+        data.tags.map((tagObj) => ({
+          id: tagObj.id,
+          name: tagObj.tag[language],
+        }))
+      );
+    } catch (error) {
+      console.error("Error loading wiki data:", error);
+      message.error("Failed to load wiki data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveWikiData = async () => {
+    try {
+      const updatedData = {
+        name: wikiData.title,
+        description: wikiData.description,
+        author: "JuanLuis",
+        lang: language,
+        image: "DefaultImage",
+        translate: true
+      };
+      await axios.put(`http://localhost:3000/v1/wikis/${wikiId}`, updatedData);
+      message.success("Wiki updated successfully!");
+      loadWikiData();
+    } catch (error) {
+      console.error("Error saving wiki data:", error);
+      message.error("Failed to save wiki changes.");
+    }
+  };
+
+  const deleteWiki = async () => {
+    try {
+      await axios.delete(`http://localhost:3000/v1/wikis/${wikiId}`);
+      message.success("Wiki deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      console.error("Error deleting wiki:", error);
+      message.error("Failed to delete wiki.");
+    }
+  };
+
+  const updateField = (field, value) => {
+    setWikiData({ ...wikiData, [field]: value });
+  };
 
   const addTag = () => {
-    if (newTag.trim() && !tags.includes(newTag)) {
-      setTags([...tags, newTag]);
+    if (newTag.trim() && !tags.some((t) => t.name === newTag)) {
+      setTags([...tags, { id: null, name: newTag }]);
       setNewTag("");
       setIsInputVisible(false);
     }
   };
 
-  const removeTag = (tag) => {
-    setTags(tags.filter((t) => t !== tag));
+  const removeTag = (tagToRemove) => {
+    setTags(tags.filter((tag) => tag.name !== tagToRemove));
   };
+
+  useEffect(() => {
+    if (wikiId) {
+      loadWikiData();
+    }
+  }, [wikiId, language]);
 
   return (
     <section className="edit-wiki-section">
       <div className="edit-wiki-container">
-        <h1>Edit Wiki Information</h1>
-
-        <div className="edit-wiki-item">
-          <label htmlFor="edit-wiki-title" className="edit-wiki-label">
-            Title
-          </label>
-          <Input id="edit-wiki-title"></Input>
-        </div>
-
-        <div className="edit-wiki-item">
-          <label htmlFor="edit-wiki-description" className="edit-wiki-label">
-            Description
-          </label>
-          <TextArea
-              id="edit-wiki-description" 
-              autoSize={{ minRows: 6, maxRows: 10 }}
-            />
-        </div>
-
-        <div className="edit-wiki-item">
-          <label htmlFor="edit-wiki-tags" className="edit-wiki-label">
-            Tags
-          </label>
-          <div className="tags-section edit-wiki-textarea">
-            {tags.map((tag) => (
-              <Tag
-                key={tag}
-                closable
-                onClose={() => removeTag(tag)}
-                className="tag-item"
-              >
-                {tag}
-              </Tag>
-            ))}
-
-            {isInputVisible ? (
+        {loading ? (
+          <Spin></Spin>
+        ) : (
+          <>
+            <h1>Edit Wiki Information</h1>
+            <div className="edit-wiki-item">
+              <label htmlFor="edit-wiki-title" className="edit-wiki-label">
+                Title
+              </label>
               <Input
-                size="small"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onPressEnter={addTag}
-                onBlur={addTag}
-                placeholder="New Tag"
-                className="tag-input"
+                id="edit-wiki-title"
+                value={wikiData.title}
+                onChange={(e) => updateField("title", e.target.value)}
               />
-            ) : (
-              <Button
-                size="small"
-                icon={<PlusOutlined />}
-                onClick={() => setIsInputVisible(true)}
-                className="add-tag-button"
-              >
-                New Tag
-              </Button>
-            )}
-          </div>
-        </div>
+            </div>
 
-        <div className="edit-wiki-buttons-section">
-          <Button type="primary">Save wiki</Button>
-          <Button>Cancel</Button>
-          <Button danger className="right-button">
-            Delete wiki
-          </Button>
-        </div>
+            <div className="edit-wiki-item">
+              <label htmlFor="edit-wiki-description" className="edit-wiki-label">
+                Description
+              </label>
+              <TextArea
+                id="edit-wiki-description"
+                value={wikiData.description}
+                onChange={(e) => updateField("description", e.target.value)}
+                autoSize={{ minRows: 6, maxRows: 10 }}
+              />
+            </div>
+
+            <div className="edit-wiki-item">
+              <label htmlFor="edit-wiki-tags" className="edit-wiki-label">
+                Tags
+              </label>
+              <div className="tags-section edit-wiki-textarea">
+                {tags.map((tag) => (
+                  <Tag
+                    key={tag.id || tag.name}
+                    closable
+                    onClose={() => removeTag(tag.name)}
+                    className="tag-item"
+                  >
+                    {tag.name}
+                  </Tag>
+                ))}
+
+                {isInputVisible ? (
+                  <Input
+                    size="small"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onPressEnter={addTag}
+                    onBlur={addTag}
+                    placeholder="New Tag"
+                    className="tag-input"
+                  />
+                ) : (
+                  <Button
+                    size="small"
+                    icon={<PlusOutlined />}
+                    onClick={() => setIsInputVisible(true)}
+                    className="add-tag-button"
+                  >
+                    New Tag
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="edit-wiki-buttons-section">
+              <Button type="primary" onClick={saveWikiData}>
+                Save wiki
+              </Button>
+              <Button onClick={() => navigate("/")}>Cancel</Button>
+              <Button danger className="right-button" onClick={deleteWiki}>
+                Delete wiki
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

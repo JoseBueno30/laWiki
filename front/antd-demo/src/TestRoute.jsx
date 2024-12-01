@@ -6,6 +6,7 @@ import { ThemeContext } from "./context/theme-context"
 import ArticleList from "./modules/articles/components/article-list/article-list";
 import WikiEditPage from "./modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import ArticleEditPage from "./modules/articles/pages/article-edit-page/article-edit-page";
+import WikiCreatePage from "./modules/wiki/pages/wiki-create-page/wiki-create-page";
 
 const TestRoute = () => {
     const {colorTheme, toggleTheme} = useContext(ThemeContext)
@@ -116,7 +117,8 @@ const TestRoute = () => {
             </Button>
             <ArticleList articleList={article}/> */}
             {/* <WikiEditPage></WikiEditPage> */}
-            <ArticleEditPage></ArticleEditPage>
+            {/*<ArticleEditPage></ArticleEditPage>*/}
+            <WikiCreatePage></WikiCreatePage>
 
         </div>
         </>
