@@ -10,7 +10,7 @@ import ArticleList from "../../components/article-list/article-list";
 import { searchArticlesWithParams, searchArticlesWithPaginationURL } from "../../service/article_service";
 
 const wiki_id = "672c8721ba3ae42bd5985361";
-const searchLimit = 1;
+const searchLimit = 2;
 
 const ArticlesSearchResultPage = () => {
   const navigate = useNavigate();
@@ -28,16 +28,12 @@ const ArticlesSearchResultPage = () => {
   const [nextPageURL, setNextPageURL] = useState(null);
 
   const getArticlesSearchResultPage = async (url, increase) => {
-    let newSearchParams = location.search;
-    if (newSearchParams.includes("&page=")) {
-      newSearchParams = newSearchParams.replace("&page=" + currentPage, "&page=" + (currentPage + increase));
-    } else if (newSearchParams.includes("?")) {
-      newSearchParams += "&page=" + (currentPage + increase);
-    } else {
-      newSearchParams += "?&page=" + (currentPage + increase);
-    }
+    let newSearchParams = new URLSearchParams(location.search);
+
+    newSearchParams.set("page", currentPage + increase);
+
     setCurrentPage(currentPage + increase);
-    navigate(location.pathname + newSearchParams, {state: url});
+    navigate(location.pathname + "?" + newSearchParams, {state: url});
   };
 
   const formatFilters = (queryParams) => {
@@ -135,7 +131,7 @@ const ArticlesSearchResultPage = () => {
                   </Button>
                 </Col>
                 <Col>
-                  Page {Math.ceil(response.offset + 1 / response.limit)} of{" "}
+                  Page {currentPage} of{" "}
                   {Math.ceil(response.total / response.limit)}
                 </Col>
                 <Col>

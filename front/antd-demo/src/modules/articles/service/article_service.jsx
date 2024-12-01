@@ -1,31 +1,6 @@
 import axios from "axios";
+import APIGateway from "../../../interceptor/interceptor";
 
-
-const APIGateway = axios.create({
-    baseURL: "http://localhost:3000",
-    timeout: 5000,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
-
-APIGateway.interceptors.response.use(
-    (response) => {
-        return response.data;
-    },
-    (error) => {
-        console.error("Error:", error);
-        if (error.response) {
-            return Promise.reject(error.response.data);
-        } else if (error.request) {
-            return Promise.reject({
-                message: "Error with no response",
-            });
-        } else {
-            return Promise.reject({ message: error.message });
-        }
-    }
-);
 
 const searchArticlesWithParams = async (queryParams) => {
     try {
