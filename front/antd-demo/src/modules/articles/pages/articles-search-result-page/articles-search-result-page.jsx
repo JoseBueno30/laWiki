@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./articles-search-result-page.css";
 import { Flex, Row, Col, Button, Spin } from "antd";
 import {
@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import ArticleList from "../../components/article-list/article-list";
 import { searchArticlesWithParams, searchArticlesWithPaginationURL } from "../../service/article_service";
+import { useTranslation } from "react-i18next";
+import { WikiContext } from "../../../../context/wiki-context";
 
 const wiki_id = "672c8721ba3ae42bd5985361";
 const searchLimit = 2;
@@ -26,6 +28,9 @@ const ArticlesSearchResultPage = () => {
   const [articles, setArticles] = useState([]);
   const [prevPageURL, setPrevPageURL] = useState(null);
   const [nextPageURL, setNextPageURL] = useState(null);
+
+  const { t } = useTranslation('search');
+  const { wiki } = useContext(WikiContext);
 
   const getArticlesSearchResultPage = async (url, increase) => {
     let newSearchParams = new URLSearchParams(location.search);
@@ -55,7 +60,7 @@ const ArticlesSearchResultPage = () => {
     setLoading(true);
     try {
       var queryParams = {
-        wiki_id: wiki_id,
+        wiki_id: wiki.wiki_info.id,
         name: (searchParams.get("name") || "").replace("_", " "),
         tags: searchParams.getAll("tags"),
         offset: (currentPage - 1) * searchLimit,
@@ -106,13 +111,13 @@ const ArticlesSearchResultPage = () => {
       ) : (
         <>
           <h2 className="article-search-results-title">
-            Search results for: {(searchParams.get("name") || "").replace("_", " ")}
+            {t("search-results", {query: (searchParams.get("name") || "").replace("_", " ")})}
           </h2>
           <h3 className="article-search-results-info">
-            Total: {response.total} | Filters: {filters}
+            {t("search-description", {total: response.total, filters: filters})}
           </h3>
           {articles.length == 0 ? (
-            <h2>No results</h2>
+            <h2>{t("search-noresults")}</h2>
           ) : (
             <>
               <ArticleList articleList={articles} />
@@ -127,7 +132,7 @@ const ArticlesSearchResultPage = () => {
                     disabled={prevPageURL == null}
                     onClick={() => getArticlesSearchResultPage(prevPageURL, -1)}
                   >
-                    Previous
+                    {t("previous-page")}
                   </Button>
                 </Col>
                 <Col>
@@ -140,7 +145,7 @@ const ArticlesSearchResultPage = () => {
                     disabled={nextPageURL == null}
                     onClick={() => getArticlesSearchResultPage(nextPageURL, 1)}
                   >
-                    Next
+                    {t("next-page")}
                   </Button>
                 </Col>
               </Row>
