@@ -4,8 +4,10 @@ import "../../../../assets/css/pages.css";
 import WikiCardGrid from "../../components/wiki-card-grid/wiki-card-grid";
 import apiClient from "../../../../interceptor/interceptor";
 import { Spin } from "antd";
+import { useTranslation } from 'react-i18next';
 
 const WikiRecommendationPage = () => {
+  const { t } = useTranslation('wiki');
   const [wikiList, setWikiList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,8 +48,7 @@ const WikiRecommendationPage = () => {
     <>
       <div className="page-wrapper">
         <div className="md-flex">
-          {/* TODO: Translate title */}
-          <h1>Highest Rated Wikis</h1>
+          <h1>{t('highest-rated-wikis')}</h1>
         </div>
         {loading ? (
           <Spin></Spin>

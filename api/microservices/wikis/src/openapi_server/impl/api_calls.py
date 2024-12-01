@@ -9,9 +9,18 @@ LIBRETRANSLATE_PORT = 5000
 def delete_articles_from_wiki(id_name : str):
     delete_articles_response = httpx.delete(HTTP_REQUEST_FORMAT.format(host=ARTICLES_ROUTE,port=ARTICLES_PORT,method=REMOVE_ALL_ARTICLES.format(id=id_name)))
     if delete_articles_response.status_code in range(400,500):
-        raise LookupError()
+        raise LookupError("Could not delete articles, recieved " + str(delete_articles_response.status_code))
     elif delete_articles_response.status_code not in range(200,300):
-        raise Exception()
+        raise Exception("Could not delete articles, recieved " + str(delete_articles_response.status_code))
+    
+def delete_tags_from_wiki(id_name : str):
+    url = HTTP_REQUEST_FORMAT.format(host=TAGS_ROUTE,port=TAGS_PORT,method=REMOVE_ALL_TAGS.format(id=id_name))
+    print(url)
+    delete_tags_response = httpx.delete(url)
+    if delete_tags_response.status_code in range(400,500):
+        raise LookupError("Could not delete tags, recieved " + str(delete_tags_response.status_code))
+    elif delete_tags_response.status_code not in range(200,300):
+        raise Exception("Could not delete tags, recieved " + str(delete_tags_response.status_code))
     
 async def translate_body_to_lan(body, lan):
     async with httpx.AsyncClient() as client:

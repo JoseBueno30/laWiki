@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="" />
+    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,6 +60,7 @@
       <workItem from="1732901573674" duration="77000" />
       <workItem from="1732957431775" duration="758000" />
       <workItem from="1733055334107" duration="35000" />
+      <workItem from="1733056222214" duration="277000" />
     </task>
     <servers />
   </component>
