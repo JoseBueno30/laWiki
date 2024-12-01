@@ -19,19 +19,44 @@ const WikiCreatePage = () => {
   const [isInputVisible, setIsInputVisible] = useState(false);
   const [language, setLanguage] = useState("es");
 
+  const createTags = async (wikiId) => {
+    try {
+      const tagCreationPromises = tags.map((tag) =>
+        axios.post(`http://localhost:3000/v1/tags/wikis/${wikiId}`, {
+          tag: tag.name,
+          translation: true,
+          lan: language,
+        })
+      );
+      await Promise.all(tagCreationPromises);
+      message.success("Tags created successfully!");
+    } catch (error) {
+      console.error("Error creating tags:", error);
+      message.error("Failed to create tags.");
+    }
+  };
+
   const createWiki = async () => {
     try {
       const newWiki = {
         name: wikiData.title,
         description: wikiData.description,
-        author: "JuanLuis",
+        author: "DefaultAuthor",
         lang: language,
         image: "DefaultImage",
         translate: true,
       };
 
-      await axios.post("http://localhost:3000/v1/wikis", newWiki);
+      const response = await axios.post("http://localhost:3000/v1/wikis", newWiki);
+      const wikiId = response.data.id;
+      console.log(wikiId);
+
       message.success("Wiki created successfully!");
+
+      if (tags.length > 0) {
+        await createTags(wikiId);
+      }
+
       navigate("/");
     } catch (error) {
       console.error("Error creating wiki:", error);

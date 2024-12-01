@@ -114,9 +114,10 @@ const TestRoute = () => {
 
   return (
     <>
-      <h1>{location.pathname}</h1>
+      {/* <h1>{location.pathname}</h1>
       <Button onClick={toggleTheme}>Toggle theme</Button>
-      <RatingsSection/>
+      <RatingsSection/> */}
+      <WikiCreatePage></WikiCreatePage>
     </>
   );
 };
