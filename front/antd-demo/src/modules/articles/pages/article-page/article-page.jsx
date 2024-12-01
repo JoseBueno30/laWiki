@@ -86,7 +86,7 @@ const ArticlePage = () => {
     (<section className='article-page'>
       <Flex align='center' justify='space-between'>
         <Title>
-          {articleVersion.title.es}
+          {articleVersion.title[locale]}
         </Title>
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
