@@ -219,8 +219,8 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
             await self.delete_article_version_by_id_v2(str(version["_id"]))
 
         #   Commented until it's launched
-        # await delete_article_comments(id)
-        # await delete_article_ratings(id)
+        await delete_article_comments(id)
+        await delete_article_ratings(id)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 
