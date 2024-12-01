@@ -18,7 +18,7 @@ const RatingsSection = () => {
     };
 
     return (
-        <Flex vertical style={{ maxWidth: "300px", minWidth: (screen.md ? "25dvw": (screen.sm ? "200px" : "100%")), margin: "1em" }}>
+        <Flex vertical style={{ maxWidth: "300px", minWidth: (screen.md ? "26dvw": (screen.sm ? "200px" : "100%")), margin: "1em" }}>
             <Space direction="vertical" size='small'>
                 <Title level={4}>Your rating</Title>
                 <Rate value={rating} onChange={updateRating}/>

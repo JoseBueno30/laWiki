@@ -4,6 +4,7 @@ import {Avatar, Button, Flex, Grid, Select, Spin,Typography} from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
 import RatingsSection from '../../components/ratings-section';
+import UserAvatar from '../../../wiki/components/avatar/user-avatar';
 import './article-page.css';
 import Title from 'antd/es/typography/Title';
 import ArticleService from '../../service/article-service';
@@ -128,11 +129,7 @@ const ArticlePage = () => {
         </Title>
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
-            <Flex align='center' gap={5}>
-              {/* Ajustar Texto de author */}
-              <Avatar src={articleVersion.author.image} alt={articleVersion.author.name} />
-              {<Text className='article-prop-text'>{articleVersion.author.name}</Text>}
-            </Flex>
+            <UserAvatar image={article.author.image} username={article.author.name}></UserAvatar>
           </Button>
           
           {/* Parsear versiones a opciones*/}
