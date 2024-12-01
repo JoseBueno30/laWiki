@@ -28,6 +28,7 @@ class RatingsManager (BaseDefaultApi):
                 {'$unset': '_id'},
                 {'$unset': 'author._id'}]
         result = await self._check_rating_exists(id, pipe)
+        result['creation_date'] = result['creation_date'].date()
         return result;
 
     async def delete_rating(self, id: str):
@@ -106,7 +107,7 @@ class RatingsManager (BaseDefaultApi):
         wiki = await self._check_wiki_exists(id);
         return wiki.get("rating");
 
-    async def get_ratings_articles_id_users_id(self,articleId: str,userId: str,):
+    async def get_ratings_bu_user_on_article(self,articleId: str,userId: str,):
         await self._check_article_exists(articleId)
         # user = await self.mongodb["users"].find_one({'_id': self._convert_id_into_ObjectId(userId)})
         pipe = [
@@ -125,6 +126,7 @@ class RatingsManager (BaseDefaultApi):
         result = await self.mongodb["rating"].aggregate(pipe).to_list(length=1)
         if len(result) == 0:
             raise HTTPException(status_code=404, detail="Rating Not Found")
+        result[0]['creation_date'] = result[0]['creation_date'].date()
         return result[0]
 
     async def delete_ratings_articles_id(self, id: str):
