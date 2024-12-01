@@ -6,11 +6,11 @@ import {
   GlobalOutlined,
   EnterOutlined,
 } from "@ant-design/icons";
-import { ThemeContext } from "../../../context/theme-context";
+import SettingsContext from "../../../context/settings-context";
 import { useTranslation } from "react-i18next";
 
 const UserProfilePopover = () => {
-  const {colorTheme, locale, toggleTheme, changeLocale} = useContext(ThemeContext);
+  const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
   const [notifications, setNotifications] = useState("Email");
   const { t } = useTranslation('header');
 
