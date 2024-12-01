@@ -1,0 +1,22 @@
+@import url("../../../../assets/css/pages.css");
+
+.wiki-sidebar {
+    height: 100% !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: none !important;
+    background-color: var(--ant-color-text-quaternary) !important;
+    padding: 25px;
+}
+
+.wiki-description {
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+.user-container {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--ant-color-border);
+    max-width: 100%;
+}

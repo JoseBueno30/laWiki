@@ -3,6 +3,7 @@ import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import ArticlePage from "../modules/articles/pages/article-page/article-page";
+import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
 
 // The structure of the application's routes
 
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
           {
             path: ":wiki_name",
             children: [
-              { path: "", element: <TestRoute /> }, // Página principal de la wiki
+              { path: "", element: <WikiMainPage /> }, // Página principal de la wiki
               { path: "edit", element: <TestRoute /> }, // Editar wiki
               { path: "search", element: <TestRoute /> }, // Buscar artículos en la wiki
               {

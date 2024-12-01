@@ -1,16 +1,16 @@
 import {RouterProvider } from "react-router-dom";
 
 import router from "./router/router";
-import { ThemeProvider } from "./context/theme-context";
+import { SettingsProvider } from "./context/settings-context";
 import "./App.css";
 
 
 function App() {
   return (
     <>
-      <ThemeProvider>
+      <SettingsProvider>
         <RouterProvider router={router}/>
-      </ThemeProvider>
+      </SettingsProvider>
     </>
   );
 }

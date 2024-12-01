@@ -21,7 +21,7 @@
 }
 
 .app-content {
-  padding-top: var(
+  margin-top: var(
     --header-height
   ); /* Altura del header, al poner position fixed */
 }
@@ -63,10 +63,7 @@
 }
 
 .icon-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

@@ -7,7 +7,7 @@ COMMENTS_URL = "comments_api"
 WIKI_PORT = 8084
 WIKI_URL = "wikis_api"
 
-RATINGS_PORT = 8081
+RATINGS_PORT = 8082
 RATINGS_URL = "ratings_api"
 
 LIBRETRANSLATE_URL = "host.docker.internal"

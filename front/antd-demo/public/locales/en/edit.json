@@ -1,0 +1,11 @@
+{
+    "edit-header": "Edit {{type}} information",
+    "title-label": "Title",
+    "description-label": "Description",
+    "tags-label": "Tags",
+    "tags-newtag": "New tag",
+    "body-label": "Body",
+    "save-button": "Save {{type}}",
+    "cancel-button": "Cancel",
+    "delete-button": "Delete {{type}}"
+}

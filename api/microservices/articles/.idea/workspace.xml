@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="" />
+    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,20 +24,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "vpa-article-page",
-    "last_opened_file_path": "C:/Users/jabr3/Documents/GitHub/laWiki/api/microservices/articles",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/jabr3/Documents/GitHub/laWiki/api/microservices/articles&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -55,7 +58,9 @@
       <workItem from="1732356407794" duration="3473000" />
       <workItem from="1732868074866" duration="791000" />
       <workItem from="1732901573674" duration="77000" />
-      <workItem from="1732957431775" duration="1251000" />
+      <workItem from="1732957431775" duration="758000" />
+      <workItem from="1733055334107" duration="35000" />
+      <workItem from="1733056222214" duration="277000" />
     </task>
     <servers />
   </component>

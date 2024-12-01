@@ -1,81 +1,109 @@
-import { Flex, Input, Button, Badge, Avatar } from "antd";
+import "./PageHeader.css";
+import { Flex, Badge, Avatar, Popover, Grid } from "antd";
 import {
-  ControlOutlined,
-  PlusOutlined,
   BellOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import PropTypes from "prop-types";
-import "./PageHeader.css";
 import Title from "antd/es/typography/Title";
-import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const FilterIcon = () => {
-  return (
-    <div className="icon-container" onClick={FilterClickHandler}>
-      <ControlOutlined style={{ fontSize: "24px" }} />
-    </div>
-  )
-}
-const AddIcon = () => <PlusOutlined />;
-const BellIcon = () => <BellOutlined />;
+import CreateButton from "./buttons/create-button";
+import SearchInput from "./buttons/search-input";
+import UserProfilePopover from "./popovers/UserProfilePopover";
+import CompactSearchInput from "./buttons/compact-search-input";
 
-const ProfileClickHandler = () => {
-  console.log("Profile clicked");
-};
+import { useTranslation } from "react-i18next";
+import WikiFilterPopover from "./popovers/wiki-filter-popover";
 
 const NotificationsClickHandler = () => {
   console.log("Notifications clicked");
-}
+};
 
-const FilterClickHandler = () => {
-  console.log("Filter clicked");
-}
+// Aqui seguramente se pase la informacion de la wiki, como el nombre, id y tags.
+const WikiHeader = () => {
+  const [showSearchHeader, setSearchHeader] = useState(true);
+  const [filters, setFilters] = useState({
+    order: "recent",
+    author: "",
+    startDate: "2024/01/01",
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useTranslation('header');
 
-const LaWikiClickHandler = () => {
-  console.log("LaWiki clicked");
-}
+  const toggleSearchHeader = () => {
+    setSearchHeader(!showSearchHeader);
+  };
 
-const MainHeader = () => {
+  // Hay que definir una funcion de searchFunction(), la cual se pasará a los componentes de input
+  // Esa funcion hará uso de un useNavigate de React router, el cual tiene el mismo efecto
+  // que el <Link to>. Esto facilita mucho el añadido de parametros a la URL.
+
   return (
-      <>
-        <Flex gap='large'>
-          <Link to='/home'>
-            <Title style={{ marginTop: "0.5em" }} onClick={LaWikiClickHandler} className="header-title">LaWiki</Title>
-          </Link>
-        </Flex>
-        <Flex gap={50}>
-          <Input.Search
-            placeholder="search wikis"
-            allowClear
-            suffix={FilterIcon()}
-            size="large"
-            style={{ width: "400px" }}
-          />
-          <Button
-            variant="outlined"
-            icon={AddIcon()}
-            iconPosition="start"
-            size={"large"}
-          >
-            New Wiki
-          </Button>
-          <Badge count={9} size="large">
-            <div className="icon-container" onClick={NotificationsClickHandler}>
-            <BellOutlined style={{ fontSize: "24px" }} />
-            </div>
-          </Badge>
-          <div className="icon-container" onClick={ProfileClickHandler}>
-            <Avatar size="large" icon={<UserOutlined/>}/>
+    <>
+      {showSearchHeader ? (
+        <>
+          <div className="header-title-container">
+            <Link to="/">
+              <Title level={3} className="header-title wiki-title">
+                LaWiki
+              </Title>
+            </Link>
+            {/* Depende de la información que le venga de la ruta */}
           </div>
-        </Flex>
-      </>
+
+          <div className="header-tools">
+            <SearchInput
+              searchPlaceholder={t('wiki-search-placeholder')}
+              toggleHeader={toggleSearchHeader}
+              query={searchQuery}
+              setQuery={setSearchQuery}
+              popover={
+                <WikiFilterPopover
+                  filters={filters}
+                  setFilters={setFilters}
+                />
+              }
+              searchFunction={() => console.log("Searching...")}
+            />
+            <CreateButton text={t('new-wiki')} />
+            <Badge count={9} size="large">
+              <div
+                className="icon-container"
+                onClick={NotificationsClickHandler}
+              >
+                <BellOutlined style={{ fontSize: "24px" }} />
+              </div>
+            </Badge>
+            <Popover
+              content={<UserProfilePopover />}
+              trigger="click"
+              placement="bottomRight"
+              overlayStyle={{ width: 270 }}
+            >
+              <Flex className="icon-container">
+                <Avatar size="large" icon={<UserOutlined />} />
+              </Flex>
+            </Popover>
+          </div>
+        </>
+      ) : (
+        <CompactSearchInput
+          searchPlaceholder={t('wiki-search-placeholder')}
+          query={searchQuery}
+          setQuery={setSearchQuery}
+          toggleHeader={toggleSearchHeader}
+          popover={
+            <WikiFilterPopover
+              filters={filters}
+              setFilters={setFilters}
+            />
+          }
+          searchFunction={() => console.log("Searching...")}
+        />
+      )}
+    </>
   );
 };
 
-MainHeader.propTypes = {
-  children: PropTypes.node,
-};
-
-export default MainHeader;
+export default WikiHeader;
