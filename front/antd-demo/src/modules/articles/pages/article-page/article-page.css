@@ -8,3 +8,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.reversed{
+  flex-direction: column-reverse;
+}

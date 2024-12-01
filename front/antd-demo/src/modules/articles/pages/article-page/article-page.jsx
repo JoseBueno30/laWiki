@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import {Avatar, Button, Flex, Grid, Select,Typography} from "antd";
 import { EditOutlined } from '@ant-design/icons';
+import CommentList from '../../../comments/components/comment-list/comment-list';
+import RatingsSection from '../../components/ratings-section';
 import './article-page.css';
 import Title from 'antd/es/typography/Title';
 const {useBreakpoint} = Grid
@@ -55,6 +57,11 @@ const article =
       },
     ],
   };
+  const user = {
+    name: "Adriduty",
+    image: "https://i1.sndcdn.com/artworks-ynfN32NPS8zDyraR-PHw2zQ-t500x500.jpg",
+    id: "1"
+  }
 
   const ArticlePage = ({/*article*/}) => {
   const screen = useBreakpoint()
@@ -83,11 +90,11 @@ const article =
         <Title>
           {article.title.es}
         </Title>
-        <Flex gap={screen.md ? 30 : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
+        <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
             <Flex align='center' gap={5}>
               {/* Ajustar Texto de author */}
-              <Avatar className='comment-avatar' src={article.author.image} alt={article.author.name} />
+              <Avatar src={article.author.image} alt={article.author.name} />
               {<Text className='article-prop-text'>{article.author.name}</Text>}
             </Flex>
           </Button>
@@ -103,6 +110,10 @@ const article =
       <div className='article-body-container'>
         ...
       </div>
+      <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
+        <CommentList commentList={[]} user={user}></CommentList>     
+        <RatingsSection></RatingsSection> 
+      </Flex>
 
     </section>
   );

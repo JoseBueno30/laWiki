@@ -1,9 +1,12 @@
-import { Flex, Space, Rate } from "antd";
+import { Flex,Grid, Space, Rate } from "antd";
 import Title from "antd/es/typography/Title";
 import RatingsList from "./ratings-list";
 import { useState } from "react";
 
+const{useBreakpoint} = Grid
+
 const RatingsSection = () => {
+    const screen = useBreakpoint()
 
     const [rating, setRating] = useState(0);
     const ratings = [5,10,0,20,0];
@@ -15,7 +18,7 @@ const RatingsSection = () => {
     };
 
     return (
-        <Flex vertical style={{ maxWidth: "300px", margin: "1em" }}>
+        <Flex vertical style={{ maxWidth: "300px", minWidth: (screen.md ? "25dvw": (screen.sm ? "200px" : "100%")), margin: "1em" }}>
             <Space direction="vertical" size='small'>
                 <Title level={4}>Your rating</Title>
                 <Rate value={rating} onChange={updateRating}/>

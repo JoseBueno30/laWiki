@@ -9,18 +9,18 @@ import Comment from '../comment/comment';
 const {Text, _ } = Typography
 const {RangePicker} = DatePicker
 
-const user = {
-  name: "Adriduty",
-  image: "https://i1.sndcdn.com/artworks-ynfN32NPS8zDyraR-PHw2zQ-t500x500.jpg",
-  id: "1"
-}
+// const user = {
+//   name: "Adriduty",
+//   image: "https://i1.sndcdn.com/artworks-ynfN32NPS8zDyraR-PHw2zQ-t500x500.jpg",
+//   id: "1"
+// }
 
 const options = [
   { label: 'recent', value: 'recent' },
   { label: 'oldest', value: 'oldest' }
 ];
 
-const CommentList = ({commentList = [   ]}) => {
+const CommentList = ({commentList = [   ], user}) => {
   console.log(commentList)
   return (
     
