@@ -1,4 +1,6 @@
 
+import json
+import re
 from typing import Any, Coroutine, List, Dict
 
 from bson import ObjectId
@@ -139,6 +141,14 @@ async def translate_name(wiki: NewWikiV2):
     print(name)
     return name
 
+def discriminate_name(name: str):
+    if ObjectId.is_valid(name):
+        raise InvalidOperation("Name cannot be a valid 12-byte integer.")
+    
+    pattern = r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]+$'
+    if not bool(re.match(pattern, name)):
+        raise InvalidOperation("Name cannot contain special characters, such as \"_\". Only alphanumeric characters, and ñ, are allowed, they may be accented.")
+
 class WikiApi(BaseDefaultV2Api):
 
     def __init__(self):
@@ -179,6 +189,8 @@ class WikiApi(BaseDefaultV2Api):
         return result
     
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
+        discriminate_name(new_wiki_v2.name)
+
         name = await translate_name(new_wiki_v2)
 
         final_wiki = WikiV2(id='1'
@@ -339,14 +351,18 @@ class WikiApiAdmins(BaseAdminsV2Api):
             raise InvalidOperation()
 
     async def update_wiki_v2(self, id: str, new_wiki: NewWikiV2) -> WikiV2:
+        discriminate_name(new_wiki.name)
+
         if ObjectId.is_valid(id):
             name = ""
         else:
             name = id
 
-        print(new_wiki)
+        new_wiki_dict = new_wiki.to_dict()
 
         translated_name = await translate_name(new_wiki)
+
+        new_wiki_dict["name"] = translated_name
 
         result = await mongodb["wiki"].find_one_and_update(match_by_name_or_id(name,id)
                                             ,
@@ -362,29 +378,46 @@ class WikiApiAdmins(BaseAdminsV2Api):
                                             ,upsert=False
                                             ,return_document=ReturnDocument.AFTER)
 
-        print("Documento: " + str(result))
-
         if result is None:
             raise LookupError("Cannot find wiki")
         
         try:
             await translate_wiki(SUPPORTED_LANGUAGES, result["lang"], translated_name, new_wiki.description, result["_id"])
-        except:
+        except Exception as e:
+            print(e)
             raise ConnectionError("Cannot connect to translator")
+
+        new_wiki_dict["id"] = str(result["_id"])
+        result["author"]["id"] = str(result["author"].pop("_id"))
+        new_wiki_dict["author"] = result["author"]
+
+        new_wiki_dict["tags"] = []
+        for tag in result["tags"]:
+            tag["id"] = str(tag.pop("_id"))
+            new_wiki_dict["tags"].append(tag)
+
+        new_wiki_dict["rating"] = result["rating"]
+        new_wiki_dict["creation_date"] = result["creation_date"]
+        new_wiki_dict["author"] = result["author"]
+
+        print(new_wiki_dict)
+        final_wiki = WikiV2.from_dict(new_wiki_dict)
+
+
+        # final_wiki = WikiV2(id=str(result["_id"])
+        #                  , name=translated_name
+        #                  , description=new_wiki.description
+        #                  , rating=result["rating"]
+        #                  , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
+        #                  , tags=result["tags"]
+        #                  , creation_date=str(result["creation_date"])
+        #                  , lang=new_wiki.lang
+        #                  , image=new_wiki.image)
         
-        raise UnicodeError("I can't figure this out, but it does update")
+        # print(str(result["creation_date"]) + ": " + str(type(result["creation_date"])))
+        print(final_wiki)
         
-        #final_wiki = WikiV2(id=str(result["_id"])
-        #                 , name=new_wiki.name
-        #                 , description=new_wiki.description
-        #                 , rating=result["rating"]
-        #                 , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
-        #                 , tags=result["tags"]
-        #                 , creation_date=result["creation_date"]
-        #                 , lang=new_wiki.lang
-        #                 , image=new_wiki.image)
-        #
-        #return final_wiki
+        return final_wiki
     
 class WikiApiInternal(BaseInternalV2Api):
 

@@ -1,0 +1,21 @@
+{
+    "edit-article-button": "Modifier cet article",
+
+    "comments-header": "Commentaires ({{count}})",
+    "post-comment-button": "Publier un commentaire",
+    "order-header": "Trier",
+    "order-recent": "Récent",
+    "order-oldest": "Ancien",
+    "filter-header": "Filtrer",
+    "filter-daterange": "Plage de dates",
+
+    "user-rating-header": "Votre évaluation",
+    "global-rating-value": "{{value}} sur 5",
+    "global-rating header": "Évaluation des autres lecteurs",
+    "global-rating-count": "{{count}} évaluations globales",
+    "num-stars": "{{count}} étoile",
+    "num-stars_plural": "{{count}} étoiles",
+
+    "next-page": "Page suivante",
+    "previous-page": "Page précédente"
+}

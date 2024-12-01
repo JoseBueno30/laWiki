@@ -1,0 +1,20 @@
+.wiki-image-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: 200px;
+    max-width: 360px;
+}
+
+.wiki-image {
+    object-fit: cover;
+    padding: 10px;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
