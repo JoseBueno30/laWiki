@@ -17,7 +17,7 @@ from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import HTTPException
 from openapi_server.impl.misc import *
-from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan
+from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan, delete_tags_from_wiki
 from pymongo.errors import InvalidOperation
 
 from datetime import datetime, timedelta
@@ -43,7 +43,7 @@ partial_pipeline_filter = [{'$addFields': {
                         "as": "tag",
                         "in": {
                             "id": {"$toString": "$$tag._id"},
-                            "tag": "$$tag.tag"
+                            "name": "$$tag.name"
                         }
                     }
                 },
@@ -60,7 +60,7 @@ move_name_filter = [{'$addFields': {
                         "as": "tag",
                         "in": {
                             "id": {"$toString": "$$tag._id"},
-                            "tag": "$$tag.tag"
+                            "name": "$$tag.name"
                         }
                     }
                 },
@@ -191,7 +191,11 @@ class WikiApi(BaseDefaultV2Api):
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
         discriminate_name(new_wiki_v2.name)
 
-        name = await translate_name(new_wiki_v2)
+        try:
+            name = await translate_name(new_wiki_v2)
+        except Exception as e:
+            print(e)
+            raise ConnectionError("Cannot connect to translator")
 
         final_wiki = WikiV2(id='1'
                          , name=name
@@ -343,6 +347,8 @@ class WikiApiAdmins(BaseAdminsV2Api):
         
         delete_articles_from_wiki(id_name)
 
+        delete_tags_from_wiki(id_name)
+
         await delete_translations(id_name)
 
         result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id_name)})
@@ -359,7 +365,7 @@ class WikiApiAdmins(BaseAdminsV2Api):
             name = id
 
         new_wiki_dict = new_wiki.to_dict()
-
+        
         translated_name = await translate_name(new_wiki)
 
         new_wiki_dict["name"] = translated_name
