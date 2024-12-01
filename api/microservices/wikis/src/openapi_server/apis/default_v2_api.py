@@ -113,8 +113,8 @@ async def get_wiki_v2(
 async def search_wikis_v2(
     response: Response,
     name: str = Query(None, description="String to be searched within the wiki&#39;s name.", alias="name"),
-    offset: int = Query(0, description="Maximum amount of results to be returned.", alias="offset", ge=1, le=100),
-    limit: int = Query(20, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="limit", ge=0, le=100),
+    offset: int = Query(0, description="The index of the first result to return. Use with limit to get the next page of search results.", alias="offset", ge=0),
+    limit: int = Query(20, description="Maximum amount of results to be returned.", alias="limit", ge=1, le=100),
     order: str = Query(None, description="Sorts the wikis by different criteria", alias="order"),
     creation_date: str = Query(None, description="Single date or range", alias="creation_date"),
     author_name: str = Query(None, description="Filter for the author of the Wiki", alias="author_name"),
