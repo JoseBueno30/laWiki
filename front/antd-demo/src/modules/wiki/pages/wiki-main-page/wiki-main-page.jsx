@@ -20,7 +20,7 @@ const WikiMainPage = () => {
   return (
     <>
     <Flex className='wiki-page-wrapper'>
-      <Row>
+      <Row className='wiki-article-recommendation-wrapper'>
         <Col className='wiki-sidebar-container'>
           <WikiSidebar className="sidebar" {...example} />
         </Col>
