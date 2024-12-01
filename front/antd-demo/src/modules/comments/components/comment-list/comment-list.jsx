@@ -21,7 +21,6 @@ const options = [
 ];
 
 const CommentList = ({commentList = [   ], user}) => {
-  console.log(commentList)
   return (
     
     <Flex className='comment-list'>

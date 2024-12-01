@@ -12,3 +12,9 @@
 .reversed{
   flex-direction: column-reverse;
 }
+
+.loading-article-page{
+  position: absolute;
+  left: 50dvw;
+  top: 50dvh;
+}

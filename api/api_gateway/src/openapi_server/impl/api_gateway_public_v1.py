@@ -87,7 +87,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
     ) -> ArticleVersion:
         """Get the most recent ArticleVersion the Article with the given name from the specified Wiki."""
         query_params={"wiki":wiki, "lan":lan}
-        return await forward_request(method="GET",url=f"{ARTICLES_URL}/v2/articles/versions/by-name{name}", query_params=query_params)
+        return await forward_request(method="GET",url=f"{ARTICLES_URL}/v2/articles/versions/by-name/{name}", query_params=query_params)
 
 
     async def get_article_comments(

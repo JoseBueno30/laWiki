@@ -1,11 +1,15 @@
 
-import React, { useEffect, useState } from 'react';
-import {Avatar, Button, Flex, Grid, Select,Typography} from "antd";
+import React, { useContext, useEffect, useState } from 'react';
+import {Avatar, Button, Flex, Grid, Select, Spin,Typography} from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
 import RatingsSection from '../../components/ratings-section';
 import './article-page.css';
 import Title from 'antd/es/typography/Title';
+import ArticleService from '../../service/article-service';
+import { WikiContext } from '../../../../context/wiki-context';
+import SettingsContext from '../../../../context/settings-context';
+
 const {useBreakpoint} = Grid
 
 const {Text, _} = Typography
@@ -63,8 +67,32 @@ const article =
     id: "1"
   }
 
-  const ArticlePage = ({/*article*/}) => {
+const ArticlePage = () => {
+
+  const {wiki} = useContext(WikiContext)
+  const {locale} = useContext(SettingsContext)
+
   const screen = useBreakpoint()
+  const [loading, setLoading] = useState(true)
+  const [articleVersion, setArticleVersion] = useState(null)
+
+  useEffect(() =>{
+    const fetchArticleVersion = async () =>{
+      // console.log("URL:", window.location.toString().split("/"))
+      const articleName = window.location.toString().split("/").pop().replaceAll("%20", " ")
+      const response = await ArticleService().getArticleVersionByName("672c8721ba3ae42bd5985361", articleName, locale) 
+      setArticleVersion(response)
+    }
+    fetchArticleVersion()
+    console.log("adios")
+  }, [])
+
+  useEffect(() =>{
+    if (articleVersion){
+      setLoading(false)
+    }
+    console.log("hola")
+  }, [articleVersion])
   
   const formatVersions = () => {
     let simplifiedVersions = [] 
@@ -83,39 +111,47 @@ const article =
     return simplifiedVersions;
   }
 
-  console.log("titulo: " + article.title.es)
+  const parseBodyToHTML = () =>{
+    var el = document.createElement( 'section' );
+    el.innerHTML = articleVersion.body
+    console.log("HTML" ,el)
+  }
+
   return (
-    <section className='article-page'>
+    loading ?
+    <Spin className='loading-article-page' size='large'></Spin>
+    :
+    (<section className='article-page'>
       <Flex align='center' justify='space-between'>
         <Title>
-          {article.title.es}
+          {articleVersion.title.es}
         </Title>
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
             <Flex align='center' gap={5}>
               {/* Ajustar Texto de author */}
-              <Avatar src={article.author.image} alt={article.author.name} />
-              {<Text className='article-prop-text'>{article.author.name}</Text>}
+              <Avatar src={articleVersion.author.image} alt={articleVersion.author.name} />
+              {<Text className='article-prop-text'>{articleVersion.author.name}</Text>}
             </Flex>
           </Button>
           
           {/* Parsear versiones a opciones*/}
           <Select title='Seleccionar version' options={formatVersions(article.versions)} defaultValue={article.versions[0].id}></Select> 
           <Button title='Editar' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
-            {screen.md ? "Editar" : "Editar"}
+            "Editar"
           </Button>
         </Flex>
         
       </Flex>
       <div className='article-body-container'>
-        ...
+        <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
         <CommentList commentList={[]} user={user}></CommentList>     
         <RatingsSection></RatingsSection> 
       </Flex>
 
-    </section>
+    </section>)
   );
 };
 
