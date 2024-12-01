@@ -1,5 +1,6 @@
 
 import json
+import operator
 import re
 from typing import Any, Coroutine, List, Dict
 
@@ -248,10 +249,6 @@ class WikiApi(BaseDefaultV2Api):
                 }
 
             url_filters += "creation_date=" + creation_date + "&"
-
-        if lang is not None:
-            filters["lang"] = lang
-            url_filters += "lang=" + lang + "&"
         
         sorting_variables = {}
         if order is not None:
@@ -317,13 +314,46 @@ class WikiApi(BaseDefaultV2Api):
 
         wikis = await mongodb["wiki"].aggregate(query_pipeline).to_list(length=None)
 
-        print(query_pipeline, end="\n\n")
-        print(wikis)
+        #print(query_pipeline, end="\n\n")
+        print(wikis[0]["wikis"])
 
         if not wikis:
             raise LookupError("Cannot find Wiki")
+        
+        if lang is not None:
+            url_filters += "lang=" + lang + "&"
+            ids = list(map(lambda x: ObjectId(x["id"]),wikis[0]["wikis"]))
+            print(ids)
+            try:
+                traducciones = await mongodb["wiki_translation"].find({"wiki_id" : {"$in" : ids}, "lang" : lang}, {"wiki_id" : {"$toString" : "$wiki_id"}, "description" : 1, "name" : 1, "_id" : 0}).to_list(length=None)
+            except:
+                print("Error buscando traducciones")
+            
+            traducciones.sort(key=operator.itemgetter("wiki_id"))
+            wikis[0]["wikis"].sort(key=operator.itemgetter("id"))
+            print("Traducciones:")
+            print(traducciones)
+            print("Todas:")
+            print(wikis[0]["wikis"])
+            print("Diferencia: " + str(len(traducciones) - len(wikis[0]["wikis"])))
+            wiki_ids = list(map(lambda x: x["wiki_id"],traducciones))
+            print(wiki_ids)
+            for wiki in wikis[0]["wikis"]:
+                try:
+                    i = wiki_ids.index(wiki["id"])
+                    wiki["description"] = traducciones[i]["description"]
+                    wiki["name"] = traducciones[i]["name"]
+                except:
+                    print("Sin traduccion:" + wiki["id"])
+                    pass
 
         return wikis[0]
+
+def poner_traduccion(dato: dict, traduccion: dict):
+    resultado = dato.copy()
+    resultado["description"] = traduccion["description"]
+    resultado["name"] = traduccion["name"]
+    return resultado
 
 def conditional_field(name: str, value):
     return {name : value} if value is not None else None
