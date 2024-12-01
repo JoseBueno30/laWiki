@@ -14,16 +14,18 @@ const locales = {
 };
 
 export const SettingsProvider = ({ children }) => {
-  const [colorTheme, setTheme] = useState("light");
-  const [locale, setLocale] = useState("en");
+  const [colorTheme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [locale, setLocale] = useState(localStorage.getItem("locale") || "en");
 
   const toggleTheme = (newTheme) => {
     if(newTheme === "light" || newTheme === "dark"){
       setTheme(newTheme);
+      localStorage.setItem("theme", newTheme);
     }
   };
 
   const changeLocale = (newLocale) => {
+    localStorage.setItem("locale", newLocale);
     setLocale(newLocale);
     i18n.changeLanguage(newLocale);
   }

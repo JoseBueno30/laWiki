@@ -3,11 +3,13 @@ import { initReactI18next } from "react-i18next";
 
 import Backend from "i18next-http-backend";
 
+let language = localStorage.getItem("locale") || "en";
+
 i18n
   .use(Backend)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: language,
     debug: false,
     backend : {
       loadPath: '/locales/{{lng}}/{{ns}}.json'
