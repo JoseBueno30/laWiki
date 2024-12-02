@@ -31,7 +31,7 @@ const generateDateRange = (startDate, endDate) => (
 )
 
 const isQueryValid = (query) => {
-  return query.trim().length > 0;
+  return query!=null && query.trim().length > 0;
 };
 
 // Aqui seguramente se pase la informacion de la wiki, como el nombre, id y tags.
@@ -40,11 +40,11 @@ const WikiHeader = ({wiki_name,wiki}) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
-    order: "recent",
+    order: "popular",
     tags: [],
     author: "",
     editor: "",
-    startDate: "2024/01/01",
+    startDate: "",
   });
 
   const {locale} = useContext(SettingsContext);
@@ -64,15 +64,16 @@ const WikiHeader = ({wiki_name,wiki}) => {
     const searchParams = new URLSearchParams();
     searchParams.append("name", searchQuery);
     searchParams.append("order", filters.order);
-    searchParams.append("tags", filters.tags.join(","));
-    isQueryValid(filters.author) ?  searchParams.append("author_name", filters.author) : null;
-    isQueryValid(filters.editor) ?  searchParams.append("editor_name", filters.editor) : null;
-    searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
+    if (filters.tags.length > 0) searchParams.append("tags", filters.tags.join(","));
+    if (isQueryValid(filters.author)) searchParams.append("author_name", filters.author);
+    if (isQueryValid(filters.editor)) searchParams.append("editor_name", filters.editor);
+    if (isQueryValid(filters.startDate)) searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
+    searchParams.append("page", 1);
 
     console.log(generateDateRange(filters.startDate, filters.endDate));
 
     const searchUrl = `/wikis/${wiki_name}/search?${searchParams.toString()}`;
-    navigate(searchUrl)
+    navigate(searchUrl);
   }
 
   // Hay que definir una funcion de searchFunction(), la cual se pasará a los componentes de input
