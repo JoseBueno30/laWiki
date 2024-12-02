@@ -59,7 +59,10 @@ const WikiHeader = () => {
     if (isQueryValid(filters.author))
       searchParams.append("author", filters.author);
     if (isQueryValid(filters.startDate) || isQueryValid(filters.endDate))
-      searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
+      searchParams.append(
+        "creation_date",
+        generateDateRange(filters.startDate, filters.endDate)
+      );
 
     const searchUrl = `/wikis/search?${searchParams.toString()}`;
     navigate(searchUrl);
@@ -93,7 +96,9 @@ const WikiHeader = () => {
               }
               searchFunction={searchHandler}
             />
-            <CreateButton text={t("new-wiki")} />
+            <Link to="/wikis/new">
+              <CreateButton text={t("new-wiki")} />
+            </Link>
             <Badge count={9} size="large">
               <div
                 className="icon-container"
