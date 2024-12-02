@@ -10,7 +10,7 @@ const WikiCardGrid = ({ wikiList }) => {
   return (
     <Flex wrap gap="middle" justify={screens.md ? "start" : "center" }>
       {wikiList.map((wiki) => (
-        <WikiCardItem key = {wiki.id} title = {wiki.title} description = {wiki.description} rating = {wiki.rating} image = {wiki.image ?? ""} />
+        <WikiCardItem wiki = {wiki} />
       ))}
     </Flex>
   );

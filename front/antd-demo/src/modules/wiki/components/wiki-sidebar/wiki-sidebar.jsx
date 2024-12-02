@@ -7,22 +7,21 @@ import RoleAvatar from '../avatar/role-avatar';
 const { useBreakpoint } = Grid;
 
 
-const WikiSidebar = (example) => {
-
-  const screens = useBreakpoint();
+const WikiSidebar = (wiki) => {
+  wiki = wiki.wiki;
 
   return (
     <Sider className='wiki-sidebar'>
         <Flex align='center' vertical>
-          <img src={example.image}></img>
+          <img src={wiki.image}></img>
           <div className='rating-container'>
-            <b>{example.rating}</b>
-            <Rate style={{ marginLeft: 10 }} disabled allowHalf value={example.rating} />
+            <b>{wiki.rating}</b>
+            <Rate style={{ marginLeft: 10 }} disabled allowHalf value={wiki.rating} />
           </div>
-          <h2>{example.title}</h2>
-          <span className='wiki-description'>{example.description}</span>
+          <h2>{wiki.title}</h2>
+          <span className='wiki-description'>{wiki.description}</span>
           <div className='user-container'>
-            <RoleAvatar image={example.author.avatar} username={example.author.name} role='Author'/>
+            <RoleAvatar image={wiki.author.image} username={wiki.author.name} role='Author'/>
           </div>
         </Flex>
       </Sider>

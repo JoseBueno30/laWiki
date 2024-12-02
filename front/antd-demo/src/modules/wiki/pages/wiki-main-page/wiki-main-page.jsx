@@ -3,39 +3,83 @@ import React from 'react';
 import './wiki-main-page.css';
 import WikiSidebar from '../../components/wiki-sidebar/wiki-sidebar';
 import ArticleList from '../../../articles/components/article-list/article-list';
-import { Col, Flex, Row } from 'antd';
+import { Col, Flex, Row, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
-
-const example = {
-    title: 'Angular',
-    description: 'Angular is a platform and framework for building single-page client applications using HTML and TypeScript.',
-    rating: 4.6,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg',
-    author:{
-      name: 'John Doe',
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-    }
-};
-
-
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useContext } from 'react';
+import WikiService from "../../service/wiki-service";
+import { WikiContext } from '../../../../context/wiki-context';
+import { searchArticlesWithParams } from '../../../articles/service/article_service';
 
 const WikiMainPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation('wiki');
+  const { wiki } = useContext(WikiContext);
+  const [ratedArticles, setRatedArticles] = useState([]);
+  const [recentArticles, setRecentArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const searchLimit = 5;
+
+  useEffect(() => {
+    const fetchWikiArticles = async () => {
+        var queryParamsPopular = {
+          wiki_id: wiki.wiki_info.id,
+          limit: searchLimit,
+          order: "popular",
+          lan: "",
+        };
+
+        queryParamsPopular = Object.fromEntries(
+          Object.entries(queryParamsPopular).filter(
+            ([_, value]) => value && value.length !== 0
+          )
+        );
+
+        var queryParamsRecent = {
+          wiki_id: wiki.wiki_info.id,
+          limit: searchLimit,
+          order: "recent",
+          lan: "",
+        };
+
+        queryParamsRecent = Object.fromEntries(
+          Object.entries(queryParamsRecent).filter(
+            ([_, value]) => value && value.length !== 0
+          )
+        );
+        const ratedArticles = await searchArticlesWithParams(queryParamsPopular);
+        const recentArticles = await searchArticlesWithParams(queryParamsRecent);
+        setRatedArticles(ratedArticles);
+        setRecentArticles(recentArticles);
+        setLoading(false);
+    };
+
+    fetchWikiArticles();
+  }, [wiki]);
+
   return (
     <>
-    <Flex className='wiki-page-wrapper'>
-      <Row className='wiki-article-recommendation-wrapper'>
-        <Col className='wiki-sidebar-container'>
-          <WikiSidebar className="sidebar" {...example} />
-        </Col>
-        <Col className='wiki-content-wrapper'>
-          <h2>{t('highest-rated-articles')}</h2>
-          <ArticleList articleList={[example, example, example, example, example]} />
-          <h2>{t('recent-articles')}s</h2>
-          <ArticleList articleList={[example, example, example, example, example]} />
-        </Col>
-      </Row>
-    </Flex>
+      {wiki && wiki.wiki_info ? (
+        <Flex className='wiki-page-wrapper'>
+        <Row className='wiki-article-recommendation-wrapper'>
+          <Col className='wiki-sidebar-container'>
+            <WikiSidebar className="sidebar" wiki={wiki.wiki_info} />
+          </Col>
+          <Col className='wiki-content-wrapper'>
+            <h2>{t('highest-rated-articles')}</h2>
+            <ArticleList articleList={ratedArticles.articles ?? []} />
+            <h2>{t('recent-articles')}</h2>
+            <ArticleList articleList={recentArticles.articles ?? []} />
+          </Col>
+        </Row>
+      </Flex>
+      ) : (
+        <Spin></Spin>
+      )}
+      
     </>
   );
 };

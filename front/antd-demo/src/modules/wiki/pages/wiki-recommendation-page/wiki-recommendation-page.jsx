@@ -5,6 +5,8 @@ import WikiCardGrid from "../../components/wiki-card-grid/wiki-card-grid";
 import apiClient from "../../../../interceptor/interceptor";
 import { Spin } from "antd";
 import { useTranslation } from 'react-i18next';
+import WikiService from "../../service/wiki-service";
+const { getRatedWikis } = WikiService();
 
 const WikiRecommendationPage = () => {
   const { t } = useTranslation('wiki');
@@ -13,31 +15,8 @@ const WikiRecommendationPage = () => {
 
   useEffect(() => {
     const fetchHighestRatedWikis = async () => {
-      // TODO dbc: proper api call;
-        const response = await WikiService.getRatedWikis();
-        setWikiList([ {
-          id: 1,
-          title: "React ReactReactReactReactReactReactReactReactReactReactReact",
-          description: "A JavaScript library for building user interfaces ",
-          rating: 4.9,
-          image: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
-        },
-        {
-          id: 2,
-          title: "Node.js",
-          description:
-            "A JavaScript runtime built on Chrome's V8 JavaScript engine",
-          rating: 4.8,
-          image: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg",
-        },
-        {
-          id: 3,
-          title: "Angular",
-          description:
-            "A platform for building mobile and desktop web applications",
-          rating: 4.7,
-          image: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg",
-        },]);
+        const response = await getRatedWikis();
+        setWikiList(response.wikis);
         setLoading(false);
     };
 
