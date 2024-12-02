@@ -1,5 +1,5 @@
 {
-    "search-results": "Résultats de recherche pour {{query}}",
+    "search-results": "Résultats de recherche pour: {{query}}",
     "search-description" : "Total : {{total}} - Filtres : {{filters}}",
     "search-noresults" : "Aucun résultat trouvé",
     "next-page" : "Page suivante",

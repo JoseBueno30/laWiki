@@ -10,6 +10,9 @@ import ArticleList from "../../components/article-list/article-list";
 import { searchArticlesWithParams, searchArticlesWithPaginationURL } from "../../service/article_service";
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
+import { Typography } from "antd";
+
+const { Title, Text } = Typography;
 
 const searchLimit = 3;
 
@@ -110,19 +113,19 @@ const ArticlesSearchResultPage = () => {
   }, [wiki, searchParams, currentPage]);
 
   return (
-    <Flex gap="middle" vertical align="center" style={{ minWidth: 400 }}>
+    <Flex vertical align="center" style={{ width: "100%"}}>
       {loading || response == null ? (
         <Spin size="large" style={{ paddingTop: "40vh" }} />
       ) : (
         <>
-          <h2 className="article-search-results-title">
+          <Title level={3} className="article-search-results-title">
             {t("search-results", {query: (searchParams.get("name") || "").replace("_", " ")})}
-          </h2>
-          <h3 className="article-search-results-info">
+          </Title>
+          <Title level={4} className="article-search-results-info">
             {t("search-description", {total: response.total, filters: filters})}
-          </h3>
+          </Title>
           {articles.length == 0 ? (
-            <h2>{t("search-noresults")}</h2>
+            <Title level={3}>{t("search-noresults")}</Title>
           ) : (
             <>
               <ArticleList articleList={articles} />
@@ -130,8 +133,9 @@ const ArticlesSearchResultPage = () => {
                 align="middle"
                 justify="space-around"
                 style={{ width: "80%", marginTop: 20 }}
+                gutter={[16, 16]}
               >
-                <Col>
+                <Col xs={24} sm={8} align="center">
                   <Button
                     type="primary"
                     disabled={prevPageURL == null}
@@ -140,11 +144,11 @@ const ArticlesSearchResultPage = () => {
                     {t("previous-page")}
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={24} sm={8} align="center">
                   Page {currentPage} of{" "}
                   {Math.ceil(response.total / response.limit)}
                 </Col>
-                <Col>
+                <Col xs={24} sm={8} align="center">
                   <Button
                     type="primary"
                     disabled={nextPageURL == null}

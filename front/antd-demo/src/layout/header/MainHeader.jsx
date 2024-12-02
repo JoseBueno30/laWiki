@@ -1,9 +1,6 @@
 import "./PageHeader.css";
 import { Flex, Badge, Avatar, Popover, Grid } from "antd";
-import {
-  BellOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -21,12 +18,17 @@ const NotificationsClickHandler = () => {
   console.log("Notifications clicked");
 };
 
-const generateDateRange = (startDate, endDate) => (
-  startDate && endDate ? `${startDate}-${endDate}` : startDate ? `${startDate}` : endDate ? `${endDate}` : ""
-)
+const generateDateRange = (startDate, endDate) =>
+  startDate && endDate
+    ? `${startDate}-${endDate}`
+    : startDate
+    ? `${startDate}`
+    : endDate
+    ? `${endDate}`
+    : "";
 
 const isQueryValid = (query) => {
-  return query.trim().length > 0;
+  return query != null && query.trim().length > 0;
 };
 
 // Aqui seguramente se pase la informacion de la wiki, como el nombre, id y tags.
@@ -38,7 +40,7 @@ const WikiHeader = () => {
     startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const { t } = useTranslation('header');
+  const { t } = useTranslation("header");
   const navigate = useNavigate();
 
   const toggleSearchHeader = () => {
@@ -54,14 +56,14 @@ const WikiHeader = () => {
     const searchParams = new URLSearchParams();
     searchParams.append("name", searchQuery);
     searchParams.append("order", filters.order);
-    isQueryValid(filters.author) ?  searchParams.append("author_name", filters.author) : null;
-    searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
-
-    console.log(generateDateRange(filters.startDate, filters.endDate));
+    if (isQueryValid(filters.author))
+      searchParams.append("author", filters.author);
+    if (isQueryValid(filters.startDate) || isQueryValid(filters.endDate))
+      searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
 
     const searchUrl = `/wikis/search?${searchParams.toString()}`;
-    navigate(searchUrl)
-  }
+    navigate(searchUrl);
+  };
 
   // Hay que definir una funcion de searchFunction(), la cual se pasará a los componentes de input
   // Esa funcion hará uso de un useNavigate de React router, el cual tiene el mismo efecto
@@ -82,19 +84,16 @@ const WikiHeader = () => {
 
           <div className="header-tools">
             <SearchInput
-              searchPlaceholder={t('wiki-search-placeholder')}
+              searchPlaceholder={t("wiki-search-placeholder")}
               toggleHeader={toggleSearchHeader}
               query={searchQuery}
               setQuery={setSearchQuery}
               popover={
-                <WikiFilterPopover
-                  filters={filters}
-                  setFilters={setFilters}
-                />
+                <WikiFilterPopover filters={filters} setFilters={setFilters} />
               }
               searchFunction={searchHandler}
             />
-            <CreateButton text={t('new-wiki')} />
+            <CreateButton text={t("new-wiki")} />
             <Badge count={9} size="large">
               <div
                 className="icon-container"
@@ -117,15 +116,12 @@ const WikiHeader = () => {
         </>
       ) : (
         <CompactSearchInput
-          searchPlaceholder={t('wiki-search-placeholder')}
+          searchPlaceholder={t("wiki-search-placeholder")}
           query={searchQuery}
           setQuery={setSearchQuery}
           toggleHeader={toggleSearchHeader}
           popover={
-            <WikiFilterPopover
-              filters={filters}
-              setFilters={setFilters}
-            />
+            <WikiFilterPopover filters={filters} setFilters={setFilters} />
           }
           searchFunction={searchHandler}
         />
