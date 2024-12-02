@@ -55,16 +55,16 @@ const WikiEditPage = () => {
       setLoading(true);
 
       const newTags = tags.filter(
-        (tag) => !originalTags.some((origTag) => origTag.name === tag.name)
+        (tag) => !originalTags.some((origTag) => origtag.tag === tag.tag)
       );
 
       const deletedTags = originalTags.filter(
-        (origTag) => !tags.some((tag) => tag.name === origTag.name)
+        (origTag) => !tags.some((tag) => tag.tag === origtag.tag)
       );
 
       for (const tag of newTags) {
         await axios.post(`http://localhost:3000/v1/tags/wikis/${wikiId}`, {
-          tag: tag.name,
+          tag: tag.tag,
           translation: true,
           lan: language,
         });
@@ -109,7 +109,7 @@ const WikiEditPage = () => {
   };
 
   const removeTag = (tagToRemove) => {
-    setTags(tags.filter((tag) => tag.name !== tagToRemove));
+    setTags(tags.filter((tag) => tag.tag !== tagToRemove));
   };
 
   useEffect(() => {
@@ -156,12 +156,12 @@ const WikiEditPage = () => {
               <div className="tags-section edit-wiki-textarea">
                 {tags.map((tag) => (
                   <Tag
-                    key={tag.id || tag.name}
+                    key={tag.id || tag.tag}
                     closable
-                    onClose={() => removeTag(tag.name)}
+                    onClose={() => removeTag(tag.tag)}
                     className="tag-item"
                   >
-                    {tag.name}
+                    {tag.tag}
                   </Tag>
                 ))}
 

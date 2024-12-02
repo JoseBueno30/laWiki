@@ -23,7 +23,7 @@ const WikiCreatePage = () => {
     try {
       const tagCreationPromises = tags.map((tag) =>
         axios.post(`http://localhost:3000/v1/tags/wikis/${wikiId}`, {
-          tag: tag.name,
+          tag: tag.tag,
           translation: true,
           lan: language,
         })
@@ -77,7 +77,7 @@ const WikiCreatePage = () => {
   };
 
   const removeTag = (tagToRemove) => {
-    setTags(tags.filter((tag) => tag.name !== tagToRemove));
+    setTags(tags.filter((tag) => tag.tag !== tagToRemove));
   };
 
   return (
@@ -114,12 +114,12 @@ const WikiCreatePage = () => {
           <div className="tags-section create-wiki-textarea">
             {tags.map((tag) => (
               <Tag
-                key={tag.id || tag.name}
+                key={tag.id || tag.tag}
                 closable
-                onClose={() => removeTag(tag.name)}
+                onClose={() => removeTag(tag.tag)}
                 className="tag-item"
               >
-                {tag.name}
+                {tag.tag}
               </Tag>
             ))}
 

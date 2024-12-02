@@ -86,7 +86,7 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
           const tag = wikiTags.find((tag) => tag.id === tag_id);
           return (
             <Tag key={tag_id} closable onClose={() => removeTag(tag_id)}>
-              {tag.name[locale]}
+              {tag.tag[locale]}
             </Tag>
           );
         })}
@@ -95,7 +95,7 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
             .filter((tag) => !filters.tags.includes(tag.id))
             .map((tag) => (
               <Select.Option key={tag.id} value={tag.id}>
-                {tag.name[locale]}
+                {tag.tag[locale]}
               </Select.Option>
             ))}
         </Select>

@@ -18,7 +18,7 @@ const ArticlesSearchResultPage = () => {
   const location = useLocation();
   const paginationURL = location.state;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(searchParams.get("page") ? Number(searchParams.get("page")) : 1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [loading, setLoading] = useState(true);
 
@@ -50,7 +50,8 @@ const ArticlesSearchResultPage = () => {
       .toString()
       .replaceAll("&", " | ")
       .replaceAll("=", " : ")
-      .replaceAll("_", " ");
+      .replaceAll("_", " ")
+      .replaceAll("%2F", "/");
 
     setFilters(filterParams);
   };
@@ -91,6 +92,7 @@ const ArticlesSearchResultPage = () => {
       setResponse(HTTPResponse);
 
       formatFilters(queryParams);
+      if (searchParams.get("page")) setCurrentPage(Number(searchParams.get("page")))
       
     } catch (error) {
       console.error(error);
@@ -105,7 +107,7 @@ const ArticlesSearchResultPage = () => {
     if(wiki.wiki_info!=null){
       searchArticles();
     }
-  }, [wiki, searchParams]);
+  }, [wiki, searchParams, currentPage]);
 
   return (
     <Flex gap="middle" vertical align="center" style={{ minWidth: 400 }}>
