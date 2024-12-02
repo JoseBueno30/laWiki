@@ -11,8 +11,7 @@ import { searchArticlesWithParams, searchArticlesWithPaginationURL } from "../..
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 
-const wiki_id = "672c8721ba3ae42bd5985361";
-const searchLimit = 2;
+const searchLimit = 3;
 
 const ArticlesSearchResultPage = () => {
   const navigate = useNavigate();
@@ -59,6 +58,7 @@ const ArticlesSearchResultPage = () => {
   const searchArticles = async () => {
     setLoading(true);
     try {
+
       var queryParams = {
         wiki_id: wiki.wiki_info.id,
         name: (searchParams.get("name") || "").replace("_", " "),
@@ -100,9 +100,12 @@ const ArticlesSearchResultPage = () => {
   };
 
   useEffect(() => {
+    console.log("USE EFFECT");
     setLoading(true);
-    searchArticles();
-  }, [wiki_id, searchParams]);
+    if(wiki.wiki_info!=null){
+      searchArticles();
+    }
+  }, [wiki, searchParams]);
 
   return (
     <Flex gap="middle" vertical align="center" style={{ minWidth: 400 }}>
