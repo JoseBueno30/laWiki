@@ -44,7 +44,7 @@ const CommentList = ({commentList, user}) => {
               <ControlOutlined className='icon comment-list-son'/>
               <Text className='comment-list-son' strong>Filter</Text>
               <Text className='comment-list-son'>Date Range</Text>
-              <RangePicker/>
+              <RangePicker  allowEmpty={[true, true]}/>
           </Space>
         </div>
         {
