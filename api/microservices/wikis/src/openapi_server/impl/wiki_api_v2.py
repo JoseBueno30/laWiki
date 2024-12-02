@@ -44,7 +44,7 @@ partial_pipeline_filter = [{'$addFields': {
                         "as": "tag",
                         "in": {
                             "id": {"$toString": "$$tag._id"},
-                            "name": "$$tag.name"
+                            "tag": "$$tag.tag"
                         }
                     }
                 },
@@ -61,7 +61,7 @@ move_name_filter = [{'$addFields': {
                         "as": "tag",
                         "in": {
                             "id": {"$toString": "$$tag._id"},
-                            "name": "$$tag.name"
+                            "tag": "$$tag.tag"
                         }
                     }
                 },

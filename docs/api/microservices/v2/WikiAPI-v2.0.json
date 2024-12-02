@@ -1530,7 +1530,7 @@
       "Tag": {
         "required": [
           "id",
-          "name"
+          "tag"
         ],
         "type": "object",
         "properties": {
@@ -1538,7 +1538,7 @@
             "type": "string",
             "description": "Unique identifier for the tag."
           },
-          "name": {
+          "tag": {
             "type": "string",
             "description": "Name of the tag."
           }
@@ -1564,7 +1564,7 @@
       "TagV2": {
         "required": [
           "id",
-          "name"
+          "tag"
         ],
         "type": "object",
         "properties": {
@@ -1572,7 +1572,7 @@
             "type": "string",
             "description": "Unique identifier for the tag."
           },
-          "name": {
+          "tag": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
