@@ -42,11 +42,15 @@ class EditorManagerV2(BaseV2EditorsApi):
             "tag_ids": [
                 {
                     "id": str(tag_id),
-                    "tag": (await mongodb["tag"].find_one({"_id": tag_id}, {"tag": 1}))["tag"]
+                    "tag": tag_data.get("translations", {})
                 }
                 for tag_id in existing_tag_ids
+                for tag_data in [await mongodb["tag"].find_one({"_id": tag_id}, {"translations": 1})]
+                if tag_data  
             ]
         }
+
+
 
         await api_calls_v2.assign_article_tags(id, id_tags_body)
 
@@ -101,9 +105,9 @@ class EditorManagerV2(BaseV2EditorsApi):
                 }
             }
         else: # The original tag needs to be translated into the other languages
-            english = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.language, "en")
-            spanish = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.language, "es")
-            french = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.language, "fr")
+            english = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.lan, "en")
+            spanish = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.lan, "es")
+            french = await api_calls_v2.translate(new_tag_v2.tag, new_tag_v2.lan, "fr")
             tag_document = {
                 "tag": new_tag_v2.tag,
                 "wiki_id": wiki_id,
@@ -130,7 +134,7 @@ class EditorManagerV2(BaseV2EditorsApi):
             "tag_ids": [
                 {
                     "id": new_tag_instance.id,
-                    "name": new_tag_instance.tag
+                    "tag": new_tag_instance.translations
                 }
             ]
         }

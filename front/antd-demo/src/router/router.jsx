@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
+import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import ArticlePage from "../modules/articles/pages/article-page/article-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
-      { path: "", element: <WikiRecommendationPage /> }, // Página principal
+      { path: "", element: <TestRoute /> }, // Página principal
       {
         path: "wikis",
         children: [
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <WikiMainPage /> }, // Página principal de la wiki
               { path: "edit", element: <TestRoute /> }, // Editar wiki
-              { path: "search", element: <TestRoute /> }, // Buscar artículos en la wiki
+              { path: "search", element: <ArticlesSearchResultPage /> }, // Buscar artículos en la wiki
               {
                 path: "articles",
                 children: [

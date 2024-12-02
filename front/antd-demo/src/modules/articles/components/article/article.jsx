@@ -1,21 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./article.css";
 import { Grid, Flex, Rate, Row, Col } from "antd";
 import UserAvatar from "../../../wiki/components/avatar/user-avatar";
+import SettingsContext from "../../../../context/settings-context";
 
 const { useBreakpoint } = Grid;
 
 const Article = ({ article }) => {
+  const { locale } = useContext(SettingsContext);
   const screens = useBreakpoint();
-  const lan = article.lan;
-  const isSmall = false;
 
   //Match title with current language of the App
 
   return (
     <Row
       className="article"
-      title={article.title.es}
+      title={article.title[locale]}
       id={article.id}
       tabIndex={0}
       justify="space-around"
@@ -25,11 +25,11 @@ const Article = ({ article }) => {
         md={8}
         sm={9}
         xs={24}
-        title={article.title.es}
+        title={article.title[locale]}
         className="article-title"
         align="center"
       >
-        {article.title.es}
+        {article.title[locale]}
       </Col>
       <Col
         md={5}
@@ -45,13 +45,13 @@ const Article = ({ article }) => {
         sm={5}
         xs={24}
         className="article-date"
-        title={"Last modified: " + article.creation_date}
+        title={"Last modified: " + article.creation_date.split("T")[0]}
         align="center"
       >
-        {article.creation_date}
+        {article.creation_date.split("T")[0]}
       </Col>
       <Col md={7} sm={10} xs={24} className="article-rating" align="center">
-        {article.rating}
+        {article.rating.toFixed(2)}
         <Rate
           style={{ marginLeft: 10 }}
           disabled

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import apiClient from "../../../interceptor/interceptor";
+import APIGateway from "../../../interceptor/interceptor";
 import { SettingsContext } from "../../../context/settings-context";
 
 const WikiService = () => {
@@ -8,7 +8,7 @@ const WikiService = () => {
       const params = new URLSearchParams({ lang: locale });
       const url = `/v1/wikis/${wiki_name}?${params.toString()}`;
 
-      const response = await apiClient.get(url);
+      const response = await APIGateway.get(url);
       return response;
     } catch (error) {
       console.error("WikiService.getWiki:", error);
@@ -18,7 +18,7 @@ const WikiService = () => {
 
   const getRatedWikis = async () => {
     try {
-      const response = await apiClient.get("/wikis");
+      const response = await APIGateway.get("/wikis");
       return response;
     } catch (error) {
       console.error("WikiService.getRatedWikis:", error);

@@ -122,7 +122,7 @@ class WikiApiInternal(BaseInternalApi):
         for obj in id_tags_body.tag_ids:
             uploaded_obj.append({
             "_id" : ObjectId(obj.id),
-            "name" : obj.name
+            "tag" : obj.tag
         })
         add_tags_object = [
             { "_id" : ObjectId(id) }

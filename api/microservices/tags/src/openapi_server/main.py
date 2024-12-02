@@ -22,7 +22,7 @@ from openapi_server.apis.v2_public_api import router as V2PublicApiRouter
 
 app = FastAPI(
     title="TagAPI",
-    description="API for the tags microservice of laWiki web appplication. It provides all endpoints related to CRUD operatios for wiki tags.",
+    description="API for the tags microservice of laWiki web application. It provides all endpoints related to CRUD operatios for wiki tags.",
     version="2.0",
 )
 

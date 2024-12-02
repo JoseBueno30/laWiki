@@ -108,7 +108,7 @@ class EditorsManagerV1(BaseV1EditorsApi):
             "tag_ids": [
                 {
                     "id": new_tag_instance.id,
-                    "name": new_tag_instance.tag
+                    "tag": new_tag_instance.tag
                 }
             ]
         }
