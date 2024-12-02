@@ -8,6 +8,7 @@ import UserAvatar from '../../../wiki/components/avatar/user-avatar';
 import './article-page.css';
 import Title from 'antd/es/typography/Title';
 import ArticleService from '../../service/article-service';
+import CommentsService from '../../../comments/service/comment-service';
 import { WikiContext } from '../../../../context/wiki-context';
 import SettingsContext from '../../../../context/settings-context';
 
@@ -34,6 +35,7 @@ const ArticlePage = () => {
   const [loading, setLoading] = useState(true)
   const [articleVersion, setArticleVersion] = useState(null)
   const [versions, setVersions] = useState([])
+  const [comments, setComments] = useState({comments: []})
 
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
@@ -41,8 +43,8 @@ const ArticlePage = () => {
       const articleName = window.location.toString().split("/").pop().replaceAll("%20", " ")
       const version_response = await ArticleService().getArticleVersionByName("672c8721ba3ae42bd5985361", articleName, locale) 
       setArticleVersion(version_response)
-      
     }
+
     fetchArticleVersion()
   }, [])
 
@@ -51,8 +53,16 @@ const ArticlePage = () => {
       const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
       setVersions(versions_response.article_versions)
     }
+
+    const fetchArticleComments = async () =>{
+      const comments_response = await CommentsService().getArticleComments(articleVersion.article_id, 0, null)
+      console.log("COMMENTS", comments_response)
+      setComments(comments_response)
+    }
+
     if(articleVersion){
       fetchVersions()
+      fetchArticleComments()
     } 
   }, [articleVersion])
 
@@ -106,7 +116,7 @@ const ArticlePage = () => {
         <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
-        <CommentList commentList={[]} user={user}></CommentList>     
+        <CommentList commentList={comments.comments} user={user}></CommentList>     
         <RatingsSection></RatingsSection> 
       </Flex>
 

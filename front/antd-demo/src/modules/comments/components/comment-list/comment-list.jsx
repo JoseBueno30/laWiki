@@ -20,7 +20,8 @@ const options = [
   { label: 'oldest', value: 'oldest' }
 ];
 
-const CommentList = ({commentList = [   ], user}) => {
+const CommentList = ({commentList, user}) => {
+  console.log("COMMENT LIST", commentList)
   return (
     
     <Flex className='comment-list'>
