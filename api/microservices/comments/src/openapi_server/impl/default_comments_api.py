@@ -14,7 +14,7 @@ from openapi_server.models.new_comment import NewComment
 from openapi_server.utils.url_creator import generate_url_offset
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
-mongodb = client.get_database("laWikiDB")
+mongodb = client.get_database("laWikiV2BD")
 
 # Removes ObjectID fields and converts them to string
 pipeline_remove_id = [
