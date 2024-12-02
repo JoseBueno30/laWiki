@@ -3,14 +3,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import {Button, Flex, Grid, Select, Spin} from "antd";
 import { EditOutlined } from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
-import RatingsSection from '../../components/ratings-section';
+import RatingsSection from '../../../ratings/components/ratings-section';
 import UserAvatar from '../../../wiki/components/avatar/user-avatar';
 import './article-page.css';
 import Title from 'antd/es/typography/Title';
 import ArticleService from '../../service/article-service';
-import CommentsService from '../../../comments/service/comment-service';
+import CommentService from '../../../comments/service/comment-service';
 import { WikiContext } from '../../../../context/wiki-context';
 import SettingsContext from '../../../../context/settings-context';
+import RatingService from '../../../ratings/service/rating-service';
 
 const {useBreakpoint} = Grid
 
@@ -36,6 +37,7 @@ const ArticlePage = () => {
   const [articleVersion, setArticleVersion] = useState(null)
   const [versions, setVersions] = useState([])
   const [comments, setComments] = useState({comments: []})
+  const [ratings, setRatings] = useState({average: 0, total: 0, ratings: []})
 
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
@@ -55,14 +57,23 @@ const ArticlePage = () => {
     }
 
     const fetchArticleComments = async () =>{
-      const comments_response = await CommentsService().getArticleComments(articleVersion.article_id, 0, null)
-      console.log("COMMENTS", comments_response)
+      const comments_response = await CommentService().getArticleComments(articleVersion.article_id, 0, null)
+      // console.log("COMMENTS", comments_response)
       setComments(comments_response)
+    }
+
+    const fetchArticleRatings = async () =>{
+      const ratings_response = await RatingService().getArticleRatings(articleVersion.article_id)
+
+      setRatings({average: ratings_response.average, total: ratings_response.total, 
+        ratings : [ratings_response.five_count, ratings_response.four_count, 
+          ratings_response.three_count, ratings_response.two_count, ratings_response.one_count]})
     }
 
     if(articleVersion){
       fetchVersions()
       fetchArticleComments()
+      fetchArticleRatings()
     } 
   }, [articleVersion])
 
@@ -117,7 +128,7 @@ const ArticlePage = () => {
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
         <CommentList commentList={comments.comments} user={user}></CommentList>     
-        <RatingsSection></RatingsSection> 
+        <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} total_ratings={ratings.total}></RatingsSection> 
       </Flex>
 
     </section>)

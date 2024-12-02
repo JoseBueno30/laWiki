@@ -146,12 +146,13 @@ class RatingsManager (BaseDefaultApi):
         # return article;
 
         try:
-            response = requests.head(self.article_url + "articles/" + id)
+            response = requests.head(self.article_url + "v2/articles/" + id)
             response.raise_for_status()  # Verifica si hubo un error HTTP
             return response  # Retorna el JSON si la respuesta es exitosa
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=response.status_code, detail=str(http_err))
         except Exception as err:
+            print(err)
             raise HTTPException(status_code=500, detail="Error connecting to the articles service")
 
     async def _check_rating_exists(self, id: str = 0, pipe: list = []):
@@ -181,7 +182,7 @@ class RatingsManager (BaseDefaultApi):
         article_list = None;
 
         try:
-            updateArticle = requests.put(self.article_url + "articles/" + id +"/ratings", json = {'rating': newAvg })
+            updateArticle = requests.put(self.article_url + "v2/articles/" + id +"/ratings", json = {'rating': newAvg })
             updateArticle.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
@@ -189,7 +190,7 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=500, detail="Error connecting to the articles service on update article's rating")
 
         try:
-            article = requests.get(self.article_url + "articles/" + id)
+            article = requests.get(self.article_url + "v2/articles/" + id)
             article.raise_for_status()
             article = article.json()
         except requests.exceptions.HTTPError as http_err:
@@ -198,7 +199,7 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=500, detail="Error connecting to the articles service on getting the article")
         try:
 
-            article_list = requests.get(self.article_url + "articles?wiki_id=" + article['wiki_id'])
+            article_list = requests.get(self.article_url + "v2/articles?wiki_id=" + article['wiki_id'])
             article_list.raise_for_status()
             article_list = article_list.json()
 
@@ -211,7 +212,7 @@ class RatingsManager (BaseDefaultApi):
             total = 0;
             for articles in article_list['articles']:
                 total += articles['rating']
-            update_wiki = requests.put(self.wiki_url + "wikis/" + article['wiki_id'] + "/ratings", json={'rating': total / len(article_list['articles']) })
+            update_wiki = requests.put(self.wiki_url + "v2/wikis/" + article['wiki_id'] + "/ratings", json={'rating': total / len(article_list['articles']) })
             update_wiki.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))

@@ -1,6 +1,6 @@
-import apiClient from "../../../interceptor/interceptor"
+import APIGateway from "../../../interceptor/interceptor"
 
-const CommentsService = () =>{
+const CommentService = () =>{
     const getArticleComments = async (articleId, offset, creationDate) =>{
         try{
             const params = new URLSearchParams({
@@ -9,7 +9,7 @@ const CommentsService = () =>{
             })
             const url = `/v1/comments/articles/${articleId}?${params.toString()}`
             
-            const response = await apiClient.get(url);
+            const response = await APIGateway.get(url);
             return response
         }catch(error){
             console.error("CommentService.getArticleComments:", error)
@@ -22,4 +22,4 @@ const CommentsService = () =>{
     }
 }
 
-export default CommentsService
+export default CommentService

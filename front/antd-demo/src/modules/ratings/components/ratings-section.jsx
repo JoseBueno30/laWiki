@@ -5,13 +5,13 @@ import { useState } from "react";
 
 const{useBreakpoint} = Grid
 
-const RatingsSection = () => {
+const RatingsSection = ({ratings, total_ratings, avg_rating}) => {
     const screen = useBreakpoint()
 
     const [rating, setRating] = useState(0);
-    const ratings = [5,10,0,20,0];
-    const total_ratings = 35;
-    const avg_rating = 4.75;
+    // const ratings = [5,10,0,20,0];
+    // const total_ratings = 35;
+    // const avg_rating = 4.75;
 
     const updateRating = (value) => {
         setRating(value);

@@ -1,4 +1,4 @@
-import apiClient from "../../../interceptor/interceptor"
+import APIGateway from "../../../interceptor/interceptor"
 
 const ArticleService = () =>{
     const getArticleVersionByName = async (wiki_id, name, lan) =>{
@@ -6,7 +6,7 @@ const ArticleService = () =>{
             const params = new URLSearchParams({wiki: wiki_id, lan: lan})
             const url = `v1/articles/versions/by-name/${name}?${params.toString()}`
 
-            const response = await apiClient.get(url)
+            const response = await APIGateway.get(url)
             return response
         }catch(error){
             console.error("ArticleService.getArticleVersionByName: ", error)
@@ -17,7 +17,7 @@ const ArticleService = () =>{
     const getArticleVersionsByArticleID = async (article_id) =>{
         try{
             const url = `v1/articles/${article_id}/versions`
-            const response = await apiClient.get(url)
+            const response = await APIGateway.get(url)
             return response
         }catch(error){
             console.error("ArticleService.getArticleVersionsByArticleID: ", error)
