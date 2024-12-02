@@ -3,6 +3,9 @@ import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
+import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
+import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
+import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
 
 // The structure of the application's routes
 
@@ -29,19 +32,19 @@ const router = createBrowserRouter([
         path: "wikis",
         children: [
           { path: "search", element: <TestRoute /> }, // Buscar wikis
-          { path: "new", element: <TestRoute /> }, // Crear wiki
+          { path: "new", element: <WikiCreatePage /> }, // Crear wiki
           {
             path: ":wiki_name",
             children: [
               { path: "", element: <WikiMainPage /> }, // Página principal de la wiki
-              { path: "edit", element: <TestRoute /> }, // Editar wiki
-              { path: "search", element: <TestRoute /> }, // Buscar artículos en la wiki
+              { path: "edit", element: <WikiEditPage /> }, // Editar wiki
+              { path: "search", element: <ArticlesSearchResultPage /> }, // Buscar artículos en la wiki
               {
                 path: "articles",
                 children: [
                   { path: "new", element: <TestRoute /> }, // Crear artículo
                   { path: ":article_name", element: <TestRoute /> }, // Ver artículo
-                  { path: ":article_name/edit", element: <TestRoute /> }, // Editar artículo
+                  { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
                 ],
               },
             ],

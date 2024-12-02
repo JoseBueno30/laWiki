@@ -8,7 +8,7 @@ import "./wiki-edit-page.css";
 const { TextArea } = Input;
 
 const WikiEditPage = () => {
-  const wikiId = "674c716c2c9c223912440f89";
+  const wikiId = "674cb6b609bf0bd3bc9221c4";
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [wikiData, setWikiData] = useState({
@@ -32,7 +32,7 @@ const WikiEditPage = () => {
 
       const currentTags = data.tags.map((tagObj) => ({
         id: tagObj.id,
-        name: tagObj.tag[language],
+        tag: tagObj.tag[language],
       }));
 
       setWikiData({
@@ -55,11 +55,11 @@ const WikiEditPage = () => {
       setLoading(true);
 
       const newTags = tags.filter(
-        (tag) => !originalTags.some((origTag) => origTag.name === tag.name)
+        (tag) => !tag.id
       );
-
+      
       const deletedTags = originalTags.filter(
-        (origTag) => !tags.some((tag) => tag.name === origTag.name)
+        (origTag) => !tags.some((tag) => origTag.id === tag.id)
       );
 
       for (const tag of newTags) {
@@ -101,8 +101,8 @@ const WikiEditPage = () => {
   };
 
   const addTag = () => {
-    if (newTag.trim() && !tags.some((t) => t.name === newTag)) {
-      setTags([...tags, { id: null, name: newTag }]);
+    if (newTag.trim() && !tags.some((t) => t.tag === newTag)) {
+      setTags([...tags, { id: null, tag: newTag }]);
       setNewTag("");
       setIsInputVisible(false);
     }
@@ -110,6 +110,19 @@ const WikiEditPage = () => {
 
   const removeTag = (tagToRemove) => {
     setTags(tags.filter((tag) => tag.name !== tagToRemove));
+  };
+
+  const deleteWiki = async () => {
+    try {
+      await axios.delete(`http://localhost:3000/v1/wikis/${wikiId}`);
+      message.success("Wiki deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      console.error("Error deleting wiki:", error);
+      message.error("Failed to delete wiki.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -193,6 +206,9 @@ const WikiEditPage = () => {
                 Save wiki
               </Button>
               <Button onClick={() => navigate("/")}>Cancel</Button>
+              <Button danger className="right-button" onClick={deleteWiki}>
+                Delete wiki
+              </Button>
             </div>
           </>
         )}
