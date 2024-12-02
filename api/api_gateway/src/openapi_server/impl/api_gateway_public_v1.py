@@ -194,7 +194,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         articleId: str,
         userId: str,
     ) -> Rating:
-        return await forward_request(method="GET", url=f"{RATINGS_URL}/ratings/article/{articleId}/users/{userId}")
+        return await forward_request(method="GET", url=f"{RATINGS_URL}/ratings/articles/{articleId}/users/{userId}")
 
     async def get_tag(
         self,

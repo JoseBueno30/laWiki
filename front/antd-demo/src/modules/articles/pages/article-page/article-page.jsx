@@ -24,7 +24,7 @@ const article =
   const user = {
     name: "Adriduty",
     image: "https://i1.sndcdn.com/artworks-ynfN32NPS8zDyraR-PHw2zQ-t500x500.jpg",
-    id: "1"
+    id: "672272c65150a9cd3f46599e"
   }
 
 const ArticlePage = () => {
@@ -38,6 +38,7 @@ const ArticlePage = () => {
   const [versions, setVersions] = useState([])
   const [comments, setComments] = useState({comments: []})
   const [ratings, setRatings] = useState({average: 0, total: 0, ratings: []})
+  const [userRating, setUserRating] = useState({rating_object: null, enabled: false})
 
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
@@ -46,7 +47,6 @@ const ArticlePage = () => {
       const version_response = await ArticleService().getArticleVersionByName("672c8721ba3ae42bd5985361", articleName, locale) 
       setArticleVersion(version_response)
     }
-
     fetchArticleVersion()
   }, [])
 
@@ -70,10 +70,22 @@ const ArticlePage = () => {
           ratings_response.three_count, ratings_response.two_count, ratings_response.one_count]})
     }
 
+    const fetchUserRating = async () =>{
+      const userRating_response = await RatingService().getUserRatingInArticle(user.id, articleVersion.article_id);
+      
+      console.log("RATING_RESPONSE:",userRating_response)
+      
+      setUserRating({
+        rating_object: userRating_response,
+        enabled: true
+      })
+    }
+
     if(articleVersion){
       fetchVersions()
       fetchArticleComments()
       fetchArticleRatings()
+      fetchUserRating()
     } 
   }, [articleVersion])
 
@@ -98,6 +110,19 @@ const ArticlePage = () => {
       simplifiedVersions.push(newVersion)
     });
     return simplifiedVersions;
+  }
+
+  const updateRating = async (newRatingValue) =>{
+    if(userRating.rating_object != null){
+      let newRatingObject = userRating.rating_object 
+      newRatingObject.value = newRatingValue
+      const rating_response = await RatingService().updateArticleRating(articleVersion.article_id, newRatingObject)
+      setUserRating({rating_object: rating_response, enabled: true})
+    }else{
+      const rating_response = await RatingService().createArticleRating(articleVersion.article_id, user.id, newRatingValue)
+      setUserRating({rating_object: rating_response, enabled: true})
+    }
+    
   }
 
   return (
@@ -127,10 +152,14 @@ const ArticlePage = () => {
         <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
-        <CommentList commentList={comments.comments} user={user}></CommentList>     
-        <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} total_ratings={ratings.total}></RatingsSection> 
-      </Flex>
+        <CommentList commentList={comments.comments} user={user}></CommentList>  
 
+        <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} 
+          total_ratings={ratings.total} 
+          updateRatingFunc={updateRating} 
+          user_value={userRating.rating_object ? userRating.rating_object.value : 0}>
+        </RatingsSection> 
+      </Flex>
     </section>)
   );
 };
