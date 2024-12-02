@@ -33,7 +33,7 @@ class APIGatewayEditorsV1(BaseV1AdminsApi):
         new_tag: NewTag,
     ) -> Tag:
         """Create a new tag in a given wiki."""
-        return await forward_request(method="POST", url=f"{TAGS_URL}/v2/tags", json=new_tag.to_dict())
+        return await forward_request(method="POST", url=f"{TAGS_URL}/v2/tags/wikis/{id}", json=new_tag.to_dict())
 
 
     async def remove_wiki(

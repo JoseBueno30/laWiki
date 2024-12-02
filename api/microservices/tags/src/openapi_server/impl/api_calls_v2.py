@@ -11,8 +11,8 @@ WIKIS_URL = "wikis_api"
 #WIKIS_URL = "localhost"
 
 TRANSLATION_PORT = 5000
-#TRANSLATION_URL = "wikis_api"
-TRANSLATION_URL = "localhost"
+TRANSLATION_URL = "host.docker.internal"
+#TRANSLATION_URL = "localhost"
 
 
 # Article microservice api calls

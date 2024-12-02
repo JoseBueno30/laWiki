@@ -14,10 +14,19 @@ import UserProfilePopover from "./popovers/UserProfilePopover";
 import CompactSearchInput from "./buttons/compact-search-input";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import WikiFilterPopover from "./popovers/wiki-filter-popover";
 
 const NotificationsClickHandler = () => {
   console.log("Notifications clicked");
+};
+
+const generateDateRange = (startDate, endDate) => (
+  startDate && endDate ? `${startDate}-${endDate}` : startDate ? `${startDate}` : endDate ? `${endDate}` : ""
+)
+
+const isQueryValid = (query) => {
+  return query.trim().length > 0;
 };
 
 // Aqui seguramente se pase la informacion de la wiki, como el nombre, id y tags.
@@ -30,10 +39,29 @@ const WikiHeader = () => {
   });
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation('header');
+  const navigate = useNavigate();
 
   const toggleSearchHeader = () => {
     setSearchHeader(!showSearchHeader);
   };
+
+  const searchHandler = () => {
+    if (!isQueryValid(searchQuery)) {
+      console.log("Invalid search query");
+      return;
+    }
+
+    const searchParams = new URLSearchParams();
+    searchParams.append("name", searchQuery);
+    searchParams.append("order", filters.order);
+    isQueryValid(filters.author) ?  searchParams.append("author_name", filters.author) : null;
+    searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
+
+    console.log(generateDateRange(filters.startDate, filters.endDate));
+
+    const searchUrl = `/wikis/search?${searchParams.toString()}`;
+    navigate(searchUrl)
+  }
 
   // Hay que definir una funcion de searchFunction(), la cual se pasará a los componentes de input
   // Esa funcion hará uso de un useNavigate de React router, el cual tiene el mismo efecto
@@ -64,7 +92,7 @@ const WikiHeader = () => {
                   setFilters={setFilters}
                 />
               }
-              searchFunction={() => console.log("Searching...")}
+              searchFunction={searchHandler}
             />
             <CreateButton text={t('new-wiki')} />
             <Badge count={9} size="large">
@@ -99,7 +127,7 @@ const WikiHeader = () => {
               setFilters={setFilters}
             />
           }
-          searchFunction={() => console.log("Searching...")}
+          searchFunction={searchHandler}
         />
       )}
     </>

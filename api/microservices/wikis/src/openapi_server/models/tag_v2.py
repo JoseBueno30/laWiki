@@ -32,8 +32,8 @@ class TagV2(BaseModel):
     TagV2
     """ # noqa: E501
     id: StrictStr = Field(description="Unique identifier for the tag.")
-    tag: Dict[str, StrictStr] = Field(description="Name of the tag.")
-    __properties: ClassVar[List[str]] = ["id", "tag"]
+    tag: Dict[str, StrictStr] = Field(description="Name of the name.")
+    __properties: ClassVar[List[str]] = ["id", "name"]
 
     model_config = {
         "populate_by_name": True,
@@ -85,7 +85,7 @@ class TagV2(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "tag": obj.get("tag")
+            "name": obj.get("name")
         })
         return _obj
 

@@ -1,5 +1,6 @@
 
 import json
+import operator
 import re
 from typing import Any, Coroutine, List, Dict
 
@@ -17,7 +18,7 @@ from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi import HTTPException
 from openapi_server.impl.misc import *
-from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan
+from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan, delete_tags_from_wiki
 from pymongo.errors import InvalidOperation
 
 from datetime import datetime, timedelta
@@ -191,7 +192,11 @@ class WikiApi(BaseDefaultV2Api):
     async def create_wiki_v2(self, new_wiki_v2: NewWikiV2) -> WikiV2:
         discriminate_name(new_wiki_v2.name)
 
-        name = await translate_name(new_wiki_v2)
+        try:
+            name = await translate_name(new_wiki_v2)
+        except Exception as e:
+            print(e)
+            raise ConnectionError("Cannot connect to translator")
 
         final_wiki = WikiV2(id='1'
                          , name=name
@@ -244,10 +249,6 @@ class WikiApi(BaseDefaultV2Api):
                 }
 
             url_filters += "creation_date=" + creation_date + "&"
-
-        if lang is not None:
-            filters["lang"] = lang
-            url_filters += "lang=" + lang + "&"
         
         sorting_variables = {}
         if order is not None:
@@ -313,13 +314,46 @@ class WikiApi(BaseDefaultV2Api):
 
         wikis = await mongodb["wiki"].aggregate(query_pipeline).to_list(length=None)
 
-        print(query_pipeline, end="\n\n")
-        print(wikis)
+        #print(query_pipeline, end="\n\n")
+        print(wikis[0]["wikis"])
 
         if not wikis:
             raise LookupError("Cannot find Wiki")
+        
+        if lang is not None:
+            url_filters += "lang=" + lang + "&"
+            ids = list(map(lambda x: ObjectId(x["id"]),wikis[0]["wikis"]))
+            print(ids)
+            try:
+                traducciones = await mongodb["wiki_translation"].find({"wiki_id" : {"$in" : ids}, "lang" : lang}, {"wiki_id" : {"$toString" : "$wiki_id"}, "description" : 1, "name" : 1, "_id" : 0}).to_list(length=None)
+            except:
+                print("Error buscando traducciones")
+            
+            traducciones.sort(key=operator.itemgetter("wiki_id"))
+            wikis[0]["wikis"].sort(key=operator.itemgetter("id"))
+            print("Traducciones:")
+            print(traducciones)
+            print("Todas:")
+            print(wikis[0]["wikis"])
+            print("Diferencia: " + str(len(traducciones) - len(wikis[0]["wikis"])))
+            wiki_ids = list(map(lambda x: x["wiki_id"],traducciones))
+            print(wiki_ids)
+            for wiki in wikis[0]["wikis"]:
+                try:
+                    i = wiki_ids.index(wiki["id"])
+                    wiki["description"] = traducciones[i]["description"]
+                    wiki["name"] = traducciones[i]["name"]
+                except:
+                    print("Sin traduccion:" + wiki["id"])
+                    pass
 
         return wikis[0]
+
+def poner_traduccion(dato: dict, traduccion: dict):
+    resultado = dato.copy()
+    resultado["description"] = traduccion["description"]
+    resultado["name"] = traduccion["name"]
+    return resultado
 
 def conditional_field(name: str, value):
     return {name : value} if value is not None else None
@@ -343,6 +377,8 @@ class WikiApiAdmins(BaseAdminsV2Api):
         
         delete_articles_from_wiki(id_name)
 
+        delete_tags_from_wiki(id_name)
+
         await delete_translations(id_name)
 
         result = await mongodb["wiki"].delete_one({"_id" : ObjectId(id_name)})
@@ -359,7 +395,7 @@ class WikiApiAdmins(BaseAdminsV2Api):
             name = id
 
         new_wiki_dict = new_wiki.to_dict()
-
+        
         translated_name = await translate_name(new_wiki)
 
         new_wiki_dict["name"] = translated_name
@@ -444,7 +480,7 @@ class WikiApiInternal(BaseInternalV2Api):
         for obj in id_tags_body_v2.tag_ids:
             uploaded_obj.append({
             "_id" : ObjectId(obj.id),
-            "name" : obj.tag
+            "tag" : obj.tag
         })
         add_tags_object = [
             { "_id" : ObjectId(id) }

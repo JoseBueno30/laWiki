@@ -1,11 +1,11 @@
-.edit-article-section {
+.create-wiki-section {
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction:column;
 }
   
-.edit-article-container {
+.create-wiki-container {
     width: 85vw;
     display: flex;
     align-items: flex-start;
@@ -14,7 +14,7 @@
     position: relative;
 }
 
-.edit-article-item {
+.create-wiki-item {
     width: 100%;
     display: flex;
     align-items: flex-start;
@@ -23,11 +23,11 @@
     position: relative;
 }
 
-.edit-article-item label {
+.create-wiki-item label {
     font-weight: bold;
 }
 
-.edit-article-buttons-section {
+.create-wiki-buttons-section {
     display: flex;
     justify-content: flex-start;
     gap: 20px;
@@ -37,7 +37,7 @@
 }
 
 @media (max-width: 768px) {
-    .edit-article-buttons-section {
+    .create-wiki-buttons-section {
         gap: 10px;
     }
 }
@@ -46,7 +46,7 @@
     margin-left: auto;
 }
 
-.edit-article-textarea {
+.create-wiki-textarea {
     width: 100%;
     padding: 8px;
     font-size: 14px;

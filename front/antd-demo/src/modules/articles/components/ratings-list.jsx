@@ -23,7 +23,6 @@ const RatingsList = ({ avg_rating, total_ratings, ratings }) => {
           let i = 5 - index;
 
           let percent = Math.round((value_count / total_ratings) * 100);
-          console.log(value_count, index, i, percent);
           return (
             <Flex key={i} vertical>
               <Text strong>{i} stars</Text>
