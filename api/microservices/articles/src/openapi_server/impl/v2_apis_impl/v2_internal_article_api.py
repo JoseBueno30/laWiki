@@ -33,7 +33,7 @@ class InternalArticleAPIV2(BaseV2InternalApi):
         self,
         id: str,
     ) -> None:
-        return await mongodb["article"].find_one(filter={"_id": ObjectId(id)})is not None
+        return await mongodb["article"].find_one(filter={"_id": ObjectId(id)}) is not None
 
     async def unassign_article_tags_v2(
         self,

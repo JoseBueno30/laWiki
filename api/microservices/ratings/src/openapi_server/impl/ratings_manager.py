@@ -33,10 +33,11 @@ class RatingsManager (BaseDefaultApi):
         return result;
 
     async def delete_rating(self, id: str):
+        rating = await self._check_rating_exists(id)
         result = await self.mongodb["rating"].delete_one({'_id': self._convert_id_into_ObjectId(id)})
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Rating Not Found")
-        await self._update_article_and_wiki_average(id)
+        await self._update_article_and_wiki_average(str(rating["article_id"]))
         return None;
 
     async def rate_article(self, id: str, new_rating: NewRating):
