@@ -1,13 +1,21 @@
-import React, { useState } from "react";
-import { Tag, Select, Button, Input, Upload } from "antd";
+import React, { useState, useEffect } from "react";
+import { Tag, Select, Button, Input, Upload, Modal, Flex } from "antd";
 const { TextArea } = Input;
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import "./article-edit-page.css";
-import MapComponent from "../MapComponent";
+import MapComponent from "../../components/map-component/MapComponent";
+import MapConfigurator from "../../components/map-configurator/map-configurator";
+import MapView from "../../components/map-view/map-view";
+import ReactDOM from "react-dom/client";
+import JsxParser from "react-jsx-parser";
+import { uploadImage } from "../../service/article_service";
 
 const { Option } = Select;
 
+
+
 const ArticleEditPage = () => {
+  const [body, setBody] = useState("");
   const [tags, setTags] = useState(["Tag 1", "Tag 2", "Tag 3"]);
   const [availableTags, setAvailableTags] = useState([
     "Tag 1",
@@ -16,8 +24,12 @@ const ArticleEditPage = () => {
     "Tag 4",
     "Tag 5",
   ]);
-  const [maps, setMaps] = useState([]);
   const [images, setImages] = useState([]); // Estado para almacenar imágenes seleccionadas
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
 
   const addTag = (value) => {
     if (value && !tags.includes(value)) {
@@ -29,21 +41,26 @@ const ArticleEditPage = () => {
     setTags(tags.filter((t) => t !== tag));
   };
 
-  const addMap = () => {
-    setMaps((prevMaps) => [
-      ...prevMaps,
-      <MapComponent key={prevMaps.length} />,
-    ]);
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    try {
+      const imageUrl = await uploadImage(file);
+
+      const wikiTextImage = `[[File:${imageUrl}|title=""]]`;
+      
+      setBody(`${body}\n${wikiTextImage}`);
+
+      onSuccess();
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      onError(error);
+    }
   };
 
-  // Manejar la selección de imágenes
-  const handleImageUpload = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImages((prevImages) => [...prevImages, e.target.result]); // Agregar la imagen al estado
-    };
-    reader.readAsDataURL(file); // Convertir archivo en base64
-    return false; // Evitar la carga automática de archivos por el componente Upload
+  const handleCancel = () => setIsModalOpen(false);
+
+  const onMapSave = (wikiTextTag) => {
+    setBody(`${body}\n${wikiTextTag}`);
+    setIsModalOpen(false);
   };
 
   return (
@@ -91,51 +108,72 @@ const ArticleEditPage = () => {
           </div>
         </div>
 
+        <Flex align="center" justify="space-evenly" style={{ width: "100%" }}>
+          <div>
+            <Button type="primary" onClick={showModal}>
+              Insertar mapa
+            </Button>
+            <Modal
+              title="Configuración del Mapa"
+              open={isModalOpen} // Aquí podrías guardar el mapa cuando se pulse OK
+              width="80vw" // Ancho personalizado para adaptarse mejor al mapa
+              style={{ height: "70vh", overflow: "hidden" }} // Altura ajustada
+              onCancel={handleCancel}
+              destroyOnClose
+            >
+              <MapConfigurator onSave={onMapSave} />
+            </Modal>
+          </div>
+
+          <div>
+            <Upload
+              customRequest={customRequest}
+              multiple={false}
+              showUploadList={false}
+              accept="image/*"
+            >
+              <Button icon={<UploadOutlined />}>Insertar imagen</Button>
+            </Upload>
+          </div>
+        </Flex>
+
+        {/* Vista previa de imágenes */}
+        <div className="image-preview-container" style={{ marginTop: "20px" }}>
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="image-preview"
+              style={{ marginBottom: "10px" }}
+            >
+              <img
+                src={image}
+                alt={`Preview ${index}`}
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
         <div className="edit-article-item">
-          <label htmlFor="edit-article-description" className="edit-article-label">
+          <label
+            htmlFor="edit-article-description"
+            className="edit-article-label"
+          >
             Body
           </label>
           <TextArea
             id="edit-article-description"
-            autoSize={{ minRows: 6, maxRows: 10 }}
+            value={body} // El valor del textarea es el estado
+            onChange={(e) => {
+              setBody(e.target.value), console.log(body);
+            }}
+            autoSize={{ minRows: 6, maxRows: 30 }}
           />
-        </div>
-
-        <div className="edit-article-item">
-          <h2>Selecciona una ubicación en el mapa:</h2>
-          {maps}
-          <Button
-            type="dashed"
-            icon={<PlusOutlined />}
-            onClick={addMap}
-            style={{ marginTop: "10px" }}
-          >
-            Agregar mapa
-          </Button>
-        </div>
-
-        <div className="edit-article-item">
-          <h2>Insertar una imagen:</h2>
-          <Upload
-            beforeUpload={handleImageUpload} // Maneja la imagen antes de la carga
-            multiple={true} // Permitir múltiples imágenes
-            showUploadList={false} // Ocultar la lista predeterminada de Ant Design
-          >
-            <Button icon={<UploadOutlined />}>Seleccionar imagen</Button>
-          </Upload>
-
-          {/* Vista previa de imágenes */}
-          <div className="image-preview-container" style={{ marginTop: "20px" }}>
-            {images.map((image, index) => (
-              <div key={index} className="image-preview" style={{ marginBottom: "10px" }}>
-                <img
-                  src={image}
-                  alt={`Preview ${index}`}
-                  style={{ maxWidth: "100%", height: "auto", borderRadius: "8px", border: "1px solid #ddd" }}
-                />
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="edit-article-buttons-section">

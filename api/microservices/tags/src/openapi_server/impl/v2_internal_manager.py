@@ -27,14 +27,9 @@ class InternalManagerV2(BaseV2InternalApi):
 
         tag_list_completed = await get_wiki_tags_v2(id, 100, 0)
         tags = tag_list_completed.articles
-        print(tags)
 
         for tag in tags:
-            articles = tag.articles
             tag_id = ObjectId(tag.id)
-            for article in articles:
-                await api_calls_v2.unassign_article_tags(article.id, [tag.id])
-
             await mongodb["tag"].delete_one({"_id": tag_id})
 
         return None
