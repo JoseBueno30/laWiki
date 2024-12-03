@@ -43,12 +43,12 @@ const ArticlePage = () => {
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
       // console.log("URL:", window.location.toString().split("/"))
-      const articleName = window.location.toString().split("/").pop().replaceAll("%20", " ")
-      const version_response = await ArticleService().getArticleVersionByName("672c8721ba3ae42bd5985361", articleName, locale) 
+      const articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
+      const version_response = await ArticleService().getArticleVersionByName(/*"672c8721ba3ae42bd5985361"*/wiki.wiki_info.id, articleName, locale) 
       setArticleVersion(version_response)
     }
     fetchArticleVersion()
-  }, [])
+  }, [wiki])
 
   useEffect(() =>{
     const fetchVersions = async () =>{
@@ -57,7 +57,7 @@ const ArticlePage = () => {
     }
 
     const fetchArticleComments = async () =>{
-      const comments_response = await CommentService().getArticleComments(articleVersion.article_id, 0, null)
+      const comments_response = await CommentService().getArticleComments(articleVersion.article_id, 0, 3, null)
       // console.log("COMMENTS", comments_response)
       setComments(comments_response)
     }
@@ -73,7 +73,7 @@ const ArticlePage = () => {
     const fetchUserRating = async () =>{
       const userRating_response = await RatingService().getUserRatingInArticle(user.id, articleVersion.article_id);
       
-      console.log("RATING_RESPONSE:",userRating_response)
+      // console.log("RATING_RESPONSE:",userRating_response)
       
       setUserRating({
         rating_object: userRating_response,
@@ -122,7 +122,13 @@ const ArticlePage = () => {
       const rating_response = await RatingService().createArticleRating(articleVersion.article_id, user.id, newRatingValue)
       setUserRating({rating_object: rating_response, enabled: true})
     }
-    
+  }
+
+  const controlCommentsPaginationAndFilters = async (newOffset, creation_date) =>{
+
+    const comments_response = await CommentService().getArticleComments(articleVersion.article_id, newOffset, 3, null)
+    console.log("CONTROLCOMMENTS", comments_response)
+    setComments(comments_response)
   }
 
   return (
@@ -139,7 +145,7 @@ const ArticlePage = () => {
             <UserAvatar image={article.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
           
-          {console.log(versions)}
+          // {console.log(versions)}
           
           <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id}></Select> 
           <Button title='Editar' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
@@ -149,10 +155,11 @@ const ArticlePage = () => {
         
       </Flex>
       <div className='article-body-container'>
+        // PONER JPARSER
         <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
-        <CommentList commentList={comments.comments} user={user}></CommentList>  
+        <CommentList commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
 
         <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} 
           total_ratings={ratings.total} 

@@ -33,7 +33,9 @@ const RatingsList = ({ avg_rating, total_ratings, ratings }) => {
                   strokeColor="#fadb14"
                   showInfo={false}
                 />
-                <Text style={{width:"40px", textAlign:"end"}}>{percent}%</Text>
+                <Flex justify="center" align="center">
+                  <Text style={{width:"40px", textAlign:"end"}}>{percent}%</Text>
+                </Flex>
               </Flex>
             </Flex>
           );

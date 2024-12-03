@@ -1,10 +1,12 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './comment-list.css';
 import { CommentOutlined, SortAscendingOutlined, ControlOutlined} from '@ant-design/icons';
-import { Flex, Space, Typography, Radio, DatePicker} from 'antd';
+import { Flex, Space, Typography, Radio, DatePicker, Button} from 'antd';
 import CommentInput from '../comment-input/comment-input';
 import Comment from '../comment/comment';
+import { Pagination } from 'antd';
+
 
 const {Text, _ } = Typography
 const {RangePicker} = DatePicker
@@ -20,15 +22,29 @@ const options = [
   { label: 'oldest', value: 'oldest' }
 ];
 
-const CommentList = ({commentList, user}) => {
-  // console.log("COMMENT LIST", commentList)
+const CommentList = ({commentsObject, user, fetchFunc}) => {
+  // console.log("COMMENT LIST", comments)
+
+  const [commentList, setCommentList] = useState(commentsObject.comments)
+  const [paginationIndex, setPaginationIndex] = useState(1)
+
+  useEffect(() =>{
+    setCommentList(commentsObject.comments)
+  },[commentsObject])
+
+  const range = (start, end) => Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
+  const handlePaginationChange = (page, PageSize) =>{
+    fetchFunc(page-1, null)
+  }
+
   return (
     
     <Flex className='comment-list'>
       <Space direction='vertical' style={{width: "100%"}}>
         <Space className='comment-list-title comment-list-son'>
           <CommentOutlined className='icon'></CommentOutlined>
-          <Text strong>Comments (3)</Text>
+          <Text strong>Comments ({commentList.length})</Text>
         </Space>
 
         <CommentInput user={user}></CommentInput>
@@ -52,7 +68,11 @@ const CommentList = ({commentList, user}) => {
             <Comment key={index} comment={element}></Comment>
           ))
         }
-
+        {console.log(commentsObject)}
+        <Flex align='center' justify='center' gap={3}>
+          {console.log("LIMITE", (commentsObject.total / commentsObject.limit) + 1)}
+          <Pagination size='small' gap={3} pageSize={3} defaultCurrent={1} total={6} onChange={handlePaginationChange} />
+        </Flex>
       </Space>
       
     </Flex>

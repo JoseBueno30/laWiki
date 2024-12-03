@@ -1,10 +1,10 @@
 import APIGateway from "../../../interceptor/interceptor"
 
 const CommentService = () =>{
-    const getArticleComments = async (articleId, offset, creationDate) =>{
+    const getArticleComments = async (articleId, offset, limit, creationDate) =>{
         try{
             const params = new URLSearchParams({
-                limit: 20,
+                limit: limit,
                 offset: offset
             })
             const url = `/v1/comments/articles/${articleId}?${params.toString()}`
