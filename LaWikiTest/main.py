@@ -40,6 +40,8 @@ Su música mezcla:
 
 [[File:https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg|title=Chamaleon]]
 
+[http://localhost:5173/wikis/Wiki_de_prueba/articles/a/edit]
+
 Anuel es reconocido como uno de los pioneros del trap latino y un ícono cultural, con millones de seguidores alrededor del mundo.
 
  <MapView lat="36.728064009663825" lon="-4.4715638324535965" zoom="16" markers={[{"lat":-4.4695552,"lon":36.72965120000002},{"lat":-4.474584863620265,"lon":36.728661088149366},{"lat":-4.4705132363472035,"lon":36.72645526954372},]}/>"""

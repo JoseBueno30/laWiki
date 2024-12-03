@@ -89,12 +89,12 @@ async def delete_ratings_articles_id(
 )
 async def edit_article_rating(
     id: str = Path(..., description=""),
-    rating: Rating = Body(None, description=""),
+    new_rating: NewRating = Body(None, description=""),
 ) -> Rating:
     """Update the value of an already existing Rating"""
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().edit_article_rating(id, rating)
+    return await BaseDefaultApi.subclasses[0]().edit_article_rating(id, new_rating)
 
 
 @router.get(
