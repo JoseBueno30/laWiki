@@ -1,0 +1,73 @@
+{
+  "common": {
+    "order-header": "Commande",
+    "order-recent": "Récent",
+    "order-oldest": "Ancien",
+    "order-popular": "Populaire",
+    "order-unpopular": "Impopulaire",
+    "filter-header": "Filtrer",
+    "tags-header": "Tags",
+    "tags-addtag": "Ajouter un tag",
+    "tags-newtag": "Nouveau tag",
+    "daterange-header": "Plage de dates",
+    "author-header": "Auteur",
+    "author-placeholder": "nom de l'auteur",
+    "editor-header": "Éditeur",
+    "editor-placeholder": "nom de l'éditeur",
+
+    "next-page": "Page suivante",
+    "previous-page": "Page précédente",
+
+    "save-button": "Enregistrer {{type}}",
+    "cancel-button": "Annuler",
+    "delete-button": "Supprimer {{type}}"
+  },
+
+  "header": {
+    "profile-link": "Voir le profil",
+    "theme-menu": "Thème : {{theme}}",
+    "theme-light": "Clair",
+    "theme-dark": "Sombre",
+    "notifications-menu": "Notifications : {{notifications}}",
+    "notifications-email": "Email",
+    "notifications-afterlogin": "Après connexion",
+    "language-menu": "Langue : {{language}}",
+    "language-en": "Anglais",
+    "language-es": "Espagnol",
+    "language-fr": "Français",
+    "logout-link": "Se déconnecter"
+  },
+
+  "wikis": {
+    "new-wiki": "Nouveau Wiki",
+    "wiki-search-placeholder": "rechercher des wikis",
+    "new-article": "Nouvel Article",
+    "article-search-placeholder": "rechercher des articles"
+  },
+
+  "article": {
+    "edit-article-button": "Modifier cet article",
+    "comments-header": "Commentaires ({{count}})",
+    "post-comment-button": "Poster un commentaire",
+
+    "user-rating-header": "Votre note",
+    "global-rating-value": "{{value}} sur 5",
+    "global-rating header": "Note des autres lecteurs",
+    "global-rating-count": "{{count}} notes globales",
+    "num-stars": "{{count}} étoile",
+    "num-stars_plural": "{{count}} étoiles"
+  },
+
+  "edit": {
+    "edit-header": "Modifier les informations de {{type}}",
+    "title-label": "Titre",
+    "description-label": "Description",
+    "body-label": "Corps"
+  },
+
+  "search": {
+    "search-results": "Résultats de recherche pour : {{query}}",
+    "search-description": "Total : {{total}} - Filtres : {{filters}}",
+    "search-noresults": "Aucun résultat trouvé"
+  }
+}

@@ -19,14 +19,14 @@ dayjs.extend(customParseFormat);
 const dateFormat = "YYYY/MM/DD";
 
 const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
-  const { t } = useTranslation("header");
+  const { t } = useTranslation();
   const { locale } = useContext(SettingsContext);
 
   const orderOptions = [
-    { label: t("order-recent"), value: "recent" },
-    { label: t("order-oldest"), value: "oldest" },
-    { label: t("order-popular"), value: "popular" },
-    { label: t("order-unpopular"), value: "unpopular" },
+    { label: t("common.order-recent"), value: "recent" },
+    { label: t("common.order-oldest"), value: "oldest" },
+    { label: t("common.order-popular"), value: "popular" },
+    { label: t("common.order-unpopular"), value: "unpopular" },
   ];
 
   const updateOrder = (e) => {
@@ -71,7 +71,7 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
 
   return (
     <Flex vertical align="center">
-      <Divider>{t("order-divider")}</Divider>
+      <Divider>{t("common.order-header")}</Divider>
       <Radio.Group
         optionType="button"
         options={orderOptions}
@@ -79,7 +79,7 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
         onChange={updateOrder}
         block
       />
-      <Divider>{t("tags-divider")}</Divider>
+      <Divider>{t("common.tags-header")}</Divider>
       <Space wrap style={{ width: "100%" }}>
         {filters.tags.map((tag_id) => {
           // Busca en el wikiTags la tag con el id correspondiente
@@ -100,7 +100,7 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
             ))}
         </Select>
       </Space>
-      <Divider>{t("daterange-divider")}</Divider>
+      <Divider>{t("common.daterange-header")}</Divider>
       <RangePicker
         allowEmpty={[true, true]}
         value={[
@@ -110,18 +110,18 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
         onChange={updateDateRange}
         format={dateFormat}
       />
-      <Divider>{t("author-divider")}</Divider>
+      <Divider>{t("common.author-header")}</Divider>
       <Input
         defaultValue={filters.author}
-        placeholder={t("author-placeholder")}
+        placeholder={t("common.author-placeholder")}
         allowClear
         onChange={updateAuthor}
         style={{ width: "80%" }}
       />
-      <Divider>{t("editor-divider")}</Divider>
+      <Divider>{t("common.editor-header")}</Divider>
       <Input
         defaultValue={filters.editor}
-        placeholder={t("editor-placeholder")}
+        placeholder={t("common.editor-placeholder")}
         allowClear
         onChange={updateEditor}
         style={{ width: "80%" }}

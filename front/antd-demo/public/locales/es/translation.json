@@ -1,0 +1,73 @@
+{
+  "common": {
+    "order-header": "Orden",
+    "order-recent": "Reciente",
+    "order-oldest": "Antiguo",
+    "order-popular": "Popular",
+    "order-unpopular": "Impopular",
+    "filter-header": "Filtrar",
+    "tags-header": "Etiquetas",
+    "tags-addtag": "Agregar etiqueta",
+    "tags-newtag": "Nueva etiqueta",
+    "daterange-header": "Rango de fechas",
+    "author-header": "Autor",
+    "author-placeholder": "usuario autor",
+    "editor-header": "Editor",
+    "editor-placeholder": "usuario editor",
+
+    "next-page": "Página siguiente",
+    "previous-page": "Página anterior",
+
+    "save-button": "Guardar {{type}}",
+    "cancel-button": "Cancelar",
+    "delete-button": "Eliminar {{type}}"
+  },
+
+  "header": {
+    "profile-link": "Ver perfil",
+    "theme-menu": "Tema: {{theme}}",
+    "theme-light": "Claro",
+    "theme-dark": "Oscuro",
+    "notifications-menu": "Notificaciones: {{notifications}}",
+    "notifications-email": "Email",
+    "notifications-afterlogin": "Después de iniciar sesión",
+    "language-menu": "Idioma: {{language}}",
+    "language-en": "Inglés",
+    "language-es": "Español",
+    "language-fr": "Francés",
+    "logout-link": "Cerrar sesión"
+  },
+
+  "wikis": {
+    "new-wiki": "Nueva Wiki",
+    "wiki-search-placeholder": "buscar wikis",
+    "new-article": "Nuevo Artículo",
+    "article-search-placeholder": "buscar artículos"
+  },
+
+  "article": {
+    "edit-article-button": "Editar este artículo",
+    "comments-header": "Comentarios ({{count}})",
+    "post-comment-button": "Publicar comentario",
+
+    "user-rating-header": "Tu valoración",
+    "global-rating-value": "{{value}} de 5",
+    "global-rating header": "Opiniones de otros lectores",
+    "global-rating-count": "{{count}} calificaciones globales",
+    "num-stars": "{{count}} estrella",
+    "num-stars_plural": "{{count}} estrellas"
+  },
+
+  "edit": {
+    "edit-header": "Editar información de {{type}}",
+    "title-label": "Título",
+    "description-label": "Descripción",
+    "body-label": "Cuerpo"
+  },
+
+  "search": {
+    "search-results": "Resultados de búsqueda para: {{query}}",
+    "search-description": "Total: {{total}} - Filtros: {{filters}}",
+    "search-noresults": "No se encontraron resultados"
+  }
+}
