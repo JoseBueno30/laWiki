@@ -33,7 +33,7 @@ async def get_user_comments(usr_id : str, order : str=None, limit : int=None, of
 
 async def check_if_wiki_exists(wiki_id : str):
     async with httpx.AsyncClient() as client:
-        wiki_response = await client.head(f"http://{WIKI_URL}:{WIKI_PORT}/wikis/{wiki_id}")
+        wiki_response = await client.head(f"http://{WIKI_URL}:{WIKI_PORT}/v2/wikis/{wiki_id}")
         return wiki_response.status_code == 200
 
 async def check_if_tag_exists(tag_id : str):

@@ -5,14 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/articles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/articles.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_article.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/new_article.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/layout/header/popovers/articles-filter-panel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/layout/header/popovers/articles-filter-panel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/wiki/pages/wiki-create-page/wiki-create-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/wiki/pages/wiki-create-page/wiki-create-page.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/wiki/pages/wiki-edit-page/wiki-edit-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/wiki/pages/wiki-edit-page/wiki-edit-page.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/wiki/service/wiki-service.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/wiki/service/wiki-service.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/models/models_v2/new_article_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/models/models_v2/new_article_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/MapComponent.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/MapComponent.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-edit-page/article-edit-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-edit-page/article-edit-page.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/router/router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/router/router.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +38,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "jbr-article-search-results-page",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/jabr3/Documents/GitHub/laWiki/api/microservices/articles",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -69,6 +73,7 @@
       <workItem from="1733056222214" duration="277000" />
       <workItem from="1733127811919" duration="69000" />
       <workItem from="1733131182722" duration="1067000" />
+      <workItem from="1733159387907" duration="9851000" />
     </task>
     <servers />
   </component>
