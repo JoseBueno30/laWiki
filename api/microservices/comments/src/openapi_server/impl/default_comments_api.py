@@ -150,7 +150,7 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
                                                res_query_params, offset, total_count, limit) # Generamos las urls de paginacion
     query_pipeline = [
         {"$match": matching_variables},
-        {"$sort": {"creation_date": -1 if order == "recent" else 1}},
+        {"$sort": {"creation_date": -1 if order == "recent" else 1, "body" : 1}},
         {"$skip": offset},
         {"$limit": limit},
         *pipeline_remove_id,
