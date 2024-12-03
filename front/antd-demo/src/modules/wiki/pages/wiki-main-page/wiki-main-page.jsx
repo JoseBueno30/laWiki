@@ -70,14 +70,24 @@ const WikiMainPage = () => {
           </Col>
           <Col className='wiki-content-wrapper'>
             <h2>{t('highest-rated-articles')}</h2>
-            <ArticleList articleList={ratedArticles.articles ?? []} />
+            {ratedArticles && ratedArticles.articles ? (
+            <ArticleList articleList={ratedArticles.articles ?? []} />)
+            : (
+              <Spin></Spin>
+            )}
             <h2>{t('recent-articles')}</h2>
-            <ArticleList articleList={recentArticles.articles ?? []} />
+            {recentArticles && recentArticles.articles ? (
+            <ArticleList articleList={recentArticles.articles ?? []} />)
+            : (
+              <Spin></Spin>
+            )}
           </Col>
         </Row>
       </Flex>
       ) : (
-        <Spin></Spin>
+        <div className='spinner'>
+          <Spin></Spin>
+        </div>
       )}
       
     </>
