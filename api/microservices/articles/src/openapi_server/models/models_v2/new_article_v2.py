@@ -107,7 +107,7 @@ class NewArticleV2(BaseModel):
             "body": obj.get("body"),
             "wiki_id": obj.get("wiki_id"),
             "lan": obj.get("lan"),
-            "trasnlate_title": obj.get("trasnlate_title") if obj.get("trasnlate_title") is not None else True
+            "translate_title": obj.get("translate_title") if obj.get("translate_title") is not None else True
         })
         return _obj
 

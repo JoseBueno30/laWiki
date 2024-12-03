@@ -1,8 +1,10 @@
 import copy, mwparserfromhell, pypandoc
+import json
 from datetime import datetime
 from typing import List
 
 from bson import ObjectId
+import re
 
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
 from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
@@ -25,6 +27,7 @@ async def _create_article_translation(
     body_translated = copy.deepcopy(og_body)
 
     body_translated = mwparserfromhell.parse(body_translated)
+
     body_translated = pypandoc.convert_text(body_translated, to='html', format='mediawiki')
 
     if translate:

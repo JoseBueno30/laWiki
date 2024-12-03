@@ -26,16 +26,21 @@ const NotificationsClickHandler = () => {
   console.log("Notifications clicked");
 };
 
-const generateDateRange = (startDate, endDate) => (
-  startDate && endDate ? `${startDate}-${endDate}` : startDate ? `${startDate}` : endDate ? `${endDate}` : ""
-)
+const generateDateRange = (startDate, endDate) =>
+  startDate && endDate
+    ? `${startDate}-${endDate}`
+    : startDate
+    ? `${startDate}`
+    : endDate
+    ? `${endDate}`
+    : "";
 
 const isQueryValid = (query) => {
-  return query!=null && query.trim().length > 0;
+  return query != null && query.trim().length > 0;
 };
 
 // Aqui seguramente se pase la informacion de la wiki, como el nombre, id y tags.
-const WikiHeader = ({wiki_name,wiki}) => {
+const WikiHeader = ({ wiki_name, wiki }) => {
   const [showSearchHeader, setSearchHeader] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,8 +52,8 @@ const WikiHeader = ({wiki_name,wiki}) => {
     startDate: "",
   });
 
-  const {locale} = useContext(SettingsContext);
-  const { t } = useTranslation('header');
+  const { locale } = useContext(SettingsContext);
+  const { t } = useTranslation("header");
   const navigate = useNavigate();
 
   const toggleSearchHeader = () => {
@@ -64,17 +69,24 @@ const WikiHeader = ({wiki_name,wiki}) => {
     const searchParams = new URLSearchParams();
     searchParams.append("name", searchQuery);
     searchParams.append("order", filters.order);
-    if (filters.tags.length > 0) searchParams.append("tags", filters.tags.join(","));
-    if (isQueryValid(filters.author)) searchParams.append("author_name", filters.author);
-    if (isQueryValid(filters.editor)) searchParams.append("editor_name", filters.editor);
-    if (isQueryValid(filters.startDate)) searchParams.append("creation_date", generateDateRange(filters.startDate, filters.endDate));
+    if (filters.tags.length > 0)
+      searchParams.append("tags", filters.tags.join(","));
+    if (isQueryValid(filters.author))
+      searchParams.append("author_name", filters.author);
+    if (isQueryValid(filters.editor))
+      searchParams.append("editor_name", filters.editor);
+    if (isQueryValid(filters.startDate))
+      searchParams.append(
+        "creation_date",
+        generateDateRange(filters.startDate, filters.endDate)
+      );
     searchParams.append("page", 1);
 
     console.log(generateDateRange(filters.startDate, filters.endDate));
 
     const searchUrl = `/wikis/${wiki_name}/search?${searchParams.toString()}`;
     navigate(searchUrl);
-  }
+  };
 
   // Hay que definir una funcion de searchFunction(), la cual se pasará a los componentes de input
   // Esa funcion hará uso de un useNavigate de React router, el cual tiene el mismo efecto
@@ -98,13 +110,13 @@ const WikiHeader = ({wiki_name,wiki}) => {
             <Link to={`/wikis/${wiki_name}`} reloadDocument>
               <Title level={3} className="header-title wiki-title">
                 {wiki.name[locale]}
-              </Title>     
+              </Title>
             </Link>
           </div>
 
           <div className="header-tools">
             <SearchInput
-              searchPlaceholder={t('article-search-placeholder')}
+              searchPlaceholder={t("article-search-placeholder")}
               toggleHeader={toggleSearchHeader}
               query={searchQuery}
               setQuery={setSearchQuery}
@@ -117,7 +129,9 @@ const WikiHeader = ({wiki_name,wiki}) => {
               }
               searchFunction={searchHandler}
             />
-            <CreateButton text={t('new-article')} />
+            <Link to={`/wikis/${wiki_name}/articles/new`}>
+              <CreateButton text={t("new-article")} />
+            </Link>
             <Badge count={9} size="large">
               <div
                 className="icon-container"
@@ -140,7 +154,7 @@ const WikiHeader = ({wiki_name,wiki}) => {
         </>
       ) : (
         <CompactSearchInput
-          searchPlaceholder={t('article-search-placeholder')}
+          searchPlaceholder={t("article-search-placeholder")}
           query={searchQuery}
           setQuery={setSearchQuery}
           toggleHeader={toggleSearchHeader}
