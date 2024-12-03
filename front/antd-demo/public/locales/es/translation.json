@@ -20,7 +20,9 @@
 
     "save-button": "Guardar {{type}}",
     "cancel-button": "Cancelar",
-    "delete-button": "Eliminar {{type}}"
+    "delete-button": "Eliminar {{type}}",
+    "upload-image-button": "Subir imagen",
+    "create-button": "Crear {{type}}"
   },
 
   "header": {
@@ -40,6 +42,7 @@
 
   "wikis": {
     "new-wiki": "Nueva Wiki",
+    "edit-wiki": "Editar Wiki",
     "wiki-search-placeholder": "buscar wikis",
     "new-article": "Nuevo Artículo",
     "article-search-placeholder": "buscar artículos"

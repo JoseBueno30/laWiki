@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Input, Button, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Tag, Input, Button, message, Upload } from "antd";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import "./wiki-create-page.css";
-import axios from "axios";
+import WikiService from "../../service/wiki-service";
+import SettingsContext from "../../../../context/settings-context";
+import { uploadImage } from "../../../articles/service/article_service"; 
 
+const { createWiki, createWikiTag } = WikiService();
 const { TextArea } = Input;
 
 const WikiCreatePage = () => {
@@ -17,23 +20,17 @@ const WikiCreatePage = () => {
   });
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
+  const [images, setImages] = useState([]);
   const [isInputVisible, setIsInputVisible] = useState(false);
-  const [language, setLanguage] = useState("es");
+  const { locale } = useContext(SettingsContext);
 
-  const { t: tHeader } = useTranslation("header");
-  const { t: tWiki } = useTranslation("wiki");
-  const { t: tEdit } = useTranslation("edit");
+  const { t } = useTranslation();
 
   const createTags = async (wikiId) => {
     try {
-      const tagCreationPromises = tags.map((tag) =>
-        axios.post(`http://localhost:3000/v1/tags/wikis/${wikiId}`, {
-          tag: tag.tag,
-          translation: true,
-          lan: language,
-        })
-      );
-      await Promise.all(tagCreationPromises);
+      for (const tag of tags) {
+        await createWikiTag(wikiId, tag.tag, locale);
+      }
       message.success("Tags created successfully!");
     } catch (error) {
       console.error("Error creating tags:", error);
@@ -41,18 +38,18 @@ const WikiCreatePage = () => {
     }
   };
 
-  const createWiki = async () => {
+  const createWikiFunction = async () => {
     try {
       const newWiki = {
         name: wikiData.title,
         description: wikiData.description,
         author: "DefaultAuthor",
-        lang: language,
-        image: "DefaultImage",
+        lang: locale,
+        image: images[0] || "DefaultImage", // Utiliza la primera imagen cargada o un valor predeterminado
         translate: true,
       };
 
-      const response = await axios.post("http://localhost:3000/v1/wikis", newWiki);
+      const response = await createWiki(newWiki);
       const wikiId = response.data.id;
       console.log(wikiId);
 
@@ -85,13 +82,26 @@ const WikiCreatePage = () => {
     setTags(tags.filter((tag) => tag.tag !== tagToRemove));
   };
 
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    try {
+      const imageUrl = await uploadImage(file);
+      setImages([...images, imageUrl]); // Agrega la URL de la imagen al estado
+      message.success("Image uploaded successfully!");
+      onSuccess();
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      message.error("Failed to upload image.");
+      onError(error);
+    }
+  };
+
   return (
     <section className="create-wiki-section">
       <div className="create-wiki-container">
-        <h1>{tHeader("new-wiki")}</h1>
+        <h1>{t("wikis.new-wiki")}</h1>
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-title" className="create-wiki-label">
-            {tWiki("table-title")}
+            {t("edit.title-label")}
           </label>
           <Input
             id="create-wiki-title"
@@ -99,10 +109,9 @@ const WikiCreatePage = () => {
             onChange={(e) => updateField("title", e.target.value)}
           />
         </div>
-
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-description" className="create-wiki-label">
-            {tEdit("description-label")}
+            {t("edit.description-label")}
           </label>
           <TextArea
             id="create-wiki-description"
@@ -111,10 +120,9 @@ const WikiCreatePage = () => {
             autoSize={{ minRows: 6, maxRows: 10 }}
           />
         </div>
-
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-tags" className="create-wiki-label">
-            {tEdit("tags-label")}
+            {t("common.tags-header")}
           </label>
           <div className="tags-section create-wiki-textarea">
             {tags.map((tag) => (
@@ -135,7 +143,7 @@ const WikiCreatePage = () => {
                 onChange={(e) => setNewTag(e.target.value)}
                 onPressEnter={addTag}
                 onBlur={addTag}
-                placeholder={tEdit("tags-newtag")}
+                placeholder={t("common.tags-newtag")}
                 className="tag-input"
               />
             ) : (
@@ -145,18 +153,49 @@ const WikiCreatePage = () => {
                 onClick={() => setIsInputVisible(true)}
                 className="add-tag-button"
               >
-                {tEdit("tags-newtag")}
+                {t("common.tags-newtag")}
               </Button>
             )}
           </div>
         </div>
-
+        <div className="create-wiki-item">
+          <Upload
+            customRequest={customRequest}
+            multiple={false}
+            showUploadList={false}
+            accept="image/*"
+          >
+            <Button icon={<UploadOutlined />}>
+              {t("common.upload-image-button")}
+            </Button>
+          </Upload>
+        </div>
+        <div className="image-preview-container" style={{ marginTop: "20px" }}>
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="image-preview"
+              style={{ marginBottom: "10px" }}
+            >
+              <img
+                src={image}
+                alt={`Preview ${index}`}
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                }}
+              />
+            </div>
+          ))}
+        </div>
         <div className="create-wiki-buttons-section">
-          <Button type="primary" onClick={createWiki}>
-            {tEdit("create-button", { type: "Wiki" })}
+          <Button type="primary" onClick={createWikiFunction}>
+            {t("common.create-button", { type: "Wiki" })}
           </Button>
           <Button onClick={() => navigate("/")}>
-            {tEdit("cancel-button")}
+            {t("common.cancel-button")}
           </Button>
         </div>
       </div>

@@ -2,11 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tag, Input, Button, message, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 import "./wiki-edit-page.css";
+import WikiService from "../../service/wiki-service";
+import SettingsContext from "../../../../context/settings-context";
 
+const { updateWiki, createWikiTag, deleteWikiTag, deleteWiki } = WikiService();
 const { TextArea } = Input;
 
 const WikiEditPage = () => {
@@ -21,20 +23,20 @@ const WikiEditPage = () => {
   const [originalTags, setOriginalTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(false);
-  const { t: tWiki } = useTranslation("wiki");
-  const { t: tEdit } = useTranslation("edit");
+  const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
+  const { locale } = useContext(SettingsContext);
 
   const loadWikiData = async () => {
     setLoading(true);
     try {
       const currentTags = wiki.wiki_info.tags.map((tagObj) => ({
         id: tagObj.id,
-        tag: tagObj.tag[wiki.wiki_info.lang],
+        tag: tagObj.tag[locale],
       }));
 
       setWikiData({
-        title: wiki.wiki_info.name[wiki.wiki_info.lang] || "",
+        title: wiki.wiki_info.name[locale] || "",
         description: wiki.wiki_info.description || "",
         tags: currentTags,
       });
@@ -62,28 +64,22 @@ const WikiEditPage = () => {
       );
 
       for (const tag of newTags) {
-        await axios.post(`http://localhost:3000/v1/tags/wikis/${wiki.wiki_info.id}`, {
-          tag: tag.tag,
-          translation: true,
-          lan: wiki.wiki_info.lang,
-        });
+        await createWikiTag(wiki.wiki_info.id, tag, locale);
       }
 
       for (const tag of deletedTags) {
-        await axios.delete(
-          `http://localhost:3000/v1/tags/${tag.id}`
-        );
+        await deleteWikiTag(tag.id);
       }
 
       const updatedData = {
         name: wikiData.title,
         description: wikiData.description,
         author: "DefaultAuthor",
-        lang: wiki.wiki_info.lang,
+        lang: locale,
         image: "DefaultImage",
         translate: true,
       };
-      await axios.put(`http://localhost:3000/v1/wikis/${wiki.wiki_info.id}`, updatedData);
+      await updateWiki(wiki.wiki_info.id, updatedData);
 
       message.success("Wiki updated successfully!");
       loadWikiData();
@@ -111,9 +107,9 @@ const WikiEditPage = () => {
     setTags(tags.filter((tag) => tag.tag !== tagToRemove));
   };
 
-  const deleteWiki = async () => {
+  const deleteWikiFunction = async () => {
     try {
-      await axios.delete(`http://localhost:3000/v1/wikis/${wiki.wiki_info.id}`);
+      await deleteWiki(wiki.wiki_info.id);
       message.success("Wiki deleted successfully!");
       navigate("/");
     } catch (error) {
@@ -125,7 +121,6 @@ const WikiEditPage = () => {
   };
 
   useEffect(() => {
-    
     loadWikiData();
   }, [wiki]);
 
@@ -136,10 +131,10 @@ const WikiEditPage = () => {
           <Spin></Spin>
         ) : (
           <>
-            <h1>{tWiki("edit-wiki-button")}</h1>
+            <h1>{t("wikis.edit-wiki")}</h1>
             <div className="edit-wiki-item">
               <label htmlFor="edit-wiki-title" className="edit-wiki-label">
-              {tWiki("table-title")}
+                {t("edit.title-label")}
               </label>
               <Input
                 id="edit-wiki-title"
@@ -150,7 +145,7 @@ const WikiEditPage = () => {
 
             <div className="edit-wiki-item">
               <label htmlFor="edit-wiki-description" className="edit-wiki-label">
-              {tEdit("description-label")}
+                {t("edit.description-label")}
               </label>
               <TextArea
                 id="edit-wiki-description"
@@ -162,7 +157,7 @@ const WikiEditPage = () => {
 
             <div className="edit-wiki-item">
               <label htmlFor="edit-wiki-tags" className="edit-wiki-label">
-              {tEdit("tags-label")}
+                {t("common.tags-header")}
               </label>
               <div className="tags-section edit-wiki-textarea">
                 {tags.map((tag) => (
@@ -183,7 +178,7 @@ const WikiEditPage = () => {
                     onChange={(e) => setNewTag(e.target.value)}
                     onPressEnter={addTag}
                     onBlur={addTag}
-                    placeholder="New Tag"
+                    placeholder={t("common.tags-addtag")}
                     className="tag-input"
                   />
                 ) : (
@@ -193,7 +188,7 @@ const WikiEditPage = () => {
                     onClick={() => setIsInputVisible(true)}
                     className="add-tag-button"
                   >
-                    {tEdit("tags-newtag")}
+                    {t("common.tags-addtag")}
                   </Button>
                 )}
               </div>
@@ -201,13 +196,13 @@ const WikiEditPage = () => {
 
             <div className="edit-wiki-buttons-section">
               <Button type="primary" onClick={saveWikiData}>
-              {tEdit("save-button", { type: "Wiki" })}
+              {t("common.save-button", { type: "Wiki" })}
               </Button>
               <Button onClick={() => navigate("/")}>
-                {tEdit("cancel-button")}
+                {t("common.cancel-button")}
               </Button>
-              <Button danger className="right-button" onClick={deleteWiki}>
-                {tEdit("delete-button", { type: "Wiki" })}
+              <Button danger className="right-button" onClick={deleteWikiFunction}>
+                {t("common.delete-button", { type: "Wiki" })}
               </Button>
             </div>
           </>
