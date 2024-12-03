@@ -90,7 +90,7 @@ const ArticlesFilterPanel = ({ filters, setFilters, wikiTags }) => {
             </Tag>
           );
         })}
-        <Select onChange={addTag} size="small" placeholder={t("tags-addtag")}>
+        <Select onChange={addTag} size="small" placeholder={t("common.tags-addtag")}>
           {wikiTags
             .filter((tag) => !filters.tags.includes(tag.id))
             .map((tag) => (
