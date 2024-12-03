@@ -4,7 +4,7 @@ from bson import ObjectId
 from typing import List
 
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
-from openapi_server.impl.v1_apis_impl.v1_internal_article_api import mongodb
+from openapi_server.impl.utils.functions import mongodb
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
@@ -33,7 +33,7 @@ class InternalArticleAPIV2(BaseV2InternalApi):
         self,
         id: str,
     ) -> None:
-        return await mongodb["article"].find_one({"_id": ObjectId(id)}, {"_id": 1}) is not None
+        return await mongodb["article"].find_one(filter={"_id": ObjectId(id)}) is not None
 
     async def unassign_article_tags_v2(
         self,

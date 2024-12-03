@@ -1,0 +1,73 @@
+{
+  "common": {
+    "order-header": "Order",
+    "order-recent": "Recent",
+    "order-oldest": "Oldest",
+    "order-popular": "Popular",
+    "order-unpopular": "Unpopular",
+    "filter-header": "Filter",
+    "tags-header": "Tags",
+    "tags-addtag": "Add tag",
+    "tags-newtag": "New tag",
+    "daterange-header": "Date range",
+    "author-header": "Author",
+    "author-placeholder": "author username",
+    "editor-header": "Editor",
+    "editor-placeholder": "editor username",
+
+    "next-page": "Next page",
+    "previous-page": "Previous page",
+
+    "save-button": "Save {{type}}",
+    "cancel-button": "Cancel",
+    "delete-button": "Delete {{type}}"
+  },
+
+  "header": {
+    "profile-link": "View profile",
+    "theme-menu": "Theme: {{theme}}",
+    "theme-light": "Light",
+    "theme-dark": "Dark",
+    "notifications-menu": "Notifications: {{notifications}}",
+    "notifications-email": "Email",
+    "notifications-afterlogin": "After login",
+    "language-menu": "Language: {{language}}",
+    "language-en": "English",
+    "language-es": "Spanish",
+    "language-fr": "French",
+    "logout-link": "Log out"
+  },
+
+  "wikis": {
+    "new-wiki": "New Wiki",
+    "wiki-search-placeholder": "search for wikis",
+    "new-article": "New Article",
+    "article-search-placeholder": "search for articles"
+  },
+
+  "article": {
+    "edit-article-button": "Edit this article",
+    "comments-header": "Comments ({{count}})",
+    "post-comment-button": "Post comment",
+
+    "user-rating-header": "Your rating",
+    "global-rating-value": "{{value}} of 5",
+    "global-rating header": "Other reader's rating",
+    "global-rating-count": "{{count}} global ratings",
+    "num-stars": "{{count}} star",
+    "num-stars_plural": "{{count}} stars"
+  },
+
+  "edit": {
+    "edit-header": "Edit {{type}} information",
+    "title-label": "Title",
+    "description-label": "Description",
+    "body-label": "Body"
+  },
+
+  "search": {
+    "search-results": "Search results for: {{query}}",
+    "search-description": "Total: {{total}} - Filters: {{filters}}",
+    "search-noresults": "No results found"
+  }
+}

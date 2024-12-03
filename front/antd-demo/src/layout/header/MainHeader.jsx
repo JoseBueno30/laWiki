@@ -40,7 +40,7 @@ const WikiHeader = () => {
     startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const { t } = useTranslation("header");
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const toggleSearchHeader = () => {
@@ -87,7 +87,7 @@ const WikiHeader = () => {
 
           <div className="header-tools">
             <SearchInput
-              searchPlaceholder={t("wiki-search-placeholder")}
+              searchPlaceholder={t("wikis.wiki-search-placeholder")}
               toggleHeader={toggleSearchHeader}
               query={searchQuery}
               setQuery={setSearchQuery}
@@ -97,7 +97,7 @@ const WikiHeader = () => {
               searchFunction={searchHandler}
             />
             <Link to="/wikis/new">
-              <CreateButton text={t("new-wiki")} />
+              <CreateButton text={t("wikis.new-wiki")} />
             </Link>
             <Badge count={9} size="large">
               <div
@@ -121,7 +121,7 @@ const WikiHeader = () => {
         </>
       ) : (
         <CompactSearchInput
-          searchPlaceholder={t("wiki-search-placeholder")}
+          searchPlaceholder={t("wikis.wiki-search-placeholder")}
           query={searchQuery}
           setQuery={setSearchQuery}
           toggleHeader={toggleSearchHeader}

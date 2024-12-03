@@ -3,6 +3,7 @@ import datetime
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
+
 from openapi_server.apis.default_api_base import BaseDefaultApi
 from openapi_server.models.author import Author
 from openapi_server.models.average_rating import AverageRating
@@ -32,16 +33,18 @@ class RatingsManager (BaseDefaultApi):
         return result;
 
     async def delete_rating(self, id: str):
+        rating = await self._check_rating_exists(id)
         result = await self.mongodb["rating"].delete_one({'_id': self._convert_id_into_ObjectId(id)})
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Rating Not Found")
-        await self._update_article_and_wiki_average(id)
+        await self._update_article_and_wiki_average(str(rating["article_id"]))
         return None;
 
     async def rate_article(self, id: str, new_rating: NewRating):
         self._check_new_rating_is_valid(new_rating)
         article = await self._check_article_exists(id)
-        await self._check_user_has_no_rating(id, new_rating.author_id)
+        if await self._check_user_has_no_rating(id, new_rating.author_id):
+            raise HTTPException(status_code=422, detail="You have already rated this article")
 
         # Check if author exists
         # TODO: No users in the database yet
@@ -67,15 +70,27 @@ class RatingsManager (BaseDefaultApi):
 
         return rating;
 
-    async def edit_article_rating(self, id: str, rating: Rating):
-        self._check_new_rating_is_valid(rating)
+    async def edit_article_rating(self, id: str, new_rating: NewRating):
+        self._check_new_rating_is_valid(new_rating)
         article = await self._check_article_exists(id)
-        result = await self._check_rating_exists(rating.id)
 
-        result['value'] = rating.value
-        await self.mongodb["rating"].update_one({'_id': self._convert_id_into_ObjectId(rating.id)}, {'$set': result})
-        await self._update_article_and_wiki_average(id)
-        return rating;
+        if await self._check_user_has_no_rating(id, new_rating.author_id):
+            result = await self.mongodb["rating"].update_one({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(new_rating.author_id)}, {'$set': {"value": new_rating.value}})
+            await self._update_article_and_wiki_average(id)
+
+            pipe = [{'$match': {'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(new_rating.author_id)}},
+                    {'$addFields': {
+                        'id': {'$toString': '$_id'},
+                        'article_id': {'$toString': '$article_id'},
+                        'author': {'id': {'$toString': '$author._id'}}}},
+                    {'$unset': '_id'},
+                    {'$unset': 'author._id'}]
+            result = await self.mongodb["rating"].aggregate(pipe).to_list(length=1);
+            result[0]['creation_date'] = result[0]['creation_date'].date()
+            return result[0]
+        else:
+            return await self.rate_article(id, new_rating)
+
 
     async def get_article_average_rating(self, id: str):
         await self._check_article_exists(id)
@@ -146,7 +161,7 @@ class RatingsManager (BaseDefaultApi):
         # return article;
 
         try:
-            response = requests.head(self.article_url + "articles/" + id)
+            response = requests.head(self.article_url + "v2/articles/" + id)
             response.raise_for_status()  # Verifica si hubo un error HTTP
             return response  # Retorna el JSON si la respuesta es exitosa
         except requests.exceptions.HTTPError as http_err:
@@ -163,10 +178,14 @@ class RatingsManager (BaseDefaultApi):
         return result[0]
 
     async def _check_wiki_exists(self, id: str):
-        wiki = await self.mongodb["wiki"].find_one({'_id': self._convert_id_into_ObjectId(id)})
-        if wiki == None:
-            raise HTTPException(status_code=404, detail="Wiki Not Found")
-        return wiki;
+        try:
+            response = requests.head(self.wiki_url + "v2/wikis/" + id)
+            response.raise_for_status()  # Verifica si hubo un error HTTP
+            return response  # Retorna el JSON si la respuesta es exitosa
+        except requests.exceptions.HTTPError as http_err:
+            raise HTTPException(status_code=response.status_code, detail=str(http_err))
+        except Exception as err:
+            raise HTTPException(status_code=500, detail="Error connecting to the wikis service")
 
     def _check_new_rating_is_valid(self, new_rating: NewRating or Rating):
         author_id = new_rating.author_id if isinstance(new_rating, NewRating) else new_rating.author.id
@@ -181,7 +200,7 @@ class RatingsManager (BaseDefaultApi):
         article_list = None;
 
         try:
-            updateArticle = requests.put(self.article_url + "articles/" + id +"/ratings", json = {'rating': newAvg })
+            updateArticle = requests.put(self.article_url + "v2/articles/" + id +"/ratings", json = {'rating': newAvg })
             updateArticle.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
@@ -189,7 +208,7 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=500, detail="Error connecting to the articles service on update article's rating")
 
         try:
-            article = requests.get(self.article_url + "articles/" + id)
+            article = requests.get(self.article_url + "v2/articles/" + id)
             article.raise_for_status()
             article = article.json()
         except requests.exceptions.HTTPError as http_err:
@@ -198,7 +217,7 @@ class RatingsManager (BaseDefaultApi):
             raise HTTPException(status_code=500, detail="Error connecting to the articles service on getting the article")
         try:
 
-            article_list = requests.get(self.article_url + "articles?wiki_id=" + article['wiki_id'])
+            article_list = requests.get(self.article_url + "v2/articles?wiki_id=" + article['wiki_id'])
             article_list.raise_for_status()
             article_list = article_list.json()
 
@@ -211,7 +230,7 @@ class RatingsManager (BaseDefaultApi):
             total = 0;
             for articles in article_list['articles']:
                 total += articles['rating']
-            update_wiki = requests.put(self.wiki_url + "wikis/" + article['wiki_id'] + "/ratings", json={'rating': total / len(article_list['articles']) })
+            update_wiki = requests.put(self.wiki_url + "v2/wikis/" + article['wiki_id'] + "/ratings", json={'rating': total / len(article_list['articles']) })
             update_wiki.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
@@ -220,9 +239,7 @@ class RatingsManager (BaseDefaultApi):
 
     async def _check_user_has_no_rating(self, id: str, author_id: str):
         result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(author_id)}).to_list(length=None)
-        if len(result) > 0:
-            raise HTTPException(status_code=422, detail="You have already rated this article")
-        return None;
+        return len(result) > 0
 
     def _convert_id_into_ObjectId(self, id: str):
         try:
