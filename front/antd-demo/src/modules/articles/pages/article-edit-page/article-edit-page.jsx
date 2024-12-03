@@ -8,8 +8,11 @@ import MapConfigurator from "../../components/map-configurator/map-configurator"
 import MapView from "../../components/map-view/map-view";
 import ReactDOM from "react-dom/client";
 import JsxParser from "react-jsx-parser";
+import { uploadImage } from "../../service/article_service";
 
 const { Option } = Select;
+
+
 
 const ArticleEditPage = () => {
   const [body, setBody] = useState("");
@@ -38,20 +41,25 @@ const ArticleEditPage = () => {
     setTags(tags.filter((t) => t !== tag));
   };
 
-  // Manejar la selección de imágenes
-  const handleImageUpload = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImages((prevImages) => [...prevImages, e.target.result]); // Agregar la imagen al estado
-    };
-    reader.readAsDataURL(file); // Convertir archivo en base64
-    return false; // Evitar la carga automática de archivos por el componente Upload
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    try {
+      const imageUrl = await uploadImage(file);
+
+      const wikiTextImage = `[[File:${imageUrl}|title=""]]`;
+      
+      setBody(`${body}\n${wikiTextImage}`);
+
+      onSuccess();
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      onError(error);
+    }
   };
 
   const handleCancel = () => setIsModalOpen(false);
 
-  const onMapSave = (wikitextTag) => {
-    setBody(body + " " + wikitextTag);
+  const onMapSave = (wikiTextTag) => {
+    setBody(`${body}\n${wikiTextTag}`);
     setIsModalOpen(false);
   };
 
@@ -119,9 +127,10 @@ const ArticleEditPage = () => {
 
           <div>
             <Upload
-              beforeUpload={handleImageUpload} // Maneja la imagen antes de la carga
-              multiple={true} // Permitir múltiples imágenes
-              showUploadList={false} // Ocultar la lista predeterminada de Ant Design
+              customRequest={customRequest}
+              multiple={false}
+              showUploadList={false}
+              accept="image/*"
             >
               <Button icon={<UploadOutlined />}>Insertar imagen</Button>
             </Upload>

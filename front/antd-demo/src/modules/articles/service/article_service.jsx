@@ -1,6 +1,23 @@
 import axios from "axios";
 import APIGateway from "../../../interceptor/interceptor";
 
+const uploadImage = async(file) =>{
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await APIGateway.post("http://localhost:3000/v1/upload-image", formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data.url
+    } catch (error) {
+        throw new Error('Error uploading file: ' + error.message);
+    }
+}
+    
 
 const searchArticlesWithParams = async (queryParams) => {
     try {
@@ -22,4 +39,4 @@ const searchArticlesWithPaginationURL = async (paginationURL) => {
     }
   };
   
-export {searchArticlesWithParams, searchArticlesWithPaginationURL};
+export {searchArticlesWithParams, searchArticlesWithPaginationURL, uploadImage};
