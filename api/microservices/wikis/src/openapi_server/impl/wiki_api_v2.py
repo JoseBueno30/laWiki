@@ -66,20 +66,13 @@ move_name_filter = [{'$addFields': {
                         }
                     }
                 },
-                "name": { "$arrayElemAt":
-                         [{ "$objectToArray": "$name" },
-                          { "$indexOfArray":
-                            [{ "$objectToArray": "$name" }, { "k": "$lang" }] 
-                            }
-                            ]
-                        },
                 "author.id": {"$toString": "$author._id"},
                 "id": {'$toString': '$_id'}
                 }
         },
         {
             "$project": {
-                "name": "$name.v",
+                "name": { "$getField": { "field": "$lang", "input": "$name" } },
                 "id": 1,
                 "lang": 1,
                 "author": 1,
