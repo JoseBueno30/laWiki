@@ -41,10 +41,10 @@ class APIGatewayPublicV1(BaseV1PublicApi):
     async def edit_article_rating(
         self,
         id: str,
-        rating: Rating,
+        new_rating: NewRating,
     ) -> Rating:
         """Update the value of an already existing Rating"""
-        return await forward_request(method="PUT",url=f"{RATINGS_URL}/ratings/articles/{id}",json=rating.to_dict())
+        return await forward_request(method="PUT",url=f"{RATINGS_URL}/ratings/articles/{id}",json=new_rating.to_dict())
 
 
     async def get_article_average_rating(

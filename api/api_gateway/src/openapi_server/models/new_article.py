@@ -39,7 +39,7 @@ class NewArticle(BaseModel):
     body: Optional[StrictStr] = Field(default=None, description="The body of the version.")
     wiki_id: StrictStr = Field(description="The ID of the Wiki where the Article is created.")
     lan: StrictStr = Field(description="Original language of the first ArticleVersion of the Article")
-    trasnlate_title: StrictBool = Field(description="Indicates if the title of the ArticleVersion of the Artivle should be translated in the different translations of the ArticleVersion")
+    translate_title: StrictBool = Field(description="Indicates if the title of the ArticleVersion of the Artivle should be translated in the different translations of the ArticleVersion")
     __properties: ClassVar[List[str]] = ["title", "author", "tags", "body", "wiki_id", "lan", "trasnlate_title"]
 
     model_config = {
@@ -107,7 +107,7 @@ class NewArticle(BaseModel):
             "body": obj.get("body"),
             "wiki_id": obj.get("wiki_id"),
             "lan": obj.get("lan"),
-            "trasnlate_title": obj.get("trasnlate_title") if obj.get("trasnlate_title") is not None else True
+            "translate_title": obj.get("translate_title") if obj.get("translate_title") is not None else True
         })
         return _obj
 

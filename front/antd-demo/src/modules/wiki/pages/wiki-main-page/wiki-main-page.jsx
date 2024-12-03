@@ -5,6 +5,9 @@ import WikiSidebar from '../../components/wiki-sidebar/wiki-sidebar';
 import ArticleList from '../../../articles/components/article-list/article-list';
 import { Col, Flex, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { Typography } from 'antd';
+
+const { Title } = Typography;
 
 const example = {
     title: 'Angular',
@@ -29,10 +32,10 @@ const WikiMainPage = () => {
           <WikiSidebar className="sidebar" {...example} />
         </Col>
         <Col className='wiki-content-wrapper'>
-          <h2>{t('highest-rated-articles')}</h2>
-          <ArticleList articleList={[example, example, example, example, example]} />
-          <h2>{t('recent-articles')}s</h2>
-          <ArticleList articleList={[example, example, example, example, example]} />
+          <Title level={3}>{t('highest-rated-articles')}</Title>
+          {/* <ArticleList articleList={[example, example, example, example, example]} /> */}
+          <Title level={3}>{t('recent-articles')}</Title>
+          {/* <ArticleList articleList={[example, example, example, example, example]} /> */}
         </Col>
       </Row>
     </Flex>

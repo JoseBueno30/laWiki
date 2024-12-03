@@ -5,6 +5,7 @@ import re
 from typing import Any, Coroutine, List, Dict
 
 from bson import ObjectId
+import httpx
 from pymongo import ReturnDocument
 from openapi_server.apis.default_v2_api_base import BaseDefaultV2Api
 from openapi_server.apis.admins_v2_api_base import BaseAdminsV2Api
@@ -99,10 +100,17 @@ def pipepline_remove_id_auto(id_name: str):
 
 def match_by_name_or_id(name : str = "", id_wiki : str = ""):
     return {"$expr": {
-        "$eq": [
-          { "$getField": { "field": "$lang", "input": "$name" } }, name
-        ]
-      }} if name else ({"_id" : ObjectId(id_wiki)})
+        "$or" : [
+            {"$eq": [
+                        { "$getField": { "field": "es", "input": "$name" } }, name
+                    ]},
+                    {"$eq": [
+                        { "$getField": { "field": "fr", "input": "$name" } }, name
+                    ]},
+                    {"$eq": [
+                        { "$getField": { "field": "en", "input": "$name" } }, name
+                    ]}
+            ]}} if name else ({"_id" : ObjectId(id_wiki)})
 
 # Removes ObjectID fields and converts them to string
 def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
@@ -159,7 +167,7 @@ class WikiApi(BaseDefaultV2Api):
         result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(id_wiki=id)).to_list(length=1)
         
         if result.__len__() != 1:
-            raise LookupError("Error finding by ID")
+            raise LookupError("No wiki found by ID")
 
         return result
 
@@ -172,7 +180,7 @@ class WikiApi(BaseDefaultV2Api):
         print(result)
         
         if result.__len__() != 1:
-            raise LookupError("Error finding")
+            raise LookupError("No wiki found")
 
         result = result[0]
 
@@ -314,8 +322,8 @@ class WikiApi(BaseDefaultV2Api):
 
         wikis = await mongodb["wiki"].aggregate(query_pipeline).to_list(length=None)
 
-        #print(query_pipeline, end="\n\n")
-        print(wikis[0]["wikis"])
+        print(query_pipeline, end="\n\n")
+        #print(wikis[0]["wikis"])
 
         if not wikis:
             raise LookupError("Cannot find Wiki")
@@ -331,10 +339,6 @@ class WikiApi(BaseDefaultV2Api):
             
             traducciones.sort(key=operator.itemgetter("wiki_id"))
             wikis[0]["wikis"].sort(key=operator.itemgetter("id"))
-            print("Traducciones:")
-            print(traducciones)
-            print("Todas:")
-            print(wikis[0]["wikis"])
             print("Diferencia: " + str(len(traducciones) - len(wikis[0]["wikis"])))
             wiki_ids = list(map(lambda x: x["wiki_id"],traducciones))
             print(wiki_ids)
@@ -344,7 +348,7 @@ class WikiApi(BaseDefaultV2Api):
                     wiki["description"] = traducciones[i]["description"]
                     wiki["name"] = traducciones[i]["name"]
                 except:
-                    print("Sin traduccion:" + wiki["id"])
+                    print("Sin traduccion:" + wiki["id"] + ", " + wiki["name"])
                     pass
 
         return wikis[0]
@@ -423,6 +427,7 @@ class WikiApiAdmins(BaseAdminsV2Api):
             print(e)
             raise ConnectionError("Cannot connect to translator")
 
+        new_wiki_dict.pop("translate")
         new_wiki_dict["id"] = str(result["_id"])
         result["author"]["id"] = str(result["author"].pop("_id"))
         new_wiki_dict["author"] = result["author"]

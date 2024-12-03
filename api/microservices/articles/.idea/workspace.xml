@@ -5,18 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/articles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/articles.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../LaWikiTest/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../LaWikiTest/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_public_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_public_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/rating.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/models/rating.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/tests/test_v1_public_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ratings/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ratings/.idea/ratings.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/.idea/ratings.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ratings/src/openapi_server/apis/default_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/src/openapi_server/apis/default_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ratings/src/openapi_server/apis/default_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/src/openapi_server/apis/default_api_base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/TestRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/TestRoute.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/components/ratings-list.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/components/ratings-section.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-page/article-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-page/article-page.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/service/article-service.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/service/article-service.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/comments/service/comment-service.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/comments/service/comment-service.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ratings/tests/test_default_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/tests/test_default_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v1.0.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v1.0.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +38,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;vpa-article-page&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/jabr3/Documents/GitHub/laWiki/api/microservices/articles&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -51,8 +51,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
-        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23726.102" />
+        <option value="bundled-python-sdk-5e1850174b45-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23726.102" />
       </set>
     </attachedChunks>
   </component>
@@ -73,9 +73,9 @@
       <workItem from="1733056222214" duration="277000" />
       <workItem from="1733127811919" duration="69000" />
       <workItem from="1733131182722" duration="1067000" />
-      <workItem from="1733161678079" duration="40000" />
-      <workItem from="1733161944403" duration="177000" />
-      <workItem from="1733162428494" duration="7000" />
+      <workItem from="1733159387907" duration="9851000" />
+      <workItem from="1733221682996" duration="117000" />
+      <workItem from="1733238525455" duration="652000" />
     </task>
     <servers />
   </component>

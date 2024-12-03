@@ -20,21 +20,7 @@ class InternalManagerV2(BaseV2InternalApi):
         id: str,
     ) -> None:
         """Delete all tags from a wiki."""
-        wiki_id = ObjectId(id)
-
-        if not await api_calls_v2.check_wiki(id):
-            raise KeyError
-
-        tag_list_completed = await get_wiki_tags_v2(id, 100, 0)
-        tags = tag_list_completed.articles
-        print(tags)
-
-        for tag in tags:
-            articles = tag.articles
-            tag_id = ObjectId(tag.id)
-            for article in articles:
-                await api_calls_v2.unassign_article_tags(article.id, [tag.id])
-
-            await mongodb["tag"].delete_one({"_id": tag_id})
+        
+        await mongodb["tag"].delete_many({"wiki_id" : ObjectId(id)})
 
         return None
