@@ -7,7 +7,7 @@ from starlette.responses import Response
 from openapi_server.apis.internal_api_base import BaseInternalApi
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
-mongodb = client.get_database("laWikiDB")
+mongodb = client.get_database("laWikiV2BD")
 
 class InternalCommentsManager(BaseInternalApi):
     async def delete_articles_comments(

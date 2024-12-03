@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const apiClient = axios.create({
+const APIGateway = axios.create({
   baseURL: 'http://localhost:3000',
   timeout: 10000,
 });
 
-apiClient.interceptors.request.use(
+APIGateway.interceptors.request.use(
   (config) => {
     // const token = localStorage.getItem('authToken'); 
     // if (token) {
@@ -20,7 +20,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-apiClient.interceptors.response.use(
+APIGateway.interceptors.response.use(
   (response) => {
     console.log('Response:', response);
     return response.data;
@@ -36,4 +36,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export default APIGateway;

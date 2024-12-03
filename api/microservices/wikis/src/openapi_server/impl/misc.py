@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from traceback import format_exc
 
 
 MESSAGE_UNEXPECTED = "Unexpected server error"
@@ -25,4 +26,5 @@ SUPPORTED_LANGUAGES = ["en", "es", "fr"]
 def raise_http_exception(code : int, message : str, e: Exception):
     print(e)
     print(type(e))
+    print(format_exc())
     raise HTTPException(status_code=code, detail=message + '. More details: ' + str(e))

@@ -32,7 +32,7 @@ class Tag(BaseModel):
     Tag
     """ # noqa: E501
     id: StrictStr = Field(description="Unique identifier for the tag.")
-    name: StrictStr = Field(description="Name of the tag.")
+    tag: StrictStr = Field(description="Name of the tag.")
     __properties: ClassVar[List[str]] = ["id", "name"]
 
     model_config = {

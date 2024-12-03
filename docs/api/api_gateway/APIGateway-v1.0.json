@@ -3364,10 +3364,10 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "The name of the tag.",
+            "description": "The ID of the tag.",
             "format": "uuid"
           },
-          "name": {
+          "tag": {
             "type": "object",
             "additionalProperties": {
               "type": "string",

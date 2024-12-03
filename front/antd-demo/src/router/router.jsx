@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
+import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
