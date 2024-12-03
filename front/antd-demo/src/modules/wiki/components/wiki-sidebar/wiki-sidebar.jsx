@@ -2,7 +2,7 @@
 import React from 'react';
 import './wiki-sidebar.css';
 import Sider from 'antd/es/layout/Sider';
-import { Flex, Rate, Button } from 'antd';
+import { Flex, Rate, Button, Image } from 'antd';
 import RoleAvatar from '../avatar/role-avatar';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ const WikiSidebar = (wiki) => {
   return (
     <Sider className='wiki-sidebar'>
         <Flex align='center' vertical>
-          <img src={wiki.image}></img>
+          <Image src={wiki.image}></Image>
           <div className='rating-container'>
             <b>{wiki.rating}</b>
             <Rate style={{ marginLeft: 10 }} disabled allowHalf value={wiki.rating} />
