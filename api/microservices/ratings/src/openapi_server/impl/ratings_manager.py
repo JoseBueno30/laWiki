@@ -15,7 +15,7 @@ import requests
 class RatingsManager (BaseDefaultApi):
     app: FastAPI = FastAPI()
     mongodb_client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
-    mongodb = mongodb_client.get_database("laWikiDB")
+    mongodb = mongodb_client.get_database("laWikiV2BD")
     wiki_url = "http://wikis_api:8084/"
     article_url = "http://articles_api:8081/"
 
