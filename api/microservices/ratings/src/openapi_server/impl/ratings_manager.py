@@ -33,10 +33,11 @@ class RatingsManager (BaseDefaultApi):
         return result;
 
     async def delete_rating(self, id: str):
+        rating = await self._check_rating_exists(id)
         result = await self.mongodb["rating"].delete_one({'_id': self._convert_id_into_ObjectId(id)})
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Rating Not Found")
-        await self._update_article_and_wiki_average(id)
+        await self._update_article_and_wiki_average(str(rating["article_id"]))
         return None;
 
     async def rate_article(self, id: str, new_rating: NewRating):
@@ -73,8 +74,6 @@ class RatingsManager (BaseDefaultApi):
         self._check_new_rating_is_valid(new_rating)
         article = await self._check_article_exists(id)
 
-
-
         if await self._check_user_has_no_rating(id, new_rating.author_id):
             result = await self.mongodb["rating"].update_one({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(new_rating.author_id)}, {'$set': {"value": new_rating.value}})
             await self._update_article_and_wiki_average(id)
@@ -86,8 +85,8 @@ class RatingsManager (BaseDefaultApi):
                         'author': {'id': {'$toString': '$author._id'}}}},
                     {'$unset': '_id'},
                     {'$unset': 'author._id'}]
-            result = await self.mongodb["rating"].aggregate(pipe).to_list(length=1)
-
+            result = await self.mongodb["rating"].aggregate(pipe).to_list(length=1);
+            result[0]['creation_date'] = result[0]['creation_date'].date()
             return result[0]
         else:
             return await self.rate_article(id, new_rating)

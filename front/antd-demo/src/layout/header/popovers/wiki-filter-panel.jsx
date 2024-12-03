@@ -17,13 +17,13 @@ dayjs.extend(customParseFormat);
 const dateFormat = "YYYY/MM/DD";
 
 const WikiFilterPanel = ({ filters, setFilters }) => {
-  const { t } = useTranslation("header");
+  const { t } = useTranslation();
 
   const orderOptions = [
-    { label: t("order-recent"), value: "recent" },
-    { label: t("order-oldest"), value: "oldest" },
-    { label: t("order-popular"), value: "popular" },
-    { label: t("order-unpopular"), value: "unpopular" },
+    { label: t("common.order-recent"), value: "recent" },
+    { label: t("common.order-oldest"), value: "oldest" },
+    { label: t("common.order-popular"), value: "popular" },
+    { label: t("common.order-unpopular"), value: "unpopular" },
   ];
 
   const updateOrder = (e) => {
@@ -57,7 +57,7 @@ const WikiFilterPanel = ({ filters, setFilters }) => {
 
   return (
     <Flex vertical align="center">
-      <Divider>{t("order-divider")}</Divider>
+      <Divider>{t("common.order-header")}</Divider>
       <Radio.Group
         optionType="button"
         options={orderOptions}
@@ -65,7 +65,7 @@ const WikiFilterPanel = ({ filters, setFilters }) => {
         onChange={updateOrder}
         block
       />
-      <Divider>{t("daterange-divider")}</Divider>
+      <Divider>{t("common.daterange-header")}</Divider>
       <RangePicker
         allowEmpty={[true, true]}
         value={[
@@ -75,10 +75,10 @@ const WikiFilterPanel = ({ filters, setFilters }) => {
         onChange={updateDateRange}
         format={dateFormat}
       />
-      <Divider>{t("author-divider")}</Divider>
+      <Divider>{t("common.author-header")}</Divider>
       <Input
         defaultValue={filters.author}
-        placeholder={t("author-placeholder")}
+        placeholder={t("common.author-placeholder")}
         allowClear
         onChange={updateAuthor}
         style={{ width: "80%" }}

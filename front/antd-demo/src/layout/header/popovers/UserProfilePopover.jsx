@@ -12,56 +12,56 @@ import { useTranslation } from "react-i18next";
 const UserProfilePopover = () => {
   const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
   const [notifications, setNotifications] = useState("Email");
-  const { t } = useTranslation('header');
+  const { t } = useTranslation();
 
   return (
     <Menu className="user-profile-menu" mode="inline">
       <Menu.Item key="1" className="profile-item">
-        <strong>{t('profile-link')}</strong>
+        <strong>{t('header.profile-link')}</strong>
       </Menu.Item>
       <Menu.Divider />
       <Menu.SubMenu
         key="2"
-        title={t('theme-menu', {theme: colorTheme == "light" ? t('theme-light') : t('theme-dark')})}
+        title={t('header.theme-menu', {theme: colorTheme == "light" ? t('header.theme-light') : t('header.theme-dark')})}
         icon={<BulbOutlined />}
       >
         <Menu.Item key="2-1" onClick={() => toggleTheme("light")}>
-          {t('theme-light')}
+          {t('header.theme-light')}
         </Menu.Item>
         <Menu.Item key="2-2" onClick={() => toggleTheme("dark")}>
-          {t('theme-dark')}
+          {t('header.theme-dark')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu
         key="3"
-        title={t('notifications-menu', {notifications: notifications == "Email" ? t('notifications-email') : t('notifications-afterlogin')})}
+        title={t('header.notifications-menu', {notifications: notifications == "Email" ? t('header.notifications-email') : t('header.notifications-afterlogin')})}
         icon={<BellOutlined />}
       >
         <Menu.Item key="3-1" onClick={() => setNotifications("Email")}>
-          {t('notifications-email')}
+          {t('header.notifications-email')}
         </Menu.Item>
         <Menu.Item key="3-2" onClick={() => setNotifications("After login")}>
-          {t('notifications-afterlogin')}
+          {t('header.notifications-afterlogin')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu
         key="4"
-        title={t('language-menu', {language: locale == "en" ? t('language-en') : locale == "es" ? t('language-es') : t('language-fr')})}
+        title={t('header.language-menu', {language: locale == "en" ? t('header.language-en') : locale == "es" ? t('header.language-es') : t('header.language-fr')})}
         icon={<GlobalOutlined />}
       >
         <Menu.Item key="4-1" onClick={() => changeLocale("en")}>
-          {t('language-en')}
+          {t('header.language-en')}
         </Menu.Item>
         <Menu.Item key="4-2" onClick={() => changeLocale("es")}>
-          {t('language-es')}
+          {t('header.language-es')}
         </Menu.Item>
         <Menu.Item key="4-3" onClick={() => changeLocale("fr")}>
-          {t('language-fr')}
+          {t('header.language-fr')}
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.Divider />
       <Menu.Item key="5" danger icon={<EnterOutlined />}>
-        {t('logout-link')}
+        {t('header.logout-link')}
       </Menu.Item>
     </Menu>
   );
