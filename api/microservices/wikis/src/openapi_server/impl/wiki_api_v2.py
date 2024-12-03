@@ -99,10 +99,17 @@ def pipepline_remove_id_auto(id_name: str):
 
 def match_by_name_or_id(name : str = "", id_wiki : str = ""):
     return {"$expr": {
-        "$eq": [
-          { "$getField": { "field": "$lang", "input": "$name" } }, name
-        ]
-      }} if name else ({"_id" : ObjectId(id_wiki)})
+        "$or" : [
+            {"$eq": [
+                        { "$getField": { "field": "es", "input": "$name" } }, "A multiple edited wiki"
+                    ]},
+                    {"$eq": [
+                        { "$getField": { "field": "fr", "input": "$name" } }, "A multiple edited wiki"
+                    ]},
+                    {"$eq": [
+                        { "$getField": { "field": "en", "input": "$name" } }, "A multiple edited wiki"
+                    ]}
+            ]}} if name else ({"_id" : ObjectId(id_wiki)})
 
 # Removes ObjectID fields and converts them to string
 def pipeline_remove_id_filter_name(name : str = "", id_wiki: str = "") -> list :
@@ -159,7 +166,7 @@ class WikiApi(BaseDefaultV2Api):
         result = await mongodb["wiki"].aggregate(pipeline_remove_id_filter_name(id_wiki=id)).to_list(length=1)
         
         if result.__len__() != 1:
-            raise LookupError("Error finding by ID")
+            raise LookupError("No wiki found by ID")
 
         return result
 
@@ -172,7 +179,7 @@ class WikiApi(BaseDefaultV2Api):
         print(result)
         
         if result.__len__() != 1:
-            raise LookupError("Error finding")
+            raise LookupError("No wiki found")
 
         result = result[0]
 
@@ -423,6 +430,7 @@ class WikiApiAdmins(BaseAdminsV2Api):
             print(e)
             raise ConnectionError("Cannot connect to translator")
 
+        new_wiki_dict.pop("translate")
         new_wiki_dict["id"] = str(result["_id"])
         result["author"]["id"] = str(result["author"].pop("_id"))
         new_wiki_dict["author"] = result["author"]
