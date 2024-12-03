@@ -1,9 +1,10 @@
 import APIGateway from "../../../interceptor/interceptor"
 
 const CommentService = () =>{
-    const getArticleComments = async (articleId, offset, limit, creationDate) =>{
+    const getArticleComments = async (articleId, offset, limit, order, creationDate) =>{
         try{
             const params = new URLSearchParams({
+                order: order,
                 limit: limit,
                 offset: offset
             })

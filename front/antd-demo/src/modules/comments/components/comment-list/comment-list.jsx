@@ -18,24 +18,35 @@ const {RangePicker} = DatePicker
 // }
 
 const options = [
-  { label: 'recent', value: 'recent' },
-  { label: 'oldest', value: 'oldest' }
+  { label: 'Recent', value: 'recent' },
+  { label: 'Oldest', value: 'oldest' }
 ];
 
 const CommentList = ({commentsObject, user, fetchFunc}) => {
   // console.log("COMMENT LIST", comments)
 
   const [commentList, setCommentList] = useState(commentsObject.comments)
-  const [paginationIndex, setPaginationIndex] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [order, setOrder] = useState('recent')
+  const [dateRange, setDateRange] = useState(null)
 
   useEffect(() =>{
     setCommentList(commentsObject.comments)
   },[commentsObject])
 
-  const range = (start, end) => Array.from({ length: end - start + 1 }, (_, i) => start + i);
-
   const handlePaginationChange = (page, PageSize) =>{
-    fetchFunc(page-1, null)
+    setCurrentPage(page)
+    fetchFunc((page-1) * commentsObject.limit, order, null)
+  }
+
+  const handleOrderChange = (e) =>{
+    print(e.target.value)
+    setOrder(e.target.value)
+    fetchFunc(0, e.target.value, null)
+  }
+
+  const handleDateRangeChange = (e) =>{
+
   }
 
   return (
@@ -54,7 +65,7 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
             <SortAscendingOutlined style={{fontSize: "25px"}}/>
             <Text strong>Order</Text>
       
-            <Radio.Group block size='small' options={options} defaultValue="recent" optionType='button'/>
+            <Radio.Group onChange={handleOrderChange} block size='small' options={options} defaultValue="recent" optionType='button'/>
           </Space>
           <Space className='filter-group'>
               <ControlOutlined className='icon comment-list-son'/>
@@ -70,8 +81,10 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
         }
         {console.log(commentsObject)}
         <Flex align='center' justify='center' gap={3}>
-          {console.log("LIMITE", (commentsObject.total / commentsObject.limit) + 1)}
-          <Pagination size='small' gap={3} pageSize={3} defaultCurrent={1} total={6} onChange={handlePaginationChange} />
+          {commentsObject.comments.length > 0 ? 
+            <Pagination size='small' gap={3} pageSize={3} defaultCurrent={currentPage} total={commentsObject.total} onChange={handlePaginationChange}/> 
+            : ""
+          }
         </Flex>
       </Space>
       

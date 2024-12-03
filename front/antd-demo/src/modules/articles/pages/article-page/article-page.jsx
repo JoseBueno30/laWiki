@@ -42,6 +42,7 @@ const ArticlePage = () => {
 
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
+      // AÑADIR PROP DE ARTICULO -> SI ES NULO BUSCAR CON LA URL Y SIN LENGUAJE
       // console.log("URL:", window.location.toString().split("/"))
       const articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
       const version_response = await ArticleService().getArticleVersionByName(/*"672c8721ba3ae42bd5985361"*/wiki.wiki_info.id, articleName, locale) 
@@ -124,9 +125,9 @@ const ArticlePage = () => {
     }
   }
 
-  const controlCommentsPaginationAndFilters = async (newOffset, creation_date) =>{
+  const controlCommentsPaginationAndFilters = async (newOffset, order,creation_date) =>{
 
-    const comments_response = await CommentService().getArticleComments(articleVersion.article_id, newOffset, 3, null)
+    const comments_response = await CommentService().getArticleComments(articleVersion.article_id, newOffset, 3, order,null)
     console.log("CONTROLCOMMENTS", comments_response)
     setComments(comments_response)
   }
@@ -145,7 +146,7 @@ const ArticlePage = () => {
             <UserAvatar image={article.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
           
-          // {console.log(versions)}
+           {/*console.log(versions)*/}
           
           <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id}></Select> 
           <Button title='Editar' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>

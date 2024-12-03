@@ -34,7 +34,7 @@ const RatingsList = ({ avg_rating, total_ratings, ratings }) => {
                   showInfo={false}
                 />
                 <Flex justify="center" align="center">
-                  <Text style={{width:"40px", textAlign:"end"}}>{percent}%</Text>
+                  <Text style={{width:"40px", textAlign:"end"}}>{percent ? percent : 0}%</Text>
                 </Flex>
               </Flex>
             </Flex>
