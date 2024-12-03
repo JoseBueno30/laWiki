@@ -2,13 +2,19 @@
 import React from 'react';
 import './wiki-sidebar.css';
 import Sider from 'antd/es/layout/Sider';
-import { Flex, Rate, Grid } from 'antd';
+import { Flex, Rate, Button } from 'antd';
 import RoleAvatar from '../avatar/role-avatar';
-const { useBreakpoint } = Grid;
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { EditOutlined } from '@ant-design/icons';
 
 
 const WikiSidebar = (wiki) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   wiki = wiki.wiki;
+  const { t } = useTranslation('wiki');
 
   return (
     <Sider className='wiki-sidebar'>
@@ -20,6 +26,7 @@ const WikiSidebar = (wiki) => {
           </div>
           <h2>{wiki.title}</h2>
           <span className='wiki-description'>{wiki.description}</span>
+          <Button size='small' icon={<EditOutlined />} iconPosition='start' onClick={() => navigate(location.pathname + "/edit")} className='wiki-description'>{t('edit-wiki-button')}</Button>
           <div className='user-container'>
             <RoleAvatar image={wiki.author.image} username={wiki.author.name} role='Author'/>
           </div>
