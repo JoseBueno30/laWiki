@@ -20,7 +20,7 @@ const WikiCardItem = ({wiki}) => {
           </div>
           <Meta title={wiki.name} description={wiki.description} />
           <div className='rating-container'>
-            {wiki.rating}
+            {parseFloat(wiki.rating.toFixed(2))}
             <Rate style={{ marginLeft: 10}} disabled allowHalf value={wiki.rating} />
           </div>
         </Card>

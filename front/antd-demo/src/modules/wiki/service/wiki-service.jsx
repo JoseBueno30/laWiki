@@ -9,6 +9,7 @@ const WikiService = () => {
       const url = `/v1/wikis/${wiki_name}?${params.toString()}`;
 
       const response = await APIGateway.get(url);
+      response.rating = parseFloat(response.rating.toFixed(2))
       return response;
     } catch (error) {
       console.error("WikiService.getWiki:", error);
