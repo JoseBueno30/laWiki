@@ -7,5 +7,6 @@
     "body-label": "Corps",
     "save-button": "Enregistrer {{type}}",
     "cancel-button": "Annuler",
-    "delete-button": "Supprimer {{type}}"
+    "delete-button": "Supprimer {{type}}",
+    "create-button": "Créer {{type}}"
 }

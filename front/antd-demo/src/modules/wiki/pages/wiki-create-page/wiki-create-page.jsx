@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tag, Input, Button, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
+import { useTranslation } from "react-i18next";
 import "./wiki-create-page.css";
+import axios from "axios";
 
 const { TextArea } = Input;
 
@@ -18,6 +19,10 @@ const WikiCreatePage = () => {
   const [newTag, setNewTag] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(false);
   const [language, setLanguage] = useState("es");
+
+  const { t: tHeader } = useTranslation("header");
+  const { t: tWiki } = useTranslation("wiki");
+  const { t: tEdit } = useTranslation("edit");
 
   const createTags = async (wikiId) => {
     try {
@@ -70,7 +75,7 @@ const WikiCreatePage = () => {
 
   const addTag = () => {
     if (newTag.trim() && !tags.some((t) => t.name === newTag)) {
-      setTags([...tags, { id: null, name: newTag }]);
+      setTags([...tags, { id: null, tag: newTag }]);
       setNewTag("");
       setIsInputVisible(false);
     }
@@ -83,10 +88,10 @@ const WikiCreatePage = () => {
   return (
     <section className="create-wiki-section">
       <div className="create-wiki-container">
-        <h1>Create New Wiki</h1>
+        <h1>{tHeader("new-wiki")}</h1>
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-title" className="create-wiki-label">
-            Title
+            {tWiki("table-title")}
           </label>
           <Input
             id="create-wiki-title"
@@ -97,7 +102,7 @@ const WikiCreatePage = () => {
 
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-description" className="create-wiki-label">
-            Description
+            {tEdit("description-label")}
           </label>
           <TextArea
             id="create-wiki-description"
@@ -109,7 +114,7 @@ const WikiCreatePage = () => {
 
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-tags" className="create-wiki-label">
-            Tags
+            {tEdit("tags-label")}
           </label>
           <div className="tags-section create-wiki-textarea">
             {tags.map((tag) => (
@@ -130,7 +135,7 @@ const WikiCreatePage = () => {
                 onChange={(e) => setNewTag(e.target.value)}
                 onPressEnter={addTag}
                 onBlur={addTag}
-                placeholder="New Tag"
+                placeholder={tEdit("tags-newtag")}
                 className="tag-input"
               />
             ) : (
@@ -140,7 +145,7 @@ const WikiCreatePage = () => {
                 onClick={() => setIsInputVisible(true)}
                 className="add-tag-button"
               >
-                New Tag
+                {tEdit("tags-newtag")}
               </Button>
             )}
           </div>
@@ -148,9 +153,11 @@ const WikiCreatePage = () => {
 
         <div className="create-wiki-buttons-section">
           <Button type="primary" onClick={createWiki}>
-            Create Wiki
+            {tEdit("create-button", { type: "Wiki" })}
           </Button>
-          <Button onClick={() => navigate("/")}>Cancel</Button>
+          <Button onClick={() => navigate("/")}>
+            {tEdit("cancel-button")}
+          </Button>
         </div>
       </div>
     </section>

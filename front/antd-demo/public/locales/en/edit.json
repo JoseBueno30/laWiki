@@ -7,5 +7,6 @@
     "body-label": "Body",
     "save-button": "Save {{type}}",
     "cancel-button": "Cancel",
-    "delete-button": "Delete {{type}}"
+    "delete-button": "Delete {{type}}",
+    "create-button": "Create {{type}}"
 }
