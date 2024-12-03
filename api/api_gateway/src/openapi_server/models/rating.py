@@ -37,7 +37,6 @@ class Rating(BaseModel):
     article_id: StrictStr = Field(description="Article ID where the rating is published")
     author: Author = Field(alias="Author")
     value: Union[StrictFloat, StrictInt] = Field(description="Rating's value")
-    creation_date: date = Field(description="Date where the rating was published")
     __properties: ClassVar[List[str]] = ["id", "article_id", "Author", "value", "creation_date"]
 
     model_config = {

@@ -2686,20 +2686,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Rating"
+                "$ref": "#/components/schemas/NewRating"
               },
               "examples": {
                 "Example 1": {
                   "value": {
-                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                    "article_id": "e4aad634-3311-4e79-b165-3911549b3b29",
-                    "Author": {
-                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-                      "name": "string",
-                      "image": "http://example.com"
-                    },
-                    "value": 0,
-                    "creation_date": "2019-08-24"
+                    "author_id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "value": 0
                   }
                 }
               }

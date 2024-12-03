@@ -44,7 +44,7 @@ class BaseV1PublicApi:
     async def edit_article_rating(
         self,
         id: str,
-        rating: Rating,
+        new_rating: NewRating,
     ) -> Rating:
         """Update the value of an already existing Rating"""
         ...

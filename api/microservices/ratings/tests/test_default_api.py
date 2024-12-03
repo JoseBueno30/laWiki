@@ -51,7 +51,7 @@ def test_edit_article_rating(client: TestClient):
 
     Edit Article's Rating
     """
-    rating = {"article_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","author":{"image":"https://openapi-generator.tech","name":"name","id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91"},"id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","creation_date":"2000-01-23","value":0.8008281904610115}
+    new_rating = {"author_id":"046b6c7f-0b8a-43b9-b35d-6489e6daee91","value":0.8008281904610115}
 
     headers = {
     }
