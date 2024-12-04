@@ -41,12 +41,24 @@
   },
 
   "wikis": {
-    "new-wiki": "Nouveau Wiki",
-    "edit-wiki": "Éditer le wiki",
-    "wiki-search-placeholder": "rechercher des wikis",
+    "new-wiki": "Nouvelle Wiki",
+    "edit-wiki": "Modifier Wiki",
+    "wiki-search-placeholder": "chercher des wikis",
     "new-article": "Nouvel Article",
-    "article-search-placeholder": "rechercher des articles",
-    "wiki-image": "Image"
+    "article-search-placeholder": "chercher des articles",
+    "wiki-image": "Image",
+    "tags-create-success": "Étiquette créée avec succès",
+    "tags-create-failure": "Erreur lors de la création de l'étiquette",
+    "tags-delete-success": "Étiquette supprimée avec succès",
+    "tags-delete-failure": "Erreur lors de la suppression de l'étiquette",
+    "wiki-create-success": "Wiki créée avec succès",
+    "wiki-create-failure": "Erreur lors de la création de la wiki",
+    "wiki-delete-success": "Wiki supprimée avec succès",
+    "wiki-delete-failure": "Erreur lors de la suppression de la wiki",
+    "wiki-edit-success": "Wiki modifiée avec succès",
+    "wiki-edit-failure": "Erreur lors de la modification de la wiki",
+    "image-upload-success": "Image téléchargée avec succès",
+    "image-upload-failure": "Erreur lors du téléchargement de l'image"
   },
 
   "article": {

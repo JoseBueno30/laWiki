@@ -43,10 +43,22 @@
   "wikis": {
     "new-wiki": "New Wiki",
     "edit-wiki": "Edit Wiki",
-    "wiki-search-placeholder": "search for wikis",
+    "wiki-search-placeholder": "search wikis",
     "new-article": "New Article",
-    "article-search-placeholder": "search for articles",
-    "wiki-image": "Image"
+    "article-search-placeholder": "search articles",
+    "wiki-image": "Image",
+    "tags-create-success": "Tag created successfully",
+    "tags-create-failure": "Error creating tag",
+    "tags-delete-success": "Tag deleted successfully",
+    "tags-delete-failure": "Error deleting tag",
+    "wiki-create-success": "Wiki created successfully",
+    "wiki-create-failure": "Error creating wiki",
+    "wiki-delete-success": "Wiki deleted successfully",
+    "wiki-delete-failure": "Error deleting wiki",
+    "wiki-edit-success": "Wiki edited successfully",
+    "wiki-edit-failure": "Error editing wiki",
+    "image-upload-success": "Image uploaded successfully",
+    "image-upload-failure": "Error uploading image"
   },
 
   "article": {

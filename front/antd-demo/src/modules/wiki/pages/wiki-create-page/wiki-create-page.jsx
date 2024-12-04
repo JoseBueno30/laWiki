@@ -34,10 +34,10 @@ const WikiCreatePage = () => {
         createWikiTag(wikiId, tag.tag, locale)
       );
       await Promise.all(tagCreationPromises);
-      message.success("Tags created successfully!");
+      message.success(t("wikis.tags-create-success"));
     } catch (error) {
       console.error("Error creating tags:", error);
-      message.error("Failed to create tags.");
+      message.error(t("wikis.tags-create-failure"));
     }
   };
 
@@ -54,14 +54,14 @@ const WikiCreatePage = () => {
 
       const response = await createWiki(newWiki);
       const wikiId = response.id;
-      message.success("Wiki created successfully!");
+      message.success(t("wikis.wiki-create-success"));
       if (tags.length > 0) {
         await createTags(wikiId);
       }
       navigate(`/wikis/${newWiki.name.replace(/ /g, "_")}`);
     } catch (error) {
       console.error("Error creating wiki:", error);
-      message.error("Failed to create wiki.");
+      message.error(t("wikis.wiki-create-failure"));
     }
   };
 
@@ -85,11 +85,11 @@ const WikiCreatePage = () => {
     try {
       const image_url = await uploadImage(file);
       setImage(image_url);
-      message.success("Image uploaded successfully!");
+      message.success(t("wikis.image-upload-success"));
       onSuccess();
     } catch (error) {
       console.error("Error uploading image:", error);
-      message.error("Failed to upload image.");
+      message.error(t("wikis.image-upload-failure"));
       onError(error);
     }
   };

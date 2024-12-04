@@ -86,11 +86,11 @@ const WikiEditPage = () => {
       };
       await updateWiki(wiki.wiki_info.id, updatedData);
 
-      message.success("Wiki updated successfully!");
+      message.success(t("wikis.wiki-edit-success"));
       navigate(`/wikis/${updatedData.name.replace(/ /g, "_")}`);
     } catch (error) {
       console.error("Error saving wiki data:", error);
-      message.error("Failed to save wiki changes.");
+      message.error(t("wikis.wiki-edit-failure"));
     } finally {
       setLoading(false);
     }
@@ -100,11 +100,11 @@ const WikiEditPage = () => {
     try {
       const imageUrl = await uploadImage(file);
       setImage(imageUrl);
-      message.success("Image uploaded successfully!");
+      message.success(t("wikis.image-upload-success"));
       onSuccess();
     } catch (error) {
       console.error("Error uploading image:", error);
-      message.error("Failed to upload image.");
+      message.error(t("wikis.image-upload-failure"));
       onError(error);
     }
   };
@@ -128,11 +128,11 @@ const WikiEditPage = () => {
   const deleteWikiFunction = async () => {
     try {
       await deleteWiki(wiki.wiki_info.id);
-      message.success("Wiki deleted successfully!");
+      message.success(t("wikis.wiki-delete-success"));
       navigate("/");
     } catch (error) {
       console.error("Error deleting wiki:", error);
-      message.error("Failed to delete wiki.");
+      message.error(t("wikis.wiki-delete-failure"));
     } finally {
       setLoading(false);
     }
