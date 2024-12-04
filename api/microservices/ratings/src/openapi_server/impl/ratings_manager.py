@@ -167,6 +167,7 @@ class RatingsManager (BaseDefaultApi):
         except requests.exceptions.HTTPError as http_err:
             raise HTTPException(status_code=response.status_code, detail=str(http_err))
         except Exception as err:
+            print(err)
             raise HTTPException(status_code=500, detail="Error connecting to the articles service")
 
     async def _check_rating_exists(self, id: str = 0, pipe: list = []):

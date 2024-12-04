@@ -164,7 +164,7 @@ async def restore_article_version_v2(
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if await BaseV2EditorsApi.subclasses[0]().restore_article_version(article_id, version_id) is None:
+        if await BaseV2EditorsApi.subclasses[0]().restore_article_version_v2(article_id, version_id) is None:
             return JSONResponse(status_code=200, content={"detail": "ArticleVersion successfully restored"})
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid Article or ArticleVersion ID format.")

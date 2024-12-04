@@ -74,10 +74,10 @@
     "highest-rated-articles": "Artículos mejor valorados",
     "user-rating-header": "Tu valoración",
     "global-rating-value": "{{value}} de 5",
-    "global-rating header": "Opiniones de otros lectores",
+    "global-rating-header": "Valoraciones de otros lectores",
     "global-rating-count": "{{count}} calificaciones globales",
-    "num-stars": "{{count}} estrella",
-    "num-stars_plural": "{{count}} estrellas"
+    "num-stars_one": "{{count}} estrella",
+    "num-stars_other": "{{count}} estrellas"
   },
 
   "edit": {

@@ -3,6 +3,7 @@ import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
 import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
+import ArticlePage from "../modules/articles/pages/article-page/article-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
                 path: "articles",
                 children: [
                   { path: "new", element: <TestRoute /> }, // Crear artículo
-                  { path: ":article_name", element: <TestRoute /> }, // Ver artículo
+                  { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
                   { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
                 ],
               },

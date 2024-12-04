@@ -26,6 +26,20 @@ pipeline_remove_id = [
     {'$unset': ["_id", "author._id"]}  # Remove the original _id fields
 ]
 
+pipeline_trunc_date = [
+    {
+        "$set": {
+            "creation_date": {
+                "$dateFromParts": {
+                    "year": {"$year": "$creation_date"},
+                    "month": {"$month": "$creation_date"},
+                    "day": {"$dayOfMonth": "$creation_date"}
+                }
+            }
+        }
+    }
+]
+
 # Groups all comments in a list
 pipeline_group_comments = [
     {"$group": {
@@ -74,7 +88,8 @@ class DefaultCommentsManager(BaseDefaultApi):
         # if not mongodb['article'].find_one({"_id": art_id}):
         #     raise Exception("Article not found")
 
-        today = date.today()
+        today = datetime.today()
+        print(today)
 
         author_dict = {'_id': ObjectId(new_comment.author_id),
                        'name': 'author_name',
@@ -84,7 +99,7 @@ class DefaultCommentsManager(BaseDefaultApi):
             'author': author_dict,
             'body': new_comment.body,
 
-            'creation_date': datetime(today.year, today.month, today.day)
+            'creation_date': today
         }
         result = await mongodb['comment'].insert_one(comment_dic)
         if result:
@@ -92,6 +107,7 @@ class DefaultCommentsManager(BaseDefaultApi):
             comment_dic['id'] = str(result.inserted_id)
             comment_dic['article_id'] = str(comment_dic['article_id'])
             comment_dic['author']['id'] = str(comment_dic['author']['_id'])
+            comment_dic['creation_date'] = date(today.year, today.month, today.day)
             return Comment.from_dict(comment_dic)
         else:
             raise Exception("Error creating comment")
@@ -154,6 +170,7 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
         {"$skip": offset},
         {"$limit": limit},
         *pipeline_remove_id,
+        *pipeline_trunc_date,
         *pipeline_group_comments,
         {"$addFields": {
             "total": total_count,
@@ -164,12 +181,10 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
             }
         }
     ]
-
-    print(query_pipeline)
-
     comments = await mongodb['comment'].aggregate(query_pipeline).to_list(length=1);
-
+    print(comments[0])
     if not comments:
         raise NotFoundErr()
+
 
     return comments[0]
