@@ -20,7 +20,7 @@ import os
 
 from openapi_server.impl.utils import forward_request
 
-dotenv_path = os.path.abspath(os.path.join(__file__, "../../../../config.env"))
+dotenv_path = os.path.abspath(os.path.join(__file__, "../../../../../config.env"))
 load_dotenv(dotenv_path=dotenv_path)
 DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 

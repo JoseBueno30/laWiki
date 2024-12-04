@@ -6,10 +6,12 @@ import { useTranslation } from "react-i18next";
 import "./wiki-create-page.css";
 import WikiService from "../../service/wiki-service";
 import SettingsContext from "../../../../context/settings-context";
-import { uploadImage } from "../../../articles/service/article_service"; 
+import { uploadImage } from "../../../articles/service/article_service";
 
 const { createWiki, createWikiTag } = WikiService();
 const { TextArea } = Input;
+
+const DEFAULT_IMAGE = "https://via.placeholder.com/400x300?text=Default+Image";
 
 const WikiCreatePage = () => {
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ const WikiCreatePage = () => {
   });
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
-  const [images, setImages] = useState([]);
+  const [image, setImage] = useState(DEFAULT_IMAGE);
   const [isInputVisible, setIsInputVisible] = useState(false);
   const { locale } = useContext(SettingsContext);
 
@@ -28,9 +30,10 @@ const WikiCreatePage = () => {
 
   const createTags = async (wikiId) => {
     try {
-      for (const tag of tags) {
-        await createWikiTag(wikiId, tag.tag, locale);
-      }
+      const tagCreationPromises = tags.map((tag) =>
+        createWikiTag(wikiId, tag.tag, locale)
+      );
+      await Promise.all(tagCreationPromises);
       message.success("Tags created successfully!");
     } catch (error) {
       console.error("Error creating tags:", error);
@@ -45,21 +48,17 @@ const WikiCreatePage = () => {
         description: wikiData.description,
         author: "DefaultAuthor",
         lang: locale,
-        image: images[0] || "DefaultImage", // Utiliza la primera imagen cargada o un valor predeterminado
+        image: image,
         translate: true,
       };
 
       const response = await createWiki(newWiki);
-      const wikiId = response.data.id;
-      console.log(wikiId);
-
+      const wikiId = response.id;
       message.success("Wiki created successfully!");
-
       if (tags.length > 0) {
         await createTags(wikiId);
       }
-
-      navigate("/");
+      navigate(`/wikis/${newWiki.name.replace(/ /g, "_")}`);
     } catch (error) {
       console.error("Error creating wiki:", error);
       message.error("Failed to create wiki.");
@@ -84,8 +83,8 @@ const WikiCreatePage = () => {
 
   const customRequest = async ({ file, onSuccess, onError }) => {
     try {
-      const imageUrl = await uploadImage(file);
-      setImages([...images, imageUrl]); // Agrega la URL de la imagen al estado
+      const image_url = await uploadImage(file);
+      setImage(image_url);
       message.success("Image uploaded successfully!");
       onSuccess();
     } catch (error) {
@@ -158,6 +157,18 @@ const WikiCreatePage = () => {
             )}
           </div>
         </div>
+        <div className="image-preview-container create-wiki-item">
+          <label className="create-wiki-label">
+            {t("wikis.wiki-image")}
+          </label>
+          <div>
+            <img
+              className="image-preview"
+              src={image}
+              alt="Preview"
+            />
+          </div>
+        </div>
         <div className="create-wiki-item">
           <Upload
             customRequest={customRequest}
@@ -169,26 +180,6 @@ const WikiCreatePage = () => {
               {t("common.upload-image-button")}
             </Button>
           </Upload>
-        </div>
-        <div className="image-preview-container" style={{ marginTop: "20px" }}>
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="image-preview"
-              style={{ marginBottom: "10px" }}
-            >
-              <img
-                src={image}
-                alt={`Preview ${index}`}
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "8px",
-                  border: "1px solid #ddd",
-                }}
-              />
-            </div>
-          ))}
         </div>
         <div className="create-wiki-buttons-section">
           <Button type="primary" onClick={createWikiFunction}>

@@ -1,15 +1,18 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Input, Button, message, Spin } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Tag, Input, Button, message, Spin, Upload } from "antd";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 import "./wiki-edit-page.css";
 import WikiService from "../../service/wiki-service";
 import SettingsContext from "../../../../context/settings-context";
+import { uploadImage } from "../../../articles/service/article_service";
 
 const { updateWiki, createWikiTag, deleteWikiTag, deleteWiki } = WikiService();
 const { TextArea } = Input;
+
+const DEFAULT_IMAGE = "https://via.placeholder.com/400x300?text=Default+Image";
 
 const WikiEditPage = () => {
   const navigate = useNavigate();
@@ -18,11 +21,13 @@ const WikiEditPage = () => {
     title: "",
     description: "",
     tags: [],
+    image: DEFAULT_IMAGE,
   });
   const [tags, setTags] = useState([]);
   const [originalTags, setOriginalTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [isInputVisible, setIsInputVisible] = useState(false);
+  const [image, setImage] = useState(DEFAULT_IMAGE);
   const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
   const { locale } = useContext(SettingsContext);
@@ -39,13 +44,14 @@ const WikiEditPage = () => {
         title: wiki.wiki_info.name[locale] || "",
         description: wiki.wiki_info.description || "",
         tags: currentTags,
+        image: wiki.wiki_info.image || DEFAULT_IMAGE,
       });
-      console.log(wiki.wiki_info);
+      setImage(wiki.wiki_info.image || DEFAULT_IMAGE);
       setTags(currentTags);
       setOriginalTags(currentTags);
     } catch (error) {
       console.error("Error loading wiki data:", error);
-      message.error("Failed to load wiki data.");
+      // message.error("Failed to load wiki data.");
     } finally {
       setLoading(false);
     }
@@ -55,39 +61,51 @@ const WikiEditPage = () => {
     try {
       setLoading(true);
 
-      const newTags = tags.filter(
-        (tag) => !tag.id
-      );
-      
+      const newTags = tags.filter((tag) => !tag.id);
       const deletedTags = originalTags.filter(
         (origTag) => !tags.some((tag) => origTag.id === tag.id)
       );
 
-      for (const tag of newTags) {
-        await createWikiTag(wiki.wiki_info.id, tag, locale);
-      }
+      const tagCreationPromises = newTags.map((tag) =>
+        createWikiTag(wiki.wiki_info.id, tag.tag, locale)
+      );
+      await Promise.all(tagCreationPromises);
 
-      for (const tag of deletedTags) {
-        await deleteWikiTag(tag.id);
-      }
+      const tagDeletedPromises = deletedTags.map((tag) =>
+        deleteWikiTag(tag.id)
+      );
+      await Promise.all(tagDeletedPromises);
 
       const updatedData = {
         name: wikiData.title,
         description: wikiData.description,
         author: "DefaultAuthor",
         lang: locale,
-        image: "DefaultImage",
+        image: image,
         translate: true,
       };
       await updateWiki(wiki.wiki_info.id, updatedData);
 
       message.success("Wiki updated successfully!");
-      loadWikiData();
+      navigate(`/wikis/${updatedData.name.replace(/ /g, "_")}`);
     } catch (error) {
       console.error("Error saving wiki data:", error);
       message.error("Failed to save wiki changes.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    try {
+      const imageUrl = await uploadImage(file);
+      setImage(imageUrl);
+      message.success("Image uploaded successfully!");
+      onSuccess();
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      message.error("Failed to upload image.");
+      onError(error);
     }
   };
 
@@ -128,7 +146,7 @@ const WikiEditPage = () => {
     <section className="edit-wiki-section">
       <div className="edit-wiki-container">
         {loading ? (
-          <Spin></Spin>
+          <Spin />
         ) : (
           <>
             <h1>{t("wikis.edit-wiki")}</h1>
@@ -194,14 +212,38 @@ const WikiEditPage = () => {
               </div>
             </div>
 
+            <div className="image-preview-container edit-wiki-item">
+              <label className="edit-wiki-label">{t("wikis.wiki-image")}</label>
+              <div>
+                <img className="image-preview" src={image} alt="Preview" />
+              </div>
+            </div>
+
+            <div className="edit-wiki-item">
+              <Upload
+                customRequest={customRequest}
+                multiple={false}
+                showUploadList={false}
+                accept="image/*"
+              >
+                <Button icon={<UploadOutlined />}>
+                  {t("common.upload-image-button")}
+                </Button>
+              </Upload>
+            </div>
+
             <div className="edit-wiki-buttons-section">
               <Button type="primary" onClick={saveWikiData}>
-              {t("common.save-button", { type: "Wiki" })}
+                {t("common.save-button", { type: "Wiki" })}
               </Button>
               <Button onClick={() => navigate("/")}>
                 {t("common.cancel-button")}
               </Button>
-              <Button danger className="right-button" onClick={deleteWikiFunction}>
+              <Button
+                danger
+                className="right-button"
+                onClick={deleteWikiFunction}
+              >
                 {t("common.delete-button", { type: "Wiki" })}
               </Button>
             </div>

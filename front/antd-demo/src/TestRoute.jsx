@@ -22,8 +22,8 @@ const TestRoute = () => {
       {/* <h1>{location.pathname}</h1>
       <Button onClick={toggleTheme}>Toggle theme</Button>
       <RatingsSection/> */}
-      {/* <WikiCreatePage></WikiCreatePage> */}
-      <WikiEditPage></WikiEditPage>
+      <WikiCreatePage></WikiCreatePage>
+      {/* <WikiEditPage></WikiEditPage> */}
       {/* <ArticleEditPage></ArticleEditPage> */}
     </>
   );

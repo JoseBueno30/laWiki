@@ -45,7 +45,8 @@
     "edit-wiki": "Éditer le wiki",
     "wiki-search-placeholder": "rechercher des wikis",
     "new-article": "Nouvel Article",
-    "article-search-placeholder": "rechercher des articles"
+    "article-search-placeholder": "rechercher des articles",
+    "wiki-image": "Image"
   },
 
   "article": {

@@ -90,6 +90,17 @@
     line-height: 28px;
     margin-bottom: 4px;
 }
+
+.image-preview-container{
+    margin-top: 20px;
+}
+
+.image-preview{
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid white;
+}
   
   
 
