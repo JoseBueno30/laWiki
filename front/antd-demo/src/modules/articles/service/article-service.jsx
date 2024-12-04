@@ -25,9 +25,36 @@ const ArticleService = () =>{
         }
     }
 
+    const getArticleVersionByID = async (articleVersionId, lan) =>{
+        try{
+            const params = new URLSearchParams({lan: lan})
+            const url = `v1/articles/versions/${articleVersionId}?${params.toString()}`
+
+            const response = await APIGateway.get(url)
+            return response
+        }catch(error){
+            console.error("ArticleService.getArticleVersionByID:", error)
+            return Promise.reject(error)
+        }
+    }
+
+    const restoreArticleVersion = async (articleId, versionId) =>{
+        try{
+            const url = `v1/articles/${articleId}/versions/${versionId}`
+
+            const response = await APIGateway.put(url)
+            return response
+        }catch(error){
+            console.error("ArticleService.getArticleVersionByID:", error)
+            return Promise.reject(error)
+        }
+    }
+
     return {
         getArticleVersionByName,
-        getArticleVersionsByArticleID
+        getArticleVersionsByArticleID,
+        getArticleVersionByID,
+        restoreArticleVersion
     }
 }
 

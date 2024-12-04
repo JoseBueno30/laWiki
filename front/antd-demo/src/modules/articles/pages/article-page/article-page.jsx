@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import {Button, Flex, Grid, Select, Spin} from "antd";
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, ReloadOutlined} from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
 import RatingsSection from '../../../ratings/components/ratings-section';
 import UserAvatar from '../../../wiki/components/avatar/user-avatar';
@@ -60,17 +60,18 @@ const ArticlePage = () => {
       // AÑADIR PROP DE ARTICULO -> SI ES NULO BUSCAR CON LA URL Y SIN LENGUAJE
 
       const articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
-      const version_response = await ArticleService().getArticleVersionByName(/*"672c8721ba3ae42bd5985361"*/wiki.wiki_info.id, articleName, locale) 
+      const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, locale) 
       setArticleVersion(version_response)
     }
     fetchArticleVersion()
   }, [wiki])
 
+  const fetchVersions = async () =>{
+    const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
+    setVersions(versions_response.article_versions)
+  }
+
   useEffect(() =>{
-    const fetchVersions = async () =>{
-      const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
-      setVersions(versions_response.article_versions)
-    }
 
     const fetchUserRating = async () =>{
       const userRating_response = await RatingService().getUserRatingInArticle(user.id, articleVersion.article_id);
@@ -112,6 +113,11 @@ const ArticlePage = () => {
     return simplifiedVersions;
   }
 
+  const loadVersion = async (versionId, _) =>{
+    const version_response = await ArticleService().getArticleVersionByID(versionId, locale)
+    setArticleVersion(version_response)
+  }
+
   const updateRating = async (newRatingValue) =>{
     let rating_response
     console.log("NUEVO RATING", newRatingValue)
@@ -139,6 +145,11 @@ const ArticlePage = () => {
     setComments(comments_response)
   }
 
+  const restoreArticleVersion = async () =>{
+    const restore_response = await ArticleService().restoreArticleVersion(articleVersion.article_id, articleVersion.id)
+    fetchVersions()
+  }
+
   return (
     loading ?
     <Spin className='loading-article-page' size='large'></Spin>
@@ -153,10 +164,17 @@ const ArticlePage = () => {
             <UserAvatar image={article.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
                     
-          <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id}></Select> 
-          <Button title='Editar' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
-            {t('article.edit-article-button')}
-          </Button>
+          <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 
+          {articleVersion.id == versions[0].id ? 
+            <Button title='Edit' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
+              {t('article.edit-article-button')}
+            </Button >
+            :
+            <Button title='Restore' icon={<ReloadOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={restoreArticleVersion}>
+            {"Restore"}
+            </Button>
+          }
+          
         </Flex>
         
       </Flex>
