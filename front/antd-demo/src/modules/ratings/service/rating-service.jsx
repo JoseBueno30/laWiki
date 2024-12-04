@@ -27,12 +27,13 @@ const RatingService = () =>{
         }
     }
 
-    const updateArticleRating = async (articleId, newRatingObject) =>{
+    const updateArticleRating = async (articleId, authorId, value) =>{
         try{
-            const params = new URLSearchParams(newRatingObject);
+            const params ={
+                author_id: authorId,
+                value: value
+            };
             const url = `/v1/ratings/articles/${articleId}`
-
-            console.log("PARAMS",newRatingObject)
 
             const response = await APIGateway.put(url, params)
             return response
@@ -44,10 +45,10 @@ const RatingService = () =>{
 
     const createArticleRating = async (articleId, authorId, value) =>{
         try{
-            const params = new URLSearchParams({
+            const params ={
                 author_id: authorId,
                 value: value
-            });
+            };
             const url = `/v1/ratings/articles/${articleId}`
 
             const response = await APIGateway.post(url, params)
@@ -57,9 +58,21 @@ const RatingService = () =>{
             return Promise.reject(error)
         }
     }
+
+    const deleteRating = async (ratingId) =>{
+        try{
+            const url = `/v1/ratings/${ratingId}`
+        
+            const response = await APIGateway.delete(url)
+            return response
+        }catch(error){
+            console.error("RatingService.deleteRating:", error)
+            return Promise.reject(error)
+        }
+    }
     
     return{
-        getArticleRatings, getUserRatingInArticle, updateArticleRating, createArticleRating
+        getArticleRatings, getUserRatingInArticle, updateArticleRating, createArticleRating, deleteRating
     }
 }
 

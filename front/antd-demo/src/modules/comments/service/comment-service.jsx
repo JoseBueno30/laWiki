@@ -8,6 +8,10 @@ const CommentService = () =>{
                 limit: limit,
                 offset: offset
             })
+            if (creationDate != null){
+                params.append("creation_date", creationDate)
+            }
+
             const url = `/v1/comments/articles/${articleId}?${params.toString()}`
             
             const response = await APIGateway.get(url);

@@ -27,7 +27,6 @@ const RatingsSection = ({ratings, total_ratings, avg_rating, updateRatingFunc, u
         <Flex vertical style={{ maxWidth: "300px", minWidth: (screen.md ? "26dvw": (screen.sm ? "200px" : "100%")), margin: "1em" }}>
             <Space direction="vertical" size='small'>
                 <Title level={4}>Your rating</Title>
-                {/* {console.log("USERRATING ?",rating, "vs",user_value)} */}
                 <Rate value={rating} onChange={updateRating}/>
             </Space>
             <RatingsList avg_rating={avg_rating} total_ratings={total_ratings} ratings={ratings} />

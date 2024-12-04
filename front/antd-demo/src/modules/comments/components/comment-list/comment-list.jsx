@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import './comment-list.css';
-import { CommentOutlined, SortAscendingOutlined, ControlOutlined} from '@ant-design/icons';
+import { CommentOutlined, SortAscendingOutlined, ControlOutlined, SearchOutlined} from '@ant-design/icons';
 import { Flex, Space, Typography, Radio, DatePicker, Button} from 'antd';
 import CommentInput from '../comment-input/comment-input';
 import Comment from '../comment/comment';
 import { Pagination } from 'antd';
 
+const dateFormat = "YYYY/MM/DD";
 
 const {Text, _ } = Typography
 const {RangePicker} = DatePicker
@@ -23,7 +24,6 @@ const options = [
 ];
 
 const CommentList = ({commentsObject, user, fetchFunc}) => {
-  // console.log("COMMENT LIST", comments)
 
   const [commentList, setCommentList] = useState(commentsObject.comments)
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,19 +34,30 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
     setCommentList(commentsObject.comments)
   },[commentsObject])
 
-  const handlePaginationChange = (page, PageSize) =>{
+  const handlePaginationChange = (page, _) =>{
     setCurrentPage(page)
-    fetchFunc((page-1) * commentsObject.limit, order, null)
+    fetchFunc((page-1) * commentsObject.limit, order, dateRange)
   }
 
   const handleOrderChange = (e) =>{
-    print(e.target.value)
+    setCurrentPage(1)
     setOrder(e.target.value)
-    fetchFunc(0, e.target.value, null)
+    fetchFunc(0, e.target.value, dateRange)
   }
 
-  const handleDateRangeChange = (e) =>{
+  const generateDateRange = (startDate, endDate) =>
+    startDate && endDate
+      ? `${startDate}-${endDate}`
+      : startDate
+      ? `${startDate}`
+      : endDate
+      ? `${endDate}`
+      : null;
 
+  const handleDateRangeChange = (_, time) =>{
+    const range = generateDateRange(time[0], time[1])
+    setDateRange(range)
+    fetchFunc(0, order, range)
   }
 
   return (
@@ -71,7 +82,11 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
               <ControlOutlined className='icon comment-list-son'/>
               <Text className='comment-list-son' strong>Filter</Text>
               <Text className='comment-list-son'>Date Range</Text>
-              <RangePicker  allowEmpty={[true, true]}/>
+              <Space.Compact>
+                <RangePicker format={dateFormat} allowEmpty={[true, true]} onChange={handleDateRangeChange}/>
+                {/* <Button icon={<SearchOutlined/>}></Button> */}
+              </Space.Compact>
+              
           </Space>
         </div>
         {
@@ -79,10 +94,9 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
             <Comment key={index} comment={element}></Comment>
           ))
         }
-        {console.log(commentsObject)}
         <Flex align='center' justify='center' gap={3}>
           {commentsObject.comments.length > 0 ? 
-            <Pagination size='small' gap={3} pageSize={3} defaultCurrent={currentPage} total={commentsObject.total} onChange={handlePaginationChange}/> 
+            <Pagination size='small' gap={3} pageSize={3} defaultCurrent={currentPage} current={currentPage} total={commentsObject.total} onChange={handlePaginationChange}/> 
             : ""
           }
         </Flex>
