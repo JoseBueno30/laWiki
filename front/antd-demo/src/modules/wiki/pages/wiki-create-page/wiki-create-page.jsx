@@ -24,8 +24,9 @@ const WikiCreatePage = () => {
   const [newTag, setNewTag] = useState("");
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [isInputVisible, setIsInputVisible] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [creatingWiki, setCreatingWiki] = useState(false);
   const { locale } = useContext(SettingsContext);
-
   const { t } = useTranslation();
 
   const createTags = async (wikiId) => {
@@ -43,6 +44,7 @@ const WikiCreatePage = () => {
 
   const createWikiFunction = async () => {
     try {
+      setCreatingWiki(true);
       const newWiki = {
         name: wikiData.title,
         description: wikiData.description,
@@ -62,6 +64,8 @@ const WikiCreatePage = () => {
     } catch (error) {
       console.error("Error creating wiki:", error);
       message.error(t("wikis.wiki-create-failure"));
+    } finally {
+      setCreatingWiki(false);
     }
   };
 
@@ -83,6 +87,7 @@ const WikiCreatePage = () => {
 
   const customRequest = async ({ file, onSuccess, onError }) => {
     try {
+      setLoadingImage(true);
       const image_url = await uploadImage(file);
       setImage(image_url);
       message.success(t("wikis.image-upload-success"));
@@ -91,6 +96,8 @@ const WikiCreatePage = () => {
       console.error("Error uploading image:", error);
       message.error(t("wikis.image-upload-failure"));
       onError(error);
+    } finally {
+      setLoadingImage(false);
     }
   };
 
@@ -134,7 +141,6 @@ const WikiCreatePage = () => {
                 {tag.tag}
               </Tag>
             ))}
-
             {isInputVisible ? (
               <Input
                 size="small"
@@ -158,15 +164,9 @@ const WikiCreatePage = () => {
           </div>
         </div>
         <div className="image-preview-container create-wiki-item">
-          <label className="create-wiki-label">
-            {t("wikis.wiki-image")}
-          </label>
+          <label className="create-wiki-label">{t("wikis.wiki-image")}</label>
           <div>
-            <img
-              className="image-preview"
-              src={image}
-              alt="Preview"
-            />
+            <img className="image-preview" src={image} alt="Preview" />
           </div>
         </div>
         <div className="create-wiki-item">
@@ -176,18 +176,25 @@ const WikiCreatePage = () => {
             showUploadList={false}
             accept="image/*"
           >
-            <Button icon={<UploadOutlined />}>
-              {t("common.upload-image-button")}
+            <Button
+              icon={<UploadOutlined />}
+              loading={loadingImage}
+              iconPosition="end"
+            >
+              {loadingImage ? t("common.loading-button") : t("common.upload-image-button")}
             </Button>
           </Upload>
         </div>
         <div className="create-wiki-buttons-section">
-          <Button type="primary" onClick={createWikiFunction}>
-            {t("common.create-button", { type: "Wiki" })}
+          <Button
+            type="primary"
+            onClick={createWikiFunction}
+            loading ={creatingWiki}
+            iconPosition="end"
+          >
+            {creatingWiki ? t("common.creating-button", { type: "Wiki" }) : t("common.create-button", { type: "Wiki" })}
           </Button>
-          <Button onClick={() => navigate("/")}>
-            {t("common.cancel-button")}
-          </Button>
+          <Button onClick={() => navigate("/")}>{t("common.cancel-button")}</Button>
         </div>
       </div>
     </section>

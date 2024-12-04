@@ -22,7 +22,10 @@
     "cancel-button": "Cancel",
     "delete-button": "Delete {{type}}",
     "upload-image-button": "Upload image",
-    "create-button": "Create {{type}}"
+    "create-button": "Create {{type}}",
+    "loading-button": "Loading",
+    "creating-button": "Creating {{type}}",
+    "saving-button": "Saving {{type}}"
   },
 
   "header": {

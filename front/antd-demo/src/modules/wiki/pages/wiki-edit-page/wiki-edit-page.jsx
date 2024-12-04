@@ -17,6 +17,8 @@ const DEFAULT_IMAGE = "https://via.placeholder.com/400x300?text=Default+Image";
 const WikiEditPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [savingWiki, setSavingWiki] = useState(false);
   const [wikiData, setWikiData] = useState({
     title: "",
     description: "",
@@ -59,8 +61,7 @@ const WikiEditPage = () => {
 
   const saveWikiData = async () => {
     try {
-      setLoading(true);
-
+      setSavingWiki(true);
       const newTags = tags.filter((tag) => !tag.id);
       const deletedTags = originalTags.filter(
         (origTag) => !tags.some((tag) => origTag.id === tag.id)
@@ -92,11 +93,12 @@ const WikiEditPage = () => {
       console.error("Error saving wiki data:", error);
       message.error(t("wikis.wiki-edit-failure"));
     } finally {
-      setLoading(false);
+      setSavingWiki(false);
     }
   };
 
   const customRequest = async ({ file, onSuccess, onError }) => {
+    setLoadingImage(true);
     try {
       const imageUrl = await uploadImage(file);
       setImage(imageUrl);
@@ -106,6 +108,8 @@ const WikiEditPage = () => {
       console.error("Error uploading image:", error);
       message.error(t("wikis.image-upload-failure"));
       onError(error);
+    } finally {
+      setLoadingImage(false);
     }
   };
 
@@ -226,15 +230,21 @@ const WikiEditPage = () => {
                 showUploadList={false}
                 accept="image/*"
               >
-                <Button icon={<UploadOutlined />}>
-                  {t("common.upload-image-button")}
+                <Button 
+                  icon={<UploadOutlined />} 
+                  loading={loadingImage}
+                  iconPosition="end">
+                  {loadingImage ? t("common.loading-button") : t("common.upload-image-button")}
                 </Button>
               </Upload>
             </div>
 
             <div className="edit-wiki-buttons-section">
-              <Button type="primary" onClick={saveWikiData}>
-                {t("common.save-button", { type: "Wiki" })}
+              <Button type="primary" 
+                onClick={saveWikiData} 
+                loading={savingWiki}
+                iconPosition="end">
+                {savingWiki ? t("common.saving-button", { type: "Wiki" }) : t("common.save-button", { type: "Wiki" })}
               </Button>
               <Button onClick={() => navigate("/")}>
                 {t("common.cancel-button")}
