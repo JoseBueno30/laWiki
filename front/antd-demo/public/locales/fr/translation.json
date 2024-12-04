@@ -54,8 +54,8 @@
     "global-rating-value": "{{value}} sur 5",
     "global-rating-header": "Note des autres lecteurs",
     "global-rating-count": "{{count}} notes globales",
-    "num-stars": "{{count}} étoile",
-    "num-stars_plural": "{{count}} étoiles"
+    "num-stars_one": "{{count}} étoile",
+    "num-stars_other": "{{count}} étoiles"
   },
 
   "edit": {
