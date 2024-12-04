@@ -1,23 +1,29 @@
 
 import React from 'react';
-import { Card, Rate } from 'antd';
+import { Card, Rate, Image } from 'antd';
 import './wiki-card-item.css';
+import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
 
-const WikiCardItem = ({title, description, rating, image}) => {
+const WikiCardItem = ({wiki}) => {
+  const navigate = useNavigate();
+  const navigateToWiki = () => {
+    let newTitle = wiki.name.replace(/\s+/g, '_');
+    navigate("/wikis/" + newTitle);
+  };
   return (
     <>
-      <Card hoverable style={{ width: 360 }}>
-        <div className='wiki-image-container'>
-          <img className='wiki-image' alt={title} src={image} />
-        </div>
-        <Meta title={title} description={description} />
-        <div className='rating-container'>
-          {rating}
-          <Rate style={{ marginLeft: 10}} disabled allowHalf value={rating} />
-        </div>
-      </Card>
+        <Card hoverable style={{ width: 360 }} onClick={() => navigateToWiki()}>
+          <div className='wiki-image-container'>
+            <Image preview={false} className='wiki-image' alt={wiki.image} src={wiki.image ?? ""} height={200} width={"auto"} />
+          </div>
+          <Meta title={wiki.name} description={wiki.description} />
+          <div className='rating-container'>
+            {parseFloat(wiki.rating.toFixed(2))}
+            <Rate style={{ marginLeft: 10}} disabled allowHalf value={wiki.rating} />
+          </div>
+        </Card>
     </>
   );
 };

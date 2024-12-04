@@ -53,7 +53,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
   });
 
   const { locale } = useContext(SettingsContext);
-  const { t } = useTranslation("header");
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const toggleSearchHeader = () => {
@@ -97,7 +97,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
       {showSearchHeader ? (
         <>
           <div className="header-title-container">
-            <Link to="/" reloadDocument>
+            <Link to="/" >
               <Title level={3} className="header-title wiki-title">
                 LaWiki
               </Title>
@@ -107,7 +107,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
             <Title level={3} className="header-title">
               /
             </Title>
-            <Link to={`/wikis/${wiki_name}`} reloadDocument>
+            <Link to={`/wikis/${wiki_name}`} >
               <Title level={3} className="header-title wiki-title">
                 {wiki.name[locale]}
               </Title>
@@ -116,7 +116,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
 
           <div className="header-tools">
             <SearchInput
-              searchPlaceholder={t("article-search-placeholder")}
+              searchPlaceholder={t("wikis.article-search-placeholder")}
               toggleHeader={toggleSearchHeader}
               query={searchQuery}
               setQuery={setSearchQuery}
@@ -130,7 +130,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
               searchFunction={searchHandler}
             />
             <Link to={`/wikis/${wiki_name}/articles/new`}>
-              <CreateButton text={t("new-article")} />
+              <CreateButton text={t("wikis.new-article")} />
             </Link>
             <Badge count={9} size="large">
               <div
@@ -154,7 +154,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
         </>
       ) : (
         <CompactSearchInput
-          searchPlaceholder={t("article-search-placeholder")}
+          searchPlaceholder={t("wikis.article-search-placeholder")}
           query={searchQuery}
           setQuery={setSearchQuery}
           toggleHeader={toggleSearchHeader}

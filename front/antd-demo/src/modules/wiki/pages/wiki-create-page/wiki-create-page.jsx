@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Input, Button, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
+import { Tag, Input, Button, message, Upload } from "antd";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import "./wiki-create-page.css";
+import WikiService from "../../service/wiki-service";
+import SettingsContext from "../../../../context/settings-context";
+import { uploadImage } from "../../../articles/service/article_service";
 
+const { createWiki, createWikiTag } = WikiService();
 const { TextArea } = Input;
+
+const DEFAULT_IMAGE = "https://via.placeholder.com/400x300?text=Default+Image";
 
 const WikiCreatePage = () => {
   const navigate = useNavigate();
@@ -16,51 +22,50 @@ const WikiCreatePage = () => {
   });
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
+  const [image, setImage] = useState(DEFAULT_IMAGE);
   const [isInputVisible, setIsInputVisible] = useState(false);
-  const [language, setLanguage] = useState("es");
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [creatingWiki, setCreatingWiki] = useState(false);
+  const { locale } = useContext(SettingsContext);
+  const { t } = useTranslation();
 
   const createTags = async (wikiId) => {
     try {
       const tagCreationPromises = tags.map((tag) =>
-        axios.post(`http://localhost:3000/v1/tags/wikis/${wikiId}`, {
-          tag: tag.tag,
-          translation: true,
-          lan: language,
-        })
+        createWikiTag(wikiId, tag.tag, locale)
       );
       await Promise.all(tagCreationPromises);
-      message.success("Tags created successfully!");
+      message.success(t("wikis.tags-create-success"));
     } catch (error) {
       console.error("Error creating tags:", error);
-      message.error("Failed to create tags.");
+      message.error(t("wikis.tags-create-failure"));
     }
   };
 
-  const createWiki = async () => {
+  const createWikiFunction = async () => {
     try {
+      setCreatingWiki(true);
       const newWiki = {
         name: wikiData.title,
         description: wikiData.description,
         author: "DefaultAuthor",
-        lang: language,
-        image: "DefaultImage",
+        lang: locale,
+        image: image,
         translate: true,
       };
 
-      const response = await axios.post("http://localhost:3000/v1/wikis", newWiki);
-      const wikiId = response.data.id;
-      console.log(wikiId);
-
-      message.success("Wiki created successfully!");
-
+      const response = await createWiki(newWiki);
+      const wikiId = response.id;
+      message.success(t("wikis.wiki-create-success"));
       if (tags.length > 0) {
         await createTags(wikiId);
       }
-
-      navigate("/");
+      navigate(`/wikis/${newWiki.name.replace(/ /g, "_")}`);
     } catch (error) {
       console.error("Error creating wiki:", error);
-      message.error("Failed to create wiki.");
+      message.error(t("wikis.wiki-create-failure"));
+    } finally {
+      setCreatingWiki(false);
     }
   };
 
@@ -70,7 +75,7 @@ const WikiCreatePage = () => {
 
   const addTag = () => {
     if (newTag.trim() && !tags.some((t) => t.name === newTag)) {
-      setTags([...tags, { id: null, name: newTag }]);
+      setTags([...tags, { id: null, tag: newTag }]);
       setNewTag("");
       setIsInputVisible(false);
     }
@@ -80,13 +85,29 @@ const WikiCreatePage = () => {
     setTags(tags.filter((tag) => tag.tag !== tagToRemove));
   };
 
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    try {
+      setLoadingImage(true);
+      const image_url = await uploadImage(file);
+      setImage(image_url);
+      message.success(t("wikis.image-upload-success"));
+      onSuccess();
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      message.error(t("wikis.image-upload-failure"));
+      onError(error);
+    } finally {
+      setLoadingImage(false);
+    }
+  };
+
   return (
     <section className="create-wiki-section">
       <div className="create-wiki-container">
-        <h1>Create New Wiki</h1>
+        <h1>{t("wikis.new-wiki")}</h1>
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-title" className="create-wiki-label">
-            Title
+            {t("edit.title-label")}
           </label>
           <Input
             id="create-wiki-title"
@@ -94,10 +115,9 @@ const WikiCreatePage = () => {
             onChange={(e) => updateField("title", e.target.value)}
           />
         </div>
-
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-description" className="create-wiki-label">
-            Description
+            {t("edit.description-label")}
           </label>
           <TextArea
             id="create-wiki-description"
@@ -106,10 +126,9 @@ const WikiCreatePage = () => {
             autoSize={{ minRows: 6, maxRows: 10 }}
           />
         </div>
-
         <div className="create-wiki-item">
           <label htmlFor="create-wiki-tags" className="create-wiki-label">
-            Tags
+            {t("common.tags-header")}
           </label>
           <div className="tags-section create-wiki-textarea">
             {tags.map((tag) => (
@@ -122,7 +141,6 @@ const WikiCreatePage = () => {
                 {tag.tag}
               </Tag>
             ))}
-
             {isInputVisible ? (
               <Input
                 size="small"
@@ -130,7 +148,7 @@ const WikiCreatePage = () => {
                 onChange={(e) => setNewTag(e.target.value)}
                 onPressEnter={addTag}
                 onBlur={addTag}
-                placeholder="New Tag"
+                placeholder={t("common.tags-newtag")}
                 className="tag-input"
               />
             ) : (
@@ -140,17 +158,43 @@ const WikiCreatePage = () => {
                 onClick={() => setIsInputVisible(true)}
                 className="add-tag-button"
               >
-                New Tag
+                {t("common.tags-newtag")}
               </Button>
             )}
           </div>
         </div>
-
+        <div className="image-preview-container create-wiki-item">
+          <label className="create-wiki-label">{t("wikis.wiki-image")}</label>
+          <div>
+            <img className="image-preview" src={image} alt="Preview" />
+          </div>
+        </div>
+        <div className="create-wiki-item">
+          <Upload
+            customRequest={customRequest}
+            multiple={false}
+            showUploadList={false}
+            accept="image/*"
+          >
+            <Button
+              icon={<UploadOutlined />}
+              loading={loadingImage}
+              iconPosition="end"
+            >
+              {loadingImage ? t("common.loading-button") : t("common.upload-image-button")}
+            </Button>
+          </Upload>
+        </div>
         <div className="create-wiki-buttons-section">
-          <Button type="primary" onClick={createWiki}>
-            Create Wiki
+          <Button
+            type="primary"
+            onClick={createWikiFunction}
+            loading ={creatingWiki}
+            iconPosition="end"
+          >
+            {creatingWiki ? t("common.creating-button", { type: "Wiki" }) : t("common.create-button", { type: "Wiki" })}
           </Button>
-          <Button onClick={() => navigate("/")}>Cancel</Button>
+          <Button onClick={() => navigate("/")}>{t("common.cancel-button")}</Button>
         </div>
       </div>
     </section>

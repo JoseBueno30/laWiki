@@ -2,13 +2,13 @@
     display: flex;
     align-content: center;
     justify-content: center;
-    height: 200px;
-    max-width: 360px;
+    width: auto;
+    padding-bottom: 10px;
 }
 
 .wiki-image {
     object-fit: cover;
-    padding: 10px;
+    z-index: 10;
 }
 
 .rating-container {

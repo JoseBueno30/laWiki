@@ -1,0 +1,95 @@
+{
+  "common": {
+    "order-header": "Commande",
+    "order-recent": "Récent",
+    "order-oldest": "Ancien",
+    "order-popular": "Populaire",
+    "order-unpopular": "Impopulaire",
+    "filter-header": "Filtrer",
+    "tags-header": "Tags",
+    "tags-addtag": "Ajouter un tag",
+    "tags-newtag": "Nouveau tag",
+    "daterange-header": "Plage de dates",
+    "author-header": "Auteur",
+    "author-placeholder": "nom de l'auteur",
+    "editor-header": "Éditeur",
+    "editor-placeholder": "nom de l'éditeur",
+
+    "next-page": "Page suivante",
+    "previous-page": "Page précédente",
+
+    "save-button": "Enregistrer {{type}}",
+    "cancel-button": "Annuler",
+    "delete-button": "Supprimer {{type}}",
+    "upload-image-button": "Télécharger l'image",
+    "create-button": "Créer {{type}}",
+    "loading-button": "Chargement",
+    "creating-button": "création d'un {{type}}",
+    "saving-button": "Sauver {{type}}"
+  },
+
+  "header": {
+    "profile-link": "Voir le profil",
+    "theme-menu": "Thème : {{theme}}",
+    "theme-light": "Clair",
+    "theme-dark": "Sombre",
+    "notifications-menu": "Notifications : {{notifications}}",
+    "notifications-email": "Email",
+    "notifications-afterlogin": "Après connexion",
+    "language-menu": "Langue : {{language}}",
+    "language-en": "Anglais",
+    "language-es": "Espagnol",
+    "language-fr": "Français",
+    "logout-link": "Se déconnecter"
+  },
+
+  "wikis": {
+    "new-wiki": "Nouvelle Wiki",
+    "edit-wiki": "Modifier Wiki",
+    "wiki-search-placeholder": "chercher des wikis",
+    "new-article": "Nouvel Article",
+    "edit-wiki-button": "Modifier ce wiki",
+    "highest-rated-wikis": "Wikis les mieux notés",
+    "article-search-placeholder": "chercher des articles",
+    "wiki-image": "Image",
+    "tags-create-success": "Étiquette créée avec succès",
+    "tags-create-failure": "Erreur lors de la création de l'étiquette",
+    "tags-delete-success": "Étiquette supprimée avec succès",
+    "tags-delete-failure": "Erreur lors de la suppression de l'étiquette",
+    "wiki-create-success": "Wiki créée avec succès",
+    "wiki-create-failure": "Erreur lors de la création de la wiki",
+    "wiki-delete-success": "Wiki supprimée avec succès",
+    "wiki-delete-failure": "Erreur lors de la suppression de la wiki",
+    "wiki-edit-success": "Wiki modifiée avec succès",
+    "wiki-edit-failure": "Erreur lors de la modification de la wiki",
+    "image-upload-success": "Image téléchargée avec succès",
+    "image-upload-failure": "Erreur lors du téléchargement de l'image"
+  },
+
+  "article": {
+    "edit-article-button": "Modifier cet article",
+    "comments-header": "Commentaires ({{count}})",
+    "post-comment-button": "Poster un commentaire",
+    "recent-articles": "Articles récents",
+    "highest-rated-articles": "Articles les mieux notés",
+    "user-rating-header": "Votre note",
+    "global-rating-value": "{{value}} sur 5",
+    "global-rating-header": "Note des autres lecteurs",
+    "global-rating-count": "{{count}} notes globales",
+    "num-stars_one": "{{count}} étoile",
+    "num-stars_other": "{{count}} étoiles"
+  },
+
+  "edit": {
+    "edit-header": "Modifier les informations de {{type}}",
+    "title-label": "Titre",
+    "description-label": "Description",
+    "body-label": "Corps"
+  },
+
+  "search": {
+    "search-results": "Résultats de recherche pour : {{query}}",
+    "search-description": "Total : {{total}} - Filtres : {{filters}}",
+    "search-noresults": "Aucun résultat trouvé"
+  }
+}

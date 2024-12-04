@@ -7,8 +7,6 @@ import ArticleList from "./modules/articles/components/article-list/article-list
 import EditWikiPage from "./modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import ArticleEditPage from "./modules/articles/pages/edit-article-page/edit-article-page";
 import WikiCreatePage from "./modules/wiki/pages/wiki-create-page/wiki-create-page";
-import RatingsList from "./modules/articles/components/ratings-list";
-import RatingsSection from "./modules/articles/components/ratings-section";
 
 const TestRoute = () => {
   const { colorTheme, toggleTheme } = useContext(SettingsContext);
@@ -24,6 +22,7 @@ const TestRoute = () => {
       <RatingsSection/> */}
       <WikiCreatePage></WikiCreatePage>
       {/* <WikiEditPage></WikiEditPage> */}
+      {/* <ArticleEditPage></ArticleEditPage> */}
     </>
   );
 };

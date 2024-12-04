@@ -3,9 +3,12 @@ import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
 import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
+import ArticlePage from "../modules/articles/pages/article-page/article-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
 import EditArticlePage from "../modules/articles/pages/edit-article-page/edit-article-page";
 import CreateArticlePage from "../modules/articles/pages/create-article-page/create-article-page";
+import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
+import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 
 // The structure of the application's routes
 
@@ -28,22 +31,23 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "", element: <EditArticlePage /> }, // Página principal
+      // { path: "", element: <WikiRecommendationPage /> }, // Página principal
       {
         path: "wikis",
         children: [
           { path: "search", element: <TestRoute /> }, // Buscar wikis
-          { path: "new", element: <TestRoute /> }, // Crear wiki
+          { path: "new", element: <WikiCreatePage /> }, // Crear wiki
           {
             path: ":wiki_name",
             children: [
               { path: "", element: <WikiMainPage /> }, // Página principal de la wiki
-              { path: "edit", element: <TestRoute /> }, // Editar wiki
+              { path: "edit", element: <WikiEditPage /> }, // Editar wiki
               { path: "search", element: <ArticlesSearchResultPage /> }, // Buscar artículos en la wiki
               {
                 path: "articles",
                 children: [
                   { path: "new", element: <CreateArticlePage /> }, // Crear artículo
-                  { path: ":article_name", element: <TestRoute /> }, // Ver artículo
+                  { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
                   { path: ":article_name/edit", element: <EditArticlePage /> }, // Editar artículo
                 ],
               },

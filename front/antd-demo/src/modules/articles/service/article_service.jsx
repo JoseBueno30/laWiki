@@ -12,7 +12,7 @@ const uploadImage = async(file) =>{
             },
         });
 
-        return response.data.url
+        return response.url
     } catch (error) {
         throw new Error('Error uploading file: ' + error.message);
     }

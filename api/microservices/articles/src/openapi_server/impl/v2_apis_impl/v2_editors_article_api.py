@@ -267,4 +267,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         if version_ids_to_delete:
             await mongodb["article_version"].delete_many({"_id": {"$in": version_ids_to_delete}})
 
+        for id_version in version_ids_to_delete:
+            await _delete_article_translation(id_version)
+
         return None

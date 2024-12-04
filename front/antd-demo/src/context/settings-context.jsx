@@ -1,9 +1,10 @@
 import { ConfigProvider, theme } from "antd";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import enUS from 'antd/es/locale/en_US';
 import esES from 'antd/es/locale/es_ES';
 import frFR from 'antd/es/locale/fr_FR';
 import i18n from "../i18n";
+import { use } from "i18next";
 
 export const SettingsContext = createContext();
 
@@ -16,6 +17,13 @@ const locales = {
 export const SettingsProvider = ({ children }) => {
   const [colorTheme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [locale, setLocale] = useState(localStorage.getItem("locale") || "en");
+
+  useEffect(() => {
+    if(!localStorage.getItem("locale")) {
+      localStorage.setItem("locale", "en");
+    }
+    i18n.changeLanguage(localStorage.getItem("locale"));
+  }, []);
 
   const toggleTheme = (newTheme) => {
     if(newTheme === "light" || newTheme === "dark"){

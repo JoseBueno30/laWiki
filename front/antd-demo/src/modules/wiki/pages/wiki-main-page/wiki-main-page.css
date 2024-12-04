@@ -18,7 +18,9 @@
     flex: 75% !important;
     padding-left: 7rem;
     padding-right: 3rem;
+    margin-bottom: 5rem;
     @media screen and (max-width: 768px) {
+        margin-bottom: 0rem;
         flex: 100% !important; 
         text-align: center;
         padding-left: 0rem;
@@ -28,4 +30,13 @@
 
 .wiki-article-recommendation-wrapper {
     width: 100%;
+}
+
+.spinner {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    display: flex;
+    margin-top: 10rem;
+
 }

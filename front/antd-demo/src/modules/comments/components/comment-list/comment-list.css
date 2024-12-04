@@ -8,6 +8,9 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+    @media (max-width: 1040px) {
+        flex-direction: column;
+    }
 }
 
 .comment-list-son{
@@ -18,7 +21,7 @@
 .filter-group{
     margin-left: auto;
 
-    @media (max-width: 690px) {
+    @media (max-width: 1040px) {
         padding-top: 10px;
         margin-left: 0;
     }

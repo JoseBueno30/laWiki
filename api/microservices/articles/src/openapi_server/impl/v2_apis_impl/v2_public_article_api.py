@@ -104,8 +104,14 @@ class PublicArticleAPIV2(BaseV2PublicApi):
             raise Exception
 
         try:
+            if lan:
+                lang = lan
+            else:
+                lang = version_id_pipeline[0]["lan"]
+                
             body_translation = await mongodb["article_translation"].find_one(
-                {"article_version_id": ObjectId(str(version_object_id[0]["_id"]))})
+                {"article_version_id": ObjectId(str(version_object_id[0]["_id"])),
+                 "lan": lang})
             print("traduccion encontrada")
             if body_translation:
                 article_version[0]["body"] = body_translation["body"]

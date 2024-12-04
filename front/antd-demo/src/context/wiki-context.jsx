@@ -21,7 +21,7 @@ export const WikiProvider = ({ children }) => {
   const fetchWiki = async () => {
     try {
       const formattedWikiName = convertUnderscoreToSpace(wiki_name);
-      const wikiData = await getWiki(formattedWikiName, locale);
+      const wikiData = await getWiki(formattedWikiName);
 
       console.log(wikiData);
       setWiki({ wiki_name: wiki_name, wiki_info: wikiData });
@@ -40,7 +40,7 @@ export const WikiProvider = ({ children }) => {
       // wiki y actualiza el estado
       fetchWiki();
     }
-  }, [wiki_name]);
+  }, [wiki_name, locale]);
 
   return (
     <WikiContext.Provider value={{wiki}}>
