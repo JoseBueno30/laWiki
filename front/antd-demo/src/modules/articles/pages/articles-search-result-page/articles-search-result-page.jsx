@@ -105,7 +105,6 @@ const ArticlesSearchResultPage = () => {
   };
 
   useEffect(() => {
-    console.log("USE EFFECT");
     setLoading(true);
     if(wiki.wiki_info!=null){
       searchArticles();

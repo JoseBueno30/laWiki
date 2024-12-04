@@ -56,12 +56,22 @@ const ArticleEditPage = () => {
     }
   };
 
-  const handleCancel = () => setIsModalOpen(false);
+  const handleModalCancel = () => setIsModalOpen(false);
 
   const onMapSave = (wikiTextTag) => {
     setBody(`${body}\n${wikiTextTag}`);
     setIsModalOpen(false);
   };
+
+  const handleCancel = () =>{
+    //navigate to article page
+
+  }
+
+  const handleSaveArticle = () =>{
+    //create new article version and navigate to article page
+
+  }
 
   return (
     <section className="edit-article-section">
@@ -108,7 +118,7 @@ const ArticleEditPage = () => {
           </div>
         </div>
 
-        <Flex align="center" justify="space-evenly" style={{ width: "100%" }}>
+        <Flex align="center" justify="space-evenly" style={{ width: "100%", paddingBottom: 0 }}>
           <div>
             <Button type="primary" onClick={showModal}>
               Insertar mapa
@@ -118,7 +128,7 @@ const ArticleEditPage = () => {
               open={isModalOpen} // Aquí podrías guardar el mapa cuando se pulse OK
               width="80vw" // Ancho personalizado para adaptarse mejor al mapa
               style={{ height: "70vh", overflow: "hidden" }} // Altura ajustada
-              onCancel={handleCancel}
+              onCancel={handleModalCancel}
               destroyOnClose
             >
               <MapConfigurator onSave={onMapSave} />
@@ -136,28 +146,6 @@ const ArticleEditPage = () => {
             </Upload>
           </div>
         </Flex>
-
-        {/* Vista previa de imágenes */}
-        <div className="image-preview-container" style={{ marginTop: "20px" }}>
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="image-preview"
-              style={{ marginBottom: "10px" }}
-            >
-              <img
-                src={image}
-                alt={`Preview ${index}`}
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "8px",
-                  border: "1px solid #ddd",
-                }}
-              />
-            </div>
-          ))}
-        </div>
 
         <div className="edit-article-item">
           <label
@@ -177,11 +165,13 @@ const ArticleEditPage = () => {
         </div>
 
         <div className="edit-article-buttons-section">
-          <Button type="primary">Save article</Button>
-          <Button>Cancel</Button>
-          <Button danger className="right-button">
+          <Button type="primary" onClick={()=>{handleSaveArticle()}}>Save article</Button>
+          <Button onClick={()=>{handleCancel()}}>Cancel</Button>
+
+          {/* TODO: Only allow the author of the article to delete it */}
+          {/* <Button danger className="right-button">
             Delete article
-          </Button>
+          </Button> */}
         </div>
       </div>
     </section>
