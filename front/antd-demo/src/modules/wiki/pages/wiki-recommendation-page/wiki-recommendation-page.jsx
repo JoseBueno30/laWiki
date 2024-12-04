@@ -9,7 +9,7 @@ import WikiService from "../../service/wiki-service";
 const { getRatedWikis } = WikiService();
 
 const WikiRecommendationPage = () => {
-  const { t } = useTranslation('wiki');
+  const { t } = useTranslation();
   const [wikiList, setWikiList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +27,7 @@ const WikiRecommendationPage = () => {
     <>
       <div className="page-wrapper">
         <div className="md-flex">
-          <h1>{t('highest-rated-wikis')}</h1>
+          <h1>{t('wikis.highest-rated-wikis')}</h1>
         </div>
         {loading ? (
           <Spin></Spin>

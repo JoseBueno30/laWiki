@@ -16,7 +16,7 @@ import { searchArticlesWithParams } from '../../../articles/service/article_serv
 const WikiMainPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation('wiki');
+  const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
   const [ratedArticles, setRatedArticles] = useState([]);
   const [recentArticles, setRecentArticles] = useState([]);
@@ -69,13 +69,13 @@ const WikiMainPage = () => {
             <WikiSidebar className="sidebar" wiki={wiki.wiki_info} />
           </Col>
           <Col className='wiki-content-wrapper'>
-            <h2>{t('highest-rated-articles')}</h2>
+            <h2>{t('article.highest-rated-articles')}</h2>
             {ratedArticles && ratedArticles.articles ? (
             <ArticleList articleList={ratedArticles.articles ?? []} />)
             : (
               <Spin></Spin>
             )}
-            <h2>{t('recent-articles')}</h2>
+            <h2>{t('article.recent-articles')}</h2>
             {recentArticles && recentArticles.articles ? (
             <ArticleList articleList={recentArticles.articles ?? []} />)
             : (

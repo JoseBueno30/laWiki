@@ -42,14 +42,17 @@
     "new-wiki": "New Wiki",
     "wiki-search-placeholder": "search for wikis",
     "new-article": "New Article",
-    "article-search-placeholder": "search for articles"
+    "article-search-placeholder": "search for articles",
+    "edit-wiki-button": "Edit this wiki",
+    "highest-rated-wikis": "Highest rated wikis"
   },
 
   "article": {
     "edit-article-button": "Edit this article",
     "comments-header": "Comments ({{count}})",
     "post-comment-button": "Post comment",
-
+    "recent-articles": "Recent articles",
+    "highest-rated-articles": "Highest rated articles",
     "user-rating-header": "Your rating",
     "global-rating-value": "{{value}} of 5",
     "global-rating header": "Other reader's rating",

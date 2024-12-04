@@ -14,7 +14,8 @@ const WikiSidebar = (wiki) => {
   const location = useLocation();
   const navigate = useNavigate();
   wiki = wiki.wiki;
-  const { t } = useTranslation('wiki');
+  const { t } = useTranslation();
+  console.log('wiki :>> ', wiki.image);
 
   return (
     <Sider className='wiki-sidebar'>
@@ -26,7 +27,7 @@ const WikiSidebar = (wiki) => {
           </div>
           <h2>{wiki.title}</h2>
           <span className='wiki-description'>{wiki.description}</span>
-          <Button size='small' icon={<EditOutlined />} iconPosition='start' onClick={() => navigate(location.pathname + "/edit")} className='wiki-description'>{t('edit-wiki-button')}</Button>
+          <Button size='small' icon={<EditOutlined />} iconPosition='start' onClick={() => navigate(location.pathname + "/edit")} className='wiki-description'>{t('wikis.edit-wiki-button')}</Button>
           <div className='user-container'>
             <RoleAvatar image={wiki.author.image} username={wiki.author.name} role='Author'/>
           </div>

@@ -16,7 +16,7 @@ const WikiCardItem = ({wiki}) => {
     <>
         <Card hoverable style={{ width: 360 }} onClick={() => navigateToWiki()}>
           <div className='wiki-image-container'>
-            <Image preview={false} className='wiki-image' alt={wiki.name} src={wiki.image ?? ""} height={200} width={"auto"} />
+            <Image preview={false} className='wiki-image' alt={wiki.image} src={wiki.image ?? ""} height={200} width={"auto"} />
           </div>
           <Meta title={wiki.name} description={wiki.description} />
           <div className='rating-container'>
