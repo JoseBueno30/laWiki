@@ -102,7 +102,7 @@ const CreateArticlePage = () => {
   };
 
   const confirmCancel = (e) => {
-    navigate(location.pathname.replace("/edit", ""));
+    navigate(location.pathname.replace("/articles/new", ""));
   };
 
 
@@ -148,7 +148,7 @@ const CreateArticlePage = () => {
       });
     } finally {
       setLoading(false);
-      navigate((location.pathname.split("/articles")[0]+"/articles/" + title).replace(" ", "_"));
+      navigate(location.pathname.replace("new", title).replace(" ", "_"));
     }
   };
 

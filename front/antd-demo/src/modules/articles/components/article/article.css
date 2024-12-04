@@ -13,9 +13,9 @@
     padding: 5px;
     font-size: 1.3em;
     font-weight: bold;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .article-author{
