@@ -1,11 +1,16 @@
 {
     "edit-header": "Modifier les informations de {{type}}",
+    "edit-article-header": "Modifier les informations sur l'Article",
     "title-label": "Titre",
+    "translate-title": "Traduire Titre",
     "description-label": "Description",
     "tags-label": "Étiquettes",
     "tags-newtag": "Nouvelle étiquette",
+    "tags-selection": "Sélectionnez une étiquette",
+    "insert-map": "Insérer carte",
+    "insert-image": "Insérer image",
     "body-label": "Corps",
-    "save-button": "Enregistrer {{type}}",
+    "save-button": "Enregistrer",
     "cancel-button": "Annuler",
     "delete-button": "Supprimer {{type}}"
 }
