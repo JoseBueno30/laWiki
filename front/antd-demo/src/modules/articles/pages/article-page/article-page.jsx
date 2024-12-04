@@ -125,6 +125,7 @@ const ArticlePage = () => {
       rating_response = await RatingService().createArticleRating(articleVersion.article_id, user.id, newRatingValue)
       setUserRating({rating_object: rating_response, enabled: true})
     }
+    fetchArticleRatings()
   }
 
   const controlCommentsPaginationAndFilters = async (newOffset, order,creation_date) =>{
