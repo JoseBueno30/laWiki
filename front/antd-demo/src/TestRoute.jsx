@@ -24,6 +24,7 @@ const TestRoute = () => {
       <RatingsSection/> */}
       <WikiCreatePage></WikiCreatePage>
       {/* <WikiEditPage></WikiEditPage> */}
+      {/* <ArticleEditPage></ArticleEditPage> */}
     </>
   );
 };

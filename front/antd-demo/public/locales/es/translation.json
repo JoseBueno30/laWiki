@@ -20,7 +20,12 @@
 
     "save-button": "Guardar {{type}}",
     "cancel-button": "Cancelar",
-    "delete-button": "Eliminar {{type}}"
+    "delete-button": "Eliminar {{type}}",
+    "upload-image-button": "Subir imagen",
+    "create-button": "Crear {{type}}",
+    "loading-button": "Cargando",
+    "creating-button": "Creando {{type}}",
+    "saving-button": "Guardando {{type}}"
   },
 
   "header": {
@@ -40,9 +45,23 @@
 
   "wikis": {
     "new-wiki": "Nueva Wiki",
+    "edit-wiki": "Editar Wiki",
     "wiki-search-placeholder": "buscar wikis",
     "new-article": "Nuevo Artículo",
-    "article-search-placeholder": "buscar artículos"
+    "article-search-placeholder": "buscar artículos",
+    "wiki-image": "Imagen",
+    "tags-create-success": "Etiqueta creada con éxito",
+    "tags-create-failure": "Error al crear la etiqueta",
+    "tags-delete-success": "Etiqueta eliminada con éxito",
+    "tags-delete-failure": "Error al eliminar la etiqueta",
+    "wiki-create-success": "Wiki creada con éxito",
+    "wiki-create-failure": "Error al crear la wiki",
+    "wiki-delete-success": "Wiki eliminada con éxito",
+    "wiki-delete-failure": "Error al eliminar la wiki",
+    "wiki-edit-success": "Wiki editada con éxito",
+    "wiki-edit-failure": "Error al editar la wiki",
+    "image-upload-success": "Imagen subida con éxito",
+    "image-upload-failure": "Error al subir la imagen"
   },
 
   "article": {
