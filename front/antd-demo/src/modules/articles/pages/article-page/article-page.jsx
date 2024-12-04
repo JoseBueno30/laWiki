@@ -12,6 +12,7 @@ import CommentService from '../../../comments/service/comment-service';
 import { WikiContext } from '../../../../context/wiki-context';
 import SettingsContext from '../../../../context/settings-context';
 import RatingService from '../../../ratings/service/rating-service';
+import { useTranslation } from 'react-i18next';
 
 const {useBreakpoint} = Grid
 
@@ -31,6 +32,7 @@ const ArticlePage = () => {
 
   const {wiki} = useContext(WikiContext)
   const {locale} = useContext(SettingsContext)
+  const {t} = useTranslation()
 
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
@@ -150,7 +152,7 @@ const ArticlePage = () => {
           
           <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id}></Select> 
           <Button title='Editar' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
-            Editar
+            {t('article.edit-article-button')}
           </Button>
         </Flex>
         
