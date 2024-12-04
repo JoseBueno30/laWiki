@@ -14,5 +14,9 @@
     "body-label": "Body",
     "save-button": "Save",
     "cancel-button": "Cancel",
+    "confirm-cancel": "Cancel",
+    "confirm-cancel-message": "All changes will be discarded. Are you sure to cancel?",
+    "confirm-cancel-yes": "Yes",
+    "confirm-cancel-no": "No",
     "delete-button": "Delete {{type}}"
 }

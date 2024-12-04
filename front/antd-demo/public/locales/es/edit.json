@@ -14,5 +14,9 @@
     "body-label": "Cuerpo",
     "save-button": "Guardar",
     "cancel-button": "Cancelar",
+    "confirm-cancel": "Cancelar",
+    "confirm-cancel-message": "Se descartarán todos los cambios. ¿Seguro que desea cancelar?",
+    "confirm-cancel-yes": "Sí",
+    "confirm-cancel-no": "No",
     "delete-button": "Eliminar {{type}}"
 }

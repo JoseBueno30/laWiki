@@ -77,4 +77,4 @@ const createArticle = async(newArticle) =>{
     }
 }
   
-export {searchArticlesWithParams, searchArticlesWithPaginationURL, uploadImage, getWikiTags, createArticleVersion};
+export {searchArticlesWithParams, searchArticlesWithPaginationURL, uploadImage, getWikiTags, createArticleVersion, createArticle};

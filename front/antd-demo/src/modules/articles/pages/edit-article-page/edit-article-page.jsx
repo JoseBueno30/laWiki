@@ -285,12 +285,12 @@ const EditArticlePage = () => {
               {t("save-button")}
             </Button>
             <Popconfirm
-              title="Cancel"
-              description="All changes will be discarded. Are you sure to cancel?"
+              title={t("confirm-cancel")}
+              description={t("confirm-cancel-message")}
               onConfirm={confirmCancel}
               
-              okText="Yes"
-              cancelText="No"
+              okText={t("confirm-cancel-yes")}
+              cancelText={t("confirm-cancel-no")}
             >
               <Button>{t("cancel-button")}</Button>
             </Popconfirm>

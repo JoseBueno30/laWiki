@@ -14,5 +14,9 @@
     "body-label": "Corps",
     "save-button": "Enregistrer",
     "cancel-button": "Annuler",
+    "confirm-cancel": "Annuler",
+    "confirm-cancel-message": "Toutes les modifications sont ignorées. Êtes-vous sûr de vouloir annuler ?",
+    "confirm-cancel-yes": "Oui",
+    "confirm-cancel-no": "Non",
     "delete-button": "Supprimer {{type}}"
 }
