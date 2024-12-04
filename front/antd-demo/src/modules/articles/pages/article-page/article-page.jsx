@@ -61,12 +61,12 @@ const ArticlePage = () => {
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
       // AÑADIR PROP DE ARTICULO -> SI ES NULO BUSCAR CON LA URL Y SIN LENGUAJE
-
+      console.log("WIKI", wiki)
       const articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
       const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, locale) 
       setArticleVersion(version_response)
     }
-    fetchArticleVersion()
+    if (wiki) fetchArticleVersion()
   }, [wiki])
 
   const fetchVersions = async () =>{
@@ -99,6 +99,12 @@ const ArticlePage = () => {
     }
     
   }, [articleVersion, versions])
+
+  useEffect(() =>{
+    if(articleVersion){
+      changeURL()
+    }
+  }, [locale])
   
   const formatVersions = () => {
     let simplifiedVersions = [] 
@@ -123,7 +129,7 @@ const ArticlePage = () => {
 
   const updateRating = async (newRatingValue) =>{
     let rating_response
-    console.log("NUEVO RATING", newRatingValue)
+    // console.log("NUEVO RATING", newRatingValue)
     if(newRatingValue == 0){
       rating_response = await RatingService().deleteRating(userRating.rating_object.id)
       setUserRating({rating_object: null, enabled: false})
@@ -152,7 +158,7 @@ const ArticlePage = () => {
     const newPart = articleVersion.title[locale];
     const sanitizedNewPart = newPart.replace(/ /g, "_");
 
-    const urlObj = new URL(url);
+    const urlObj = new URL(window.location);
     const pathParts = urlObj.pathname.split("/");
     pathParts[pathParts.length - 1] = sanitizedNewPart;
     urlObj.pathname = pathParts.join("/");
@@ -198,8 +204,6 @@ const ArticlePage = () => {
         
       </Flex>
       <div className='article-body-container'>
-        // PONER JPARSER
-        // <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
         <JsxParser 
         components={{MapView}}
         jsx={articleVersion.body}/>

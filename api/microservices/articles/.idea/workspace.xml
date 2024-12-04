@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-page/article-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-page/article-page.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/service/article-service.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/service/article-service.jsx" afterDir="false" />
-    </list>
+    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +63,7 @@
       <workItem from="1733159387907" duration="9851000" />
       <workItem from="1733221682996" duration="117000" />
       <workItem from="1733238525455" duration="652000" />
-      <workItem from="1733333907772" duration="1405000" />
+      <workItem from="1733333907772" duration="2013000" />
     </task>
     <servers />
   </component>
