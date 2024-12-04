@@ -6,6 +6,7 @@ import { Flex, Space, Typography, Radio, DatePicker, Button} from 'antd';
 import CommentInput from '../comment-input/comment-input';
 import Comment from '../comment/comment';
 import { Pagination } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const dateFormat = "YYYY/MM/DD";
 
@@ -18,17 +19,19 @@ const {RangePicker} = DatePicker
 //   id: "1"
 // }
 
-const options = [
-  { label: 'Recent', value: 'recent' },
-  { label: 'Oldest', value: 'oldest' }
-];
-
 const CommentList = ({commentsObject, user, fetchFunc}) => {
+  // console.log("COMMENT LIST", comments)
+  const {t} = useTranslation()
 
   const [commentList, setCommentList] = useState(commentsObject.comments)
   const [currentPage, setCurrentPage] = useState(1);
   const [order, setOrder] = useState('recent')
   const [dateRange, setDateRange] = useState(null)
+
+  const options = [
+    { label: t('common.order-recent'), value: 'recent' },
+    { label: t('common.order-oldest'), value: 'oldest' }
+  ];
 
   useEffect(() =>{
     setCommentList(commentsObject.comments)
@@ -66,7 +69,7 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
       <Space direction='vertical' style={{width: "100%"}}>
         <Space className='comment-list-title comment-list-son'>
           <CommentOutlined className='icon'></CommentOutlined>
-          <Text strong>Comments ({commentList.length})</Text>
+          <Text strong>{t('article.comments-header', {count: commentList.length})}</Text>
         </Space>
 
         <CommentInput user={user}></CommentInput>
@@ -74,14 +77,14 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
         <div className='comment-list-options'>
           <Space className='comment-list-title comment-list-son'>
             <SortAscendingOutlined style={{fontSize: "25px"}}/>
-            <Text strong>Order</Text>
+            <Text strong>{t('common.order-header')}</Text>
       
             <Radio.Group onChange={handleOrderChange} block size='small' options={options} defaultValue="recent" optionType='button'/>
           </Space>
           <Space className='filter-group'>
               <ControlOutlined className='icon comment-list-son'/>
-              <Text className='comment-list-son' strong>Filter</Text>
-              <Text className='comment-list-son'>Date Range</Text>
+              <Text className='comment-list-son' strong>{t('common.filter-header')}</Text>
+              <Text className='comment-list-son'>{t('common.daterange-header')}</Text>
               <Space.Compact>
                 <RangePicker format={dateFormat} allowEmpty={[true, true]} onChange={handleDateRangeChange}/>
                 {/* <Button icon={<SearchOutlined/>}></Button> */}

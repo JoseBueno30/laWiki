@@ -52,7 +52,7 @@
 
     "user-rating-header": "Votre note",
     "global-rating-value": "{{value}} sur 5",
-    "global-rating header": "Note des autres lecteurs",
+    "global-rating-header": "Note des autres lecteurs",
     "global-rating-count": "{{count}} notes globales",
     "num-stars": "{{count}} étoile",
     "num-stars_plural": "{{count}} étoiles"
