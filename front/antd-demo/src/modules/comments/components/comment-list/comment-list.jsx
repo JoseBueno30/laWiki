@@ -19,7 +19,7 @@ const {RangePicker} = DatePicker
 //   id: "1"
 // }
 
-const CommentList = ({commentsObject, user, fetchFunc}) => {
+const CommentList = ({commentsObject, user, fetchFunc, uploadFunc}) => {
   // console.log("COMMENT LIST", comments)
   const {t} = useTranslation()
 
@@ -58,6 +58,7 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
       : null;
 
   const handleDateRangeChange = (_, time) =>{
+    setCurrentPage(1)
     const range = generateDateRange(time[0], time[1])
     setDateRange(range)
     fetchFunc(0, order, range)
@@ -69,10 +70,10 @@ const CommentList = ({commentsObject, user, fetchFunc}) => {
       <Space direction='vertical' style={{width: "100%"}}>
         <Space className='comment-list-title comment-list-son'>
           <CommentOutlined className='icon'></CommentOutlined>
-          <Text strong>{t('article.comments-header', {count: commentList.length})}</Text>
+          <Text strong>{t('article.comments-header', {count: commentsObject.total})}</Text>
         </Space>
 
-        <CommentInput user={user}></CommentInput>
+        <CommentInput user={user} uploadFunc={uploadFunc}></CommentInput>
 
         <div className='comment-list-options'>
           <Space className='comment-list-title comment-list-son'>

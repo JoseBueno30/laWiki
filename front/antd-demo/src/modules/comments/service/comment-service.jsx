@@ -22,8 +22,25 @@ const CommentService = () =>{
         }
     }
 
+    const postComment = async (articleId, userId, body) => {
+        try{
+            const params = {
+                author_id: userId,
+                body: body
+            }
+    
+            const url = `/v1/comments/articles/${articleId}`
+    
+            const response = await APIGateway.post(url, params)
+            return response
+        }catch(error){
+            console.error("CommentService.PostComment:", error)
+            return Promise.reject(error)
+        }
+    }
+
     return {
-        getArticleComments
+        getArticleComments, postComment
     }
 }
 

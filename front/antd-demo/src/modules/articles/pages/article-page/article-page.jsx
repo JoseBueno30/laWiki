@@ -50,6 +50,11 @@ const ArticlePage = () => {
         ratings_response.three_count, ratings_response.two_count, ratings_response.one_count]})
   }
 
+  const fetchArticleComments = async () =>{
+    const comments_response = await CommentService().getArticleComments(articleVersion.article_id, 0, 3,'recent', null)
+    setComments(comments_response)
+  }
+
   useEffect(() =>{
     const fetchArticleVersion = async () =>{
       // AÑADIR PROP DE ARTICULO -> SI ES NULO BUSCAR CON LA URL Y SIN LENGUAJE
@@ -65,11 +70,6 @@ const ArticlePage = () => {
     const fetchVersions = async () =>{
       const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
       setVersions(versions_response.article_versions)
-    }
-
-    const fetchArticleComments = async () =>{
-      const comments_response = await CommentService().getArticleComments(articleVersion.article_id, 0, 3,'recent', null)
-      setComments(comments_response)
     }
 
     const fetchUserRating = async () =>{
@@ -128,6 +128,11 @@ const ArticlePage = () => {
     fetchArticleRatings()
   }
 
+  const uploadComment = async (text) =>{
+    await CommentService().postComment(articleVersion.article_id, user.id, text)
+    fetchArticleComments()
+  }
+
   const controlCommentsPaginationAndFilters = async (newOffset, order,creation_date) =>{
 
     const comments_response = await CommentService().getArticleComments(articleVersion.article_id, newOffset, 3, order,creation_date)
@@ -160,7 +165,7 @@ const ArticlePage = () => {
         <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
-        <CommentList commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
+        <CommentList uploadFunc={uploadComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
 
         <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} 
           total_ratings={ratings.total} 
