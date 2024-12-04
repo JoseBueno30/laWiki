@@ -148,9 +148,25 @@ const ArticlePage = () => {
     setComments(comments_response)
   }
 
+  const changeURL = () =>{
+    const newPart = articleVersion.title[locale];
+    const sanitizedNewPart = newPart.replace(/ /g, "_");
+
+    const urlObj = new URL(url);
+    const pathParts = urlObj.pathname.split("/");
+    pathParts[pathParts.length - 1] = sanitizedNewPart;
+    urlObj.pathname = pathParts.join("/");
+
+    const newUrl = urlObj.toString();
+
+    // Reload with new URL
+    window.location = newUrl;
+  }
+
   const restoreArticleVersion = async () =>{
     const restore_response = await ArticleService().restoreArticleVersion(articleVersion.article_id, articleVersion.id)
-    fetchVersions()
+    // fetchVersions()  
+    changeURL()
   }
 
   return (
