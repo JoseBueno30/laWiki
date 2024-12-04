@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
-      { path: "", element: <TestRoute /> }, // Página principal
+      { path: "", element: <WikiRecommendationPage /> }, // Página principal
       {
         path: "wikis",
         children: [

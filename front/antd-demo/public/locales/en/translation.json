@@ -48,6 +48,8 @@
     "edit-wiki": "Edit Wiki",
     "wiki-search-placeholder": "search wikis",
     "new-article": "New Article",
+    "edit-wiki-button": "Edit this wiki",
+    "highest-rated-wikis": "Highest rated wikis",
     "article-search-placeholder": "search articles",
     "wiki-image": "Image",
     "tags-create-success": "Tag created successfully",
@@ -68,7 +70,8 @@
     "edit-article-button": "Edit this article",
     "comments-header": "Comments ({{count}})",
     "post-comment-button": "Post comment",
-
+    "recent-articles": "Recent articles",
+    "highest-rated-articles": "Highest rated articles",
     "user-rating-header": "Your rating",
     "global-rating-value": "{{value}} of 5",
     "global-rating header": "Other reader's rating",

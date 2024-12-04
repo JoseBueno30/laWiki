@@ -48,6 +48,8 @@
     "edit-wiki": "Modifier Wiki",
     "wiki-search-placeholder": "chercher des wikis",
     "new-article": "Nouvel Article",
+    "edit-wiki-button": "Modifier ce wiki",
+    "highest-rated-wikis": "Wikis les mieux notés",
     "article-search-placeholder": "chercher des articles",
     "wiki-image": "Image",
     "tags-create-success": "Étiquette créée avec succès",
@@ -68,7 +70,8 @@
     "edit-article-button": "Modifier cet article",
     "comments-header": "Commentaires ({{count}})",
     "post-comment-button": "Poster un commentaire",
-
+    "recent-articles": "Articles récents",
+    "highest-rated-articles": "Articles les mieux notés",
     "user-rating-header": "Votre note",
     "global-rating-value": "{{value}} sur 5",
     "global-rating header": "Note des autres lecteurs",
