@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -20,21 +22,17 @@ import {
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 const { TextArea } = Input;
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import "./article-edit-page.css";
-import MapComponent from "../../components/map-component/MapComponent";
+import './create-article-page.css';
 import MapConfigurator from "../../components/map-configurator/map-configurator";
-import MapView from "../../components/map-view/map-view";
-import ReactDOM from "react-dom/client";
-import JsxParser from "react-jsx-parser";
 import {
-  createArticleVersion,
+  createArticle,
   getWikiTags,
   uploadImage,
 } from "../../service/article_service";
 
 const { Option } = Select;
 
-const ArticleEditPage = () => {
+const CreateArticlePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const articleData = location.state;
@@ -44,9 +42,9 @@ const ArticleEditPage = () => {
   const { locale } = useContext(SettingsContext);
 
   const [title, setTitle] = useState("");
-  const [translateTitle, setTransalateTitle] = useState(true);
-  const [availableTags, setAvailableTags] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [translateTitle, setTransalateTitle] = useState(true);""
+  const [availableTags, setAvailableTags] = useState([{tag:{en: "tag1"}}]);
+  const [tags, setTags] = useState([{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}}]);
   const [body, setBody] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -59,15 +57,10 @@ const ArticleEditPage = () => {
   const handleModalCancel = () => setIsModalOpen(false);
 
   useEffect(() => {
-    if (articleData != null) {
+    if(wiki!=null){
       fetchWikiTags();
-      setTitle(articleData.title[locale]);
-      setTags(articleData.tags);
-      setBody(articleData.body);
-    } else {
-      navigate(location.pathname.replace("/edit", ""));
     }
-  }, []);
+  }, [wiki]);
 
   const fetchWikiTags = async () => {
     const tagList = getWikiTags(wiki.wiki_info.id);
@@ -95,6 +88,10 @@ const ArticleEditPage = () => {
       onSuccess();
     } catch (error) {
       console.error("Error uploading file:", error);
+      messageApi.open({
+        type: "error",
+        content: "Error uploading the image",
+      });
       onError(error);
     }
   };
@@ -115,7 +112,7 @@ const ArticleEditPage = () => {
   };
 
   const handleSaveArticle = async () => {
-    //create new article version and navigate to article page
+    //create new article and navigate to article page
 
     if (checkValidTitle(title) == false) {
       messageApi.open({
@@ -128,7 +125,8 @@ const ArticleEditPage = () => {
     }
 
     try {
-      const newArticleVersion = {
+      const newArticle = {
+        wiki_id: wiki.wiki_info.id,
         title: title,
         author: {
           //fake data until users are implemented
@@ -142,7 +140,7 @@ const ArticleEditPage = () => {
         translate_title: translateTitle,
       };
 
-      const response = await createArticleVersion(articleData.id, newArticleVersion);
+      const response = await createArticle(newArticle);
     } catch (error) {
       messageApi.open({
         type: "error",
@@ -150,7 +148,7 @@ const ArticleEditPage = () => {
       });
     } finally {
       setLoading(false);
-      navigate(("http://localhost:5173/wikis/" + wiki.wiki_info.name + "/articles/" + title).replace(" ", "_")); //MAKE url base a variable
+      navigate((location.pathname.split("/articles")[0]+"/articles/" + title).replace(" ", "_"));
     }
   };
 
@@ -199,12 +197,12 @@ const ArticleEditPage = () => {
             <div className="tags-section edit-article-textarea">
               {tags.map((tag) => (
                 <Tag
-                  key={tag}
+                  key={1}
                   closable
                   onClose={() => removeTag(tag)}
                   className="tag-item"
                 >
-                  {tag}
+                  {tag.tag[locale]}
                 </Tag>
               ))}
 
@@ -214,13 +212,13 @@ const ArticleEditPage = () => {
                 onChange={addTag}
                 className="tag-select"
               >
-                {availableTags
+                {/* {availableTags
                   .filter((tag) => !tags.includes(tag))
                   .map((tag) => (
-                    <Option key={tag} value={tag}>
-                      {tag}
+                    <Option key={1} value={tag.tag[locale]}>
+                      {tag.tag[locale]}
                     </Option>
-                  ))}
+                  ))} */}
               </Select>
             </div>
           </div>
@@ -238,7 +236,7 @@ const ArticleEditPage = () => {
                 title="Configuración del Mapa"
                 open={isModalOpen} // Aquí podrías guardar el mapa cuando se pulse OK
                 width="80vw" // Ancho personalizado para adaptarse mejor al mapa
-                style={{ height: "70vh", overflow: "hidden" }} // Altura ajustada
+                style={{ height: "70vh", overflow: "hidden", minWidth:"350px" }} // Altura ajustada
                 onCancel={handleModalCancel}
                 destroyOnClose
               >
@@ -271,7 +269,7 @@ const ArticleEditPage = () => {
               onChange={(e) => {
                 setBody(e.target.value);
               }}
-              autoSize={{ minRows: 6, maxRows: 30 }}
+              autoSize={{ minRows: 6, maxRows: 20 }}
             />
           </div>
 
@@ -307,4 +305,4 @@ const ArticleEditPage = () => {
   );
 };
 
-export default ArticleEditPage;
+export default CreateArticlePage;

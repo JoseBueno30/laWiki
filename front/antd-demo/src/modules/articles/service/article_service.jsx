@@ -57,16 +57,23 @@ const getWikiTags = async(wikiId) =>{
     }
 }
 
-const createArticleVersion = async(articleId, newArticle) =>{
+const createArticleVersion = async(articleId, newArticleVersion) =>{
     try {
-        const formData = new FormData();
-        formData.append('file', file);
 
-        const response = await APIGateway.post("http://localhost:3000/v1/articles/" + articleId + "/versions", newArticle);
+        return await APIGateway.post("http://localhost:3000/v1/articles/" + articleId + "/versions", newArticleVersion);
 
-        return response.data.url
     } catch (error) {
         throw new Error('Error creating ArticleVersion: ' + error.message);
+    }
+}
+
+const createArticle = async(newArticle) =>{
+    try {
+
+        return await APIGateway.post("http://localhost:3000/v1/articles", newArticle);
+
+    } catch (error) {
+        throw new Error('Error creating Article: ' + error.message);
     }
 }
   

@@ -4,7 +4,7 @@ import TestRoute from "../TestRoute";
 import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
-import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
+import EditArticlePage from "../modules/articles/pages/edit-article-page/edit-article-page";
 
 // The structure of the application's routes
 
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
-      { path: "", element: <ArticleEditPage /> }, // Página principal
+      { path: "", element: <EditArticlePage /> }, // Página principal
       {
         path: "wikis",
         children: [
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
                 children: [
                   { path: "new", element: <TestRoute /> }, // Crear artículo
                   { path: ":article_name", element: <TestRoute /> }, // Ver artículo
-                  { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
+                  { path: ":article_name/edit", element: <EditArticlePage /> }, // Editar artículo
                 ],
               },
             ],
