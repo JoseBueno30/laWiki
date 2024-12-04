@@ -13,8 +13,11 @@ import { WikiContext } from '../../../../context/wiki-context';
 import SettingsContext from '../../../../context/settings-context';
 import RatingService from '../../../ratings/service/rating-service';
 import { useTranslation } from 'react-i18next';
+import JsxParser from 'react-jsx-parser';
 
 const {useBreakpoint} = Grid
+
+const MapView = null
 
 const article =
   {
@@ -180,7 +183,10 @@ const ArticlePage = () => {
       </Flex>
       <div className='article-body-container'>
         // PONER JPARSER
-        <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
+        // <section dangerouslySetInnerHTML={{__html: articleVersion.body}}></section>
+        <JsxParser 
+        components={{MapView}}
+        jsx={articleVersion.body}/>
       </div>
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
         <CommentList uploadFunc={uploadComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
