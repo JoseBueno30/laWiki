@@ -17,6 +17,7 @@
 
     "next-page": "Página siguiente",
     "previous-page": "Página anterior",
+    "pagination": "Página {{page}} de {{total}}",
 
     "save-button": "Guardar {{type}}",
     "cancel-button": "Cancelar",
@@ -67,6 +68,11 @@
   },
 
   "article": {
+    "last-modified": "Última modificación: ",
+    "table-title": "Título",
+    "table-author": "Autor/a",
+    "table-date": "Última modificación",
+    "table-rating": "Valoración",
     "edit-article-button": "Editar este artículo",
     "select-version": "Seleccionar versión",
     "comments-header": "Comentarios ({{count}})",

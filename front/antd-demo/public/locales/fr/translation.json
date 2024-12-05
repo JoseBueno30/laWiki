@@ -17,6 +17,7 @@
 
     "next-page": "Page suivante",
     "previous-page": "Page précédente",
+    "pagination": "Page {{page}} sur {{total}}",
 
     "save-button": "Enregistrer {{type}}",
     "cancel-button": "Annuler",
@@ -67,6 +68,11 @@
   },
 
   "article": {
+    "last-modified": "Dernière modification: ",
+    "table-title": "Titre",
+    "table-author": "Auteur/e",
+    "table-date": "Dernière modification",
+    "table-rating": "Note",
     "edit-article-button": "Modifier cet article",
     "select-version": "Sélectionner version",
     "restore-button": "Restaurer",

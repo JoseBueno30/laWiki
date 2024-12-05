@@ -118,13 +118,13 @@ const ArticlesSearchResultPage = () => {
       ) : (
         <>
           <Title level={3} className="article-search-results-title">
-            {t("edit.search-results", {query: (searchParams.get("edit.name") || "").replaceAll("_", " ")})}
+            {t("search.search-results", {query: (searchParams.get("edit.name") || "").replaceAll("_", " ")})}
           </Title>
           <Title level={4} className="article-search-results-info">
-            {t("edit.search-description", {total: response.total, filters: filters})}
+            {t("search.search-description", {total: response.total, filters: filters})}
           </Title>
           {articles.length == 0 ? (
-            <Title level={3}>{t("edit.search-noresults")}</Title>
+            <Title level={3}>{t("search.search-noresults")}</Title>
           ) : (
             <>
               <ArticleList articleList={articles} />
@@ -140,12 +140,11 @@ const ArticlesSearchResultPage = () => {
                     disabled={prevPageURL == null}
                     onClick={() => getArticlesSearchResultPage(prevPageURL, -1)}
                   >
-                    {t("edit.previous-page")}
+                    {t("common.previous-page")}
                   </Button>
                 </Col>
                 <Col xs={24} sm={8} align="center">
-                  Page {currentPage} of{" "}
-                  {Math.ceil(response.total / response.limit)}
+                  {t("common.pagination", {page:currentPage, total: Math.ceil(response.total / response.limit)})}
                 </Col>
                 <Col xs={24} sm={8} align="center">
                   <Button
@@ -153,7 +152,7 @@ const ArticlesSearchResultPage = () => {
                     disabled={nextPageURL == null}
                     onClick={() => getArticlesSearchResultPage(nextPageURL, 1)}
                   >
-                    {t("edit.next-page")}
+                    {t("common.next-page")}
                   </Button>
                 </Col>
               </Row>

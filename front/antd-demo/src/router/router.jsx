@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
-      { path: "", element: <EditArticlePage /> }, // Página principal
+      { path: "", element: <WikiRecommendationPage /> }, // Página principal
       // { path: "", element: <WikiRecommendationPage /> }, // Página principal
       {
         path: "wikis",
