@@ -68,6 +68,8 @@
 
   "article": {
     "edit-article-button": "Edit this article",
+    "select-version": "Select version",
+    "restore-button": "Restore",
     "comments-header": "Comments ({{count}})",
     "post-comment-button": "Post comment",
     "recent-articles": "Recent articles",
@@ -82,9 +84,25 @@
 
   "edit": {
     "edit-header": "Edit {{type}} information",
+    "edit-article-header": "Edit Article information",
     "title-label": "Title",
+    "translate-title": "Translate Title",
     "description-label": "Description",
-    "body-label": "Body"
+    "tags-label": "Tags",
+    "tags-newtag": "New tag",
+    "tags-selection": "Select a tag",
+    "insert-map": "Insert map",
+    "add-marker": "Add marker",
+    "save-map": "Save map",
+    "insert-image": "Insert image",
+    "body-label": "Body",
+    "save-button": "Save",
+    "cancel-button": "Cancel",
+    "confirm-cancel": "Cancel",
+    "confirm-cancel-message": "All changes will be discarded. Are you sure to cancel?",
+    "confirm-cancel-yes": "Yes",
+    "confirm-cancel-no": "No",
+    "delete-button": "Delete {{type}}"
   },
 
   "search": {

@@ -31,7 +31,7 @@ const ArticlesSearchResultPage = () => {
   const [prevPageURL, setPrevPageURL] = useState(null);
   const [nextPageURL, setNextPageURL] = useState(null);
 
-  const { t } = useTranslation('search');
+  const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
 
   const getArticlesSearchResultPage = async (url, increase) => {
@@ -65,7 +65,7 @@ const ArticlesSearchResultPage = () => {
 
       var queryParams = {
         wiki_id: wiki.wiki_info.id,
-        name: (searchParams.get("name") || "").replace("_", " "),
+        name: (searchParams.get("name") || "").replaceAll("_", " "),
         tags: searchParams.getAll("tags"),
         offset: (currentPage - 1) * searchLimit,
         limit: searchLimit,
@@ -118,13 +118,13 @@ const ArticlesSearchResultPage = () => {
       ) : (
         <>
           <Title level={3} className="article-search-results-title">
-            {t("search-results", {query: (searchParams.get("name") || "").replace("_", " ")})}
+            {t("edit.search-results", {query: (searchParams.get("edit.name") || "").replaceAll("_", " ")})}
           </Title>
           <Title level={4} className="article-search-results-info">
-            {t("search-description", {total: response.total, filters: filters})}
+            {t("edit.search-description", {total: response.total, filters: filters})}
           </Title>
           {articles.length == 0 ? (
-            <Title level={3}>{t("search-noresults")}</Title>
+            <Title level={3}>{t("edit.search-noresults")}</Title>
           ) : (
             <>
               <ArticleList articleList={articles} />
@@ -140,7 +140,7 @@ const ArticlesSearchResultPage = () => {
                     disabled={prevPageURL == null}
                     onClick={() => getArticlesSearchResultPage(prevPageURL, -1)}
                   >
-                    {t("previous-page")}
+                    {t("edit.previous-page")}
                   </Button>
                 </Col>
                 <Col xs={24} sm={8} align="center">
@@ -153,7 +153,7 @@ const ArticlesSearchResultPage = () => {
                     disabled={nextPageURL == null}
                     onClick={() => getArticlesSearchResultPage(nextPageURL, 1)}
                   >
-                    {t("next-page")}
+                    {t("edit.next-page")}
                   </Button>
                 </Col>
               </Row>

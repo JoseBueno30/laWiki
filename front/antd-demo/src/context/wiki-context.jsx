@@ -17,6 +17,7 @@ export const WikiProvider = ({ children }) => {
   const [wiki, setWiki] = useState({ wiki_name: "", wiki_info: null });
   const { wiki_name } = useParams();
   const { locale } = useContext(SettingsContext);
+  const location = useLocation();
 
   const fetchWiki = async () => {
     try {

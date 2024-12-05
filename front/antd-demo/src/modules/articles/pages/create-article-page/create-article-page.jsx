@@ -8,7 +8,6 @@ import SettingsContext from "../../../../context/settings-context";
 
 import {
   Tag,
-  Select,
   Button,
   Input,
   Upload,
@@ -17,7 +16,8 @@ import {
   Switch,
   message,
   Spin,
-  Popconfirm 
+  Popconfirm,
+  Dropdown
 } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 const { TextArea } = Input;
@@ -30,21 +30,20 @@ import {
   uploadImage,
 } from "../../service/article_service";
 
-const { Option } = Select;
 
 const CreateArticlePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const articleData = location.state;
 
-  const { t } = useTranslation("edit");
+  const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
   const { locale } = useContext(SettingsContext);
 
   const [title, setTitle] = useState("");
   const [translateTitle, setTransalateTitle] = useState(true);""
-  const [availableTags, setAvailableTags] = useState([{tag:{en: "tag1"}}]);
-  const [tags, setTags] = useState([{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}},{tag:{en: "tag1"}}]);
+  const [availableTags, setAvailableTags] = useState([]);
+  const [tags, setTags] = useState([]);
   const [body, setBody] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -58,19 +57,31 @@ const CreateArticlePage = () => {
 
   useEffect(() => {
     if(wiki!=null){
-      fetchWikiTags();
+      fetchData();
     }
   }, [wiki]);
 
+  const fetchData = async() => {
+    setLoading(true);
+    try{
+      await fetchWikiTags();
+    }catch(error){
+
+    }finally{setLoading(false);}
+  }
+
+
   const fetchWikiTags = async () => {
-    const tagList = getWikiTags(wiki.wiki_info.id);
+    const tagList = await getWikiTags(wiki.wiki_info.id);
+    
     setAvailableTags(tagList);
   };
 
-  const addTag = (value) => {
-    if (value && !tags.includes(value)) {
-      setTags([...tags, value]);
-    }
+  const addTag = (e) => {
+    const selectedTag = availableTags.find(tag => tag.id === e.key);
+
+    setTags([...tags, selectedTag]);
+    
   };
 
   const removeTag = (tag) => {
@@ -148,8 +159,18 @@ const CreateArticlePage = () => {
       });
     } finally {
       setLoading(false);
-      navigate(location.pathname.replace("new", title).replace(" ", "_"));
+      navigate(location.pathname.replace("/new", "/"+title).replaceAll(" ", "_"));
     }
+  };
+
+  const items = (availableTags.filter(tag => !(new Set(tags.map(tag => tag.id))).has(tag.id))).map(tag => ({
+    key: tag.id,
+    label: tag.tag[locale],
+  }));
+
+  const menuProps = {
+    items,
+    onClick: addTag,
   };
 
   return (
@@ -159,7 +180,7 @@ const CreateArticlePage = () => {
         <Spin size="large" style={{ paddingTop: "40vh" }} />
       ) : (
         <div className="edit-article-container">
-          <h1>{t("edit-article-header")}</h1>
+          <h1>{t("edit.edit-article-header")}</h1>
 
           <div className="edit-article-item">
             <Flex justify="space-between" style={{ width: "100%" }}>
@@ -167,10 +188,10 @@ const CreateArticlePage = () => {
                 htmlFor="edit-article-title"
                 className="edit-article-label"
               >
-                {t("title-label")}
+                {t("edit.title-label")}
               </label>
               <div>
-                {t("translate-title")}
+                {t("edit.translate-title")}
                 <Switch
                   checkedChildren={<CheckOutlined />}
                   unCheckedChildren={<CloseOutlined />}
@@ -192,7 +213,7 @@ const CreateArticlePage = () => {
 
           <div className="edit-article-item">
             <label htmlFor="edit-article-tags" className="edit-article-label">
-              {t("tags-label")}
+              {t("edit.tags-label")}
             </label>
             <div className="tags-section edit-article-textarea">
               {tags.map((tag) => (
@@ -206,20 +227,14 @@ const CreateArticlePage = () => {
                 </Tag>
               ))}
 
-              <Select
-                placeholder={t("tags-selection")}
-                style={{ width: 200 }}
-                onChange={addTag}
-                className="tag-select"
+              <Dropdown
+                menu={
+                  menuProps
+                }
+                placement="bottom"
               >
-                {/* {availableTags
-                  .filter((tag) => !tags.includes(tag))
-                  .map((tag) => (
-                    <Option key={1} value={tag.tag[locale]}>
-                      {tag.tag[locale]}
-                    </Option>
-                  ))} */}
-              </Select>
+                <Button>{t("edit.tags-selection")}</Button>
+              </Dropdown>
             </div>
           </div>
 
@@ -230,7 +245,7 @@ const CreateArticlePage = () => {
           >
             <div>
               <Button type="primary" onClick={showModal}>
-                {t("insert-map")}
+                {t("edit.insert-map")}
               </Button>
               <Modal
                 title="Configuración del Mapa"
@@ -251,7 +266,7 @@ const CreateArticlePage = () => {
                 showUploadList={false}
                 accept="image/*"
               >
-                <Button icon={<UploadOutlined />}>{t("insert-image")}</Button>
+                <Button icon={<UploadOutlined />}>{t("edit.insert-image")}</Button>
               </Upload>
             </div>
           </Flex>
@@ -261,7 +276,7 @@ const CreateArticlePage = () => {
               htmlFor="edit-article-description"
               className="edit-article-label"
             >
-              {t("body-label")}
+              {t("edit.body-label")}
             </label>
             <TextArea
               id="edit-article-description"
@@ -280,17 +295,17 @@ const CreateArticlePage = () => {
                 handleSaveArticle();
               }}
             >
-              {t("save-button")}
+              {t("edit.save-button")}
             </Button>
             <Popconfirm
-              title={t("confirm-cancel")}
-              description={t("confirm-cancel-message")}
+              title={t("edit.confirm-cancel")}
+              description={t("edit.confirm-cancel-message")}
               onConfirm={confirmCancel}
               
-              okText={t("confirm-cancel-yes")}
-              cancelText={t("confirm-cancel-no")}
+              okText={t("edit.confirm-cancel-yes")}
+              cancelText={t("edit.confirm-cancel-no")}
             >
-              <Button>{t("cancel-button")}</Button>
+              <Button>{t("edit.cancel-button")}</Button>
             </Popconfirm>
             
 

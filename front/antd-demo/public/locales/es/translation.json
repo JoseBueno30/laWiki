@@ -68,6 +68,7 @@
 
   "article": {
     "edit-article-button": "Editar este artículo",
+    "select-version": "Seleccionar versión",
     "comments-header": "Comentarios ({{count}})",
     "post-comment-button": "Publicar comentario",
     "recent-articles": "Artículos recientes",
@@ -82,9 +83,26 @@
 
   "edit": {
     "edit-header": "Editar información de {{type}}",
+    "edit-article-header": "Editar información del Artículo",
+    "restore-button": "Restaurar",
     "title-label": "Título",
+    "translate-title": "Traducir Título",
     "description-label": "Descripción",
-    "body-label": "Cuerpo"
+    "tags-label": "Etiquetas",
+    "tags-newtag": "Nueva etiqueta",
+    "tags-selection": "Selecciona una etiqueta",
+    "insert-map": "Insertar mapa",
+    "add-marker": "Añadir marcador",
+    "save-map": "Guardar mapa",
+    "insert-image": "Insertar imagen",
+    "body-label": "Cuerpo",
+    "save-button": "Guardar",
+    "cancel-button": "Cancelar",
+    "confirm-cancel": "Cancelar",
+    "confirm-cancel-message": "Se descartarán todos los cambios. ¿Seguro que desea cancelar?",
+    "confirm-cancel-yes": "Sí",
+    "confirm-cancel-no": "No",
+    "delete-button": "Eliminar {{type}}"
   },
 
   "search": {

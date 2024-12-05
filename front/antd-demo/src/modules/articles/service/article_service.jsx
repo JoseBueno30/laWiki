@@ -41,14 +41,20 @@ const searchArticlesWithPaginationURL = async (paginationURL) => {
 
 const getWikiTags = async(wikiId) =>{
     try {
+
         var response = await APIGateway.get("http://localhost:3000/v1/tags/wikis/" + wikiId);
 
-        var tagList = response.data.articles; //Misspelling of the API, it is a list of tags
+        var tagList = response.articles; //Misspelling of the API, it is a list of tags
 
-        while (response.data.next != null){
-            response = await APIGateway.get("http://localhost:3000/v1" + response.data.next);
-            tagList = [...tagList, ...response.data.articles];
+        while (response.next != null){
+            response = await APIGateway.get("http://localhost:3000/v1" + response.next);
+            tagList = [...tagList, ...response.articles];
         }
+
+        tagList = tagList.map(tag => ({
+            id: tag.id,
+            tag: tag.translations
+          }));
 
         return tagList;
     } catch (error) {
@@ -76,5 +82,19 @@ const createArticle = async(newArticle) =>{
         throw new Error('Error creating Article: ' + error.message);
     }
 }
+
+const getArticleWikiTextBody = async(articleId, lan) =>{
+    try {
+        const params = {
+            parsed: false,
+            lan: lan
+        }
+
+        return await APIGateway.get("http://localhost:3000/v1/articles/versions/"+ articleId + "/body", {params:params});
+
+    } catch (error) {
+        throw new Error('Error: ' + error.message);
+    }
+}
   
-export {searchArticlesWithParams, searchArticlesWithPaginationURL, uploadImage, getWikiTags, createArticleVersion, createArticle};
+export {searchArticlesWithParams, searchArticlesWithPaginationURL, uploadImage, getWikiTags, createArticleVersion, createArticle, getArticleWikiTextBody};

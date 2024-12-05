@@ -21,7 +21,7 @@ const MapConfigurator = ({ onSave }) => {
   const [centerMarkerFeature, setCenterMarkerFeature] = useState(null);
   const [userLocation, setUserLocation] = useState([0, 0]);
 
-  const { t } = useTranslation("edit");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -135,7 +135,7 @@ const MapConfigurator = ({ onSave }) => {
         align="center"
       >
         <Button onClick={() => addMarker(mapRef.current.getView().getCenter())} type="primary">
-          {t("add-marker")}
+          {t("edit.add-marker")}
         </Button>
       </Col>
       <Col
@@ -144,7 +144,7 @@ const MapConfigurator = ({ onSave }) => {
         align="center"
       >
         <Button onClick={handleSave} style={{ marginLeft: '10px' }}>
-        {t("save-map")}
+        {t("edit.save-map")}
         </Button>
       </Col>
 

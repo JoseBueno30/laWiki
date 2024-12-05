@@ -1,5 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
+import {useNavigate, useLocation } from "react-router-dom";
 import {Button, Flex, Grid, Select, Spin} from "antd";
 import { EditOutlined, ReloadOutlined} from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
@@ -37,6 +38,9 @@ const ArticlePage = () => {
   const {locale} = useContext(SettingsContext)
   const {t} = useTranslation()
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
   const [articleVersion, setArticleVersion] = useState(null)
@@ -67,7 +71,7 @@ const ArticlePage = () => {
       setArticleVersion(version_response)
     }
     if (wiki) fetchArticleVersion()
-  }, [wiki])
+  }, [wiki, location])
 
   const fetchVersions = async () =>{
     const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
@@ -113,7 +117,7 @@ const ArticlePage = () => {
       const newVersion = {
         value: element.id,
         label: screen.md ? 
-          <span>{element.modification_date.substring(0,10) + " " + element.title[element.lan]}</span> 
+          <span>{element.modification_date.substring(0,10) + " " + element.title[locale]}</span> 
           :
           <span>{element.modification_date.substring(0,10)}</span> 
       }
@@ -158,15 +162,12 @@ const ArticlePage = () => {
     const newPart = articleVersion.title[locale];
     const sanitizedNewPart = newPart.replace(/ /g, "_");
 
-    const urlObj = new URL(window.location);
-    const pathParts = urlObj.pathname.split("/");
-    pathParts[pathParts.length - 1] = sanitizedNewPart;
-    urlObj.pathname = pathParts.join("/");
-
-    const newUrl = urlObj.toString();
-
     // Reload with new URL
-    window.location = newUrl;
+    navigate((location.pathname.split("/articles")[0]+"/articles/" + sanitizedNewPart).replace(" ", "_"));
+  }
+
+  const editArticle = () =>{
+    navigate(location.pathname + "/edit", {state: articleVersion})
   }
 
   const restoreArticleVersion = async () =>{
@@ -189,25 +190,27 @@ const ArticlePage = () => {
             <UserAvatar image={article.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
                     
-          <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 
+          <Select title={t("article.select-version")} options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 
           {articleVersion.id == versions[0].id ? 
-            <Button title='Edit' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
+            <Button  icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={editArticle}>
               {t('article.edit-article-button')}
             </Button >
             :
-            <Button title='Restore' icon={<ReloadOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={restoreArticleVersion}>
-            {"Restore"}
+            <Button  icon={<ReloadOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={restoreArticleVersion}>
+            {t("article.restore-button")}
             </Button>
           }
           
         </Flex>
         
       </Flex>
+
       <div className='article-body-container'>
         <JsxParser 
         components={{MapView}}
         jsx={articleVersion.body}/>
       </div>
+
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
         <CommentList uploadFunc={uploadComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
 
