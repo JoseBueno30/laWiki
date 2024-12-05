@@ -15,12 +15,12 @@ import SettingsContext from '../../../../context/settings-context';
 import RatingService from '../../../ratings/service/rating-service';
 import { useTranslation } from 'react-i18next';
 import JsxParser from 'react-jsx-parser';
+import MapView from '../../components/map-view/map-view';
 
 const {useBreakpoint} = Grid
 
-const MapView = null
 
-const article =
+const quislantArticle =
   {
     author:{
       image: "https://i.imgur.com/5CAdhgd.jpeg"
@@ -40,6 +40,8 @@ const ArticlePage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const article = location.state;
+  console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
@@ -70,10 +72,13 @@ const ArticlePage = () => {
       const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, locale) 
       setArticleVersion(version_response)
     }
-    if (wiki) fetchArticleVersion()
+    if (wiki){
+      fetchArticleVersion();
+    }
   }, [wiki, location])
 
   const fetchVersions = async () =>{
+    //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
     const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
     setVersions(versions_response.article_versions)
   }
@@ -187,7 +192,7 @@ const ArticlePage = () => {
         </Title>
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
-            <UserAvatar image={article.author.image} username={articleVersion.author.name}></UserAvatar>
+            <UserAvatar image={quislantArticle.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
                     
           <Select title={t("article.select-version")} options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 

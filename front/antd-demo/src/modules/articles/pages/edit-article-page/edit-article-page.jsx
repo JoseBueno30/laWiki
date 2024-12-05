@@ -86,7 +86,8 @@ const EditArticlePage = () => {
   };
 
   const fetchWikiTextBody = async() =>{
-    const response = await getArticleWikiTextBody(articleData.id, locale);
+    const response = await getArticleWikiTextBody(articleData.id, articleData.lan);
+    console.log("BODY: ", response)
     setBody(response.body);
   }
 
@@ -164,7 +165,7 @@ const EditArticlePage = () => {
         translate_title: translateTitle,
       };
 
-      const response = await createArticleVersion(articleData.id, newArticleVersion);
+      const response = await createArticleVersion(articleData.article_id, newArticleVersion);
     } catch (error) {
       messageApi.open({
         type: "error",
@@ -173,6 +174,7 @@ const EditArticlePage = () => {
     } finally {
       setLoading(false);
       navigate((location.pathname.split("/articles")[0]+"/articles/" + title.replaceAll(" ", "_")));
+
     }
   };
 

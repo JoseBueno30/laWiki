@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./article.css";
 import { Grid, Flex, Rate, Row, Col } from "antd";
 import UserAvatar from "../../../wiki/components/avatar/user-avatar";
@@ -10,7 +11,12 @@ const Article = ({ article }) => {
   const { locale } = useContext(SettingsContext);
   const screens = useBreakpoint();
 
-  //Match title with current language of the App
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const clickArticle = () =>{
+    navigate(location.pathname.split("/search")[0] + "/articles/" + article.title[locale].replaceAll(" ", "_"), {state: article});
+  }
 
   return (
     <Row
@@ -20,6 +26,7 @@ const Article = ({ article }) => {
       tabIndex={0}
       justify="space-around"
       align="middle"
+      onClick={(clickArticle)}
     >
       <Col
         md={8}
