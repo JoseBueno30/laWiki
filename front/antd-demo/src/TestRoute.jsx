@@ -7,6 +7,7 @@ import ArticleList from "./modules/articles/components/article-list/article-list
 import WikiEditPage from "./modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import ArticleEditPage from "./modules/articles/pages/article-edit-page/article-edit-page";
 import WikiCreatePage from "./modules/wiki/pages/wiki-create-page/wiki-create-page";
+import NotFound from "./modules/wiki/pages/wiki-not-found/wiki-not-found";
 
 const TestRoute = () => {
   const { colorTheme, toggleTheme } = useContext(SettingsContext);
@@ -20,7 +21,8 @@ const TestRoute = () => {
       {/* <h1>{location.pathname}</h1>
       <Button onClick={toggleTheme}>Toggle theme</Button>
       <RatingsSection/> */}
-      <WikiCreatePage></WikiCreatePage>
+      {/*<WikiCreatePage></WikiCreatePage>*/}
+      {<NotFound status_code={404} error_message={"Test message"}></NotFound>}
       {/* <WikiEditPage></WikiEditPage> */}
       {/* <ArticleEditPage></ArticleEditPage> */}
     </>
