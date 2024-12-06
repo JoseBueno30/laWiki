@@ -7,25 +7,27 @@ import { useState, useEffect, useContext } from "react";
 import { SettingsContext } from "../../../../context/settings-context";
 import WikiCardGrid from "../../components/wiki-card-grid/wiki-card-grid";
 import WikiService from "../../service/wiki-service";
-const { searchWikis } = WikiService();
+const { searchWikisWithParams, searchWikisWithPaginationURL } = WikiService();
 
 const searchLimit = 6;
 
 const WikiSearchResultsPage = () => {
   const { t } = useTranslation();
   const { locale } = useContext(SettingsContext);
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
-
   const pagination_url = location.state;
+  
+  const [loading, setLoading] = useState(true);
+  
   const [wikis, setWikis] = useState([]);
   const [prevPageURL, setPrevPageURL] = useState(null);
   const [nextPageURL, setNextPageURL] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState(null);
 
-  const [loading, setLoading] = useState(true);
   const [response, setResponse] = useState(null);
 
   const navigateToPage = (pagination_url, next_page) => {
@@ -42,32 +44,27 @@ const WikiSearchResultsPage = () => {
     setWikis(http_response.wikis);
     setPrevPageURL(http_response.prev);
     setNextPageURL(http_response.next);
-
-    formatFilters(http_response.query_params);
   };
 
-  const getWikiResults = async () => {
+  const searchWikis = async () => {
+    setLoading(true);
     try {
+
       const queryParams = retrieveSearchParams();
-      // Actualiza la página y elimina el parámetro
-      setCurrentPage(Number(queryParams["page"]));
-      delete queryParams["page"];
 
-      console.log("QUERY PARAMS", queryParams);
-      const http_response = await searchWikis(queryParams);
-      console.log("HTTP RESPONSE", http_response.wikis);
-      updateState(http_response);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      var HTTPResponse;
+      if (pagination_url != null) {
+        HTTPResponse = await searchWikisWithPaginationURL(pagination_url);
+      } else {
+        HTTPResponse = await searchWikisWithParams(queryParams);
+      }
 
-  const getWikiResultsByPaginationURL = async (url) => {
-    try {
-      const http_response = await getWikiResultsByPaginationURL(url);
-      updateState(http_response);
+      updateState(HTTPResponse);
+
+      formatFilters(queryParams);
+
+      if (searchParams.get("page")) setCurrentPage(Number(searchParams.get("page")))
+      
     } catch (error) {
       console.error(error);
     } finally {
@@ -76,8 +73,8 @@ const WikiSearchResultsPage = () => {
   };
 
   const retrieveSearchParams = () => {
-    const queryParams = {};
-    queryParams["name"] = (searchParams.get("name") || "").replace("_", " ");
+    var queryParams = {};
+    queryParams["name"] = (searchParams.get("name") || "").replaceAll("_", " ");
     queryParams["order"] = searchParams.get("order");
     if (searchParams.has("creation_date"))
       queryParams["creation_date"] = searchParams.get("creation_date");
@@ -86,10 +83,17 @@ const WikiSearchResultsPage = () => {
     queryParams["offset"] = (currentPage - 1) * searchLimit;
     queryParams["limit"] = searchLimit;
 
+    queryParams = Object.fromEntries(
+      Object.entries(queryParams).filter(
+        ([_, value]) => value && value.length !== 0
+      )
+    );
+
     return queryParams;
   };
 
   const formatFilters = (queryParams) => {
+    delete queryParams.name;
     delete queryParams.offset;
     delete queryParams.limit;
 
@@ -106,22 +110,18 @@ const WikiSearchResultsPage = () => {
   useEffect(() => {
     console.log("USE EFFECT");
     setLoading(true);
-    if (pagination_url != null) {
-      getWikiResultsByPaginationURL(pagination_url);
-    } else {
-      getWikiResults();
-    }
-  }, [searchParams, locale]);
+    searchWikis();
+  }, [searchParams, locale, currentPage]);
 
   return (
-    <Flex vertical style={{ width: "100%", paddingLeft:"50px" }}>
+    <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
       {loading || response == null ? (
         <Spin size="large" style={{ paddingTop: "40vh" }} />
       ) : (
         <>
           <Title level={3}>
             {t("search.search-results", {
-              query: (searchParams.get("name") || "").replace("_", " "),
+              query: (searchParams.get("name") || "").replaceAll("_", " "),
             })}
           </Title>
           <Title level={4}>
@@ -135,6 +135,7 @@ const WikiSearchResultsPage = () => {
           ) : (
             <>
               <WikiCardGrid wikiList={wikis} />
+
               <Row
                 align="middle"
                 justify="space-around"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./articles-search-result-page.css";
-import { Flex, Row, Col, Button, Spin } from "antd";
+import { Flex, Row, Col, Button, Spin, Space } from "antd";
 import {
   useSearchParams,
   useNavigate,
@@ -113,7 +113,7 @@ const ArticlesSearchResultPage = () => {
   }, [wiki, searchParams, currentPage]);
 
   return (
-    <Flex vertical align="center" style={{ width: "100%"}}>
+    <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
       {loading || response == null ? (
         <Spin size="large" style={{ paddingTop: "40vh" }} />
       ) : (
@@ -127,8 +127,8 @@ const ArticlesSearchResultPage = () => {
           {articles.length == 0 ? (
             <Title level={3}>{t("search-noresults")}</Title>
           ) : (
-            <>
-              <ArticleList articleList={articles} />
+            <Flex vertical align="center" style={{width:"85%"}}>
+              <ArticleList articleList={articles}/>
               <Row
                 align="middle"
                 justify="space-around"
@@ -158,7 +158,7 @@ const ArticlesSearchResultPage = () => {
                   </Button>
                 </Col>
               </Row>
-            </>
+            </Flex>
           )}
         </>
       )}

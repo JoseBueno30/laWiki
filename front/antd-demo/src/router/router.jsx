@@ -8,7 +8,7 @@ import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
-import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results/wiki-search-results-page";
+import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results-page/wiki-search-results-page";
 
 // The structure of the application's routes
 
