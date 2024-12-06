@@ -31,7 +31,7 @@ const ArticlesSearchResultPage = () => {
   const [prevPageURL, setPrevPageURL] = useState(null);
   const [nextPageURL, setNextPageURL] = useState(null);
 
-  const { t } = useTranslation('search');
+  const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
 
   const getArticlesSearchResultPage = async (url, increase) => {
@@ -105,7 +105,6 @@ const ArticlesSearchResultPage = () => {
   };
 
   useEffect(() => {
-    console.log("USE EFFECT");
     setLoading(true);
     if(wiki.wiki_info!=null){
       searchArticles();
@@ -119,13 +118,13 @@ const ArticlesSearchResultPage = () => {
       ) : (
         <>
           <Title level={3} className="article-search-results-title">
-            {t("search-results", {query: (searchParams.get("name") || "").replace("_", " ")})}
+            {t("search.search-results", {query: (searchParams.get("edit.name") || "").replaceAll("_", " ")})}
           </Title>
           <Title level={4} className="article-search-results-info">
-            {t("search-description", {total: response.total, filters: filters})}
+            {t("search.search-description", {total: response.total, filters: filters})}
           </Title>
           {articles.length == 0 ? (
-            <Title level={3}>{t("search-noresults")}</Title>
+            <Title level={3}>{t("search.search-noresults")}</Title>
           ) : (
             <Flex vertical align="center" style={{width:"85%"}}>
               <ArticleList articleList={articles}/>
@@ -141,12 +140,11 @@ const ArticlesSearchResultPage = () => {
                     disabled={prevPageURL == null}
                     onClick={() => getArticlesSearchResultPage(prevPageURL, -1)}
                   >
-                    {t("previous-page")}
+                    {t("common.previous-page")}
                   </Button>
                 </Col>
                 <Col xs={24} sm={8} align="center">
-                  Page {currentPage} of{" "}
-                  {Math.ceil(response.total / response.limit)}
+                  {t("common.pagination", {page:currentPage, total: Math.ceil(response.total / response.limit)})}
                 </Col>
                 <Col xs={24} sm={8} align="center">
                   <Button
@@ -154,7 +152,7 @@ const ArticlesSearchResultPage = () => {
                     disabled={nextPageURL == null}
                     onClick={() => getArticlesSearchResultPage(nextPageURL, 1)}
                   >
-                    {t("next-page")}
+                    {t("common.next-page")}
                   </Button>
                 </Col>
               </Row>

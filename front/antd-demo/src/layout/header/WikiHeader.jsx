@@ -67,7 +67,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
     }
 
     const searchParams = new URLSearchParams();
-    searchParams.append("name", searchQuery);
+    searchParams.append("name", searchQuery.replaceAll(" ", "_"));
     searchParams.append("order", filters.order);
     if (filters.tags.length > 0)
       searchParams.append("tags", filters.tags.join(","));

@@ -5,6 +5,8 @@ import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import ArticlePage from "../modules/articles/pages/article-page/article-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
+import EditArticlePage from "../modules/articles/pages/edit-article-page/edit-article-page";
+import CreateArticlePage from "../modules/articles/pages/create-article-page/create-article-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
@@ -31,6 +33,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "", element: <WikiRecommendationPage /> }, // Página principal
+      // { path: "", element: <WikiRecommendationPage /> }, // Página principal
       {
         path: "wikis",
         children: [
@@ -45,9 +48,9 @@ const router = createBrowserRouter([
               {
                 path: "articles",
                 children: [
-                  { path: "new", element: <TestRoute /> }, // Crear artículo
+                  { path: "new", element: <CreateArticlePage /> }, // Crear artículo
                   { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
-                  { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
+                  { path: ":article_name/edit", element: <EditArticlePage /> }, // Editar artículo
                 ],
               },
             ],
