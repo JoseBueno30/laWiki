@@ -57,7 +57,7 @@ const WikiHeader = () => {
     searchParams.append("name", searchQuery);
     searchParams.append("order", filters.order);
     if (isQueryValid(filters.author))
-      searchParams.append("author", filters.author);
+      searchParams.append("author_name", filters.author);
     if (isQueryValid(filters.startDate) || isQueryValid(filters.endDate))
       searchParams.append(
         "creation_date",
