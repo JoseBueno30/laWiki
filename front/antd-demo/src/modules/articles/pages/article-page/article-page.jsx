@@ -32,6 +32,7 @@ const quislantArticle =
     id: "672272c65150a9cd3f46599e"
   }
 
+let article = location.state;
 const ArticlePage = () => {
 
   const {wiki} = useContext(WikiContext)
@@ -40,8 +41,7 @@ const ArticlePage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const article = location.state;
-  console.log("LOCATION: ",article)
+  // console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
@@ -64,14 +64,20 @@ const ArticlePage = () => {
     setComments(comments_response)
   }
 
-  useEffect(() =>{
-    const fetchArticleVersion = async () =>{
-      // AÑADIR PROP DE ARTICULO -> SI ES NULO BUSCAR CON LA URL Y SIN LENGUAJE
-      console.log("WIKI", wiki)
-      const articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
-      const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, locale) 
-      setArticleVersion(version_response)
+  const fetchArticleVersion = async () =>{
+    let articleName
+    if(article){
+      articleName = article.title[locale]
+    }else{
+      articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
     }
+    const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
+    console.log(version_response)
+    setArticleVersion(version_response)
+  }
+  
+  useEffect(() =>{
+    
     if (wiki){
       fetchArticleVersion();
     }
@@ -79,8 +85,19 @@ const ArticlePage = () => {
 
   const fetchVersions = async () =>{
     //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
-    const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
-    setVersions(versions_response.article_versions)
+    console.log("Article ? ", article)
+    if (!article){
+      const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
+      setVersions(versions_response.article_versions)
+    }else{
+      setVersions(article.versions)
+    }
+  }
+
+  const fetchUpdatedArticle = async () =>{
+    const article_response = await ArticleService().getArticleById(articleVersion.article_id)
+    article = article_response
+    fetchVersions()
   }
 
   useEffect(() =>{
@@ -110,9 +127,15 @@ const ArticlePage = () => {
   }, [articleVersion, versions])
 
   useEffect(() =>{
-    if(articleVersion){
-      changeURL()
+    const reloadVersionWithLocale = async () =>{
+      if(articleVersion){
+        await fetchUpdatedArticle()
+        console.log("article", article)
+        fetchArticleVersion()
+        changeURL()
+      }
     }
+    reloadVersionWithLocale()
   }, [locale])
   
   const formatVersions = () => {
@@ -177,7 +200,7 @@ const ArticlePage = () => {
 
   const restoreArticleVersion = async () =>{
     const restore_response = await ArticleService().restoreArticleVersion(articleVersion.article_id, articleVersion.id)
-    // fetchVersions()  
+    fetchUpdatedArticle()  
     changeURL()
   }
 
