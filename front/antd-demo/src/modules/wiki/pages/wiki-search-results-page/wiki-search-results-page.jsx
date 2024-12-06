@@ -54,7 +54,7 @@ const WikiSearchResultsPage = () => {
 
       var HTTPResponse;
       if (pagination_url != null) {
-        HTTPResponse = await searchWikisWithPaginationURL(pagination_url);
+        HTTPResponse = await searchWikisWithPaginationURL(pagination_url, locale);
       } else {
         HTTPResponse = await searchWikisWithParams(queryParams);
       }

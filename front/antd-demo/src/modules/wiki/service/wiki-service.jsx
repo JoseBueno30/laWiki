@@ -44,9 +44,10 @@ const WikiService = () => {
     }
   };
 
-  const searchWikisWithPaginationURL = async (paginationURL) => {
+  const searchWikisWithPaginationURL = async (paginationURL, locale) => {
     try {
-      return await APIGateway.get("http://localhost:3000/v1" + paginationURL);
+      const url = paginationURL + "&lang=" + locale;
+      return await APIGateway.get("http://localhost:3000/v1" + url);
     }catch (error) {
       console.error("WikiService.searchWikis:", error);
       return Promise.reject(error);
@@ -55,11 +56,6 @@ const WikiService = () => {
 
   const searchWikisWithParams = async (queryParams) => {
     try {
-      // const params = new URLSearchParams(queryParams);
-      // const lang = localStorage.getItem("locale");
-      // params.set("lang", lang);
-
-      // const url = `/v1/wikis?${params.toString()}`;
       return await APIGateway.get("http://localhost:3000/v1/wikis", {
         params: queryParams,
       });
