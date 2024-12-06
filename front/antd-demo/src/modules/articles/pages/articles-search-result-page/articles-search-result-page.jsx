@@ -65,9 +65,9 @@ const ArticlesSearchResultPage = () => {
 
       var queryParams = {
         wiki_id: wiki.wiki_info.id,
-        name: (searchParams.get("name") || "").replace("_", " "),
+        name: (searchParams.get("name") || "").replaceAll("_", " "),
         tags: searchParams.getAll("tags"),
-        offset: (currentPage - 1) * searchLimit,
+        offset: ((searchParams.get("page") || 1) - 1) * searchLimit,
         limit: searchLimit,
         order: searchParams.get("order") || "",
         creation_date: searchParams.get("creation_date") || "",
@@ -110,7 +110,7 @@ const ArticlesSearchResultPage = () => {
     if(wiki.wiki_info!=null){
       searchArticles();
     }
-  }, [wiki, searchParams, currentPage]);
+  }, [wiki, searchParams]);
 
   return (
     <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>

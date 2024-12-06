@@ -42,7 +42,7 @@ const WikiSearchResultsPage = () => {
   const updateState = (http_response) => {
     setResponse(http_response);
     setWikis(http_response.wikis);
-    setPrevPageURL(http_response.prev);
+    setPrevPageURL(http_response.previous);
     setNextPageURL(http_response.next);
   };
 
@@ -73,15 +73,15 @@ const WikiSearchResultsPage = () => {
   };
 
   const retrieveSearchParams = () => {
-    var queryParams = {};
-    queryParams["name"] = (searchParams.get("name") || "").replaceAll("_", " ");
-    queryParams["order"] = searchParams.get("order");
-    if (searchParams.has("creation_date"))
-      queryParams["creation_date"] = searchParams.get("creation_date");
-    if (searchParams.has("author_name"))
-      queryParams["author_name"] = searchParams.get("author_name");
-    queryParams["offset"] = (currentPage - 1) * searchLimit;
-    queryParams["limit"] = searchLimit;
+    var queryParams = {
+      name: (searchParams.get("name") || "").replaceAll("_", " "),
+      offset: ((searchParams.get("page") || 1) - 1) * searchLimit,
+      limit: searchLimit,
+      order: searchParams.get("order") || "",
+      creation_date: searchParams.get("creation_date") || "",
+      author_name: searchParams.get("author_name") || "",
+      lang: locale,
+    };
 
     queryParams = Object.fromEntries(
       Object.entries(queryParams).filter(
@@ -96,6 +96,7 @@ const WikiSearchResultsPage = () => {
     delete queryParams.name;
     delete queryParams.offset;
     delete queryParams.limit;
+    delete queryParams.lang;
 
     let filterParams = new URLSearchParams(queryParams)
       .toString()
@@ -111,7 +112,7 @@ const WikiSearchResultsPage = () => {
     console.log("USE EFFECT");
     setLoading(true);
     searchWikis();
-  }, [searchParams, locale, currentPage]);
+  }, [searchParams, locale]);
 
   return (
     <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>

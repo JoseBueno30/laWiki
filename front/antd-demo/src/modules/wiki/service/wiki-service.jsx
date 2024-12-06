@@ -55,13 +55,13 @@ const WikiService = () => {
 
   const searchWikisWithParams = async (queryParams) => {
     try {
-      const params = new URLSearchParams(queryParams);
-      const lang = localStorage.getItem("locale");
-      params.set("lang", lang);
+      // const params = new URLSearchParams(queryParams);
+      // const lang = localStorage.getItem("locale");
+      // params.set("lang", lang);
 
-      const url = `/v1/wikis?${params.toString()}`;
+      // const url = `/v1/wikis?${params.toString()}`;
       return await APIGateway.get("http://localhost:3000/v1/wikis", {
-        params: params,
+        params: queryParams,
       });
     }catch (error) {
       console.error("WikiService.searchWikis:", error);
