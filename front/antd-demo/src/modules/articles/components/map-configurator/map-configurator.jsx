@@ -1,6 +1,6 @@
 import './map-configurator.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Flex } from 'antd';
+import { Button, Flex, Row, Col } from 'antd';
 import 'ol/ol.css';
 import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
@@ -12,6 +12,7 @@ import { Point } from 'ol/geom';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Icon, Style } from 'ol/style';
+import { useTranslation } from "react-i18next";
 
 const MapConfigurator = ({ onSave }) => {
   const mapRef = useRef(null);
@@ -19,6 +20,8 @@ const MapConfigurator = ({ onSave }) => {
   const [vectorLayer, setVectorLayer] = useState(null);
   const [centerMarkerFeature, setCenterMarkerFeature] = useState(null);
   const [userLocation, setUserLocation] = useState([0, 0]);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -120,14 +123,32 @@ const MapConfigurator = ({ onSave }) => {
 
   return (
     <div>
-        <Flex style={{paddingBottom:5}}>
+        <Row
+          style={{paddingBottom:5, width:"100%"}}
+          tabIndex={0}
+          justify="space-around"
+          align="middle"
+        >
+          <Col
+        sm={12}
+        xs={24}
+        align="center"
+      >
         <Button onClick={() => addMarker(mapRef.current.getView().getCenter())} type="primary">
-          Añadir Marcador en el Centro
+          {t("edit.add-marker")}
         </Button>
+      </Col>
+      <Col
+        sm={12}
+        xs={24}
+        align="center"
+      >
         <Button onClick={handleSave} style={{ marginLeft: '10px' }}>
-          Guardar Configuración
+        {t("edit.save-map")}
         </Button>
-        </Flex>
+      </Col>
+
+        </Row>
       <div id="map-container" style={{ width: '100%', height: '70vh' }}></div>
     </div>
   );

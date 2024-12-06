@@ -6,7 +6,7 @@ import './i18n.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Suspense fallback="loading">
+    <Suspense fallback="">
       <App />
     </Suspense>
   </StrictMode>

@@ -1,16 +1,24 @@
 import React, { useContext } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./article.css";
 import { Grid, Flex, Rate, Row, Col } from "antd";
 import UserAvatar from "../../../wiki/components/avatar/user-avatar";
 import SettingsContext from "../../../../context/settings-context";
+import { useTranslation } from 'react-i18next';
 
 const { useBreakpoint } = Grid;
 
 const Article = ({ article }) => {
   const { locale } = useContext(SettingsContext);
   const screens = useBreakpoint();
+  const {t} = useTranslation()
 
-  //Match title with current language of the App
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const clickArticle = () =>{
+    navigate(location.pathname.split("/search")[0] + "/articles/" + article.title[locale].replaceAll(" ", "_"), {state: article});
+  }
 
   return (
     <Row
@@ -20,6 +28,7 @@ const Article = ({ article }) => {
       tabIndex={0}
       justify="space-around"
       align="middle"
+      onClick={(clickArticle)}
     >
       <Col
         md={8}
@@ -45,7 +54,7 @@ const Article = ({ article }) => {
         sm={5}
         xs={24}
         className="article-date"
-        title={"Last modified: " + article.creation_date.split("T")[0]}
+        title={t("article.last-modified") + article.creation_date.split("T")[0]}
         align="center"
       >
         {article.creation_date.split("T")[0]}
