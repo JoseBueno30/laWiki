@@ -153,8 +153,7 @@ const WikiSearchResultsPage = () => {
                   </Button>
                 </Col>
                 <Col xs={24} sm={8} align="center">
-                  Page {currentPage} of{" "}
-                  {Math.ceil(response.total / response.limit)}
+                  {t('common.pagination', {page:currentPage, total: Math.ceil(response.total / response.limit)})}
                 </Col>
                 <Col xs={24} sm={8} align="center">
                   <Button

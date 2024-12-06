@@ -36,8 +36,6 @@ const WikiHeader = () => {
   const [showSearchHeader, setSearchHeader] = useState(true);
   const [filters, setFilters] = useState({
     order: "recent",
-    author: "",
-    startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
