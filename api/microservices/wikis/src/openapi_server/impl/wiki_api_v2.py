@@ -273,6 +273,9 @@ class WikiApi(BaseDefaultV2Api):
                     "&limit=" + str(limit)) if (offset + limit) < total_count else None
         previous_url = (url_filters + "offset=" + str(max(offset - limit, 0)) + 
                         "&limit=" + str(limit)) if offset > 0 else None
+        
+        #if lang is not None:
+        #    url_filters += "lang=" + lang + "&"
 
         # https://www.google.com/search?q=paging+meaning
         paging_pipeline = [
@@ -319,10 +322,15 @@ class WikiApi(BaseDefaultV2Api):
         #print(wikis[0]["wikis"])
 
         if not wikis:
-            raise LookupError("Cannot find Wiki")
-        
+            return {"wikis": [],
+                    "total": total_count,
+                    "offset": offset,
+                    "limit": limit,
+                    "next": next_url,
+                    "previous": previous_url
+            }
+
         if lang is not None:
-            url_filters += "lang=" + lang + "&"
             ids = list(map(lambda x: ObjectId(x["id"]),wikis[0]["wikis"]))
             print(ids)
             try:
@@ -330,8 +338,6 @@ class WikiApi(BaseDefaultV2Api):
             except:
                 print("Error buscando traducciones")
             
-            traducciones.sort(key=operator.itemgetter("wiki_id"))
-            wikis[0]["wikis"].sort(key=operator.itemgetter("id"))
             print("Diferencia: " + str(len(traducciones) - len(wikis[0]["wikis"])))
             wiki_ids = list(map(lambda x: x["wiki_id"],traducciones))
             print(wiki_ids)
