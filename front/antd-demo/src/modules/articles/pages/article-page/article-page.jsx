@@ -87,7 +87,7 @@ const ArticlePage = () => {
     //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
     console.log("Article ? ", article)
     if (!article){
-      const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
+      const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id, 'recent')
       setVersions(versions_response.article_versions)
     }else{
       setVersions(article.versions)

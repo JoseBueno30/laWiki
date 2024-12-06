@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-page/article-page.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/modules/articles/pages/article-page/article-page.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +68,7 @@
       <workItem from="1733221682996" duration="117000" />
       <workItem from="1733238525455" duration="652000" />
       <workItem from="1733333907772" duration="2013000" />
-      <workItem from="1733476560480" duration="6565000" />
+      <workItem from="1733476560480" duration="9592000" />
     </task>
     <servers />
   </component>

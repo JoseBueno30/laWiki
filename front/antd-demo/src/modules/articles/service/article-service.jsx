@@ -16,9 +16,12 @@ const ArticleService = () =>{
         }
     }
 
-    const getArticleVersionsByArticleID = async (article_id) =>{
+    const getArticleVersionsByArticleID = async (article_id, order) =>{
         try{
-            const url = `v1/articles/${article_id}/versions`
+            const params = new URLSearchParams({
+                order: order
+            })
+            const url = `v1/articles/${article_id}/versions?${params.toString()}`
             const response = await APIGateway.get(url)
             return response
         }catch(error){
