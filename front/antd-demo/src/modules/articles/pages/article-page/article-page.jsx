@@ -195,7 +195,7 @@ const quislantArticle =
   }
 
   const editArticle = () =>{
-    navigate(location.pathname + "/edit", {state: {articleVersion: articleVersion, lan: article.lan}})
+    navigate(location.pathname + "/edit", {state: {articleVersion: articleVersion, lan: articleVersion.lan}})
   }
 
   const restoreArticleVersion = async () =>{
