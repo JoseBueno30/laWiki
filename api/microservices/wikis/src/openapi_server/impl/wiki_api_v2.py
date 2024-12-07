@@ -245,8 +245,8 @@ class WikiApi(BaseDefaultV2Api):
                 }
             elif len(dates) == 2:
                 filters["creation_date"] = {
-                    "$gte": dates[0].replace("/","-"),
-                    "$lte": dates[1].replace("/","-")
+                    "$gte": (datetime.strptime(dates[0] , "%Y/%m/%d")),
+                    "$lte": (datetime.strptime(dates[1] , "%Y/%m/%d"))
                 }
 
             url_filters += "creation_date=" + creation_date + "&"
