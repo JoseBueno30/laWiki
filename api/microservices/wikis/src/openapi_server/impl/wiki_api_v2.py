@@ -128,6 +128,13 @@ async def translate_wiki(languages : List[str], wiki_lang: str, name: Dict[str, 
         translation["lang"] = lang
         translation["name"] = name[lang]
         upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : lang}, translation,upsert=True)
+    translation = {}
+    translation["wiki_id"] = target_wiki
+    translation["description"] = description
+    translation["lang"] = wiki_lang
+    translation["name"] = name[wiki_lang]
+    upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : wiki_lang}, translation,upsert=True)
+    
 
 async def translate_name(wiki: NewWikiV2):
     if wiki.translate:
