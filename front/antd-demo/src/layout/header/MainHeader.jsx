@@ -61,6 +61,8 @@ const WikiHeader = () => {
         "creation_date",
         generateDateRange(filters.startDate, filters.endDate)
       );
+    searchParams.append("page", 1);
+
 
     const searchUrl = `/wikis/search?${searchParams.toString()}`;
     navigate(searchUrl);
