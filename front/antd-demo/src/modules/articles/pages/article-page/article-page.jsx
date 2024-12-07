@@ -32,15 +32,15 @@ const quislantArticle =
     id: "672272c65150a9cd3f46599e"
   }
 
-let article = location.state;
-const ArticlePage = () => {
-
-  const {wiki} = useContext(WikiContext)
-  const {locale} = useContext(SettingsContext)
-  const {t} = useTranslation()
-
-  const navigate = useNavigate();
-  const location = useLocation();
+  const ArticlePage = () => {
+    
+    const {wiki} = useContext(WikiContext)
+    const {locale} = useContext(SettingsContext)
+    const {t} = useTranslation()
+    
+    const navigate = useNavigate();
+    const location = useLocation();
+    let article = location.state;
   // console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
@@ -195,7 +195,7 @@ const ArticlePage = () => {
   }
 
   const editArticle = () =>{
-    navigate(location.pathname + "/edit", {state: articleVersion})
+    navigate(location.pathname + "/edit", {state: {articleVersion: articleVersion, lan: article.lan}})
   }
 
   const restoreArticleVersion = async () =>{

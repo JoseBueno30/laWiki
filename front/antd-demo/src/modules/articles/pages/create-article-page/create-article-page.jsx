@@ -308,11 +308,6 @@ const CreateArticlePage = () => {
               <Button>{t("edit.cancel-button")}</Button>
             </Popconfirm>
             
-
-            {/* TODO: Only allow the author of the article to delete it */}
-            {/* <Button danger className="right-button">
-              Delete article
-            </Button> */}
           </div>
         </div>
       )}
