@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import RootLayout from "../layout/root-layout";
 import TestRoute from "../TestRoute";
 import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-result-page/articles-search-result-page";
@@ -50,10 +50,14 @@ const router = createBrowserRouter([
                   { path: "new", element: <TestRoute /> }, // Crear artículo
                   { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
                   { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
+                  { path: "*", element: <Navigate to="not_found" relative replace/> }, // Página no encontrada
                 ],
               },
             ],
           },
+          {
+            path: "*", element: <Navigate to="not_found" relative replace/>,
+          }
         ],
       },
       { path: "testing", element: <TestRoute /> }, // Ruta de testing
@@ -61,6 +65,7 @@ const router = createBrowserRouter([
   },
   { path: "/login", element: <TestRoute /> },
   { path: "/register", element: <TestRoute /> },
+  { path: "*", element: <NotFoundPage status_code={404} resource_type="Page" /> }, // Página no encontrada
 ]);
 
 export default router;
