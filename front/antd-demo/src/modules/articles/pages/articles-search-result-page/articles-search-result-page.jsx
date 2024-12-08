@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./articles-search-result-page.css";
-import { Flex, Row, Col, Button, Spin } from "antd";
+import { Flex, Row, Col, Button, Spin, Space } from "antd";
 import {
   useSearchParams,
   useNavigate,
@@ -67,7 +67,7 @@ const ArticlesSearchResultPage = () => {
         wiki_id: wiki.wiki_info.id,
         name: (searchParams.get("name") || "").replaceAll("_", " "),
         tags: searchParams.getAll("tags"),
-        offset: (currentPage - 1) * searchLimit,
+        offset: ((searchParams.get("page") || 1) - 1) * searchLimit,
         limit: searchLimit,
         order: searchParams.get("order") || "",
         creation_date: searchParams.get("creation_date") || "",
@@ -109,10 +109,10 @@ const ArticlesSearchResultPage = () => {
     if(wiki.wiki_info!=null){
       searchArticles();
     }
-  }, [wiki, searchParams, currentPage]);
+  }, [wiki, searchParams]);
 
   return (
-    <Flex vertical align="center" style={{ width: "100%"}}>
+    <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
       {loading || response == null ? (
         <Spin size="large" style={{ paddingTop: "40vh" }} />
       ) : (
@@ -126,8 +126,8 @@ const ArticlesSearchResultPage = () => {
           {articles.length == 0 ? (
             <Title level={3}>{t("search.search-noresults")}</Title>
           ) : (
-            <>
-              <ArticleList articleList={articles} />
+            <Flex vertical align="center" style={{width:"85%"}}>
+              <ArticleList articleList={articles}/>
               <Row
                 align="middle"
                 justify="space-around"
@@ -156,7 +156,7 @@ const ArticlesSearchResultPage = () => {
                   </Button>
                 </Col>
               </Row>
-            </>
+            </Flex>
           )}
         </>
       )}

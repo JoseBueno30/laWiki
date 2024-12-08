@@ -9,6 +9,7 @@ import EditArticlePage from "../modules/articles/pages/edit-article-page/edit-ar
 import CreateArticlePage from "../modules/articles/pages/create-article-page/create-article-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
+import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results-page/wiki-search-results-page";
 
 // The structure of the application's routes
 
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
       {
         path: "wikis",
         children: [
-          { path: "search", element: <TestRoute /> }, // Buscar wikis
+          { path: "search", element: <WikiSearchResultsPage/> }, // Buscar wikis
           { path: "new", element: <WikiCreatePage /> }, // Crear wiki
           {
             path: ":wiki_name",

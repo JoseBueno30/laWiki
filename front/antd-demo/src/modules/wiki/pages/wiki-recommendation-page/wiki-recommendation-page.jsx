@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./wiki-recommendation-page.css";
 import "../../../../assets/css/pages.css";
 import WikiCardGrid from "../../components/wiki-card-grid/wiki-card-grid";
@@ -7,8 +7,10 @@ import { Spin } from "antd";
 import { useTranslation } from 'react-i18next';
 import WikiService from "../../service/wiki-service";
 const { getRatedWikis } = WikiService();
+import { SettingsContext } from "../../../../context/settings-context";
 
 const WikiRecommendationPage = () => {
+  const { locale } = useContext(SettingsContext);
   const { t } = useTranslation();
   const [wikiList, setWikiList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ const WikiRecommendationPage = () => {
     };
 
     fetchHighestRatedWikis();
-  }, []);
+  }, [locale]);
 
   return (
     <>
