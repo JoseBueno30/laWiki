@@ -6,7 +6,8 @@ import { useTranslation } from "react-i18next";
 import "./wiki-create-page.css";
 import WikiService from "../../service/wiki-service";
 import SettingsContext from "../../../../context/settings-context";
-import { uploadImage } from "../../../articles/service/article_service";
+import ArticleService from "../../../articles/service/article-service";
+const { uploadImage } = ArticleService();
 
 const { createWiki, createWikiTag } = WikiService();
 const { TextArea } = Input;

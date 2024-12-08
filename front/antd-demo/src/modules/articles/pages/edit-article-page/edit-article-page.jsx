@@ -22,12 +22,11 @@ const { TextArea } = Input;
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import "./edit-article-page.css";
 import MapConfigurator from "../../components/map-configurator/map-configurator";
-import {
-  createArticleVersion,
+import ArticleService from "../../service/article-service";
+const { createArticleVersion,
   getArticleWikiTextBody,
   getWikiTags,
-  uploadImage,
-} from "../../service/article_service";
+  uploadImage } = ArticleService();
 
 
 const EditArticlePage = () => {

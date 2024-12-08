@@ -17,6 +17,7 @@ export const WikiProvider = ({ children }) => {
   const [wiki, setWiki] = useState({ wiki_name: "", wiki_info: null });
   const { wiki_name } = useParams();
   const { locale } = useContext(SettingsContext);
+  const navigate = useNavigate();
   const location = useLocation();
 
   const fetchWiki = async () => {
@@ -28,7 +29,7 @@ export const WikiProvider = ({ children }) => {
       setWiki({ wiki_name: wiki_name, wiki_info: wikiData });
       
     } catch (error) {
-      console.error("WikiProvider:", error);
+      navigate(location.pathname.split("/wikis")[0] + "/wikis/not_found");
     }
   };
 

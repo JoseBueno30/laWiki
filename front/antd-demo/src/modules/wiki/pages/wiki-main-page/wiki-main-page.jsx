@@ -11,7 +11,10 @@ import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import WikiService from "../../service/wiki-service";
 import { WikiContext } from '../../../../context/wiki-context';
-import { searchArticlesWithParams } from '../../../articles/service/article_service';
+import ArticleService from '../../../articles/service/article-service';
+const { searchArticlesWithParams } = ArticleService();
+
+
 
 const WikiMainPage = () => {
   const location = useLocation();
@@ -54,10 +57,16 @@ const WikiMainPage = () => {
         const recentArticles = await searchArticlesWithParams(queryParamsRecent);
         setRatedArticles(ratedArticles);
         setRecentArticles(recentArticles);
-        setLoading(false);
     };
-
-    fetchWikiArticles();
+    
+    setLoading(false);
+    try{
+      fetchWikiArticles();
+    }catch(error){
+      navigate(location.pathname.split("/wikis")[0] + "/wikis/not_found");
+    }finally{
+      setLoading(false);
+    }
   }, [wiki]);
 
   return (
