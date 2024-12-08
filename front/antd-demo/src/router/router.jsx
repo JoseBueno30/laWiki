@@ -9,7 +9,6 @@ import EditArticlePage from "../modules/articles/pages/edit-article-page/edit-ar
 import CreateArticlePage from "../modules/articles/pages/create-article-page/create-article-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
-import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
 import NotFoundPage from "../modules/wiki/pages/wiki-not-found/wiki-not-found";
 import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results-page/wiki-search-results-page";
 
@@ -51,9 +50,9 @@ const router = createBrowserRouter([
                 path: "articles",
                 children: [
                   { path: "not_found", element: <NotFoundPage status_code={404} resource_type="Article" /> }, // Wiki no encontrada
-                  { path: "new", element: <TestRoute /> }, // Crear artículo
+                  { path: "new", element: <CreateArticlePage /> }, // Crear artículo
                   { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
-                  { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
+                  { path: ":article_name/edit", element: <EditArticlePage/> }, // Editar artículo
                   { path: "*", element: <Navigate to="not_found" relative replace/> }, // Página no encontrada
                 ],
               },
