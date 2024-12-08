@@ -1,5 +1,5 @@
 import { useEffect, createContext, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SettingsContext } from "./settings-context";
 import WikiService from "../modules/wiki/service/wiki-service";

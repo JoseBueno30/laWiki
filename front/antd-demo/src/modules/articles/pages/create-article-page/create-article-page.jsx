@@ -91,7 +91,7 @@ const CreateArticlePage = () => {
     try {
       const imageUrl = await uploadImage(file);
 
-      const wikiTextImage = `[[File:${imageUrl}|title=""]]`;
+      const wikiTextImage = `[[File:${imageUrl}]]`;
 
       setBody(`${body}\n${wikiTextImage}`);
 
@@ -217,7 +217,7 @@ const CreateArticlePage = () => {
             <div className="tags-section edit-article-textarea">
               {tags.map((tag) => (
                 <Tag
-                  key={1}
+                  key={tag.id}
                   closable
                   onClose={() => removeTag(tag)}
                   className="tag-item"
