@@ -7,12 +7,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import ArticleList from "../../components/article-list/article-list";
-import {  } from "../../service/article_service";
-const { searchArticlesWithParams, searchArticlesWithPaginationURL } = ArticleService();
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 import { Typography } from "antd";
 import ArticleService from "../../service/article-service";
+const { searchArticlesWithParams, searchArticlesWithPaginationURL } = ArticleService();
 
 const { Title, Text } = Typography;
 
