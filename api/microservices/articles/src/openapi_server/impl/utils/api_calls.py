@@ -59,7 +59,7 @@ async def translate_body_to_lan(body, lan):
             "target": lan,
             "format": "html"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_URL}:{LIBRETRANSLATE_PORT}/translate", params=body_params, timeout=httpx.Timeout(180))
+        translation = await client.post(f"http://{LIBRETRANSLATE_URL}:{LIBRETRANSLATE_PORT}/translate", params=body_params, timeout=httpx.Timeout(500))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
