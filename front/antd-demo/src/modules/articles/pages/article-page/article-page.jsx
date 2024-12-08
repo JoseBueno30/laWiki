@@ -32,7 +32,7 @@ const quislantArticle =
     id: "672272c65150a9cd3f46599e"
   }
 
-  let article = location.state;
+  let article = null
   const ArticlePage = () => {
     
     const {wiki} = useContext(WikiContext)
@@ -41,6 +41,7 @@ const quislantArticle =
     
     const navigate = useNavigate();
     const location = useLocation();
+    article = article ? article : location.state;
   // console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
