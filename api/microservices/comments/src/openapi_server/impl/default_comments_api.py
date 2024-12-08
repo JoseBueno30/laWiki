@@ -3,7 +3,6 @@ from xml.dom import NotFoundErr
 
 from bson import ObjectId
 
-
 from openapi_server.apis.default_api_base import BaseDefaultApi
 from openapi_server.impl import api_calls
 from openapi_server.models.comment import Comment
@@ -53,6 +52,7 @@ pipeline_group_comments = [
     }
 ]
 
+
 class DefaultCommentsManager(BaseDefaultApi):
 
     async def delete_comment(self, comment_id: str) -> None:
@@ -73,7 +73,7 @@ class DefaultCommentsManager(BaseDefaultApi):
         """Retrieves all comments from an articles"""
         path = "/comments/articles/{article_id}"
         path_vars = {"article_id": article_id}
-        return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date,None ,article_id)
+        return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date, None, article_id)
 
     async def post_comment(
             self,
@@ -124,26 +124,31 @@ class DefaultCommentsManager(BaseDefaultApi):
         """Retrieves all comments from a user"""
         path = "/comments/users/{user_id}"
         path_vars = {"user_id": user_id}
-        return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date, user_id, article_id)
+        return await get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date, user_id,
+                                                article_id)
+
 
 def parse_date(date_str):
     res_date = datetime.strptime(date_str, "%Y/%m/%d")
     return res_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
+
 def build_pagination_urls(base_path, path_vars, pagination, offset, total_count, limit):
-    next_url = generate_url_offset(base_path, path_vars, pagination, offset + limit) if offset + limit < total_count else None
+    next_url = generate_url_offset(base_path, path_vars, pagination,
+                                   offset + limit) if offset + limit < total_count else None
     prev_url = generate_url_offset(base_path, path_vars, pagination, max(offset - limit, 0)) if offset > 0 else None
     return next_url, prev_url
 
 
-async def get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date = None, user_id = None, article_id = None):
+async def get_comments_by_parameters(path, path_vars, order, limit, offset, creation_date=None, user_id=None,
+                                     article_id=None):
     """General function to retrieve comments by parameters"""
-    res_query_params = {"limit": limit, "offset": offset} # Dictionary for pagination info in the url
-    matching_variables = {} # Dictionary for the filters
+    res_query_params = {"limit": limit, "offset": offset}  # Dictionary for pagination info in the url
+    matching_variables = {}  # Dictionary for the filters
 
     if user_id is not None:
         matching_variables["author._id"] = ObjectId(user_id)
-        if "user_id" not in path_vars: # Path variables dont need to be added to the query url
+        if "user_id" not in path_vars:  # Path variables dont need to be added to the query url
             res_query_params["user_id"] = user_id
     if article_id is not None:
         matching_variables["article_id"] = ObjectId(article_id)
@@ -161,12 +166,13 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
                 "$lte": parse_date(dates[1])
             }
 
-    total_count = await mongodb['comment'].count_documents(matching_variables) # Contamos el numero de comentarios que cumplen con los filtros
+    total_count = await mongodb['comment'].count_documents(matching_variables)  # Contamos el numero de comentarios que cumplen con los filtros
     next_url, prev_url = build_pagination_urls(path, path_vars,
-                                               res_query_params, offset, total_count, limit) # Generamos las urls de paginacion
+                                               res_query_params, offset, total_count,
+                                               limit)  # Generamos las urls de paginacion
     query_pipeline = [
         {"$match": matching_variables},
-        {"$sort": {"creation_date": -1 if order == "recent" else 1, "body" : 1}},
+        {"$sort": {"creation_date": -1 if order == "recent" else 1, "body": 1}},
         {"$skip": offset},
         {"$limit": limit},
         *pipeline_remove_id,
@@ -178,13 +184,19 @@ async def get_comments_by_parameters(path, path_vars, order, limit, offset, crea
             "limit": limit,
             "next": next_url,
             "previous": prev_url
-            }
+        }
         }
     ]
     comments = await mongodb['comment'].aggregate(query_pipeline).to_list(length=1);
-    print(comments[0])
-    if not comments:
-        raise NotFoundErr()
 
+    if not comments:
+        comments.append({
+            "comments": [],
+            "total": total_count,
+            "offset": offset,
+            "limit": limit,
+            "next": next_url,
+            "previous": prev_url
+        })
 
     return comments[0]
