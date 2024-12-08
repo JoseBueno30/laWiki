@@ -1,12 +1,13 @@
 .edit-article-section {
     width: 100%;
+    min-width: 400px;
     display: flex;
     align-items: center;
     flex-direction:column;
 }
   
 .edit-article-container {
-    width: 85vw;
+    width: 85%;
     display: flex;
     align-items: flex-start;
     flex-direction: column;

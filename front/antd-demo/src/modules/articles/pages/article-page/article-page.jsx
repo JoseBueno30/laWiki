@@ -1,5 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
+import {useNavigate, useLocation } from "react-router-dom";
 import {Button, Flex, Grid, Select, Spin} from "antd";
 import { EditOutlined, ReloadOutlined} from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
@@ -14,12 +15,12 @@ import SettingsContext from '../../../../context/settings-context';
 import RatingService from '../../../ratings/service/rating-service';
 import { useTranslation } from 'react-i18next';
 import JsxParser from 'react-jsx-parser';
+import MapView from '../../components/map-view/map-view';
 
 const {useBreakpoint} = Grid
 
-const MapView = null
 
-const article =
+const quislantArticle =
   {
     author:{
       image: "https://i.imgur.com/5CAdhgd.jpeg"
@@ -31,11 +32,17 @@ const article =
     id: "672272c65150a9cd3f46599e"
   }
 
-const ArticlePage = () => {
-
-  const {wiki} = useContext(WikiContext)
-  const {locale} = useContext(SettingsContext)
-  const {t} = useTranslation()
+  let article = null
+  const ArticlePage = () => {
+    
+    const {wiki} = useContext(WikiContext)
+    const {locale} = useContext(SettingsContext)
+    const {t} = useTranslation()
+    
+    const navigate = useNavigate();
+    const location = useLocation();
+    article = article ? article : location.state;
+  // console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
@@ -58,20 +65,40 @@ const ArticlePage = () => {
     setComments(comments_response)
   }
 
-  useEffect(() =>{
-    const fetchArticleVersion = async () =>{
-      // AÑADIR PROP DE ARTICULO -> SI ES NULO BUSCAR CON LA URL Y SIN LENGUAJE
-      console.log("WIKI", wiki)
-      const articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
-      const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, locale) 
-      setArticleVersion(version_response)
+  const fetchArticleVersion = async () =>{
+    let articleName
+    if(article){
+      articleName = article.title[locale]
+    }else{
+      articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
     }
-    if (wiki) fetchArticleVersion()
-  }, [wiki])
+    const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
+
+    setArticleVersion(version_response)
+  }
+  
+  useEffect(() =>{
+    
+    if (wiki){
+      fetchArticleVersion();
+    }
+  }, [wiki, location])
 
   const fetchVersions = async () =>{
-    const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id)
-    setVersions(versions_response.article_versions)
+    //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
+    // console.log("Article ? ", article)
+    if (!article){
+      const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id, 'recent')
+      setVersions(versions_response.article_versions)
+    }else{
+      setVersions(article.versions)
+    }
+  }
+
+  const fetchUpdatedArticle = async () =>{
+    const article_response = await ArticleService().getArticleById(articleVersion.article_id)
+    article = article_response
+    fetchVersions()
   }
 
   useEffect(() =>{
@@ -101,9 +128,15 @@ const ArticlePage = () => {
   }, [articleVersion, versions])
 
   useEffect(() =>{
-    if(articleVersion){
-      changeURL()
+    const reloadVersionWithLocale = async () =>{
+      if(articleVersion){
+        await fetchUpdatedArticle()
+        console.log("article", article)
+        fetchArticleVersion()
+        changeURL()
+      }
     }
+    reloadVersionWithLocale()
   }, [locale])
   
   const formatVersions = () => {
@@ -113,7 +146,7 @@ const ArticlePage = () => {
       const newVersion = {
         value: element.id,
         label: screen.md ? 
-          <span>{element.modification_date.substring(0,10) + " " + element.title[element.lan]}</span> 
+          <span>{element.modification_date.substring(0,10) + " " + element.title[locale]}</span> 
           :
           <span>{element.modification_date.substring(0,10)}</span> 
       }
@@ -158,20 +191,17 @@ const ArticlePage = () => {
     const newPart = articleVersion.title[locale];
     const sanitizedNewPart = newPart.replace(/ /g, "_");
 
-    const urlObj = new URL(window.location);
-    const pathParts = urlObj.pathname.split("/");
-    pathParts[pathParts.length - 1] = sanitizedNewPart;
-    urlObj.pathname = pathParts.join("/");
-
-    const newUrl = urlObj.toString();
-
     // Reload with new URL
-    window.location = newUrl;
+    navigate((location.pathname.split("/articles")[0]+"/articles/" + sanitizedNewPart).replace(" ", "_"));
+  }
+
+  const editArticle = () =>{
+    navigate(location.pathname + "/edit", {state: {articleVersion: articleVersion, lan: articleVersion.lan}})
   }
 
   const restoreArticleVersion = async () =>{
     const restore_response = await ArticleService().restoreArticleVersion(articleVersion.article_id, articleVersion.id)
-    // fetchVersions()  
+    fetchUpdatedArticle()  
     changeURL()
   }
 
@@ -186,28 +216,30 @@ const ArticlePage = () => {
         </Title>
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
-            <UserAvatar image={article.author.image} username={articleVersion.author.name}></UserAvatar>
+            <UserAvatar image={quislantArticle.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
                     
-          <Select title='Seleccionar version' options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 
+          <Select title={t("article.select-version")} options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 
           {articleVersion.id == versions[0].id ? 
-            <Button title='Edit' icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined'>
+            <Button  icon={<EditOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={editArticle}>
               {t('article.edit-article-button')}
             </Button >
             :
-            <Button title='Restore' icon={<ReloadOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={restoreArticleVersion}>
-            {"Restore"}
+            <Button  icon={<ReloadOutlined />} iconPosition='start' type='secondary' color='default' variant='outlined' onClick={restoreArticleVersion}>
+            {t("article.restore-button")}
             </Button>
           }
           
         </Flex>
         
       </Flex>
+
       <div className='article-body-container'>
         <JsxParser 
         components={{MapView}}
-        jsx={articleVersion.body}/>
+        jsx={((articleVersion.body).replaceAll("<p><mapview", "<MapView").replaceAll("</mapview></p>", "</MapView>").replaceAll("'{[{", "{[{").replaceAll("]}'","]}"))}/>
       </div>
+
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
         <CommentList uploadFunc={uploadComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
 

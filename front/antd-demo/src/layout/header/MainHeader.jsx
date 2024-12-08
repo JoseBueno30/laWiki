@@ -36,8 +36,6 @@ const WikiHeader = () => {
   const [showSearchHeader, setSearchHeader] = useState(true);
   const [filters, setFilters] = useState({
     order: "recent",
-    author: "",
-    startDate: "2024/01/01",
   });
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
@@ -57,12 +55,14 @@ const WikiHeader = () => {
     searchParams.append("name", searchQuery);
     searchParams.append("order", filters.order);
     if (isQueryValid(filters.author))
-      searchParams.append("author", filters.author);
+      searchParams.append("author_name", filters.author);
     if (isQueryValid(filters.startDate) || isQueryValid(filters.endDate))
       searchParams.append(
         "creation_date",
         generateDateRange(filters.startDate, filters.endDate)
       );
+    searchParams.append("page", 1);
+
 
     const searchUrl = `/wikis/search?${searchParams.toString()}`;
     navigate(searchUrl);

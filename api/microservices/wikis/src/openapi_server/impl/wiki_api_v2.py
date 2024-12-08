@@ -128,6 +128,13 @@ async def translate_wiki(languages : List[str], wiki_lang: str, name: Dict[str, 
         translation["lang"] = lang
         translation["name"] = name[lang]
         upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : lang}, translation,upsert=True)
+    translation = {}
+    translation["wiki_id"] = target_wiki
+    translation["description"] = description
+    translation["lang"] = wiki_lang
+    translation["name"] = name[wiki_lang]
+    upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : wiki_lang}, translation,upsert=True)
+    
 
 async def translate_name(wiki: NewWikiV2):
     if wiki.translate:
@@ -245,8 +252,8 @@ class WikiApi(BaseDefaultV2Api):
                 }
             elif len(dates) == 2:
                 filters["creation_date"] = {
-                    "$gte": dates[0].replace("/","-"),
-                    "$lte": dates[1].replace("/","-")
+                    "$gte": (datetime.strptime(dates[0] , "%Y/%m/%d")),
+                    "$lte": (datetime.strptime(dates[1] , "%Y/%m/%d"))
                 }
 
             url_filters += "creation_date=" + creation_date + "&"
@@ -273,6 +280,9 @@ class WikiApi(BaseDefaultV2Api):
                     "&limit=" + str(limit)) if (offset + limit) < total_count else None
         previous_url = (url_filters + "offset=" + str(max(offset - limit, 0)) + 
                         "&limit=" + str(limit)) if offset > 0 else None
+        
+        #if lang is not None:
+        #    url_filters += "lang=" + lang + "&"
 
         # https://www.google.com/search?q=paging+meaning
         paging_pipeline = [
@@ -319,10 +329,15 @@ class WikiApi(BaseDefaultV2Api):
         #print(wikis[0]["wikis"])
 
         if not wikis:
-            raise LookupError("Cannot find Wiki")
-        
+            return {"wikis": [],
+                    "total": total_count,
+                    "offset": offset,
+                    "limit": limit,
+                    "next": next_url,
+                    "previous": previous_url
+            }
+
         if lang is not None:
-            url_filters += "lang=" + lang + "&"
             ids = list(map(lambda x: ObjectId(x["id"]),wikis[0]["wikis"]))
             print(ids)
             try:
@@ -330,8 +345,6 @@ class WikiApi(BaseDefaultV2Api):
             except:
                 print("Error buscando traducciones")
             
-            traducciones.sort(key=operator.itemgetter("wiki_id"))
-            wikis[0]["wikis"].sort(key=operator.itemgetter("id"))
             print("Diferencia: " + str(len(traducciones) - len(wikis[0]["wikis"])))
             wiki_ids = list(map(lambda x: x["wiki_id"],traducciones))
             print(wiki_ids)

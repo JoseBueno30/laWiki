@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const APIGateway = axios.create({
   baseURL: 'http://localhost:3000',
-  timeout: 10000,
+  timeout: 180000,
 });
 
 APIGateway.interceptors.request.use(

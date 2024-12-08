@@ -107,7 +107,8 @@ def get_model_list_pipeline(match_query, offset, limit, order, total_documents, 
         },
         {
             "$sort": {
-                "creation_date": -1 if order == "recent" else 1
+                "creation_date": -1 if order == "recent" else 1,
+                "modification_date": -1 if order == "recent" else 1,
             }
         },
         {

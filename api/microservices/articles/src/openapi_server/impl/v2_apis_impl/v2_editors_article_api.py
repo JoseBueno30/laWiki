@@ -32,6 +32,8 @@ async def _create_article_translation(
 
     if translate:
         body_translated = await translate_body_to_lan(body_translated, new_lan)
+        body_translated.replace("<mapview", "<MapView")
+        print("LAN: ", new_lan, "\n", body_translated)
 
     article_translation = {
         "lan": new_lan,
@@ -200,7 +202,7 @@ class EditorsArticleAPIV2(BaseV2EditorsApi):
         # MongoDB query
         await mongodb["article"].update_one(
             {"_id": ObjectId(id)},
-            {"$push": {"versions": simplified_article_version_dict},
+            {"$push": {"versions": {"$each": [simplified_article_version_dict], "$position": 0}},
              "$set": {"title": new_article_version_json["title"],
                       "tags": article_tags}},
         )

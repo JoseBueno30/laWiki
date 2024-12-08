@@ -5,10 +5,13 @@ import ArticlesSearchResultPage from "../modules/articles/pages/articles-search-
 import WikiRecommendationPage from "../modules/wiki/pages/wiki-recommendation-page/wiki-recommendation-page";
 import ArticlePage from "../modules/articles/pages/article-page/article-page";
 import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
+import EditArticlePage from "../modules/articles/pages/edit-article-page/edit-article-page";
+import CreateArticlePage from "../modules/articles/pages/create-article-page/create-article-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
 import NotFoundPage from "../modules/wiki/pages/wiki-not-found/wiki-not-found";
+import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results-page/wiki-search-results-page";
 
 // The structure of the application's routes
 
@@ -31,10 +34,11 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "", element: <WikiRecommendationPage /> }, // Página principal
+      // { path: "", element: <WikiRecommendationPage /> }, // Página principal
       {
         path: "wikis",
         children: [
-          { path: "search", element: <TestRoute /> }, // Buscar wikis
+          { path: "search", element: <WikiSearchResultsPage/> }, // Buscar wikis
           { path: "new", element: <WikiCreatePage /> }, // Crear wiki
           { path: "not_found", element: <NotFoundPage status_code={404} resource_type="Wiki" /> }, // Wiki no encontrada
           {
