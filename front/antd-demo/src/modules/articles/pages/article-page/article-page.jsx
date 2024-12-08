@@ -41,9 +41,9 @@ const quislantArticle =
     
     const navigate = useNavigate();
     const location = useLocation();
-    article = article ? article : location.state;
+    article = article && (!location.state || article == location.state) ? article : location.state;
   // console.log("LOCATION: ",article)
-    console.log("LOCATION: ",article)
+    // console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
@@ -68,6 +68,7 @@ const quislantArticle =
 
   const fetchArticleVersion = async () =>{
     let articleName
+    console.log("articulo", article)
     if(article){
       articleName = article.title[locale]
     }else{
@@ -78,11 +79,11 @@ const quislantArticle =
     setArticleVersion(version_response)
   }
 
-  useEffect (() =>{
-    return () =>{
-      article = null
-    }
-  })
+  // useEffect (() =>{
+  //   return () =>{
+  //     article = null
+  //   }
+  // })
   
   useEffect(() =>{
     
