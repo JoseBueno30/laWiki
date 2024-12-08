@@ -24,11 +24,10 @@ const { TextArea } = Input;
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import './create-article-page.css';
 import MapConfigurator from "../../components/map-configurator/map-configurator";
-import {
-  createArticle,
-  getWikiTags,
-  uploadImage,
-} from "../../service/article_service";
+import ArticleService from "../../service/article-service";
+const { createArticle, getWikiTags, uploadImage } = ArticleService();
+
+
 
 
 const CreateArticlePage = () => {
