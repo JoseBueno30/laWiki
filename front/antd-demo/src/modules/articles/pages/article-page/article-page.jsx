@@ -28,7 +28,7 @@ const quislantArticle =
   };
   const user = {
     name: "Adriduty",
-    image: "https://i1.sndcdn.com/artworks-ynfN32NPS8zDyraR-PHw2zQ-t500x500.jpg",
+    image: "",
     id: "672272c65150a9cd3f46599e"
   }
 
@@ -43,6 +43,7 @@ const quislantArticle =
     const location = useLocation();
     article = article ? article : location.state;
   // console.log("LOCATION: ",article)
+    console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
   const [loading, setLoading] = useState(true)
@@ -76,6 +77,12 @@ const quislantArticle =
 
     setArticleVersion(version_response)
   }
+
+  useEffect (() =>{
+    return () =>{
+      article = null
+    }
+  })
   
   useEffect(() =>{
     
@@ -216,7 +223,7 @@ const quislantArticle =
         </Title>
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
-            <UserAvatar image={quislantArticle.author.image} username={articleVersion.author.name}></UserAvatar>
+            <UserAvatar image={articleVersion.author.image} username={articleVersion.author.name}></UserAvatar>
           </Button>
                     
           <Select title={t("article.select-version")} options={formatVersions()} defaultValue={versions[0].id} onChange={loadVersion}></Select> 
