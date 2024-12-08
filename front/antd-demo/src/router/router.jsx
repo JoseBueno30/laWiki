@@ -8,6 +8,7 @@ import WikiMainPage from "../modules/wiki/pages/wiki-main-page/wiki-main-page";
 import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 import ArticleEditPage from "../modules/articles/pages/article-edit-page/article-edit-page";
+import NotFoundPage from "../modules/wiki/pages/wiki-not-found/wiki-not-found";
 
 // The structure of the application's routes
 
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
         children: [
           { path: "search", element: <TestRoute /> }, // Buscar wikis
           { path: "new", element: <WikiCreatePage /> }, // Crear wiki
+          { path: "not_found", element: <NotFoundPage status_code={404} resource_type="Wiki" /> }, // Wiki no encontrada
           {
             path: ":wiki_name",
             children: [
@@ -44,6 +46,7 @@ const router = createBrowserRouter([
               {
                 path: "articles",
                 children: [
+                  { path: "not_found", element: <NotFoundPage status_code={404} resource_type="Article" /> }, // Wiki no encontrada
                   { path: "new", element: <TestRoute /> }, // Crear artículo
                   { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
                   { path: ":article_name/edit", element: <ArticleEditPage /> }, // Editar artículo
