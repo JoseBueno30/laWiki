@@ -33,7 +33,7 @@ import {
 const EditArticlePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const articleData = location.state;
+  const articleData = location.state.articleVersion;
 
   const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
@@ -161,7 +161,7 @@ const EditArticlePage = () => {
         },
         tags: tags,
         body: body,
-        lan: locale,
+        lan: location.state.lan,
         translate_title: translateTitle,
       };
 
