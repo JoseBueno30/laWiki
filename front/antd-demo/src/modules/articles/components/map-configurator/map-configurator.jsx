@@ -113,7 +113,7 @@ const MapConfigurator = ({ onSave }) => {
     const view = mapRef.current.getView();
     const center = toLonLat(view.getCenter());
     const zoom = view.getZoom();
-    return `<MapView lat="${center[1]}" lon="${center[0]}" zoom="${zoom}" markers={[${markerTags.join('')}]}/>`;
+    return `<MapView lat="${center[1]}" lon="${center[0]}" zoom="${zoom}" markers={[${markerTags.join('')}]} />`;
   };
 
   const handleSave = () => {

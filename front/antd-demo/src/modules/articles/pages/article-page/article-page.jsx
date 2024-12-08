@@ -73,7 +73,7 @@ const quislantArticle =
       articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
     }
     const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
-    console.log(version_response)
+
     setArticleVersion(version_response)
   }
   
@@ -237,7 +237,7 @@ const quislantArticle =
       <div className='article-body-container'>
         <JsxParser 
         components={{MapView}}
-        jsx={articleVersion.body}/>
+        jsx={((articleVersion.body).replaceAll("<p><mapview", "<MapView").replaceAll("</mapview></p>", "</MapView>").replaceAll("'{[{", "{[{").replaceAll("]}'","]}"))}/>
       </div>
 
       <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
