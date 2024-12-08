@@ -32,6 +32,7 @@ const quislantArticle =
     id: "672272c65150a9cd3f46599e"
   }
 
+  let article = location.state;
   const ArticlePage = () => {
     
     const {wiki} = useContext(WikiContext)
@@ -40,7 +41,6 @@ const quislantArticle =
     
     const navigate = useNavigate();
     const location = useLocation();
-    let article = location.state;
   // console.log("LOCATION: ",article)
 
   const screen = useBreakpoint()
@@ -85,7 +85,7 @@ const quislantArticle =
 
   const fetchVersions = async () =>{
     //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
-    console.log("Article ? ", article)
+    // console.log("Article ? ", article)
     if (!article){
       const versions_response = await ArticleService().getArticleVersionsByArticleID(articleVersion.article_id, 'recent')
       setVersions(versions_response.article_versions)
