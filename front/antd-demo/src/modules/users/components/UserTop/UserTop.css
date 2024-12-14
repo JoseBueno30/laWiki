@@ -1,0 +1,13 @@
+.userAvatar {
+    max-width: 16.8vw;
+    clip-path: circle();
+}
+
+.userName {
+    font-size: 300%;
+    font-weight: 700;
+}
+
+.userFigure {
+    text-align: center;
+}
