@@ -82,7 +82,6 @@ const ArticleService = () =>{
             return Promise.reject(error)
         }
     }
-        
     
     const searchArticlesWithParams = async (queryParams) => {
         try {
@@ -164,7 +163,7 @@ const ArticleService = () =>{
         getArticleVersionsByArticleID,
         getArticleVersionByID,
         restoreArticleVersion,
-        getArticleById, 
+        getArticleById,
         searchArticlesWithParams,
         searchArticlesWithPaginationURL, 
         uploadImage, 

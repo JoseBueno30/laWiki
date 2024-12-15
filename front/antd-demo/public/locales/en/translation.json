@@ -45,6 +45,7 @@
   },
 
   "wikis": {
+    "wikis": "Wikis",
     "new-wiki": "New Wiki",
     "edit-wiki": "Edit Wiki",
     "wiki-search-placeholder": "search wikis",
@@ -68,6 +69,7 @@
   },
 
   "article": {
+    "articles": "Articles",
     "last-modified": "Last modified: ",
     "table-title": "Title",
     "table-author": "Author",
