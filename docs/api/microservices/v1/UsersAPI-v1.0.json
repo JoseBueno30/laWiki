@@ -1,0 +1,522 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "UsersAPI",
+    "description": "Microservice that manages authentication and user info related endpoints",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/UsersAPI/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/v1/verify_token": {
+      "post": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Verify user token",
+        "description": "Returns user info from the user oatuh token",
+        "operationId": "post-verify_token",
+        "parameters": [
+          {
+            "name": "auth_token",
+            "in": "query",
+            "description": "Google OAuth user authentication token",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, valid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, invalid token"
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get user info",
+        "description": "Retrieves user info by the unique account email",
+        "operationId": "get-user-info",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User unique id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "user_email",
+            "in": "header",
+            "description": "Client's authenticated email",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "admin",
+            "in": "header",
+            "description": "True if user is an admin user, False otherwise",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, invalid token or no token provided"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Update user info",
+        "description": "Updates user account info",
+        "operationId": "put-users-user_email",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User unique id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "user_email",
+            "in": "header",
+            "description": "Client's authenticated email",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "admin",
+            "in": "header",
+            "description": "True if user is an admin user, False otherwise",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUserInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User unauthorized for this operation"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Check user",
+        "description": "Checks wheter the user email is registered in the application",
+        "operationId": "head-users-user_email",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User unique id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}/rating": {
+      "put": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Update user rating",
+        "description": "Update the given user's rating",
+        "operationId": "put-v1-users-user_email-rating",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "Unique user id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRating"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}/image": {
+      "put": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Update user image",
+        "description": "Update the given user's profile picture",
+        "operationId": "put-users-user_id-image",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The unique user ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_email",
+            "in": "header",
+            "description": "Client's authenticated email",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "admin",
+            "in": "header",
+            "description": "True if user is an admin user, False otherwise",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}/username": {
+      "put": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Update user username",
+        "description": "Update the given user's username",
+        "operationId": "put-users-user_id-username",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The unique user ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_email",
+            "in": "header",
+            "description": "Client's authenticated email",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          {
+            "name": "admin",
+            "in": "header",
+            "description": "True if user is an admin user, False otherwise",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VerifyResponse": {
+        "title": "VerifyResponse",
+        "required": [
+          "auth_token",
+          "exp_date",
+          "iat_date",
+          "user_info"
+        ],
+        "type": "object",
+        "properties": {
+          "auth_token": {
+            "type": "string"
+          },
+          "iat_date": {
+            "type": "integer",
+            "description": "\"Issued at Time\" in Epoch format",
+            "format": "int64",
+            "x-stoplight": {
+              "id": "ia0ekjj8q67mr"
+            }
+          },
+          "exp_date": {
+            "type": "integer",
+            "description": "\"Expiration date\" in Epoch format",
+            "format": "int64",
+            "x-stoplight": {
+              "id": "1d2fs5uy6gz7l"
+            }
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "Info obtained retrieved by the oath token"
+      },
+      "NewUserInfo": {
+        "title": "NewUserInfo",
+        "required": [
+          "image",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "ptmzghhypmriv"
+            }
+          }
+        },
+        "description": "Model used to update an existing user information"
+      },
+      "UserInfo": {
+        "title": "User Info",
+        "required": [
+          "admin",
+          "email",
+          "id",
+          "image",
+          "rating",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "e1vqsebcaho7l"
+            }
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "sh3aj3mio7e8l"
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "0jftg3etfaj30"
+            }
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "x-stoplight": {
+              "id": "a2nfvlfpcj6h4"
+            }
+          },
+          "admin": {
+            "type": "boolean",
+            "description": "True if it is an admin user, False otherwise",
+            "x-stoplight": {
+              "id": "lsmdrl1l781vi"
+            }
+          }
+        },
+        "description": "User account info"
+      },
+      "NewRating": {
+        "title": "NewRating",
+        "required": [
+          "rating"
+        ],
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "description": ""
+      }
+    },
+    "securitySchemes": {}
+  }
+}
