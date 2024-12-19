@@ -19,13 +19,6 @@ import MapView from '../../components/map-view/map-view';
 
 const {useBreakpoint} = Grid
 
-
-const quislantArticle =
-  {
-    author:{
-      image: "https://i.imgur.com/5CAdhgd.jpeg"
-    }
-  };
   const user = {
     name: "Adriduty",
     image: "",
@@ -189,6 +182,11 @@ const quislantArticle =
     fetchArticleComments()
   }
 
+  const deleteComment = async (commentId) =>{
+    await CommentService().deleteComment(commentId)
+    fetchArticleComments()
+  }
+
   const controlCommentsPaginationAndFilters = async (newOffset, order,creation_date) =>{
 
     const comments_response = await CommentService().getArticleComments(articleVersion.article_id, newOffset, 3, order,creation_date)
@@ -248,8 +246,8 @@ const quislantArticle =
         jsx={((articleVersion.body).replaceAll("<p><mapview", "<MapView").replaceAll("</mapview></p>", "</MapView>").replaceAll("'{[{", "{[{").replaceAll("]}'","]}"))}/>
       </div>
 
-      <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
-        <CommentList uploadFunc={uploadComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
+      <Flex className={screen.md ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.md ? false : true} align={screen.md ? "start" : "center"}>
+        <CommentList uploadFunc={uploadComment} deleteFunc={deleteComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
 
         <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} 
           total_ratings={ratings.total} 

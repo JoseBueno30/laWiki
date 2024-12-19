@@ -73,7 +73,7 @@
     "table-author": "Auteur/e",
     "table-date": "Dernière modification",
     "table-rating": "Note",
-    "edit-article-button": "Modifier cet article",
+    "edit-article-button": "Modifier article",
     "select-version": "Sélectionner version",
     "restore-button": "Restaurer",
     "comments-header": "Commentaires ({{count}})",

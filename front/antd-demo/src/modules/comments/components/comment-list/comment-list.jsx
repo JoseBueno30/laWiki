@@ -19,7 +19,7 @@ const {RangePicker} = DatePicker
 //   id: "1"
 // }
 
-const CommentList = ({commentsObject, user, fetchFunc, uploadFunc}) => {
+const CommentList = ({commentsObject, user, fetchFunc, uploadFunc, deleteFunc}) => {
   // console.log("COMMENT LIST", comments)
   const {t} = useTranslation()
 
@@ -85,7 +85,7 @@ const CommentList = ({commentsObject, user, fetchFunc, uploadFunc}) => {
           <Space className='filter-group'>
               <ControlOutlined className='icon comment-list-son'/>
               <Text className='comment-list-son' strong>{t('common.filter-header')}</Text>
-              <Text className='comment-list-son'>{t('common.daterange-header')}</Text>
+              {screen.sm ? <Text className='comment-list-son'>{t('common.daterange-header')}</Text>: ""}
               <Space.Compact>
                 <RangePicker format={dateFormat} allowEmpty={[true, true]} onChange={handleDateRangeChange}/>
                 {/* <Button icon={<SearchOutlined/>}></Button> */}
@@ -95,7 +95,7 @@ const CommentList = ({commentsObject, user, fetchFunc, uploadFunc}) => {
         </div>
         {
           commentList.map((element, index) => (
-            <Comment key={index} comment={element}></Comment>
+            <Comment key={index} comment={element} user={user} deleteFunc={deleteFunc}></Comment>
           ))
         }
         <Flex align='center' justify='center' gap={3}>
