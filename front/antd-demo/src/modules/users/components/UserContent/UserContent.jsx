@@ -1,23 +1,37 @@
 import { Tabs } from "antd";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import SettingsContext from "../../../../context/settings-context";
 import ArticleService from "../../../articles/service/article-service";
 import UserWikis from "../UserWikis/UserWikis";
+import UserArticles from "../UserArticles/UserArticles";
+import { useSearchParams } from "react-router-dom";
 
-const { searchArticlesWithParams } = ArticleService();
-
-//Las wikis funcionan
-//He cambiado de idea de como hacer los articulos un monton de veces
-//Hare que se llame a articles y se obtengan las wikis de los articulos
-const UserContent = ({author_name=""}) => {
+const UserContent = ({author_name="", author_id}) => {
     const { t } = useTranslation();
     const { locale } = useContext(SettingsContext);
+    const [wikiActive, setWikiActive] = useState(true);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const content_wikis = <UserWikis author_name={author_name} search_limit={6}/>;
+    const onChange = (key) => {
+        setWikiActive(key == "1");
+    }
+
+    const content_wikis = <UserWikis
+    author_name={author_name}
+    active={wikiActive}
+    search_limit={3}/>;
+
+    const content_articles = <UserArticles
+    author_name={author_name}
+    active={!wikiActive}
+    author_id={author_id}
+    search_limit={6}/>;
 
     return(<Tabs
     centered
+    defaultActiveKey={!searchParams.has("wiki_page") && searchParams.has("article_page")  ? "2" : "1"}
+    onChange={onChange}
     items={[
         { "label": t("wikis.wikis"),
             "key": 1,
@@ -25,7 +39,7 @@ const UserContent = ({author_name=""}) => {
         },
         { "label": t("article.articles"),
             "key": 2,
-            "children": <></>
+            "children": content_articles
     }]}/>);
 };
 export default UserContent;

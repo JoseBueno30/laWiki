@@ -93,6 +93,16 @@ const ArticleService = () =>{
         }
     };
     
+    const searchArticlesByAuthor = async (author_id,queryParams) => {
+        try {
+            return await APIGateway.get(`http://localhost:3000/v1/articles/author/${author_id}`, {
+                params: queryParams,
+            });
+        } catch (error) {
+            return Promise.reject(error)
+        }
+    };
+    
     const searchArticlesWithPaginationURL = async (paginationURL) => {
         try {
             return await APIGateway.get("http://localhost:3000/v1" + paginationURL);
@@ -165,6 +175,7 @@ const ArticleService = () =>{
         restoreArticleVersion,
         getArticleById,
         searchArticlesWithParams,
+        searchArticlesByAuthor,
         searchArticlesWithPaginationURL, 
         uploadImage, 
         getWikiTags, 
