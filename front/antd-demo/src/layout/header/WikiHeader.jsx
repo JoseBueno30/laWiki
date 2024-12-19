@@ -132,14 +132,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
             <Link to={`/wikis/${wiki_name}/articles/new`}>
               <CreateButton text={t("wikis.new-article")} />
             </Link>
-            <Badge count={9} size="large">
-              <div
-                className="icon-container"
-                onClick={NotificationsClickHandler}
-              >
-                <BellOutlined style={{ fontSize: "24px" }} />
-              </div>
-            </Badge>
+            
             <Popover
               content={<UserProfilePopover />}
               trigger="click"

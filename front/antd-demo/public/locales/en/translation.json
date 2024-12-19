@@ -73,7 +73,7 @@
     "table-author": "Author",
     "table-date": "Last modified",
     "table-rating": "Rating",
-    "edit-article-button": "Edit this article",
+    "edit-article-button": "Edit article",
     "select-version": "Select version",
     "restore-button": "Restore",
     "comments-header": "Comments ({{count}})",
