@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import {useNavigate, useLocation } from "react-router-dom";
-import {Button, Flex, Grid, Select, Spin} from "antd";
+import {Button, Flex, Grid, Select, Spin, Tag} from "antd";
 import { EditOutlined, ReloadOutlined} from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
 import RatingsSection from '../../../ratings/components/ratings-section';
@@ -217,9 +217,17 @@ const {useBreakpoint} = Grid
     :
     (<section className='article-page'>
       <Flex align='center' justify='space-between'>
-        <Title>
-          {articleVersion.title[locale]}
-        </Title>
+        <Flex vertical>
+          <Title>
+            {articleVersion.title[locale]}
+          </Title>
+          <Flex gap={2}>
+            {articleVersion.tags.map(tag =>(
+                <Tag color='geekblue'>{tag.tag[locale]}</Tag>
+            ))}
+          </Flex>
+        </Flex>
+       
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
             <UserAvatar image={articleVersion.author.image} username={articleVersion.author.name}></UserAvatar>
