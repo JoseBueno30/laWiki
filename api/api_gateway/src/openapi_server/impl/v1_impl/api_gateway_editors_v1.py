@@ -4,10 +4,9 @@ from fastapi.exceptions import HTTPException
 from typing import List
 
 from fastapi import UploadFile
-from fastapi.openapi.utils import status_code_ranges
 
-from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
-from openapi_server.impl.utils import ARTICLES_URL,COMMENTS_URL,RATINGS_URL,TAGS_URL,WIKIS_URL
+from openapi_server.apis.v1_apis.v1_editors_api_base import BaseV1EditorsApi
+from openapi_server.impl.utils import ARTICLES_URL, TAGS_URL
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.inline_response200 import InlineResponse200
@@ -26,6 +25,9 @@ DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 
 
 class APIGatewayEditorsV1(BaseV1EditorsApi):
+
+    def __init__(self):
+        super().__init__()
 
     async def assign_tags(
         self,

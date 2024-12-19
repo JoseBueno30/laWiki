@@ -4,7 +4,6 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
-
 from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
 import openapi_server.impl
 
@@ -20,10 +19,13 @@ from fastapi import (  # noqa: F401
     Query,
     Response,
     Security,
-    status, File, UploadFile
+    status,
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from pydantic import Field, StrictBytes, StrictStr
+from typing import Any, List, Optional, Tuple, Union
+from typing_extensions import Annotated
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.inline_response200 import InlineResponse200
@@ -52,8 +54,8 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def assign_tags(
-    id: str = Path(..., description=""),
-    tag_id_list: TagIDList = Body(None, description=""),
+    id: StrictStr = Path(..., description=""),
+    tag_id_list: Optional[TagIDList] = Body(None, description=""),
 ) -> None:
     """Assigns a list of tags, given their IDs, to an article."""
     if not BaseV1EditorsApi.subclasses:
@@ -73,7 +75,7 @@ async def assign_tags(
     response_model_by_alias=True,
 )
 async def create_article(
-    new_article: NewArticle = Body(None, description=""),
+    new_article: Optional[NewArticle] = Body(None, description=""),
 ) -> Article:
     """Create a new Article in a given wiki"""
     if not BaseV1EditorsApi.subclasses:
@@ -93,8 +95,8 @@ async def create_article(
     response_model_by_alias=True,
 )
 async def create_article_version(
-    id: str = Path(..., description=""),
-    new_article_version: NewArticleVersion = Body(None, description=""),
+    id: StrictStr = Path(..., description=""),
+    new_article_version: Optional[NewArticleVersion] = Body(None, description=""),
 ) -> ArticleVersion:
     """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
     if not BaseV1EditorsApi.subclasses:
@@ -115,7 +117,7 @@ async def create_article_version(
     response_model_by_alias=True,
 )
 async def delete_article_by_id(
-    id: str = Path(..., description=""),
+    id: StrictStr = Path(..., description=""),
 ) -> None:
     """Delete an Article identified by it&#39;s unique ID"""
     if not BaseV1EditorsApi.subclasses:
@@ -136,7 +138,7 @@ async def delete_article_by_id(
     response_model_by_alias=True,
 )
 async def delete_article_version_by_id(
-    id: str = Path(..., description=""),
+    id: StrictStr = Path(..., description=""),
 ) -> None:
     """Delete an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseV1EditorsApi.subclasses:
@@ -157,8 +159,8 @@ async def delete_article_version_by_id(
     response_model_by_alias=True,
 )
 async def restore_article_version(
-    article_id: str = Path(..., description=""),
-    version_id: str = Path(..., description=""),
+    article_id: StrictStr = Path(..., description=""),
+    version_id: StrictStr = Path(..., description=""),
 ) -> None:
     """Restore an older ArticleVersion of an Article."""
     if not BaseV1EditorsApi.subclasses:
@@ -179,8 +181,8 @@ async def restore_article_version(
     response_model_by_alias=True,
 )
 async def unassign_tags(
-    id: str = Path(..., description=""),
-    ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
+    id: StrictStr = Path(..., description=""),
+    ids: Annotated[List[StrictStr], Field(max_length=50, description="List of Tag IDs")] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseV1EditorsApi.subclasses:
@@ -197,10 +199,10 @@ async def unassign_tags(
     },
     tags=["v1/editors"],
     summary="Upload Image",
-    response_model_by_alias=True
+    response_model_by_alias=True,
 )
 async def upload_image(
-    file: UploadFile = File(..., description="Image to upload")
+    file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = Form(None, description=""),
 ) -> InlineResponse200:
     """Uploads an image file and returns the URL."""
     if not BaseV1EditorsApi.subclasses:

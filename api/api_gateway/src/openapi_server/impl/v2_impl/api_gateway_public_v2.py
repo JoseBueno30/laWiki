@@ -1,6 +1,6 @@
 from typing import List
 
-from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
+from openapi_server.apis.v2_apis.v2_public_api_base import BaseV2PublicApi
 from openapi_server.impl.utils import ARTICLES_URL,COMMENTS_URL,RATINGS_URL,TAGS_URL,WIKIS_URL
 from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
@@ -20,7 +20,10 @@ from openapi_server.models.wiki_list import WikiList
 
 from openapi_server.impl.utils import forward_request
 
-class APIGatewayPublicV1(BaseV1PublicApi):
+class APIGatewayPublicV2(BaseV2PublicApi):
+
+    def __init__(self):
+        super().__init__()
 
     async def delete_comment(
         self,

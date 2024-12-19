@@ -18,10 +18,11 @@ from fastapi.security.api_key import APIKeyCookie, APIKeyHeader, APIKeyQuery  # 
 
 from openapi_server.models.extra_models import TokenModel
 
+
 bearer_auth = HTTPBearer()
 
 
-def verify_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_auth)) -> TokenModel:
+def get_token_oauth_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_auth)) -> TokenModel:
     """
     Check and retrieve authentication information from custom bearer token.
 
@@ -32,3 +33,4 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_auth
     """
 
     ...
+

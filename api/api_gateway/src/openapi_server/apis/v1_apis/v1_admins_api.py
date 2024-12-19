@@ -4,8 +4,8 @@ from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
-from openapi_server.apis.v1_admins_api_base import BaseV1AdminsApi
-import openapi_server.impl
+from openapi_server.apis.v1_apis.v1_admins_api_base import BaseV1AdminsApi
+import openapi_server.impl.v1_impl
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -31,7 +31,7 @@ from openapi_server.models.wiki import Wiki
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v1_impl
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
