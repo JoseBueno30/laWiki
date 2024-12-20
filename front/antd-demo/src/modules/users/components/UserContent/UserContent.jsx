@@ -1,32 +1,36 @@
 import { Tabs } from "antd";
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import SettingsContext from "../../../../context/settings-context";
-import ArticleService from "../../../articles/service/article-service";
 import UserWikis from "../UserWikis/UserWikis";
 import UserArticles from "../UserArticles/UserArticles";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 const UserContent = ({author_name="", author_id}) => {
+    const location = useLocation();
     const { t } = useTranslation();
-    const { locale } = useContext(SettingsContext);
     const [wikiActive, setWikiActive] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
 
     const onChange = (key) => {
         setWikiActive(key == "1");
+        location.state = null;
     }
 
-    const content_wikis = <UserWikis
+    const content_wikis = wikiActive ? (<UserWikis
     author_name={author_name}
     active={wikiActive}
-    search_limit={3}/>;
+    search_limit={6}/>) : (<></>);
 
-    const content_articles = <UserArticles
+    const content_articles = wikiActive ? 
+    (<></>) : <UserArticles
     author_name={author_name}
     active={!wikiActive}
     author_id={author_id}
     search_limit={6}/>;
+
+    useEffect(() => {
+        onChange("1");
+    },[]);
 
     return(<Tabs
     centered
