@@ -11,7 +11,7 @@ class BaseV1InternalApi:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         BaseV1InternalApi.subclasses = BaseV1InternalApi.subclasses + (cls,)
-    async def head_users_user_email(
+    async def check_user(
         self,
         user_id: str,
     ) -> None:
@@ -19,7 +19,7 @@ class BaseV1InternalApi:
         ...
 
 
-    async def put_v1_users_user_email_rating(
+    async def put_user_rating(
         self,
         user_id: str,
         new_rating: NewRating,

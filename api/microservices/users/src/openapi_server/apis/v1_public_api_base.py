@@ -31,7 +31,7 @@ class BaseV1PublicApi:
         ...
 
 
-    async def put_users_user_email(
+    async def put_user_info(
         self,
         user_id: str,
         user_email: str,
@@ -42,23 +42,23 @@ class BaseV1PublicApi:
         ...
 
 
-    async def put_users_user_id_image(
+    async def put_user_image(
         self,
         user_id: str,
         user_email: str,
         admin: bool,
         body: str,
-    ) -> None:
+    ) -> UserInfo:
         """Update the given user&#39;s profile picture"""
         ...
 
 
-    async def put_users_user_id_username(
+    async def put_user_username(
         self,
         user_id: str,
         user_email: str,
         admin: bool,
         body: str,
-    ) -> None:
+    ) -> UserInfo:
         """Update the given user&#39;s username"""
         ...

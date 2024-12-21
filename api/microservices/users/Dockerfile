@@ -6,6 +6,8 @@ RUN python3 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
 
 RUN pip install --upgrade pip
+RUN pip install motor
+RUN pip install firebase-admin
 
 COPY . .
 RUN pip install --no-cache-dir .

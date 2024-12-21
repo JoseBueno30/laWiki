@@ -87,7 +87,7 @@ async def post_verify_token(
     summary="Update user info",
     response_model_by_alias=True,
 )
-async def put_users_user_email(
+async def put_user_info(
     user_id: str = Path(..., description="User unique id"),
     user_email: str = Header(None, description="Client&#39;s authenticated email"),
     admin: bool = Header(None, description="True if user is an admin user, False otherwise"),
@@ -96,7 +96,7 @@ async def put_users_user_email(
     """Updates user account info"""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1PublicApi.subclasses[0]().put_users_user_email(user_id, user_email, admin, new_user_info)
+    return await BaseV1PublicApi.subclasses[0]().put_user_info(user_id, user_email, admin, new_user_info)
 
 
 @router.put(
@@ -110,16 +110,16 @@ async def put_users_user_email(
     summary="Update user image",
     response_model_by_alias=True,
 )
-async def put_users_user_id_image(
+async def put_user_image(
     user_id: str = Path(..., description="The unique user ID"),
     user_email: str = Header(None, description="Client&#39;s authenticated email"),
     admin: bool = Header(None, description="True if user is an admin user, False otherwise"),
     body: str = Body(None, description=""),
-) -> None:
+) -> UserInfo:
     """Update the given user&#39;s profile picture"""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1PublicApi.subclasses[0]().put_users_user_id_image(user_id, user_email, admin, body)
+    return await BaseV1PublicApi.subclasses[0]().put_user_image(user_id, user_email, admin, body)
 
 
 @router.put(
@@ -133,13 +133,13 @@ async def put_users_user_id_image(
     summary="Update user username",
     response_model_by_alias=True,
 )
-async def put_users_user_id_username(
+async def put_user_username(
     user_id: str = Path(..., description="The unique user ID"),
     user_email: str = Header(None, description="Client&#39;s authenticated email"),
     admin: bool = Header(None, description="True if user is an admin user, False otherwise"),
     body: str = Body(None, description=""),
-) -> None:
+) -> UserInfo:
     """Update the given user&#39;s username"""
     if not BaseV1PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1PublicApi.subclasses[0]().put_users_user_id_username(user_id, user_email, admin, body)
+    return await BaseV1PublicApi.subclasses[0]().put_user_username(user_id, user_email, admin, body)

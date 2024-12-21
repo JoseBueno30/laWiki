@@ -13,6 +13,8 @@
 
 
 from fastapi import FastAPI
+import firebase_admin
+from firebase_admin import credentials
 
 from openapi_server.apis.v1_internal_api import router as V1InternalApiRouter
 from openapi_server.apis.v1_public_api import router as V1PublicApiRouter
@@ -22,6 +24,9 @@ app = FastAPI(
     description="Microservice that manages authentication and user info related endpoints",
     version="1.0.0",
 )
+
+cred = credentials.Certificate("../../firebase-admin.json")
+firebase_admin.initialize_app(cred)
 
 app.include_router(V1InternalApiRouter)
 app.include_router(V1PublicApiRouter)

@@ -14,3 +14,4 @@ env.bak/
 venv.bak/
 
 api/api_gateway/config.env
+api/microservices/users/firebase-admin.json

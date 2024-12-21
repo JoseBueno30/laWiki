@@ -43,13 +43,13 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     summary="Check user",
     response_model_by_alias=True,
 )
-async def head_users_user_email(
+async def check_user(
     user_id: str = Path(..., description="User unique id"),
 ) -> None:
     """Checks wheter the user email is registered in the application"""
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1InternalApi.subclasses[0]().head_users_user_email(user_id)
+    return await BaseV1InternalApi.subclasses[0]().check_user(user_id)
 
 
 @router.put(
@@ -62,11 +62,11 @@ async def head_users_user_email(
     summary="Update user rating",
     response_model_by_alias=True,
 )
-async def put_v1_users_user_email_rating(
+async def put_user_rating(
     user_id: str = Path(..., description="Unique user id"),
     new_rating: NewRating = Body(None, description=""),
 ) -> None:
     """Update the given user&#39;s rating"""
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1InternalApi.subclasses[0]().put_v1_users_user_email_rating(user_id, new_rating)
+    return await BaseV1InternalApi.subclasses[0]().put_user_rating(user_id, new_rating)
