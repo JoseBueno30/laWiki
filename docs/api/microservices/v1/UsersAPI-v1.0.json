@@ -68,11 +68,11 @@
             "explode": false,
             "schema": {
               "type": "string",
-              "format": "email"
+              "format": "uuid"
             }
           },
           {
-            "name": "user_email",
+            "name": "user-email",
             "in": "header",
             "description": "Client's authenticated email",
             "required": true,
@@ -120,7 +120,7 @@
         ],
         "summary": "Update user info",
         "description": "Updates user account info",
-        "operationId": "put-users-user_email",
+        "operationId": "put-user-info",
         "parameters": [
           {
             "name": "user_id",
@@ -131,11 +131,11 @@
             "explode": false,
             "schema": {
               "type": "string",
-              "format": "email"
+              "format": "uuid"
             }
           },
           {
-            "name": "user_email",
+            "name": "user-email",
             "in": "header",
             "description": "Client's authenticated email",
             "required": true,
@@ -192,7 +192,7 @@
         ],
         "summary": "Check user",
         "description": "Checks wheter the user email is registered in the application",
-        "operationId": "head-users-user_email",
+        "operationId": "check-user",
         "parameters": [
           {
             "name": "user_id",
@@ -203,7 +203,7 @@
             "explode": false,
             "schema": {
               "type": "string",
-              "format": "email"
+              "format": "uuid"
             }
           }
         ],
@@ -224,7 +224,7 @@
         ],
         "summary": "Update user rating",
         "description": "Update the given user's rating",
-        "operationId": "put-v1-users-user_email-rating",
+        "operationId": "put-user-rating",
         "parameters": [
           {
             "name": "user_id",
@@ -234,7 +234,8 @@
             "style": "simple",
             "explode": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -249,7 +250,14 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found"
@@ -264,7 +272,7 @@
         ],
         "summary": "Update user image",
         "description": "Update the given user's profile picture",
-        "operationId": "put-users-user_id-image",
+        "operationId": "put-user-image",
         "parameters": [
           {
             "name": "user_id",
@@ -274,11 +282,12 @@
             "style": "simple",
             "explode": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
-            "name": "user_email",
+            "name": "user-email",
             "in": "header",
             "description": "Client's authenticated email",
             "required": true,
@@ -313,7 +322,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -331,7 +347,7 @@
         ],
         "summary": "Update user username",
         "description": "Update the given user's username",
-        "operationId": "put-users-user_id-username",
+        "operationId": "put-user-username",
         "parameters": [
           {
             "name": "user_id",
@@ -341,11 +357,12 @@
             "style": "simple",
             "explode": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
-            "name": "user_email",
+            "name": "user-email",
             "in": "header",
             "description": "Client's authenticated email",
             "required": true,
@@ -379,7 +396,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"

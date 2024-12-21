@@ -25,7 +25,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-cred = credentials.Certificate("../firebase-admin.json")
+cred = credentials.Certificate("./firebase-admin.json")
 firebase_admin.initialize_app(cred)
 
 app.include_router(V1InternalApiRouter)

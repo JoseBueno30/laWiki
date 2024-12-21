@@ -12,6 +12,8 @@ RUN pip install firebase-admin
 COPY . .
 RUN pip install --no-cache-dir .
 
+COPY firebase-admin.json /usr/src/app/firebase-admin.json
+
 
 FROM python:3.7 AS test_runner
 WORKDIR /tmp

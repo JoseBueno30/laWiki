@@ -46,7 +46,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 async def check_user(
     user_id: str = Path(..., description="User unique id"),
 ) -> None:
-    """Checks wheter the user email is registered in the application"""
+    """Checks whether the user email is registered in the application"""
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseV1InternalApi.subclasses[0]().check_user(user_id)

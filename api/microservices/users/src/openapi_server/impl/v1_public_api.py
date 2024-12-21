@@ -19,7 +19,8 @@ pipeline_remove_id = [
 def validate_user(user, user_email, admin):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    if user["email"] != user_email or not admin:
+    print(user[0]["email"], user_email, admin)
+    if user[0]["email"] != user_email and not admin:
         raise HTTPException(status_code=401, detail="User unauthorized for this operation")
 
 
@@ -33,10 +34,9 @@ class V1PublicAPI(BaseV1PublicApi):
     ) -> UserInfo:
         """Retrieves user info by the unique user id"""
         user_info = await mongodb['user'].aggregate(
-            [*pipeline_remove_id, {'$match': {'id': ObjectId(user_id)}}]).to_list(
-            length=None)
-        if not user_info:
-            raise HTTPException(status_code=404, detail="User not found")
+            [{'$match': {'_id': ObjectId(user_id)}}, *pipeline_remove_id]
+        ).to_list(length=None)
+        validate_user(user_info, user_email, admin)
 
         return UserInfo(**user_info[0])
 
@@ -55,8 +55,9 @@ class V1PublicAPI(BaseV1PublicApi):
         except Exception as e:
             raise HTTPException(status_code=400, detail="Token inválido o expirado")
 
-        user_info = await mongodb['user'].aggregate([*pipeline_remove_id, {'$match': {'email': token_email}}]).to_list(
-            length=None)
+        user_info = await mongodb['user'].aggregate(
+            [{'$match': {'email': token_email}}, *pipeline_remove_id]
+        ).to_list(length=None)
         if user_info:
             user_info = UserInfo(**user_info[0])
         else:
@@ -68,40 +69,39 @@ class V1PublicAPI(BaseV1PublicApi):
                 'admin': False
             }
             res = await mongodb['user'].insert_one(new_user)
-            user_info = UserInfo(id=str(res.inserted_id), **new_user)
+            user_info = UserInfo(**{**new_user, 'id': str(res.inserted_id)})
 
         return VerifyResponse(auth_token=auth_token, iat_date=token_iat, exp_date=token_exp, user_info=user_info)
 
     async def put_user_info(self, user_id: str, user_email: str, admin: bool, new_user_info: NewUserInfo) -> UserInfo:
         """Updates user account info"""
         user = await mongodb['user'].aggregate(
-            [*pipeline_remove_id, {'$match': {'id': ObjectId(user_id)}}]
+            [{'$match': {'_id': ObjectId(user_id)}}, *pipeline_remove_id]
         ).to_list(length=None)
-
-        validate_user(user[0], user_email, admin)
+        validate_user(user, user_email, admin)
         updated_fields = {
             "username": new_user_info.username,
             "image": new_user_info.image
         }
-        await mongodb['user'].update_one({'id': ObjectId(user_id)}, {'$set': updated_fields})
+        await mongodb['user'].update_one({'_id': ObjectId(user_id)}, {'$set': updated_fields})
         return UserInfo(**{**user[0], **updated_fields})
 
     async def put_user_image(self, user_id: str, user_email: str, admin: bool, body: str) -> UserInfo:
         """Update the given user's profile picture"""
         user = await mongodb['user'].aggregate(
-            [*pipeline_remove_id, {'$match': {'id': ObjectId(user_id)}}]
+            [{'$match': {'_id': ObjectId(user_id)}}, *pipeline_remove_id]
         ).to_list(length=None)
 
-        validate_user(user[0], user_email, admin)
-        await mongodb['user'].update_one({'id': ObjectId(user_id)}, {'$set': {"image": body}})
+        validate_user(user, user_email, admin)
+        await mongodb['user'].update_one({'_id': ObjectId(user_id)}, {'$set': {"image": body}})
         return UserInfo(**{**user[0], "image": body})
 
     async def put_user_username(self, user_id: str, user_email: str, admin: bool, body: str) -> UserInfo:
         """Update the given user's username"""
         user = await mongodb['user'].aggregate(
-            [*pipeline_remove_id, {'$match': {'id': ObjectId(user_id)}}]
+            [{'$match': {'_id': ObjectId(user_id)}}, *pipeline_remove_id]
         ).to_list(length=None)
 
-        validate_user(user[0], user_email, admin)
-        await mongodb['user'].update_one({'id': ObjectId(user_id)}, {'$set': {"username": body}})
+        validate_user(user, user_email, admin)
+        await mongodb['user'].update_one({'_id': ObjectId(user_id)}, {'$set': {"username": body}})
         return UserInfo(**{**user[0], "username": body})

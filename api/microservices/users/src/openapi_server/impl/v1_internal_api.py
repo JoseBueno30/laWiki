@@ -22,8 +22,9 @@ class V1InternalAPI(BaseV1InternalApi):
             self,
             user_id: str,
     ) -> None:
-        """Checks wheter the user email is registered in the application"""
-        user = await mongodb['user'].find_one({"id": ObjectId(user_id)})
+        """Checks whether the user email is registered in the application"""
+
+        user = await mongodb['user'].find_one({"_id": ObjectId(user_id)})
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         return None
@@ -34,8 +35,9 @@ class V1InternalAPI(BaseV1InternalApi):
             new_rating: NewRating,
     ) -> UserInfo:
         """Update the given user's rating"""
-        user = await mongodb['user'].aggregate([*pipeline_remove_id, {'$match': {'id': ObjectId(user_id)}}]).to_list(
-            length=None)
+        user = await mongodb['user'].aggregate(
+            [{'$match': {'_id': ObjectId(user_id)}}, *pipeline_remove_id]
+        ).to_list(length=None)
         if not user[0]:
             raise HTTPException(status_code=404, detail="User not found")
 
