@@ -3,6 +3,7 @@
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
 from openapi_server.models.new_rating import NewRating
+from openapi_server.models.user_info import UserInfo
 
 
 class BaseV1InternalApi:
@@ -23,6 +24,6 @@ class BaseV1InternalApi:
         self,
         user_id: str,
         new_rating: NewRating,
-    ) -> None:
+    ) -> UserInfo:
         """Update the given user&#39;s rating"""
         ...

@@ -24,7 +24,7 @@ from fastapi import (  # noqa: F401
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.new_rating import NewRating
-
+from openapi_server.models.user_info import UserInfo
 
 router = APIRouter()
 
@@ -65,7 +65,7 @@ async def check_user(
 async def put_user_rating(
     user_id: str = Path(..., description="Unique user id"),
     new_rating: NewRating = Body(None, description=""),
-) -> None:
+) -> UserInfo:
     """Update the given user&#39;s rating"""
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")

@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb64c130-5fa0-41b4-8b20-781124d66fe6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_public_api_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_public_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,6 +54,10 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\adrid\Desktop\Programas\WebDev-UMA\IngWeb\laWiki\api\microservices\users" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\adrid\Desktop\Programas\WebDev-UMA\IngWeb\laWiki\api\microservices\users" />
+      <recent name="C:\Users\adrid\Desktop\Programas\WebDev-UMA\IngWeb\laWiki\api\microservices\users\src\openapi_server" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -74,7 +76,7 @@
       <option name="presentableId" value="Default" />
       <updated>1734632620641</updated>
       <workItem from="1734632622302" duration="4453000" />
-      <workItem from="1734772980632" duration="1758000" />
+      <workItem from="1734772980632" duration="3668000" />
     </task>
     <servers />
   </component>
