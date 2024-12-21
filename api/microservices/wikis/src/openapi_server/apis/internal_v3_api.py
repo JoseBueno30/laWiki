@@ -84,7 +84,7 @@ async def assign_wiki_tags_v3(
     summary="Check Wiki",
     response_model_by_alias=True,
 )
-async def check_wiki_by_idv2(
+async def check_wiki_by_idv3(
     response : Response,
     id_name: str = Path(..., description=""),
 ) -> None:
@@ -92,7 +92,7 @@ async def check_wiki_by_idv2(
     if not BaseInternalV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        if not await BaseInternalV3Api.subclasses[0]().check_wiki_by_idv2(id_name):
+        if not await BaseInternalV3Api.subclasses[0]().check_wiki_by_idv3(id_name):
             response.status_code = 404
     except InvalidId:
         raise HTTPException(status_code=400, detail=MESSAGE_BAD_FORMAT)
