@@ -11,6 +11,7 @@ COPY . .
 RUN pip install --no-cache-dir .
 RUN pip install motor
 RUN pip install python-dotenv
+RUN pip install redis
 
 
 FROM python:3.7 AS test_runner

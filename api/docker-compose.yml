@@ -65,6 +65,17 @@ services:
       - ./config.env
     command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8084
 
+  users:
+    container_name: users_api
+    build:
+      context: ./microservices/users
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    env_file:
+      - ./config.env
+    command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8085
+
   libretranslate:
     container_name: libretranslate
     build:
