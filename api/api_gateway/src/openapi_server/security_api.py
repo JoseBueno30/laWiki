@@ -51,7 +51,7 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(beare
             }
             # Add token to the cache, with a TTL of 1.5 hours
             redis_client.set(token, json.dumps(token_data), ex=5400)
-            return res
+            return TokenModel(**token_data)
         except HTTPException:
             # invalid token
             return None
