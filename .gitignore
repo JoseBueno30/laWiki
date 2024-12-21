@@ -15,3 +15,6 @@ venv.bak/
 
 api/api_gateway/config.env
 api/microservices/users/firebase-admin.json
+api/microservices/users/openapi-generator-cli-7.9.0.jar
+api/microservices/users/.idea/workspace.xml
+api/microservices/users/.idea/material_theme_project_new.xml
