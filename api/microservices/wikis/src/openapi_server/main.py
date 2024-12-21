@@ -16,10 +16,13 @@ from fastapi import FastAPI
 
 from openapi_server.apis.admins_api import router as AdminsApiRouter
 from openapi_server.apis.admins_v2_api import router as AdminsV2ApiRouter
+from openapi_server.apis.admins_v3_api import router as AdminsV3ApiRouter
 from openapi_server.apis.default_api import router as DefaultApiRouter
 from openapi_server.apis.default_v2_api import router as DefaultV2ApiRouter
+from openapi_server.apis.default_v3_api import router as DefaultV3ApiRouter
 from openapi_server.apis.internal_api import router as InternalApiRouter
 from openapi_server.apis.internal_v2_api import router as InternalV2ApiRouter
+from openapi_server.apis.internal_v3_api import router as InternalV3ApiRouter
 
 app = FastAPI(
     title="Wiki API",
@@ -29,7 +32,10 @@ app = FastAPI(
 
 app.include_router(AdminsApiRouter)
 app.include_router(AdminsV2ApiRouter)
+app.include_router(AdminsV3ApiRouter)
 app.include_router(DefaultApiRouter)
 app.include_router(DefaultV2ApiRouter)
+app.include_router(DefaultV3ApiRouter)
 app.include_router(InternalApiRouter)
 app.include_router(InternalV2ApiRouter)
+app.include_router(InternalV3ApiRouter)
