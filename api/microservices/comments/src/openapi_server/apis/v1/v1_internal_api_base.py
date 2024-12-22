@@ -2,18 +2,17 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
-from starlette.responses import Response
 
 
-class BaseInternalApi:
+class BaseV1InternalApi:
     subclasses: ClassVar[Tuple] = ()
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        BaseInternalApi.subclasses = BaseInternalApi.subclasses + (cls,)
-    async def delete_articles_comments(
+        BaseV1InternalApi.subclasses = BaseV1InternalApi.subclasses + (cls,)
+    async def v1_delete_articles_comments(
         self,
         article_id: str,
-    ) -> Response:
+    ) -> None:
         """Deletes all comments from an article"""
         ...

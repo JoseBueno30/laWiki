@@ -3,20 +3,24 @@ info:
   description: API for the Comments microservice of laWiki web appplication. It provides
     all endpoints related to CRUD operatios for articles comments.
   title: CommentsAPI
-  version: "1.0"
+  version: "2.0"
 servers:
 - description: SwaggerHub API Auto Mocking
   url: https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/CommentsAPI/1.0
 tags:
 - description: Operations available for all authenticated users
-  name: default
+  name: v1/public
 - description: Operations available only between authorized microservices
-  name: internal
+  name: v1/internal
+- description: Operations available for all authenticated users
+  name: v2/public
+- description: Operations available only between authorized microservices
+  name: v2/internal
 paths:
-  /comments/users/{user_id}:
+  /v1/comments/users/{user_id}:
     get:
       description: Retrieves all comments from an user
-      operationId: get-users-comments
+      operationId: v1-get-users-comments
       parameters:
       - description: The unique ID of the user
         explode: false
@@ -107,11 +111,12 @@ paths:
         "404":
           description: Not Found
       summary: Get Users Comments
-      tags: []
-  /comments/articles/{article_id}:
+      tags:
+      - v1/public
+  /v1/comments/articles/{article_id}:
     delete:
       description: Deletes all comments from an article
-      operationId: delete_articles_comments
+      operationId: v1-delete-articles-comments
       parameters:
       - description: The unique ID of the Article
         explode: false
@@ -132,10 +137,10 @@ paths:
           description: Article not found
       summary: Delete Articles Comments
       tags:
-      - internal
+      - v1/internal
     get:
       description: Retrieves all comments from an articles
-      operationId: get_article_comments
+      operationId: v1-get-articles-comments
       parameters:
       - description: The unique ID of the article
         explode: false
@@ -218,10 +223,10 @@ paths:
           description: Not Found
       summary: Get Articles Comments
       tags:
-      - default
+      - v1/public
     post:
       description: Posts a new comment in an article
-      operationId: post_comment
+      operationId: v1-post-comment
       parameters:
       - description: The unique ID of the article
         explode: false
@@ -252,11 +257,12 @@ paths:
         "404":
           description: Article or Author not found
       summary: Post Comment
-      tags: []
-  /comments/{comment_id}:
+      tags:
+      - v1/public
+  /v1/comments/{comment_id}:
     delete:
       description: Deletes an article's comment
-      operationId: delete_comment
+      operationId: v1-delete-comment
       parameters:
       - description: The unique ID of the article
         explode: false
@@ -277,7 +283,262 @@ paths:
         "404":
           description: Comment not found
       summary: Delete Comment
-      tags: []
+      tags:
+      - v1/public
+  /v2/comments/users/{user_id}:
+    get:
+      description: Retrieves all comments from an user
+      operationId: v2-get-users-comments
+      parameters:
+      - explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Fillters the results by the article's ID
+        explode: true
+        in: query
+        name: article_id
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      - description: Set the order the comments will be shown. It is determined by
+          date
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          example: recent - oldest
+          type: string
+        style: form
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+          description: OK
+        "400":
+          description: "Bad Request, invalid User ID format"
+      summary: Get Users Comments
+      tags:
+      - v2/public
+  /v2/comments/articles/{article_id}:
+    delete:
+      description: Deletes all comments from an article
+      operationId: v2-delete-articles-comments
+      parameters:
+      - explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, comments deleted successfully"
+        "400":
+          description: "Bad Request, invalid Article ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article not found
+      summary: Delete Articles Comments
+      tags:
+      - v2/internal
+    get:
+      description: Retrieves all comments from an article
+      operationId: v2-get-articles-comments
+      parameters:
+      - explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Set the order the comments will be shown. It is determined by
+          date
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: recent
+          example: recent - oldest
+          type: string
+        style: form
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Single date or range
+        explode: true
+        in: query
+        name: creation_date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+          description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
+      summary: Get Articles Comments
+      tags:
+      - v2/public
+    post:
+      description: Posts a new comment in an article
+      operationId: v2-post-comment
+      parameters:
+      - explode: false
+        in: path
+        name: article_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Client's authenticated email
+        explode: false
+        in: header
+        name: user-email
+        required: true
+        schema:
+          format: email
+          type: string
+        style: simple
+      - description: "True if user is an admin user, False otherwise"
+        explode: false
+        in: header
+        name: admin
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewComment'
+        description: JSON object that contains the author and content of the comment
+      responses:
+        "201":
+          description: Comment successufully created
+        "400":
+          description: "Bad Request, wrong content structure"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or Author not found
+      summary: Post Comment
+      tags:
+      - v2/public
+  /v2/comments/{comment_id}:
+    delete:
+      description: Deletes an article's comment
+      operationId: v2-delete-comment
+      parameters:
+      - explode: false
+        in: path
+        name: comment_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Client's authenticated email
+        explode: false
+        in: header
+        name: user-email
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "True if user is an admin user, False otherwise"
+        explode: false
+        in: header
+        name: admin
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      responses:
+        "204":
+          description: "No Content, comment deleted successfully"
+        "400":
+          description: "Bad Request, invalid Comment ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Comment not found
+      summary: Delete Comment
+      tags:
+      - v2/public
 components:
   schemas:
     Comment:
