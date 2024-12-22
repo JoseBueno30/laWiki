@@ -15,6 +15,7 @@ class BaseV1InternalApi:
     async def check_user(
         self,
         user_id: str,
+        user_email: str,
     ) -> None:
         """Checks wheter the user email is registered in the application"""
         ...

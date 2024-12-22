@@ -44,12 +44,14 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def check_user(
-    user_id: str = Path(..., description="User unique id"),
+        user_id: str = Path(..., description="User unique id"),
+        user_email : str = Query(None, description="User email")
 ) -> None:
-    """Checks whether the user email is registered in the application"""
+    """Checks whether the user email is registered in the application.
+    Also checks if the provided email is the same as the user_id account email"""
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1InternalApi.subclasses[0]().check_user(user_id)
+    return await BaseV1InternalApi.subclasses[0]().check_user(user_id, user_email)
 
 
 @router.put(
@@ -63,8 +65,8 @@ async def check_user(
     response_model_by_alias=True,
 )
 async def put_user_rating(
-    user_id: str = Path(..., description="Unique user id"),
-    new_rating: NewRating = Body(None, description=""),
+        user_id: str = Path(..., description="Unique user id"),
+        new_rating: NewRating = Body(None, description=""),
 ) -> UserInfo:
     """Update the given user&#39;s rating"""
     if not BaseV1InternalApi.subclasses:

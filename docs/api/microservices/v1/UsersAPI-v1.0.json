@@ -191,7 +191,7 @@
           "v1/internal"
         ],
         "summary": "Check user",
-        "description": "Checks wheter the user email is registered in the application",
+        "description": "Checks whether the user email is registered in the application. Also checks if the provided email is the same as the user_id account email",
         "operationId": "check-user",
         "parameters": [
           {
@@ -205,11 +205,26 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "user_email",
+            "in": "query",
+            "description": "User email",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "User email does not match"
           },
           "404": {
             "description": "Not Found"
