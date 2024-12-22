@@ -157,7 +157,7 @@ class PublicArticleAPIV1(BaseV1PublicApi):
             editor_name: str,
     ) -> ArticleListV1:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-        url_filters = "/articles?"
+        url_filters = "v1/articles?"
         matching_variables = {}
         if wiki_id is not None:
             matching_variables["wiki_id"] = ObjectId(wiki_id)
