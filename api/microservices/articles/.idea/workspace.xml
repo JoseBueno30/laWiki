@@ -5,36 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/v2_admins_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/v2_admins_api_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/v2_editors_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/v2_editors_api_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/v2_public_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v2_apis/v2_public_api_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_admins_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_editors_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_public_v1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_admins_v2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_editors_v2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_public_v2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../docs/api/api_gateway/APIGateway-v2.0.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_admins_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/v1_admins_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_admins_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/v1_admins_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/v1_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_editors_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/v1_editors_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/v1_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_public_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/apis/v1_apis/v1_public_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_admins_v1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_editors_v1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/api_gateway_public_v1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/security_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/security_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_admins_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_admins_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_editors_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_editors_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_public_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_public_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_admins_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_admins_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_editors_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_editors_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_public_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_public_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_internal_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_internal_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../comments/src/openapi_server/impl/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../comments/src/openapi_server/impl/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tags/src/openapi_server/impl/api_calls_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tags/src/openapi_server/impl/api_calls_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tags/src/openapi_server/impl/api_calls_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tags/src/openapi_server/impl/api_calls_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/misc.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/misc.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +84,8 @@
       <workItem from="1733333907772" duration="2013000" />
       <workItem from="1733476560480" duration="9592000" />
       <workItem from="1734598217729" duration="1206000" />
+      <workItem from="1734804440485" duration="1724000" />
+      <workItem from="1734862938294" duration="709000" />
     </task>
     <servers />
   </component>
