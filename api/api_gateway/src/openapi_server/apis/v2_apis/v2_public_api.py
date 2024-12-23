@@ -34,9 +34,11 @@ from openapi_server.models.comment_list_response import CommentListResponse
 from openapi_server.models.inline_response200 import InlineResponse200
 from openapi_server.models.new_comment import NewComment
 from openapi_server.models.new_rating import NewRating
+from openapi_server.models.public_user_info import PublicUserInfo
 from openapi_server.models.rating import Rating
 from openapi_server.models.tag import Tag
 from openapi_server.models.tag_list import TagList
+from openapi_server.models.user_info import UserInfo
 from openapi_server.models.wiki import Wiki
 from openapi_server.models.wiki_list import WikiList
 from openapi_server.security_api import verify_token
@@ -592,3 +594,42 @@ async def search_wikis(
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseV2PublicApi.subclasses[0]().search_wikis(name, limit, offset, order, creation_date, author_name, lang)
+@router.get(
+    "/v2/users/me",
+    responses={
+        200: {"model": UserInfo, "description": "OK"},
+        403: {"description": "Forbidden"},
+        404: {"description": "User not found"},
+    },
+    tags=["v2/public"],
+    summary="Get current user info",
+    response_model_by_alias=True,
+)
+async def get_current_user_info(
+    decoded_token: TokenModel = Security(
+        verify_token
+    ),
+) -> UserInfo:
+    """Retrieves user info by the unique account email"""
+    if not BaseV2PublicApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseV2PublicApi.subclasses[0]().get_current_user_info()
+
+@router.get(
+    "/v2/users/{user_id}",
+    responses={
+        200: {"model": PublicUserInfo, "description": "OK"},
+        403: {"description": "Forbidden"},
+        404: {"description": "User not found"},
+    },
+    tags=["v2/public"],
+    summary="Get user info",
+    response_model_by_alias=True,
+)
+async def get_user_info(
+    user_id: str = Path(..., description="User unique id"),
+) -> PublicUserInfo:
+    """Retrieves user info by the unique account email"""
+    if not BaseV2PublicApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseV2PublicApi.subclasses[0]().get_user_info(user_id)

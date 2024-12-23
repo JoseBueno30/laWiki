@@ -20,29 +20,23 @@ import json
 
 
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from openapi_server.models.author import Author
-from openapi_server.models.simplified_tag import SimplifiedTag
+from openapi_server.models.user_info import UserInfo
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class ArticleVersion(BaseModel):
+class VerifyResponse(BaseModel):
     """
-    Concrete version of an Article object 
+    Info obtained retrieved by the oath token
     """ # noqa: E501
-    id: StrictStr = Field(description="The ID of the version of the article.")
-    article_id: StrictStr = Field(description="The ID of the article.")
-    author: Author
-    title: Dict[str, StrictStr] = Field(description="Dictionary of the title of the version of the article in the different supported languages.")
-    modification_date: datetime = Field(description="The date of modification the article that created the version.")
-    body: StrictStr = Field(description="The body of the version.")
-    tags: List[SimplifiedTag] = Field(description="Array of the tags of the version of the article.")
-    lan: StrictStr = Field(description="Original language of the ArticleVersion")
-    __properties: ClassVar[List[str]] = ["id", "article_id", "author", "title", "modification_date", "body", "tags", "lan"]
+    auth_token: StrictStr
+    iat_date: StrictInt = Field(description="\"Issued at Time\" in Epoch format")
+    exp_date: StrictInt = Field(description="\"Expiration date\" in Epoch format")
+    user_info: UserInfo
+    __properties: ClassVar[List[str]] = ["auth_token", "iat_date", "exp_date", "user_info"]
 
     model_config = {
         "populate_by_name": True,
@@ -62,7 +56,7 @@ class ArticleVersion(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ArticleVersion from a JSON string"""
+        """Create an instance of VerifyResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,21 +75,14 @@ class ArticleVersion(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of author
-        if self.author:
-            _dict['author'] = self.author.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
-        _items = []
-        if self.tags:
-            for _item in self.tags:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['tags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of user_info
+        if self.user_info:
+            _dict['user_info'] = self.user_info.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ArticleVersion from a dict"""
+        """Create an instance of VerifyResponse from a dict"""
         if obj is None:
             return None
 
@@ -103,14 +90,10 @@ class ArticleVersion(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "article_id": obj.get("article_id"),
-            "author": Author.from_dict(obj.get("author")) if obj.get("author") is not None else None,
-            "title": obj.get("title"),
-            "modification_date": obj.get("modification_date"),
-            "body": obj.get("body"),
-            "tags": [SimplifiedTag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,
-            "lan": obj.get("lan")
+            "auth_token": obj.get("auth_token"),
+            "iat_date": obj.get("iat_date"),
+            "exp_date": obj.get("exp_date"),
+            "user_info": UserInfo.from_dict(obj.get("user_info")) if obj.get("user_info") is not None else None
         })
         return _obj
 

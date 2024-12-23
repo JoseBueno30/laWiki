@@ -20,25 +20,24 @@ import json
 
 
 
-from datetime import date
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Union
-from openapi_server.models.author import Author
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class Rating(BaseModel):
+class UserInfo(BaseModel):
     """
-    Rating of an Article
+    User account info
     """ # noqa: E501
-    id: StrictStr = Field(description="Rating ID  ")
-    article_id: StrictStr = Field(description="Article ID where the rating is published")
-    author: Author = Field(alias="Author")
-    value: Union[StrictFloat, StrictInt] = Field(description="Rating's value")
-    creation_date: date = Field(description="Date where the rating was published")
-    __properties: ClassVar[List[str]] = ["id", "article_id", "Author", "value", "creation_date"]
+    id: StrictStr
+    email: StrictStr
+    username: StrictStr
+    image: StrictStr
+    rating: Union[StrictFloat, StrictInt]
+    admin: StrictBool = Field(description="True if it is an admin user, False otherwise")
+    __properties: ClassVar[List[str]] = ["id", "email", "username", "image", "rating", "admin"]
 
     model_config = {
         "populate_by_name": True,
@@ -58,7 +57,7 @@ class Rating(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Rating from a JSON string"""
+        """Create an instance of UserInfo from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,14 +76,11 @@ class Rating(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of author
-        if self.author:
-            _dict['Author'] = self.author.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Rating from a dict"""
+        """Create an instance of UserInfo from a dict"""
         if obj is None:
             return None
 
@@ -93,10 +89,11 @@ class Rating(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "article_id": obj.get("article_id"),
-            "Author": Author.from_dict(obj.get("Author")) if obj.get("Author") is not None else None,
-            "value": obj.get("value"),
-            "creation_date": obj.get("creation_date")
+            "email": obj.get("email"),
+            "username": obj.get("username"),
+            "image": obj.get("image"),
+            "rating": obj.get("rating"),
+            "admin": obj.get("admin")
         })
         return _obj
 

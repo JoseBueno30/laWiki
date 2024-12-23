@@ -8,7 +8,7 @@ ARTICLES_API_URL = os.getenv("ARTICLES_API_URL", "http://articles_api:8081")
 RATINGS_API_URL = os.getenv("RATINGS_API_URL", "http://ratings_api:8082")
 TAGS_API_URL = os.getenv("TAGS_API_URL", "http://tags_api:8083")
 WIKIS_API_URL = os.getenv("WIKIS_API_URL", "http://wikis_api:8084")
-
+USERS_API_URL = os.getenv("USERS_API_URL", "http://users_api:8085")
 
 
 async def forward_request(method: str, url: str, query_params: dict = None, json: dict = None, headers_params: dict = None, content: bytes = None):
