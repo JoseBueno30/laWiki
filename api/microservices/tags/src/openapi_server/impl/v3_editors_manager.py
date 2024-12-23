@@ -168,7 +168,7 @@ class EditorManagerV3(BaseV3EditorsApi):
     async def unassign_tags_v3(
         self,
         id: str,
-        ids: list[str],
+        ids: List[str],
         user_id: str,
         admin: str,
     ) -> None:
