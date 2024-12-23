@@ -19,7 +19,7 @@ from fastapi.security import (  # noqa: F401
 from fastapi.security.api_key import APIKeyCookie, APIKeyHeader, APIKeyQuery  # noqa: F401
 from openapi_server.models.extra_models import TokenModel
 from impl.redis_config import redis_client
-from impl.utils import forward_request, USERS_URL, USERS_PORT
+from impl.utils import forward_request, USERS_API_URL
 
 bearer_auth = HTTPBearer()
 
@@ -37,12 +37,12 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(beare
 
     cached_token = redis_client.get(token)
     if not cached_token:
-        query_params = {"auth_token": token}
+        body = {"auth_token": token}
         try:
             res = await forward_request(
-                "POST",
-                f"{USERS_URL}:{USERS_PORT}/v1/verify_token",
-                query_params=query_params)
+                "PUT",
+                f"{USERS_API_URL}/v1/verify_token",
+                json=body.to_dict())
 
             token_data = {
                 "iat_date" : res["iat_date"],

@@ -15,40 +15,65 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
     async def create_wiki(
         self,
         new_wiki: NewWiki,
+        decoded_token: TokenModel,
     ) -> Wiki:
         """Create a new Wiki"""
-        return await forward_request(method="POST", url=f"{WIKIS_API_URL}/v2/wikis", json=new_wiki.to_dict())
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="POST", url=f"{WIKIS_API_URL}/v3/wikis", json=new_wiki.to_dict(), headers_params=headers_params)
 
 
     async def delete_tag(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete a wiki tag."""
-        return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v2/tags/{id}")
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v3/tags/{id}", headers_params=headers_params)
 
 
     async def post_wiki_tag(
         self,
         id: str,
         new_tag: NewTag,
+        decoded_token: TokenModel,
     ) -> Tag:
         """Create a new tag in a given wiki."""
-        return await forward_request(method="POST", url=f"{TAGS_API_URL}/v2/tags/wikis/{id}", json=new_tag.to_dict())
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="POST", url=f"{TAGS_API_URL}/v3/tags/wikis/{id}", json=new_tag.to_dict(), headers_params=headers_params)
 
 
     async def remove_wiki(
         self,
         id_name: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Remove Wiki with the matching ID."""
-        return await forward_request(method="DELETE", url=f"{WIKIS_API_URL}/v2/wikis/{id_name}")
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="DELETE", url=f"{WIKIS_API_URL}/v3/wikis/{id_name}", headers_params=headers_params)
 
 
     async def update_wiki(
         self,
         id_name: str,
         new_wiki: NewWiki,
+        decoded_token: TokenModel,
     ) -> Wiki:
         """Update Wiki with wiki the matching ID"""
-        return await forward_request(method="Put", url=f"{WIKIS_API_URL}/v2/wikis/{id_name}", json=new_wiki.to_dict())
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="Put", url=f"{WIKIS_API_URL}/v3/wikis/{id_name}", json=new_wiki.to_dict(), headers_params=headers_params)

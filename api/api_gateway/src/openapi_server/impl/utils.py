@@ -10,10 +10,6 @@ TAGS_API_URL = os.getenv("TAGS_API_URL", "http://tags_api:8083")
 WIKIS_API_URL = os.getenv("WIKIS_API_URL", "http://wikis_api:8084")
 USERS_API_URL = os.getenv("USERS_API_URL", "http://users_api:8085")
 
-
-USERS_PORT = 8085
-USERS_URL = "http://users_api:" + str(USERS_PORT)
-
 async def forward_request(method: str, url: str, query_params: dict = None, json: dict = None, headers_params: dict = None, content: bytes = None):
     params = None
     headers = None

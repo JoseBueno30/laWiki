@@ -30,6 +30,7 @@ class BaseV2PublicApi:
     async def delete_comment(
         self,
         comment_id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Deletes an article&#39;s comment"""
         ...
@@ -38,6 +39,7 @@ class BaseV2PublicApi:
     async def delete_rating(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete the rating associated with the selected ID"""
         ...
@@ -47,6 +49,7 @@ class BaseV2PublicApi:
         self,
         id: str,
         new_rating: NewRating,
+        decoded_token: TokenModel,
     ) -> Rating:
         """Update the value of an already existing Rating"""
         ...
@@ -221,6 +224,7 @@ class BaseV2PublicApi:
         self,
         article_id: str,
         new_comment: NewComment,
+        decoded_token: TokenModel,
     ) -> Comment:
         """Posts a new comment in an article"""
         ...
@@ -230,6 +234,7 @@ class BaseV2PublicApi:
         self,
         id: str,
         new_rating: NewRating,
+        decoded_token: TokenModel,
     ) -> Rating:
         """Create a rating for a given Article"""
         ...
@@ -266,14 +271,15 @@ class BaseV2PublicApi:
         ...
 
     async def get_user_info(
-            self,
-            user_id: str,
+        self,
+        user_id: str,
     ) -> PublicUserInfo:
-        """Retrieves user info by the unique account email"""
+        """Retrieves user info by the unique ID of the user"""
         ...
 
     async def get_current_user_info(
-            self,
+        self,
+        decoded_token: TokenModel,
     ) -> UserInfo:
         """Retrieves user info of the current user"""
         ...

@@ -4,6 +4,7 @@ from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
+from openapi_server.models.extra_models import TokenModel
 from openapi_server.models.inline_response200 import InlineResponse200
 from openapi_server.models.new_article import NewArticle
 from openapi_server.models.new_article_version import NewArticleVersion
@@ -20,6 +21,7 @@ class BaseV2EditorsApi:
         self,
         id: str,
         tag_id_list: TagIDList,
+        decoded_token: TokenModel,
     ) -> None:
         """Assigns a list of tags, given their IDs, to an article."""
         ...
@@ -28,6 +30,7 @@ class BaseV2EditorsApi:
     async def create_article(
         self,
         new_article: NewArticle,
+        decoded_token: TokenModel,
     ) -> Article:
         """Create a new Article in a given wiki"""
         ...
@@ -37,6 +40,7 @@ class BaseV2EditorsApi:
         self,
         id: str,
         new_article_version: NewArticleVersion,
+        decoded_token: TokenModel,
     ) -> ArticleVersion:
         """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
         ...
@@ -45,6 +49,7 @@ class BaseV2EditorsApi:
     async def delete_article_by_id(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete an Article identified by it&#39;s unique ID"""
         ...
@@ -53,6 +58,7 @@ class BaseV2EditorsApi:
     async def delete_article_version_by_id(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete an ArticleVersion identified by it&#39;s unique ID"""
         ...
@@ -62,6 +68,7 @@ class BaseV2EditorsApi:
         self,
         article_id: str,
         version_id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Restore an older ArticleVersion of an Article."""
         ...
@@ -71,6 +78,7 @@ class BaseV2EditorsApi:
         self,
         id: str,
         ids: List[str],
+        decoded_token: TokenModel,
     ) -> None:
         """Unassigns a list of tags, given their IDs to an article."""
         ...

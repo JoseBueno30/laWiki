@@ -57,7 +57,7 @@ async def create_wiki(
     """Create a new Wiki"""
     if not BaseV2AdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2AdminsApi.subclasses[0]().create_wiki(new_wiki)
+    return await BaseV2AdminsApi.subclasses[0]().create_wiki(new_wiki, decoded_token)
 
 
 @router.delete(
@@ -81,7 +81,7 @@ async def delete_tag(
     """Delete a wiki tag."""
     if not BaseV2AdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2AdminsApi.subclasses[0]().delete_tag(id)
+    return await BaseV2AdminsApi.subclasses[0]().delete_tag(id, decoded_token)
 
 
 @router.post(
@@ -105,7 +105,7 @@ async def post_wiki_tag(
     """Create a new tag in a given wiki."""
     if not BaseV2AdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2AdminsApi.subclasses[0]().post_wiki_tag(id, new_tag)
+    return await BaseV2AdminsApi.subclasses[0]().post_wiki_tag(id, new_tag, decoded_token)
 
 
 @router.delete(
@@ -129,7 +129,7 @@ async def remove_wiki(
     """Remove Wiki with the matching ID."""
     if not BaseV2AdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2AdminsApi.subclasses[0]().remove_wiki(id_name)
+    return await BaseV2AdminsApi.subclasses[0]().remove_wiki(id_name, decoded_token)
 
 
 @router.put(
@@ -154,4 +154,4 @@ async def update_wiki(
     """Update Wiki with wiki the matching ID"""
     if not BaseV2AdminsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2AdminsApi.subclasses[0]().update_wiki(id_name, new_wiki)
+    return await BaseV2AdminsApi.subclasses[0]().update_wiki(id_name, new_wiki, decoded_token)

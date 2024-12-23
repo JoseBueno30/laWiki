@@ -62,7 +62,7 @@ async def assign_tags(
     """Assigns a list of tags, given their IDs, to an article."""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().assign_tags(id, tag_id_list)
+    return await BaseV2EditorsApi.subclasses[0]().assign_tags(id, tag_id_list, decoded_token)
 
 
 @router.post(
@@ -85,7 +85,7 @@ async def create_article(
     """Create a new Article in a given wiki"""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().create_article(new_article)
+    return await BaseV2EditorsApi.subclasses[0]().create_article(new_article, decoded_token)
 
 
 @router.post(
@@ -109,7 +109,7 @@ async def create_article_version(
     """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().create_article_version(id, new_article_version)
+    return await BaseV2EditorsApi.subclasses[0]().create_article_version(id, new_article_version, decoded_token)
 
 
 @router.delete(
@@ -133,7 +133,7 @@ async def delete_article_by_id(
     """Delete an Article identified by it&#39;s unique ID"""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().delete_article_by_id(id)
+    return await BaseV2EditorsApi.subclasses[0]().delete_article_by_id(id, decoded_token)
 
 
 @router.delete(
@@ -157,7 +157,7 @@ async def delete_article_version_by_id(
     """Delete an ArticleVersion identified by it&#39;s unique ID"""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().delete_article_version_by_id(id)
+    return await BaseV2EditorsApi.subclasses[0]().delete_article_version_by_id(id, decoded_token)
 
 
 @router.put(
@@ -182,7 +182,7 @@ async def restore_article_version(
     """Restore an older ArticleVersion of an Article."""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().restore_article_version(article_id, version_id)
+    return await BaseV2EditorsApi.subclasses[0]().restore_article_version(article_id, version_id, decoded_token)
 
 
 @router.delete(
@@ -207,7 +207,7 @@ async def unassign_tags(
     """Unassigns a list of tags, given their IDs to an article."""
     if not BaseV2EditorsApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2EditorsApi.subclasses[0]().unassign_tags(id, ids)
+    return await BaseV2EditorsApi.subclasses[0]().unassign_tags(id, ids, decoded_token)
 
 
 @router.post(

@@ -72,7 +72,7 @@ async def delete_comment(
     """Deletes an article&#39;s comment"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().delete_comment(comment_id)
+    return await BaseV2PublicApi.subclasses[0]().delete_comment(comment_id, decoded_token)
 
 
 @router.delete(
@@ -96,7 +96,7 @@ async def delete_rating(
     """Delete the rating associated with the selected ID"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().delete_rating(id)
+    return await BaseV2PublicApi.subclasses[0]().delete_rating(id, decoded_token)
 
 
 @router.put(
@@ -121,7 +121,7 @@ async def edit_article_rating(
     """Update the value of an already existing Rating"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().edit_article_rating(id, new_rating)
+    return await BaseV2PublicApi.subclasses[0]().edit_article_rating(id, new_rating, decoded_token)
 
 
 @router.get(
@@ -513,7 +513,7 @@ async def post_comment(
     """Posts a new comment in an article"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().post_comment(article_id, new_comment)
+    return await BaseV2PublicApi.subclasses[0]().post_comment(article_id, new_comment, decoded_token)
 
 
 @router.post(
@@ -538,7 +538,7 @@ async def rate_article(
     """Create a rating for a given Article"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().rate_article(id, new_rating)
+    return await BaseV2PublicApi.subclasses[0]().rate_article(id, new_rating, decoded_token)
 
 
 @router.get(
@@ -613,7 +613,7 @@ async def get_current_user_info(
     """Retrieves user info by the unique account email"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().get_current_user_info()
+    return await BaseV2PublicApi.subclasses[0]().get_current_user_info(decoded_token)
 
 @router.get(
     "/v2/users/{user_id}",

@@ -17,6 +17,7 @@ class BaseV2AdminsApi:
     async def create_wiki(
         self,
         new_wiki: NewWiki,
+        decoded_token: TokenModel,
     ) -> Wiki:
         """Create a new Wiki"""
         ...
@@ -25,6 +26,7 @@ class BaseV2AdminsApi:
     async def delete_tag(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete a wiki tag."""
         ...
@@ -34,6 +36,7 @@ class BaseV2AdminsApi:
         self,
         id: str,
         new_tag: NewTag,
+        decoded_token: TokenModel,
     ) -> Tag:
         """Create a new tag in a given wiki."""
         ...
@@ -42,6 +45,7 @@ class BaseV2AdminsApi:
     async def remove_wiki(
         self,
         id_name: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Remove Wiki with the matching ID."""
         ...
@@ -51,6 +55,7 @@ class BaseV2AdminsApi:
         self,
         id_name: str,
         new_wiki: NewWiki,
+        decoded_token: TokenModel,
     ) -> Wiki:
         """Update Wiki with wiki the matching ID"""
         ...

@@ -9,6 +9,7 @@ from openapi_server.apis.v2_apis.v2_editors_api_base import BaseV2EditorsApi
 from openapi_server.impl.utils import ARTICLES_API_URL, TAGS_API_URL
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
+from openapi_server.models.extra_models import TokenModel
 from openapi_server.models.inline_response200 import InlineResponse200
 from openapi_server.models.new_article import NewArticle
 from openapi_server.models.new_article_version import NewArticleVersion
@@ -33,60 +34,95 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
         self,
         id: str,
         tag_id_list: TagIDList,
+        decoded_token: TokenModel,
     ) -> None:
         """Assigns a list of tags, given their IDs, to an article."""
-        return await forward_request(method="PUT", url=f"{TAGS_API_URL}/v2/tags/articles/{id}", json=tag_id_list.to_dict())
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="PUT", url=f"{TAGS_API_URL}/v3/tags/articles/{id}", json=tag_id_list.to_dict(), headers_params=headers_params)
 
     async def create_article(
         self,
         new_article: NewArticle,
+        decoded_token: TokenModel,
     ) -> Article:
         """Create a new Article in a given wiki"""
-        return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v2/articles", json=new_article.to_dict())
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v3/articles", json=new_article.to_dict(), headers_params=headers_params)
 
 
     async def create_article_version(
         self,
         id: str,
         new_article_version: NewArticleVersion,
+        decoded_token: TokenModel,
     ) -> ArticleVersion:
         """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
-        return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v2/articles/{id}/versions", json=new_article_version.to_dict())
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v3/articles/{id}/versions", json=new_article_version.to_dict(), headers_params=headers_params)
 
 
     async def delete_article_by_id(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete an Article identified by it&#39;s unique ID"""
-        return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v2/articles/{id}")
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v3/articles/{id}", headers_params=headers_params)
 
 
     async def delete_article_version_by_id(
         self,
         id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Delete an ArticleVersion identified by it&#39;s unique ID"""
-        return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v2/articles/versions/{id}")
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v3/articles/versions/{id}", headers_params=headers_params)
 
 
     async def restore_article_version(
         self,
         article_id: str,
         version_id: str,
+        decoded_token: TokenModel,
     ) -> None:
         """Restore an older ArticleVersion of an Article."""
-        return await forward_request(method="PUT", url=f"{ARTICLES_API_URL}/v2/articles/{article_id}/versions/{version_id}")
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
+        return await forward_request(method="PUT", url=f"{ARTICLES_API_URL}/v3/articles/{article_id}/versions/{version_id}", headers_params=headers_params)
 
 
     async def unassign_tags(
         self,
         id: str,
         ids: List[str],
+        decoded_token: TokenModel,
     ) -> None:
         """Unassigns a list of tags, given their IDs to an article."""
+        headers_params = {
+            "user-id": decoded_token.user_info["id"],
+            "admin": decoded_token.user_info["admin"]
+        }
         query_params = {"ids":ids}
-        return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v2/tags/articles/{id}", query_params=query_params)
+        return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v3/tags/articles/{id}", query_params=query_params, headers_params=headers_params)
 
 
     async def upload_image(
