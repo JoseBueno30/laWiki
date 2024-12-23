@@ -26,6 +26,7 @@ from fastapi import (  # noqa: F401
     Security,
     status,
 )
+from fastapi.exceptions import RequestValidationError
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.new_wiki_v2 import NewWikiV2
@@ -53,7 +54,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 )
 async def create_wiki_v3(
     response: Response,
-    user_email: StrictStr = Header(..., description=""),
+    user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
     new_wiki_v2: NewWikiV2 = Body(None, description=""),
 ) -> WikiV2:
@@ -61,15 +62,17 @@ async def create_wiki_v3(
     if not BaseDefaultV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        result = await BaseDefaultV3Api.subclasses[0]().create_wiki_v3(user_email,admin,new_wiki_v2)
+        result = await BaseDefaultV3Api.subclasses[0]().create_wiki_v3(user_id,admin,new_wiki_v2)
         response.status_code = 201
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Wiki name unavailable")
     except InvalidOperation as e:
-        raise raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except RequestValidationError as e:
+        raise_http_exception(403, MESSAGE_FORBIDDEN, e)
     except Exception as e:
         print(e)
-        raise HTTPException(status_code=500, detail=MESSAGE_UNEXPECTED)
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
     return result
 

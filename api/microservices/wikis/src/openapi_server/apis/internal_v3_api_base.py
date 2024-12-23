@@ -16,7 +16,7 @@ class BaseInternalV3Api:
     async def assign_wiki_tags_v3(
         self,
         id: str,
-        user_email: StrictStr,
+        user_id: StrictStr,
         admin: StrictBool,
         id_tags_body_v2: IdTagsBodyV2,
     ) -> None:
@@ -35,7 +35,7 @@ class BaseInternalV3Api:
     async def unassign_wiki_tags_v3(
         self,
         id: str,
-        user_email: StrictStr,
+        user_id: StrictStr,
         admin: StrictBool,
         ids: List[str],
     ) -> None:
@@ -45,7 +45,7 @@ class BaseInternalV3Api:
 
     async def update_rating_v3(
         self,
-        user_email: StrictStr,
+        user_id: StrictStr,
         admin: StrictBool,
         id: str,
         id_ratings_body: IdRatingsBody,

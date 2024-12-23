@@ -11,6 +11,7 @@ from pymongo.errors import DuplicateKeyError, InvalidOperation
 from openapi_server.apis.internal_v3_api_base import BaseInternalV3Api
 import openapi_server.impl
 from openapi_server.impl.misc import *
+from fastapi.exceptions import RequestValidationError
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -54,7 +55,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 async def assign_wiki_tags_v3(
     response: Response,
     id: str = Path(..., description=""),
-    user_email: StrictStr = Header(..., description=""),
+    user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
     id_tags_body_v2: IdTagsBodyV2 = Body(None, description=""),
 ) -> None:
@@ -62,12 +63,14 @@ async def assign_wiki_tags_v3(
     if not BaseInternalV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseInternalV3Api.subclasses[0]().assign_wiki_tags_v3(id, user_email, admin, id_tags_body_v2)
+        await BaseInternalV3Api.subclasses[0]().assign_wiki_tags_v3(id, user_id, admin, id_tags_body_v2)
         response.status_code = 204
     except LookupError:
         response.status_code = 404
     except InvalidId as e:
         raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except RequestValidationError as e:
+        raise_http_exception(403, MESSAGE_FORBIDDEN, e)
     except Exception as e:
         raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
@@ -113,7 +116,7 @@ async def check_wiki_by_idv3(
 async def unassign_wiki_tags_v3(
     response: Response,
     id: str = Path(..., description=""),
-    user_email: StrictStr = Header(..., description=""),
+    user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
     ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
 ) -> None:
@@ -121,12 +124,14 @@ async def unassign_wiki_tags_v3(
     if not BaseInternalV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseInternalV3Api.subclasses[0]().unassign_wiki_tags_v3(id, user_email, admin, ids)
+        await BaseInternalV3Api.subclasses[0]().unassign_wiki_tags_v3(id, user_id, admin, ids)
         response.status_code = 204
     except LookupError:
         response.status_code = 404
     except InvalidId as e:
         raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except RequestValidationError as e:
+        raise_http_exception(403, MESSAGE_FORBIDDEN, e)
     except Exception as e:
         raise_http_exception(500, MESSAGE_UNEXPECTED, e)
 
@@ -144,7 +149,8 @@ async def unassign_wiki_tags_v3(
     response_model_by_alias=True,
 )
 async def update_rating_v3(
-    user_email: StrictStr = Header(..., description=""),
+    response: Response,
+    user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
     id: str = Path(..., description=""),
     id_ratings_body: IdRatingsBody = Body(None, description=""),
@@ -152,4 +158,14 @@ async def update_rating_v3(
     """Update the rating of a Wiki give its unique ID and a rating"""
     if not BaseInternalV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseInternalV3Api.subclasses[0]().update_rating_v3(user_email, admin, id, id_ratings_body)
+    try:
+        await BaseInternalV3Api.subclasses[0]().update_rating_v3(user_id, admin, id, id_ratings_body)
+        response.status_code = 204
+    except LookupError:
+        response.status_code = 404
+    except InvalidId as e:
+        raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except RequestValidationError as e:
+        raise_http_exception(403, MESSAGE_FORBIDDEN, e)
+    except Exception as e:
+        raise_http_exception(500, MESSAGE_UNEXPECTED, e)

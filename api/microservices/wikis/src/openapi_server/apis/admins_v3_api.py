@@ -6,6 +6,7 @@ import pkgutil
 
 from bson.errors import InvalidId
 
+from fastapi.exceptions import RequestValidationError
 from pymongo.errors import DuplicateKeyError, InvalidOperation
 from openapi_server.apis.admins_v3_api_base import BaseAdminsV3Api
 import openapi_server.impl
@@ -53,7 +54,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 )
 async def remove_wiki_v3(
     response : Response,
-    user_email: StrictStr = Header(..., description=""),
+    user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
     id_name: str = Path(..., description="Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."),
 ) -> None:
@@ -61,13 +62,15 @@ async def remove_wiki_v3(
     if not BaseAdminsV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        await BaseAdminsV3Api.subclasses[0]().remove_wiki_v3(user_email,admin,id_name)
+        await BaseAdminsV3Api.subclasses[0]().remove_wiki_v3(user_id,admin,id_name)
     except LookupError:
         response.status_code = 404
     except TypeError as e:
         raise_http_exception(400, MESSAGE_NAME_WHEN_ID, e)
     except InvalidId as e:
         raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except RequestValidationError as e:
+        raise_http_exception(403, MESSAGE_FORBIDDEN, e)
     except InvalidOperation as e:
         raise_http_exception(500, MESSAGE_UNAKCNOWLEDGED, e)
     except Exception as e:
@@ -87,7 +90,7 @@ async def remove_wiki_v3(
     response_model_by_alias=True,
 )
 async def update_wiki_v3(
-    user_email: StrictStr = Header(..., description=""),
+    user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
     id_name: str = Path(..., description="Identifier of the requested wiki, may be its name or its ID. Keep in mind wiki names may be modified."),
     new_wiki_v2: NewWikiV2 = Body(None, description=""),
@@ -96,11 +99,13 @@ async def update_wiki_v3(
     if not BaseAdminsV3Api.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
-        return await BaseAdminsV3Api.subclasses[0]().update_wiki_v3(user_email,admin,id_name, new_wiki_v2)
+        return await BaseAdminsV3Api.subclasses[0]().update_wiki_v3(user_id,admin,id_name, new_wiki_v2)
     except TypeError as e:
         raise_http_exception(400, MESSAGE_NAME_WHEN_ID, e)
     except InvalidOperation as e:
         raise raise_http_exception(400, MESSAGE_BAD_FORMAT, e)
+    except RequestValidationError as e:
+        raise_http_exception(403, MESSAGE_FORBIDDEN, e)
     except LookupError as e:
         raise_http_exception(404, MESSAGE_NOT_FOUND.format(resource="Wiki"), e)
     except UnicodeError as e:

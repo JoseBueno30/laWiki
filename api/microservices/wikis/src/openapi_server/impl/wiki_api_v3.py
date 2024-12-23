@@ -1,12 +1,8 @@
-
-import json
-import operator
 import re
 from typing import Any, Coroutine, List, Dict
 from pydantic import StrictStr, StrictBool
 
 from bson import ObjectId
-import httpx
 from pymongo import ReturnDocument
 from openapi_server.apis.default_v3_api_base import BaseDefaultV3Api
 from openapi_server.apis.admins_v3_api_base import BaseAdminsV3Api
@@ -18,9 +14,9 @@ from openapi_server.models.tag_v2 import TagV2
 from openapi_server.models.wiki_list_v2 import WikiListV2
 from openapi_server.models.wiki_v2 import WikiV2, AuthorV2
 from motor.motor_asyncio import AsyncIOMotorClient
-from fastapi import HTTPException
+from fastapi.exceptions import RequestValidationError
 from openapi_server.impl.misc import *
-from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan, delete_tags_from_wiki
+from openapi_server.impl.api_calls import delete_articles_from_wiki, translate_body_to_lan, translate_text_to_lan, delete_tags_from_wiki, get_user_by_id
 from pymongo.errors import InvalidOperation
 
 from datetime import datetime, timedelta
@@ -28,6 +24,25 @@ from datetime import datetime, timedelta
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 
 mongodb = client.get_database("laWikiV2BD")
+
+def check_user_equals_author_or_admin(user_id: str, author_name: str, admin: bool):
+    user_result = None
+    if not admin:
+        print(user_id)
+        print(author_name)
+        user_result = get_user_by_id(user_id)
+        if user_result["username"] != author_name:
+            raise RequestValidationError("User is not the author of the wiki")
+    return user_result
+    
+async def check_wiki_has_author_equals_user(wiki_author: str, wiki_id: str, admin: bool):
+    author_result = None
+    if not admin:
+        author_result = await mongodb["wiki"].find_one({"_id": ObjectId(wiki_id)}, {"author":
+                                                                                    {"$toString": "$author._id"}})
+        if author_result["author"] != wiki_author:
+            raise RequestValidationError("User is not the author of the wiki")
+    return author_result
 
 def check_modification_match(result):
     if result.matched_count < 1: # If _id does not lead to a wiki, causes 404
@@ -198,7 +213,12 @@ class WikiApi(BaseDefaultV3Api):
 
         return result
     
-    async def create_wiki_v3(self, user_email: StrictStr, admin: StrictBool, new_wiki_v2: NewWikiV2) -> WikiV2:
+    async def create_wiki_v3(self, user_id: StrictStr, admin: StrictBool, new_wiki_v2: NewWikiV2) -> WikiV2:
+        user = check_user_equals_author_or_admin(user_id, new_wiki_v2.author, admin)
+
+        if user is None:
+            user = get_user_by_id(user_id)
+
         discriminate_name(new_wiki_v2.name)
 
         try:
@@ -211,19 +231,18 @@ class WikiApi(BaseDefaultV3Api):
                          , name=name
                          , description=new_wiki_v2.description
                          , rating=0
-                         , author=AuthorV2(id='0',name=new_wiki_v2.author, image="")
+                         , author=AuthorV2(id=user_id,name=new_wiki_v2.author, image=user["image"])
                          , tags=[]
                          , creation_date=str(datetime.now())
                          , lang=new_wiki_v2.lang
                          , image=new_wiki_v2.image)
-        idless = final_wiki
-        del idless.id
-        del idless.author.id
-        result = await mongodb["wiki"].insert_one(idless.to_dict())
-        author_id = ObjectId()
-        await mongodb["wiki"].update_one({"_id" : result.inserted_id}, {"$set": {"author._id" : author_id}})
+        idless = final_wiki.model_dump()
+        idless.pop("id")
+        idless["author"].pop("id")
+        idless["author"]["_id"] = ObjectId(user_id)
+        print(idless)
+        result = await mongodb["wiki"].insert_one(idless)
         final_wiki.id = str(result.inserted_id)
-        final_wiki.author.id = str(author_id)
 
         await translate_wiki(SUPPORTED_LANGUAGES, new_wiki_v2.lang, name, new_wiki_v2.description, result.inserted_id)
 
@@ -382,9 +401,11 @@ class WikiApiAdmins(BaseAdminsV3Api):
         super().__init__()
     
     
-    async def remove_wiki_v3(self, user_email: StrictStr, admin: StrictBool, id_name: str) -> None:
+    async def remove_wiki_v3(self, user_id: StrictStr, admin: StrictBool, id_name: str) -> None:
         if not ObjectId.is_valid(id_name): # Si es nombre se cambia por id
             id_name = await get_id(id_name)
+        
+        await check_wiki_has_author_equals_user(user_id, id_name, admin)
         
         delete_articles_from_wiki(id_name)
 
@@ -397,13 +418,16 @@ class WikiApiAdmins(BaseAdminsV3Api):
         if not result.acknowledged:
             raise InvalidOperation()
 
-    async def update_wiki_v3(self, user_email: StrictStr, admin: StrictBool, id: str, new_wiki: NewWikiV2) -> WikiV2:
-        discriminate_name(new_wiki.name)
-
+    async def update_wiki_v3(self, user_id: StrictStr, admin: StrictBool, id: str, new_wiki: NewWikiV2) -> WikiV2:
         if ObjectId.is_valid(id):
             name = ""
         else:
             name = id
+
+        check_user_equals_author_or_admin(user_id, new_wiki.author, admin)
+        await check_wiki_has_author_equals_user(user_id, id, admin)
+        
+        discriminate_name(new_wiki.name)
 
         new_wiki_dict = new_wiki.to_dict()
         
@@ -450,19 +474,6 @@ class WikiApiAdmins(BaseAdminsV3Api):
 
         print(new_wiki_dict)
         final_wiki = WikiV2.from_dict(new_wiki_dict)
-
-
-        # final_wiki = WikiV2(id=str(result["_id"])
-        #                  , name=translated_name
-        #                  , description=new_wiki.description
-        #                  , rating=result["rating"]
-        #                  , author=AuthorV2(id=str(result["author"]["_id"]),name=new_wiki.author, image=result["author"]["image"])
-        #                  , tags=result["tags"]
-        #                  , creation_date=str(result["creation_date"])
-        #                  , lang=new_wiki.lang
-        #                  , image=new_wiki.image)
-        
-        # print(str(result["creation_date"]) + ": " + str(type(result["creation_date"])))
         print(final_wiki)
         
         return final_wiki
@@ -478,14 +489,16 @@ class WikiApiInternal(BaseInternalV3Api):
         else:
             return await mongodb["wiki"].find_one({"name": id_name}, {"_id": 1}) is not None
     
-    async def update_rating_v3(self, user_email: StrictStr, admin: StrictBool, id: str, id_ratings_body: IdRatingsBody) -> None:
+    async def update_rating_v3(self, user_id: StrictStr, admin: StrictBool, id: str, id_ratings_body: IdRatingsBody) -> None:
         update_rating_object = [{"_id" : ObjectId(id)},
                                 {"$set" : {"rating": id_ratings_body.rating}}]
         result = await mongodb["wiki"].update_one(filter=update_rating_object[0],
                                          update=update_rating_object[1])
         check_modification_match(result)
 
-    async def assign_wiki_tags_v3(self, id: str, user_email: StrictStr, admin: StrictBool, id_tags_body_v2: IdTagsBodyV2) -> None:
+    async def assign_wiki_tags_v3(self, id: str, user_id: StrictStr, admin: StrictBool, id_tags_body_v2: IdTagsBodyV2) -> None:
+        await check_wiki_has_author_equals_user(user_id, id, admin)
+
         print(id_tags_body_v2)
         print(id_tags_body_v2.to_json())
         uploaded_obj = []
@@ -509,7 +522,9 @@ class WikiApiInternal(BaseInternalV3Api):
                                          update=add_tags_object[1])
         check_modification_match(result) 
     
-    async def unassign_wiki_tags_v3(self, id: str, user_email: StrictStr, admin: StrictBool, ids: List[str]) -> None:
+    async def unassign_wiki_tags_v3(self, id: str, user_id: StrictStr, admin: StrictBool, ids: List[str]) -> None:
+        await check_wiki_has_author_equals_user(user_id, id, admin)
+
         id_list = []
         for id_str in ids:
             id_list.append(ObjectId(id_str))

@@ -15,7 +15,7 @@ class BaseAdminsV3Api:
         BaseAdminsV3Api.subclasses = BaseAdminsV3Api.subclasses + (cls,)
     async def remove_wiki_v3(
         self,
-        user_email: StrictStr,
+        user_id: StrictStr,
         admin: StrictBool,
         id_name: str,
     ) -> None:
@@ -25,7 +25,7 @@ class BaseAdminsV3Api:
 
     async def update_wiki_v3(
         self,
-        user_email: StrictStr,
+        user_id: StrictStr,
         admin: StrictBool,
         id_name: str,
         new_wiki_v2: NewWikiV2,

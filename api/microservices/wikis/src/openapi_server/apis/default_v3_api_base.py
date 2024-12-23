@@ -16,7 +16,7 @@ class BaseDefaultV3Api:
         BaseDefaultV3Api.subclasses = BaseDefaultV3Api.subclasses + (cls,)
     async def create_wiki_v3(
         self,
-        user_email: StrictStr,
+        user_id: StrictStr,
         admin: StrictBool,
         new_wiki_v2: NewWikiV2,
     ) -> WikiV2:
