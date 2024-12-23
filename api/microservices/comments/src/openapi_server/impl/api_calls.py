@@ -19,13 +19,9 @@ async def check_user(user_id : str, user_email: str) -> int:
         response = await client.head(f"http://{USERS_URL}:{USERS_PORT}/v1/users/{user_id}?user_email={user_email}")
         return response.status_code
 
-async def get_user(user_id : str, admin : bool) -> dict:
+async def get_user(user_id : str) -> dict:
     async with httpx.AsyncClient() as client:
-        headers = {
-            "user-id": user_id,
-            "admin": str(admin)
-        }
-        response = await client.get(f"http://{USERS_URL}:{USERS_PORT}/v1/users/{user_id}", headers=headers)
+        response = await client.get(f"http://{USERS_URL}:{USERS_PORT}/v1/users/{user_id}")
 
         if response.status_code == 401:
             raise HTTPException(status_code=403, detail="Forbidden")
