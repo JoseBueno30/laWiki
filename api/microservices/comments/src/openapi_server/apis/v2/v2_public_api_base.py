@@ -16,7 +16,7 @@ class BaseV2PublicApi:
     async def v2_delete_comment(
         self,
         comment_id: str,
-        user_email: str,
+        user_id: str,
         admin: bool,
     ) -> None:
         """Deletes an article&#39;s comment"""
@@ -51,7 +51,7 @@ class BaseV2PublicApi:
     async def v2_post_comment(
         self,
         article_id: str,
-        user_email: str,
+        user_id: str,
         admin: bool,
         new_comment: NewComment,
     ) -> Comment:

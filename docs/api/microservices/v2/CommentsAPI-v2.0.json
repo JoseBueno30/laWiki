@@ -614,15 +614,15 @@
             }
           },
           {
-            "name": "user-email",
+            "name": "user-id",
             "in": "header",
-            "description": "Client's authenticated email",
+            "description": "Client's authenticated ID",
             "required": true,
             "style": "simple",
             "explode": false,
             "schema": {
               "type": "string",
-              "format": "email"
+              "format": "uuid"
             }
           },
           {
@@ -726,14 +726,15 @@
             }
           },
           {
-            "name": "user-email",
+            "name": "user-id",
             "in": "header",
-            "description": "Client's authenticated email",
+            "description": "Client's authenticated ID",
             "required": true,
             "style": "simple",
             "explode": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {

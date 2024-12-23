@@ -11,30 +11,32 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.models.new_comment import NewComment
 from ..operations import parse_date, build_pagination_urls
-from ..pipelines import pipeline_remove_id,pipeline_trunc_date,pipeline_group_comments
+from ..pipelines import pipeline_remove_id, pipeline_trunc_date, pipeline_group_comments
 
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 mongodb = client.get_database("laWikiV2BD")
+
 
 class V2PublicComments(BaseV2PublicApi):
     async def v2_delete_comment(
             self,
             comment_id: str,
-            user_email: str,
+            user_id: str,
             admin: bool,
     ) -> None:
         """Deletes an article's comment"""
-        comment = await mongodb['comment'].find_one({"_id": ObjectId(comment_id)})
+        try:
+            comment_oid = ObjectId(comment_id)
+        except:
+            raise HTTPException(status_code=400, detail="Bad Request, invalid Comment ID format")
+
+        comment = await mongodb['comment'].find_one({"_id": comment_oid})
         if comment is None:
             raise HTTPException(status_code=404, detail="Comment not found")
 
         # If the user is not an admin, we check if the user is the author of the comment
-        if not admin:
-            user_check = await api_calls.check_user(str(comment['author']['_id']), user_email)
-            if user_check == 404:
-                raise HTTPException(status_code=404, detail="User not found")
-            if user_check == 400:
-                raise HTTPException(status_code=403, detail="Forbidden")
+        if not admin and comment['author']['_id'] != ObjectId(user_id):
+            raise HTTPException(status_code=403, detail="Forbidden")
 
         await mongodb['comment'].delete_one({"_id": ObjectId(comment_id)})
         return None
@@ -42,7 +44,7 @@ class V2PublicComments(BaseV2PublicApi):
     async def v2_post_comment(
             self,
             article_id: str,
-            user_email: str,
+            user_id: str,
             admin: bool,
             new_comment: NewComment,
     ) -> Comment:
@@ -51,12 +53,12 @@ class V2PublicComments(BaseV2PublicApi):
 
         # As the get method is restricted, I pass the same headers to the get_user method
         # If the client is authorized to get the user, it will be authorized to post the comment
-        author = await api_calls.get_user(new_comment.author_id, user_email, admin)
+        author = await api_calls.get_user(new_comment.author_id, user_id, admin)
 
         today = datetime.today()
 
         author_dict = {'_id': ObjectId(new_comment.author_id),
-                       'name' : author['username'],
+                       'name': author['username'],
                        'image': author['image']}
         comment_dic = {
             'article_id': ObjectId(article_id),

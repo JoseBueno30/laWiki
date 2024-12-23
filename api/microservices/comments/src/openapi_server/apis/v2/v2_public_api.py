@@ -49,13 +49,13 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 )
 async def v2_delete_comment(
     comment_id: str = Path(..., description=""),
-    user_email: str = Header(None, description="Client&#39;s authenticated email"),
+    user_id: str = Header(None, description="Client&#39;s authenticated ID"),
     admin: bool = Header(None, description="True if user is an admin user, False otherwise"),
 ) -> None:
     """Deletes an article&#39;s comment"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().v2_delete_comment(comment_id, user_email, admin)
+    return await BaseV2PublicApi.subclasses[0]().v2_delete_comment(comment_id, user_id, admin)
 
 
 @router.get(
@@ -119,11 +119,11 @@ async def v2_get_users_comments(
 )
 async def v2_post_comment(
     article_id: str = Path(..., description=""),
-    user_email: str = Header(None, description="Client&#39;s authenticated email"),
+    user_id: str = Header(None, description="Client&#39;s authenticated ID"),
     admin: bool = Header(None, description="True if user is an admin user, False otherwise"),
     new_comment: NewComment = Body(None, description="JSON object that contains the author and content of the comment"),
 ) -> Comment:
     """Posts a new comment in an article"""
     if not BaseV2PublicApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV2PublicApi.subclasses[0]().v2_post_comment(article_id, user_email, admin, new_comment)
+    return await BaseV2PublicApi.subclasses[0]().v2_post_comment(article_id, user_id, admin, new_comment)
