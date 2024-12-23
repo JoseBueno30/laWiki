@@ -1,0 +1,300 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "UsersAPI",
+    "description": "Microservice that manages authentication and user info related endpoints",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/UsersAPI/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/v1/verify_token": {
+      "put": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Verify user token",
+        "description": "Returns user info from the user oauth token",
+        "operationId": "put-verify_token",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, invalid token"
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}": {
+      "get": {
+        "tags": [
+          "v1/public"
+        ],
+        "summary": "Get user info",
+        "description": "Retrieves user info by the unique account email",
+        "operationId": "get-user-info",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User unique id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUserInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/v1/users/{user_id}/rating": {
+      "put": {
+        "tags": [
+          "v1/internal"
+        ],
+        "summary": "Update user rating",
+        "description": "Update the given user's rating",
+        "operationId": "put-user-rating",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "Unique user id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VerifyResponse": {
+        "title": "VerifyResponse",
+        "required": [
+          "auth_token",
+          "exp_date",
+          "iat_date",
+          "user_info"
+        ],
+        "type": "object",
+        "properties": {
+          "auth_token": {
+            "type": "string"
+          },
+          "iat_date": {
+            "type": "integer",
+            "description": "\"Issued at Time\" in Epoch format",
+            "format": "int64",
+            "x-stoplight": {
+              "id": "ia0ekjj8q67mr"
+            }
+          },
+          "exp_date": {
+            "type": "integer",
+            "description": "\"Expiration date\" in Epoch format",
+            "format": "int64",
+            "x-stoplight": {
+              "id": "1d2fs5uy6gz7l"
+            }
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "Info obtained retrieved by the oath token"
+      },
+      "NewUserInfo": {
+        "title": "NewUserInfo",
+        "required": [
+          "image",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "ptmzghhypmriv"
+            }
+          }
+        },
+        "description": "Model used to update an existing user information"
+      },
+      "UserInfo": {
+        "title": "User Info",
+        "required": [
+          "admin",
+          "email",
+          "id",
+          "image",
+          "rating",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "e1vqsebcaho7l"
+            }
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "sh3aj3mio7e8l"
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "0jftg3etfaj30"
+            }
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "x-stoplight": {
+              "id": "a2nfvlfpcj6h4"
+            }
+          },
+          "admin": {
+            "type": "boolean",
+            "description": "True if it is an admin user, False otherwise",
+            "x-stoplight": {
+              "id": "lsmdrl1l781vi"
+            }
+          }
+        },
+        "description": "User account info"
+      },
+      "PublicUserInfo": {
+        "title": "PublicUserInfo",
+        "required": [
+          "id",
+          "image",
+          "rating",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "x-stoplight": {
+              "id": "4b9wb37kpwp0o"
+            }
+          },
+          "username": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "5uju42mzuimmv"
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "f9z9p6if8b0s4"
+            }
+          },
+          "rating": {
+            "type": "number",
+            "format": "double",
+            "x-stoplight": {
+              "id": "s4c9nz6ai0xb7"
+            }
+          }
+        },
+        "description": ""
+      }
+    },
+    "securitySchemes": {}
+  }
+}
