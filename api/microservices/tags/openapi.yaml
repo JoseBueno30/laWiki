@@ -3,7 +3,7 @@ info:
   description: API for the tags microservice of laWiki web appplication. It provides
     all endpoints related to CRUD operatios for wiki tags.
   title: TagAPI
-  version: "2.0"
+  version: "3.0"
 servers:
 - description: SwaggerHub API Auto Mocking
   url: https://virtserver.swaggerhub.com/ez3/tags-api/0.1
@@ -537,6 +537,343 @@ paths:
       summary: Assign Tags
       tags:
       - v1/editors
+  /v3/tags/{id}:
+    delete:
+      description: Delete a wiki tag.
+      operationId: delete-tag-v3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: admin
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      responses:
+        "204":
+          description: "No Content, tag deleted successfully"
+        "400":
+          description: "Bad Request, invalid ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+      summary: Delete Tag
+      tags:
+      - v3/editors
+    get:
+      description: Get a tag by ID.
+      operationId: get-tag-v3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagV2'
+          description: OK
+        "400":
+          description: "Bad Request, invalid Tag ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+      summary: Get Tag
+      tags:
+      - v3/public
+  /v3/tags/wikis/{id}:
+    delete:
+      description: Delete all tags from a wiki.
+      operationId: delete-wiki-tags-v3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, tags deleted successfully"
+        "400":
+          description: "Bad Request, Incorrect ID format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Wiki not found
+      summary: Delete Wiki Tags
+      tags:
+      - v3/internal
+    get:
+      description: Retrieve all the tags from a wiki.
+      operationId: get-wiki-tags-v3
+      parameters:
+      - description: The unique ID of the wiki.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagListV2'
+          description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
+        "404":
+          description: Wiki not found
+      summary: Get Wikis Tags
+      tags:
+      - v3/public
+    post:
+      description: Create a new tag in a given wiki.
+      operationId: post-wiki-tag-v3
+      parameters:
+      - description: The unique ID of the wiki.
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: admin
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTagV2'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagV2'
+          description: OK
+        "400":
+          description: "Bad Request, wrong content structure"
+        "403":
+          description: Forbidden
+      summary: Create Tag
+      tags:
+      - v3/editors
+  /v3/tags/articles/{id}:
+    delete:
+      description: "Unassigns a list of tags, given their IDs to an article."
+      operationId: unassign-tags-v3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of Tag IDs
+        explode: false
+        in: query
+        name: ids
+        required: true
+        schema:
+          example:
+          - tag1
+          - tag2
+          items:
+            type: string
+          maxItems: 50
+          type: array
+          uniqueItems: true
+        style: form
+      - explode: false
+        in: header
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: admin
+        required: false
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No Content, tags unassigned successfully"
+        "400":
+          description: "Bad Request, invalid parameters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Unassign Tags
+      tags:
+      - v3/editors
+    get:
+      description: Retrieves all the tags from an article.
+      operationId: get-articles-tags-v3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum amount of responses to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          example: 20
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - description: The index of the first result to return. Use with limit to get
+          the next page of search results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          example: 0
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagListV2'
+          description: OK
+        "400":
+          description: "Bad Request, invalid parameters"
+        "404":
+          description: Article not found
+      summary: Get Articles Tag
+      tags:
+      - v3/public
+    put:
+      description: "Assigns a list of tags, given their IDs, to an article."
+      operationId: assign-tags-v3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: admin
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Example 1:
+                value:
+                  tag_ids:
+                  - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+            schema:
+              $ref: '#/components/schemas/TagIDList'
+      responses:
+        "204":
+          description: "No Content, tags assigned"
+        "400":
+          description: "Bad Request, invalid parameters format"
+        "403":
+          description: Forbidden
+        "404":
+          description: Article or tag not found
+      summary: Assign Tags
+      tags:
+      - v3/editors
 components:
   schemas:
     TagV2:

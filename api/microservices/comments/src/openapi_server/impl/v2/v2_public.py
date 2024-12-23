@@ -48,12 +48,12 @@ class V2PublicComments(BaseV2PublicApi):
             admin: bool,
             new_comment: NewComment,
     ) -> Comment:
+        if user_id != new_comment.author_id and not admin:
+            raise HTTPException(status_code=403, detail="Forbidden")
         if not await api_calls.check_article(article_id):
             raise HTTPException(status_code=404, detail="Article not found")
 
-        # As the get method is restricted, I pass the same headers to the get_user method
-        # If the client is authorized to get the user, it will be authorized to post the comment
-        author = await api_calls.get_user(new_comment.author_id, user_id, admin)
+        author = await api_calls.get_user(new_comment.author_id)
 
         today = datetime.today()
 

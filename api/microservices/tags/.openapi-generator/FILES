@@ -19,6 +19,12 @@ src/openapi_server/apis/v2_internal_api.py
 src/openapi_server/apis/v2_internal_api_base.py
 src/openapi_server/apis/v2_public_api.py
 src/openapi_server/apis/v2_public_api_base.py
+src/openapi_server/apis/v3_editors_api.py
+src/openapi_server/apis/v3_editors_api_base.py
+src/openapi_server/apis/v3_internal_api.py
+src/openapi_server/apis/v3_internal_api_base.py
+src/openapi_server/apis/v3_public_api.py
+src/openapi_server/apis/v3_public_api_base.py
 src/openapi_server/impl/__init__.py
 src/openapi_server/main.py
 src/openapi_server/models/__init__.py
@@ -38,3 +44,6 @@ tests/test_v1_public_api.py
 tests/test_v2_editors_api.py
 tests/test_v2_internal_api.py
 tests/test_v2_public_api.py
+tests/test_v3_editors_api.py
+tests/test_v3_internal_api.py
+tests/test_v3_public_api.py
