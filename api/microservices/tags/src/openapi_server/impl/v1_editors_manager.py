@@ -10,7 +10,7 @@ from openapi_server.apis.v1_editors_api_base import BaseV1EditorsApi
 mongodb_client = AsyncIOMotorClient(
         "mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 
-mongodb = mongodb_client.get_database("laWikiDB")
+mongodb = mongodb_client.get_database("laWikiV2BD")
 class EditorsManagerV1(BaseV1EditorsApi):
 
     def __init__(self):
@@ -91,7 +91,12 @@ class EditorsManagerV1(BaseV1EditorsApi):
         tag_document = {
             "tag": new_tag.tag,
             "wiki_id": wiki_id,
-            "articles": []
+            "articles": [],
+            "translations": {
+                    "en" : "",
+                    "es" : "",
+                    "fr" : ""
+                }
         }
 
         result = await mongodb["tag"].insert_one(tag_document)

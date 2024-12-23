@@ -38,6 +38,11 @@ async def check_wiki(wiki_id: str) -> bool:
         response = await client.head(f"http://{WIKIS_API_URL}/v2/wikis/{wiki_id}")
         return response.status_code == 200
 
+async def get_wiki(wiki_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"http://{WIKIS_API_URL}/v2/wikis/{wiki_id}")
+        return response.json()
+
 async def assign_wiki_tags(wiki_id: str, id_tags_body) -> bool:
     async with httpx.AsyncClient() as client:
         response = await client.put(f"http://{WIKIS_API_URL}/v2/wikis/{wiki_id}/tags",
