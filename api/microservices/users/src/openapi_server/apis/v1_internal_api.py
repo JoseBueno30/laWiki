@@ -23,8 +23,9 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.new_rating import NewRating
 from openapi_server.models.user_info import UserInfo
+from openapi_server.models.verify_response import VerifyResponse
+
 
 router = APIRouter()
 
@@ -33,31 +34,10 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
 
-@router.head(
-    "/v1/users/{user_id}",
-    responses={
-        200: {"description": "OK"},
-        404: {"description": "Not Found"},
-    },
-    tags=["v1/internal"],
-    summary="Check user",
-    response_model_by_alias=True,
-)
-async def check_user(
-        user_id: str = Path(..., description="User unique id"),
-        user_email : str = Query(None, description="User email")
-) -> None:
-    """Checks whether the user email is registered in the application.
-    Also checks if the provided email is the same as the user_id account email"""
-    if not BaseV1InternalApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1InternalApi.subclasses[0]().check_user(user_id, user_email)
-
-
 @router.put(
     "/v1/users/{user_id}/rating",
     responses={
-        204: {"description": "No Content"},
+        200: {"model": UserInfo, "description": "OK"},
         404: {"description": "Not Found"},
     },
     tags=["v1/internal"],
@@ -65,10 +45,29 @@ async def check_user(
     response_model_by_alias=True,
 )
 async def put_user_rating(
-        user_id: str = Path(..., description="Unique user id"),
-        new_rating: NewRating = Body(None, description=""),
+    user_id: str = Path(..., description="Unique user id"),
+    body: float = Body(None, description=""),
 ) -> UserInfo:
     """Update the given user&#39;s rating"""
     if not BaseV1InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV1InternalApi.subclasses[0]().put_user_rating(user_id, new_rating)
+    return await BaseV1InternalApi.subclasses[0]().put_user_rating(user_id, body)
+
+
+@router.put(
+    "/v1/verify_token",
+    responses={
+        200: {"model": VerifyResponse, "description": "OK"},
+        401: {"description": "Unauthorized, invalid token"},
+    },
+    tags=["v1/internal"],
+    summary="Verify user token",
+    response_model_by_alias=True,
+)
+async def put_verify_token(
+    body: str = Body(None, description=""),
+) -> VerifyResponse:
+    """Returns user info from the user oauth token"""
+    if not BaseV1InternalApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseV1InternalApi.subclasses[0]().put_verify_token(body)

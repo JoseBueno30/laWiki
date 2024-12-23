@@ -20,19 +20,23 @@ import json
 
 
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class NewRating(BaseModel):
+class PublicUserInfo(BaseModel):
     """
     
     """ # noqa: E501
+    id: StrictStr
+    email: Optional[StrictStr] = None
+    username: StrictStr
+    image: StrictStr
     rating: Union[StrictFloat, StrictInt]
-    __properties: ClassVar[List[str]] = ["rating"]
+    __properties: ClassVar[List[str]] = ["id", "email", "username", "image", "rating"]
 
     model_config = {
         "populate_by_name": True,
@@ -52,7 +56,7 @@ class NewRating(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of NewRating from a JSON string"""
+        """Create an instance of PublicUserInfo from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,7 +79,7 @@ class NewRating(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of NewRating from a dict"""
+        """Create an instance of PublicUserInfo from a dict"""
         if obj is None:
             return None
 
@@ -83,6 +87,10 @@ class NewRating(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
+            "email": obj.get("email"),
+            "username": obj.get("username"),
+            "image": obj.get("image"),
             "rating": obj.get("rating")
         })
         return _obj

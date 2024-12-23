@@ -15,7 +15,7 @@
     "/v1/verify_token": {
       "put": {
         "tags": [
-          "v1/public"
+          "v1/internal"
         ],
         "summary": "Verify user token",
         "description": "Returns user info from the user oauth token",
