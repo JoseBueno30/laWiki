@@ -30,7 +30,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         comment_id: str,
     ) -> None:
         """Deletes an article&#39;s comment"""
-        return await forward_request("DELETE", f"{COMMENTS_API_URL}/comments/{comment_id}")
+        return await forward_request("DELETE", f"{COMMENTS_API_URL}/v1/comments/{comment_id}")
 
 
     async def delete_rating(
@@ -103,7 +103,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
     ) -> CommentListResponse:
         """Retrieves all comments from an articles"""
         query_params = {"order": order, "limit": limit, "offset":offset, "creation_date":creation_date}
-        response = await forward_request(method="GET", url=f"{COMMENTS_API_URL}/comments/articles/{article_id}", query_params=query_params)
+        response = await forward_request(method="GET", url=f"{COMMENTS_API_URL}/v1/comments/articles/{article_id}", query_params=query_params)
         response["next"] = "/v1" + response["next"] if response["next"] else None
         response["previous"] = "/v1" + response["previous"] if response["previous"] else None
 
@@ -217,7 +217,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
     ) -> CommentListResponse:
         """Retrieves all comments from an user"""
         query_params = {"article_id":article_id, "order":order, "limit":limit, "offset":offset, "creation_date":creation_date}
-        response = await forward_request(method="GET", url=f"{COMMENTS_API_URL}/comments/users/{user_id}", query_params=query_params)
+        response = await forward_request(method="GET", url=f"{COMMENTS_API_URL}/v1/comments/users/{user_id}", query_params=query_params)
         response["next"] = "/v1" + response["next"] if response["next"] else None
         response["previous"] = "/v1" + response["previous"] if response["previous"] else None
 
@@ -254,7 +254,7 @@ class APIGatewayPublicV1(BaseV1PublicApi):
         new_comment: NewComment,
     ) -> Comment:
         """Posts a new comment in an article"""
-        return await forward_request(method="POST", url=f"{COMMENTS_API_URL}/comments/articles/{article_id}", json=new_comment.to_dict())
+        return await forward_request(method="POST", url=f"{COMMENTS_API_URL}/v1/comments/articles/{article_id}", json=new_comment.to_dict())
 
 
     async def rate_article(
