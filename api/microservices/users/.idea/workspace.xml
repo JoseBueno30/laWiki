@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb64c130-5fa0-41b4-8b20-781124d66fe6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/users.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/users.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v1_internal_api_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v1_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../docs/api/microservices/v1/UsersAPI-v1.0.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../docs/api/microservices/v1/UsersAPI-v1.0.json" afterDir="false" />
-    </list>
+    <list default="true" id="eb64c130-5fa0-41b4-8b20-781124d66fe6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,6 +72,7 @@
       <workItem from="1734772980632" duration="11010000" />
       <workItem from="1734796036639" duration="3700000" />
       <workItem from="1734882394202" duration="726000" />
+      <workItem from="1734958067077" duration="966000" />
     </task>
     <servers />
   </component>
