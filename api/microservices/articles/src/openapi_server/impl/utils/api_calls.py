@@ -1,17 +1,11 @@
 import httpx
 import json
+import os
 
-COMMENTS_PORT = 8080
-COMMENTS_URL = "comments_api"
-
-WIKI_PORT = 8084
-WIKI_URL = "wikis_api"
-
-RATINGS_PORT = 8082
-RATINGS_URL = "ratings_api"
-
-LIBRETRANSLATE_URL = "host.docker.internal"
-LIBRETRANSLATE_PORT = 5000
+COMMENTS_API_URL = os.getenv("COMMENTS_API_URL", "comments_api:8080")
+WIKIS_API_URL = os.getenv("WIKIS_API_URL", "wikis_api:8084")
+RATINGS_API_URL = os.getenv("RATINGS_API_URL", "ratings_api:8082")
+LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSALTE_API_URL", "host.docker.internal:5000")
 
 async def get_user_comments(usr_id : str, order : str=None, limit : int=None, offset : int=None):
     async with httpx.AsyncClient() as client:
@@ -23,7 +17,7 @@ async def get_user_comments(usr_id : str, order : str=None, limit : int=None, of
         if offset and offset != 0:
             query_params['offset'] = offset
 
-        comments_response = await client.get(f"http://{COMMENTS_URL}:{COMMENTS_PORT}/comments/users/{usr_id}",
+        comments_response = await client.get(f"http://{COMMENTS_API_URL}/comments/users/{usr_id}",
                                               params=query_params)
         if comments_response.status_code != 200:
             raise Exception(comments_response.text)
@@ -33,7 +27,7 @@ async def get_user_comments(usr_id : str, order : str=None, limit : int=None, of
 
 async def check_if_wiki_exists(wiki_id : str):
     async with httpx.AsyncClient() as client:
-        wiki_response = await client.head(f"http://{WIKI_URL}:{WIKI_PORT}/v2/wikis/{wiki_id}")
+        wiki_response = await client.head(f"http://{WIKIS_API_URL}/v2/wikis/{wiki_id}")
         return wiki_response.status_code == 200
 
 async def check_if_tag_exists(tag_id : str):
@@ -43,12 +37,12 @@ async def check_if_tag_exists(tag_id : str):
 
 async def delete_article_comments(article_id : str):
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{COMMENTS_URL}:{COMMENTS_PORT}/comments/articles/{article_id}")
+        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/comments/articles/{article_id}")
         return delete_response.status_code == 204
 
 async def delete_article_ratings(article_id : str):
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{RATINGS_URL}:{RATINGS_PORT}/ratings/articles/{article_id}")
+        delete_response = await client.delete(f"http://{RATINGS_API_URL}/ratings/articles/{article_id}")
         return delete_response.status_code == 204
 
 async def translate_body_to_lan(body, lan):
@@ -59,7 +53,7 @@ async def translate_body_to_lan(body, lan):
             "target": lan,
             "format": "html"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_URL}:{LIBRETRANSLATE_PORT}/translate", params=body_params, timeout=httpx.Timeout(500))
+        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=body_params, timeout=httpx.Timeout(500))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
@@ -71,6 +65,6 @@ async def translate_text_to_lan(text, lan):
             "target": lan,
             "format": "text"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_URL}:{LIBRETRANSLATE_PORT}/translate", params=text_params)
+        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=text_params)
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]

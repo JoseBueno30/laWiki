@@ -3172,6 +3172,104 @@
         ]
       }
     },
+    "/v2/users/{user_id}": {
+      "get": {
+        "tags": [
+          "v2/public"
+        ],
+        "summary": "Get user info",
+        "description": "Retrieves user info by the unique account email",
+        "operationId": "get-user-info",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User unique id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUserInfo"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "email": "user@example.com",
+                      "username": "string",
+                      "image": "http://example.com",
+                      "rating": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/v2/users/me": {
+      "get": {
+        "tags": [
+          "v2/public"
+        ],
+        "summary": "Get current user info",
+        "description": "Retrieves user info by the unique account email",
+        "operationId": "get-current-user-info",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                      "email": "user@example.com",
+                      "username": "string",
+                      "image": "http://example.com",
+                      "rating": 0,
+                      "admin": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "oauth_token": []
+          }
+        ]
+      }
+    },
     "/v1/articles/{id}": {
       "get": {
         "tags": [
@@ -7938,6 +8036,138 @@
             "description": "URL of the uploaded image"
           }
         }
+      },
+      "VerifyResponse": {
+        "title": "VerifyResponse",
+        "required": [
+          "auth_token",
+          "exp_date",
+          "iat_date",
+          "user_info"
+        ],
+        "type": "object",
+        "properties": {
+          "auth_token": {
+            "type": "string"
+          },
+          "iat_date": {
+            "type": "integer",
+            "description": "\"Issued at Time\" in Epoch format",
+            "format": "int64",
+            "x-stoplight": {
+              "id": "ia0ekjj8q67mr"
+            }
+          },
+          "exp_date": {
+            "type": "integer",
+            "description": "\"Expiration date\" in Epoch format",
+            "format": "int64",
+            "x-stoplight": {
+              "id": "1d2fs5uy6gz7l"
+            }
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "Info obtained retrieved by the oath token"
+      },
+      "UserInfo": {
+        "title": "User Info",
+        "required": [
+          "admin",
+          "email",
+          "id",
+          "image",
+          "rating",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "x-stoplight": {
+              "id": "e1vqsebcaho7l"
+            }
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "sh3aj3mio7e8l"
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "0jftg3etfaj30"
+            }
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "x-stoplight": {
+              "id": "a2nfvlfpcj6h4"
+            }
+          },
+          "admin": {
+            "type": "boolean",
+            "description": "True if it is an admin user, False otherwise",
+            "x-stoplight": {
+              "id": "lsmdrl1l781vi"
+            }
+          }
+        },
+        "description": "User account info"
+      },
+      "PublicUserInfo": {
+        "title": "PublicUserInfo",
+        "required": [
+          "id",
+          "image",
+          "rating",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "x-stoplight": {
+              "id": "4b9wb37kpwp0o"
+            }
+          },
+          "username": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "5uju42mzuimmv"
+            }
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "x-stoplight": {
+              "id": "f9z9p6if8b0s4"
+            }
+          },
+          "rating": {
+            "type": "number",
+            "format": "double",
+            "x-stoplight": {
+              "id": "s4c9nz6ai0xb7"
+            }
+          }
+        },
+        "description": ""
       }
     },
     "requestBodies": {},

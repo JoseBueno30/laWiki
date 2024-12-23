@@ -12,9 +12,11 @@ from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from openapi_server.models.new_comment import NewComment
 from openapi_server.models.new_rating import NewRating
+from openapi_server.models.public_user_info import PublicUserInfo
 from openapi_server.models.rating import Rating
 from openapi_server.models.tag import Tag
 from openapi_server.models.tag_list import TagList
+from openapi_server.models.user_info import UserInfo
 from openapi_server.models.wiki import Wiki
 from openapi_server.models.wiki_list import WikiList
 
@@ -261,4 +263,17 @@ class BaseV2PublicApi:
         lang: str,
     ) -> WikiList:
         """Get a list of Wikis that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
+        ...
+
+    async def get_user_info(
+            self,
+            user_id: str,
+    ) -> PublicUserInfo:
+        """Retrieves user info by the unique account email"""
+        ...
+
+    async def get_current_user_info(
+            self,
+    ) -> UserInfo:
+        """Retrieves user info of the current user"""
         ...

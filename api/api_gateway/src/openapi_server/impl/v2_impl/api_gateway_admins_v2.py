@@ -1,5 +1,5 @@
 from openapi_server.apis.v2_apis.v2_admins_api_base import BaseV2AdminsApi
-from openapi_server.impl.utils import TAGS_URL,WIKIS_URL
+from openapi_server.impl.utils import TAGS_API_URL,WIKIS_API_URL
 from openapi_server.impl.utils import forward_request
 from openapi_server.models.new_tag import NewTag
 from openapi_server.models.new_wiki import NewWiki
@@ -17,7 +17,7 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
         new_wiki: NewWiki,
     ) -> Wiki:
         """Create a new Wiki"""
-        return await forward_request(method="POST", url=f"{WIKIS_URL}/v2/wikis", json=new_wiki.to_dict())
+        return await forward_request(method="POST", url=f"{WIKIS_API_URL}/v2/wikis", json=new_wiki.to_dict())
 
 
     async def delete_tag(
@@ -25,7 +25,7 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
         id: str,
     ) -> None:
         """Delete a wiki tag."""
-        return await forward_request(method="DELETE", url=f"{TAGS_URL}/v2/tags/{id}")
+        return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v2/tags/{id}")
 
 
     async def post_wiki_tag(
@@ -34,7 +34,7 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
         new_tag: NewTag,
     ) -> Tag:
         """Create a new tag in a given wiki."""
-        return await forward_request(method="POST", url=f"{TAGS_URL}/v2/tags/wikis/{id}", json=new_tag.to_dict())
+        return await forward_request(method="POST", url=f"{TAGS_API_URL}/v2/tags/wikis/{id}", json=new_tag.to_dict())
 
 
     async def remove_wiki(
@@ -42,7 +42,7 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
         id_name: str,
     ) -> None:
         """Remove Wiki with the matching ID."""
-        return await forward_request(method="DELETE", url=f"{WIKIS_URL}/v2/wikis/{id_name}")
+        return await forward_request(method="DELETE", url=f"{WIKIS_API_URL}/v2/wikis/{id_name}")
 
 
     async def update_wiki(
@@ -51,4 +51,4 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
         new_wiki: NewWiki,
     ) -> Wiki:
         """Update Wiki with wiki the matching ID"""
-        return await forward_request(method="Put", url=f"{WIKIS_URL}/v2/wikis/{id_name}", json=new_wiki.to_dict())
+        return await forward_request(method="Put", url=f"{WIKIS_API_URL}/v2/wikis/{id_name}", json=new_wiki.to_dict())

@@ -6,7 +6,7 @@ from typing import List
 from fastapi import UploadFile
 
 from openapi_server.apis.v1_apis.v1_editors_api_base import BaseV1EditorsApi
-from openapi_server.impl.utils import ARTICLES_URL, TAGS_URL
+from openapi_server.impl.utils import ARTICLES_API_URL, TAGS_API_URL
 from openapi_server.models.article import Article
 from openapi_server.models.article_version import ArticleVersion
 from openapi_server.models.inline_response200 import InlineResponse200
@@ -35,14 +35,14 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
         tag_id_list: TagIDList,
     ) -> None:
         """Assigns a list of tags, given their IDs, to an article."""
-        return await forward_request(method="PUT", url=f"{TAGS_URL}/v2/tags/articles/{id}", json=tag_id_list.to_dict())
+        return await forward_request(method="PUT", url=f"{TAGS_API_URL}/v2/tags/articles/{id}", json=tag_id_list.to_dict())
 
     async def create_article(
         self,
         new_article: NewArticle,
     ) -> Article:
         """Create a new Article in a given wiki"""
-        return await forward_request(method="POST", url=f"{ARTICLES_URL}/v2/articles", json=new_article.to_dict())
+        return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v2/articles", json=new_article.to_dict())
 
 
     async def create_article_version(
@@ -51,7 +51,7 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
         new_article_version: NewArticleVersion,
     ) -> ArticleVersion:
         """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
-        return await forward_request(method="POST", url=f"{ARTICLES_URL}/v2/articles/{id}/versions", json=new_article_version.to_dict())
+        return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v2/articles/{id}/versions", json=new_article_version.to_dict())
 
 
     async def delete_article_by_id(
@@ -59,7 +59,7 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
         id: str,
     ) -> None:
         """Delete an Article identified by it&#39;s unique ID"""
-        return await forward_request(method="DELETE", url=f"{ARTICLES_URL}/v2/articles/{id}")
+        return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v2/articles/{id}")
 
 
     async def delete_article_version_by_id(
@@ -67,7 +67,7 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
         id: str,
     ) -> None:
         """Delete an ArticleVersion identified by it&#39;s unique ID"""
-        return await forward_request(method="DELETE", url=f"{ARTICLES_URL}/v2/articles/versions/{id}")
+        return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v2/articles/versions/{id}")
 
 
     async def restore_article_version(
@@ -76,7 +76,7 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
         version_id: str,
     ) -> None:
         """Restore an older ArticleVersion of an Article."""
-        return await forward_request(method="PUT", url=f"{ARTICLES_URL}/v2/articles/{article_id}/versions/{version_id}")
+        return await forward_request(method="PUT", url=f"{ARTICLES_API_URL}/v2/articles/{article_id}/versions/{version_id}")
 
 
     async def unassign_tags(
@@ -86,7 +86,7 @@ class APIGatewayEditorsV1(BaseV1EditorsApi):
     ) -> None:
         """Unassigns a list of tags, given their IDs to an article."""
         query_params = {"ids":ids}
-        return await forward_request(method="DELETE", url=f"{TAGS_URL}/v2/tags/articles/{id}", query_params=query_params)
+        return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v2/tags/articles/{id}", query_params=query_params)
 
 
     async def upload_image(

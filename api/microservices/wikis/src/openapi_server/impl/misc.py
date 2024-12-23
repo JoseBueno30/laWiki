@@ -11,13 +11,7 @@ MESSAGE_NAME_WHEN_ID = "Argument must be a valid ID, cannot be name"
 MESSAGE_CANT_RETURN = "Cannot return content currently, operation processed"
 MESSAGE_CANT_TRANSLATE = "Failed to translate wiki, update succesful"
 
-ARTICLES_PORT = 8081
-#ARTICLES_ROUTE = "127.0.0.1"
-ARTICLES_ROUTE = "articles_api"
-TAGS_PORT = 8083
-#TAGS_ROUTE = "127.0.0.1"
-TAGS_ROUTE = "tags_api"
-HTTP_REQUEST_FORMAT = "http://{host}:{port}/{method}"
+HTTP_REQUEST_FORMAT = "http://{url}/{method}"
 REMOVE_ALL_ARTICLES = "v2/articles/wiki/{id}"
 REMOVE_ALL_TAGS = "v2/tags/wikis/{id}"
 

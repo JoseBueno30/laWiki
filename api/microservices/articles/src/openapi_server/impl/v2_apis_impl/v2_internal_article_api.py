@@ -8,9 +8,6 @@ from openapi_server.impl.utils.functions import mongodb
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
-ARTICLE_URL = "localhost"
-ARTICLE_PORT = 8080
-
 class InternalArticleAPIV2(BaseV2InternalApi):
 
     def __init__(self, **kwargs):
