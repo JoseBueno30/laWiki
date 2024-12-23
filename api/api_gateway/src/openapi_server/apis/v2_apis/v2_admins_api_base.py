@@ -2,6 +2,7 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
+from openapi_server.models.extra_models import TokenModel
 from openapi_server.models.new_tag import NewTag
 from openapi_server.models.new_wiki import NewWiki
 from openapi_server.models.tag import Tag

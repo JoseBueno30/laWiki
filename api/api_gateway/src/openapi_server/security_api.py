@@ -18,8 +18,8 @@ from fastapi.security import (  # noqa: F401
 )
 from fastapi.security.api_key import APIKeyCookie, APIKeyHeader, APIKeyQuery  # noqa: F401
 from openapi_server.models.extra_models import TokenModel
-from impl.redis_config import redis_client
-from impl.utils import forward_request, USERS_API_URL
+from openapi_server.impl.redis_config import redis_client
+from openapi_server.impl.utils import forward_request, USERS_API_URL
 
 bearer_auth = HTTPBearer()
 

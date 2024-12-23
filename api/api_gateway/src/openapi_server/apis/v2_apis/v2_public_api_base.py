@@ -10,6 +10,7 @@ from openapi_server.models.article_version_list import ArticleVersionList
 from openapi_server.models.average_rating import AverageRating
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
+from openapi_server.models.extra_models import TokenModel
 from openapi_server.models.new_comment import NewComment
 from openapi_server.models.new_rating import NewRating
 from openapi_server.models.public_user_info import PublicUserInfo
