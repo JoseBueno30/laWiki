@@ -214,10 +214,9 @@ class WikiApi(BaseDefaultV3Api):
         return result
     
     async def create_wiki_v3(self, user_id: StrictStr, admin: StrictBool, new_wiki_v2: NewWikiV2) -> WikiV2:
-        user = check_user_equals_author_or_admin(user_id, new_wiki_v2.author, admin)
-
-        if user is None:
-            user = get_user_by_id(user_id)
+        check_user_equals_author_or_admin(user_id, new_wiki_v2.author, admin)
+        
+        user = get_user_by_id(user_id)
 
         discriminate_name(new_wiki_v2.name)
 
@@ -231,7 +230,7 @@ class WikiApi(BaseDefaultV3Api):
                          , name=name
                          , description=new_wiki_v2.description
                          , rating=0
-                         , author=AuthorV2(id=user_id,name=new_wiki_v2.author, image=user["image"])
+                         , author=AuthorV2(id=user["id"],name=user["username"], image=user["image"])
                          , tags=[]
                          , creation_date=str(datetime.now())
                          , lang=new_wiki_v2.lang
@@ -426,6 +425,8 @@ class WikiApiAdmins(BaseAdminsV3Api):
 
         check_user_equals_author_or_admin(user_id, new_wiki.author, admin)
         await check_wiki_has_author_equals_user(user_id, id, admin)
+
+        user = get_user_by_id(user_id)
         
         discriminate_name(new_wiki.name)
 
@@ -441,7 +442,9 @@ class WikiApiAdmins(BaseAdminsV3Api):
                                                 "$set": {
                                                     "name" : translated_name,
                                                     "description": new_wiki.description,
-                                                    "author.name": new_wiki.author,
+                                                    "author.name": user["username"],
+                                                    "author.image": user["image"],
+                                                    "author._id": ObjectId(user["id"]),
                                                     "image": new_wiki.image,
                                                     "lang": new_wiki.lang
                                                 }
