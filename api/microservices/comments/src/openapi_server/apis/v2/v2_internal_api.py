@@ -5,7 +5,7 @@ import importlib
 import pkgutil
 
 from openapi_server.apis.v2.v2_internal_api_base import BaseV2InternalApi
-import openapi_server.impl
+import openapi_server.impl.v2
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -27,7 +27,7 @@ from openapi_server.models.extra_models import TokenModel  # noqa: F401
 
 router = APIRouter()
 
-ns_pkg = openapi_server.impl
+ns_pkg = openapi_server.impl.v2
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
