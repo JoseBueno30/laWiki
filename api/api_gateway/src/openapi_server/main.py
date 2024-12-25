@@ -15,14 +15,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from openapi_server.apis.v1_admins_api import router as V1AdminsApiRouter
-from openapi_server.apis.v1_editors_api import router as V1EditorsApiRouter
-from openapi_server.apis.v1_public_api import router as V1PublicApiRouter
+from openapi_server.apis.v1_apis.v1_admins_api import router as V1AdminsApiRouter
+from openapi_server.apis.v1_apis.v1_editors_api import router as V1EditorsApiRouter
+from openapi_server.apis.v1_apis.v1_public_api import router as V1PublicApiRouter
+
+from openapi_server.apis.v2_apis.v2_admins_api import router as V2AdminsApiRouter
+from openapi_server.apis.v2_apis.v2_editors_api import router as V2EditorsApiRouter
+from openapi_server.apis.v2_apis.v2_public_api import router as V2PublicApiRouter
 
 app = FastAPI(
     title="laWiki API Gateway",
     description="The Articles API provides endpoints for managing and retrieving articles and article versions within the wiki application. It supports core CRUD (Create, Read, Update, Delete) operations, search functionality, and versioning.",
-    version="1.0",
+    version="2.0",
 )
 
 app.add_middleware(
@@ -36,3 +40,7 @@ app.add_middleware(
 app.include_router(V1AdminsApiRouter)
 app.include_router(V1EditorsApiRouter)
 app.include_router(V1PublicApiRouter)
+
+app.include_router(V2AdminsApiRouter)
+app.include_router(V2EditorsApiRouter)
+app.include_router(V2PublicApiRouter)

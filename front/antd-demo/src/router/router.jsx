@@ -36,22 +36,22 @@ const router = createBrowserRouter([
       { path: "", element: <WikiRecommendationPage /> }, // Página principal
       // { path: "", element: <WikiRecommendationPage /> }, // Página principal
       { path: "user_not_found", element: <NotFoundPage status_code={404} resource_type="User" /> }, // Usuario no encontrado
+      { path: "wiki_not_found", element: <NotFoundPage status_code={404} resource_type="Wiki" /> },
       {
         path: "wikis",
         children: [
           { path: "search", element: <WikiSearchResultsPage/> }, // Buscar wikis
           { path: "new", element: <WikiCreatePage /> }, // Crear wiki
-          { path: "not_found", element: <NotFoundPage status_code={404} resource_type="Wiki" /> }, // Wiki no encontrada
           {
             path: ":wiki_name",
             children: [
               { path: "", element: <WikiMainPage /> }, // Página principal de la wiki
               { path: "edit", element: <WikiEditPage /> }, // Editar wiki
               { path: "search", element: <ArticlesSearchResultPage /> }, // Buscar artículos en la wiki
+              { path: "article_not_found", element: <NotFoundPage status_code={404} resource_type="Article" /> },
               {
                 path: "articles",
                 children: [
-                  { path: "not_found", element: <NotFoundPage status_code={404} resource_type="Article" /> }, // Wiki no encontrada
                   { path: "new", element: <CreateArticlePage /> }, // Crear artículo
                   { path: ":article_name", element: <ArticlePage/> }, // Ver artículo
                   { path: ":article_name/edit", element: <EditArticlePage/> }, // Editar artículo

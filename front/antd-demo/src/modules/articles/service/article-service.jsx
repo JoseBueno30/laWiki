@@ -85,7 +85,7 @@ const ArticleService = () =>{
     
     const searchArticlesWithParams = async (queryParams) => {
         try {
-            return await APIGateway.get("http://localhost:3000/v1/articles", {
+            return await APIGateway.get("v1/articles", {
                 params: queryParams,
             });
         } catch (error) {

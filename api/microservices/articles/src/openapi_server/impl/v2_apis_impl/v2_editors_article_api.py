@@ -8,7 +8,7 @@ import re
 
 from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
 from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
-    check_if_tag_exists, check_if_wiki_exists
+    check_if_tag_exists, check_if_wiki_exists, delete_article_comments
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2

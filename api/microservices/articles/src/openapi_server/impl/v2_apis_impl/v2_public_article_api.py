@@ -5,7 +5,7 @@ import mwparserfromhell, pypandoc
 from typing import List
 
 from openapi_server.apis.v2_public_api_base import BaseV2PublicApi
-from openapi_server.impl.utils.api_calls import translate_body_to_lan
+from openapi_server.impl.utils.api_calls import translate_body_to_lan, get_user_comments
 from openapi_server.impl.utils.functions import transform_article_ids_pipeline, mongodb, transform_version_ids_pipeline, \
     get_total_number_of_documents, get_model_list_pipeline
 from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
@@ -253,7 +253,7 @@ class PublicArticleAPIV2(BaseV2PublicApi):
         lan: str
     ) -> ArticleListV2:
         """Get a list of Articles from a given Wiki that match a keyword string. Results can by filtered by tags, sorted by different parameters and support pagination."""
-        url_filters = "/articles?"
+        url_filters = "v2/articles?"
         matching_variables = {}
         if wiki_id is not None:
             matching_variables["wiki_id"] = ObjectId(wiki_id)

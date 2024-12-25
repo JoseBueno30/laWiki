@@ -1,0 +1,184 @@
+# coding: utf-8
+
+from typing import Dict, List  # noqa: F401
+import importlib
+import pkgutil
+
+from openapi_server.apis.default_api_base_v2 import BaseDefaultApiV2
+import openapi_server.impl
+
+from fastapi import (  # noqa: F401
+    APIRouter,
+    Body,
+    Cookie,
+    Depends,
+    Form,
+    Header,
+    HTTPException,
+    Path,
+    Query,
+    Response,
+    Security,
+    status,
+)
+
+from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.average_rating import AverageRating
+from openapi_server.models.new_rating import NewRating
+from openapi_server.models.rating import Rating
+
+
+router = APIRouter()
+
+ns_pkg = openapi_server.impl
+for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
+    importlib.import_module(name)
+
+
+@router.delete(
+    "/v2/ratings/{id}",
+    responses={
+        204: {"description": "Deleted successfully"},
+        400: {"description": "Bad Request, invalid Rating ID format"},
+        403: {"description": "No permissions to delete"},
+        404: {"description": "Rating Not Found"},
+    },
+    tags=["default"],
+    summary="Delete Rating",
+    response_model_by_alias=True,
+)
+async def delete_rating(
+    id: str = Path(..., description=""),
+    user_id: str = Header(...),
+    admin: bool = Header(...),
+) -> None:
+    """Delete the rating associated with the selected ID"""
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().delete_rating(id, user_id, admin)
+
+
+@router.delete(
+    "/v2/ratings/articles/{id}",
+    responses={
+        204: {"description": "No Content"},
+        401: {"description": "Unauthorized"},
+        404: {"description": "Not Found"},
+    },
+    tags=["default"],
+    summary="Delete all ratings associated to an article",
+    response_model_by_alias=True,
+)
+async def delete_ratings_articles_id(
+    id: str = Path(..., description=""),
+) -> None:
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().delete_ratings_articles_id(id)
+
+
+@router.put(
+    "/v2/ratings/articles/{id}",
+    responses={
+        201: {"model": Rating, "description": "Rating edited"},
+        400: {"description": "Bad Request, invalid Article ID format"},
+        403: {"description": "Forbidden"},
+        404: {"description": "Not Found"},
+    },
+    tags=["default"],
+    summary="Edit Article&#39;s Rating",
+    response_model_by_alias=True,
+)
+async def edit_article_rating(
+    id: str = Path(..., description=""),
+    new_rating: NewRating = Body(None, description=""),
+    user_id: str = Header(...),
+    admin: bool = Header(...),
+) -> Rating:
+    """Update the value of an already existing Rating"""
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().edit_article_rating(id, new_rating, user_id, admin)
+
+
+@router.get(
+    "/v2/ratings/articles/{id}/average",
+    responses={
+        200: {"model": AverageRating, "description": "OK"},
+        400: {"description": "Bad Request, invalid Article ID format"},
+    },
+    tags=["default"],
+    summary="Get Article&#39;s average rating",
+    response_model_by_alias=True,
+)
+async def get_article_average_rating(
+    id: str = Path(..., description=""),
+) -> AverageRating:
+    """Get data about the average rating of the article"""
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().get_article_average_rating(id)
+
+
+@router.get(
+    "/v2/ratings/{id}",
+    responses={
+        200: {"model": Rating, "description": "Rating found and returned"},
+        400: {"description": "Bad Request, invalid Rating ID format"},
+        404: {"description": "Rating Not Found"},
+    },
+    tags=["default"],
+    summary="Get Rating",
+    response_model_by_alias=True,
+)
+async def get_rating(
+    id: str = Path(..., description=""),
+) -> Rating:
+    """Get the Rating with the provided ID"""
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().get_rating(id)
+
+
+@router.get(
+    "/v2/ratings/articles/{articleId}/users/{userId}",
+    responses={
+        200: {"model": Rating, "description": "OK"},
+        404: {"description": "Not Found"},
+        422: {"description": "Unprocessable Entity (WebDAV)"},
+    },
+    tags=["default"],
+    summary="Get rating made by an user in an article",
+    response_model_by_alias=True,
+)
+async def get_ratings_bu_user_on_article(
+    articleId: str = Path(..., description=""),
+    userId: str = Path(..., description=""),
+) -> Rating:
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().get_ratings_bu_user_on_article(articleId, userId)
+
+
+@router.post(
+    "/v2/ratings/articles/{id}",
+    responses={
+        201: {"model": Rating, "description": "Rating created"},
+        400: {"description": "Bad Request, invalid Article ID format"},
+        403: {"description": "Forbidden"},
+        404: {"description": "Not Found"},
+    },
+    tags=["default"],
+    summary="Rate Article",
+    response_model_by_alias=True,
+)
+async def rate_article(
+    id: str = Path(..., description=""),
+    new_rating: NewRating = Body(None, description=""),
+    user_id: str = Header(...),
+    admin: bool = Header(...),
+) -> Rating:
+    """Create a rating for a given Article"""
+    if not BaseDefaultApiV2.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApiV2.subclasses[0]().rate_article(id, new_rating, user_id, admin)

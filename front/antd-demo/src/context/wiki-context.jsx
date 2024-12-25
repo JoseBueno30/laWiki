@@ -29,7 +29,7 @@ export const WikiProvider = ({ children }) => {
       setWiki({ wiki_name: wiki_name, wiki_info: wikiData });
       
     } catch (error) {
-      navigate(location.pathname.split("/wikis")[0] + "/wikis/not_found");
+      navigate(location.pathname.split("/wikis")[0] + "/wiki_not_found");
     }
   };
 

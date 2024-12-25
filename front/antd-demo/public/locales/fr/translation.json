@@ -26,7 +26,13 @@
     "create-button": "Créer {{type}}",
     "loading-button": "Chargement",
     "creating-button": "création d'un {{type}}",
-    "saving-button": "Sauver {{type}}"
+    "saving-button": "Sauver {{type}}",
+
+    "back-to-previous-page": "Retour à la page précédente",
+    "back-to-wiki-main-page": "Page principale du Wiki",
+    "back-to-main-page": "Page principale",
+    "article-not-found": "L'article n'existe pas, il aurait pu être supprimé",
+    "wiki-not-found": "Le wiki n'existe pas, il aurait pu être supprimé"
   },
 
   "header": {
@@ -75,7 +81,7 @@
     "table-author": "Auteur/e",
     "table-date": "Dernière modification",
     "table-rating": "Note",
-    "edit-article-button": "Modifier cet article",
+    "edit-article-button": "Modifier article",
     "select-version": "Sélectionner version",
     "restore-button": "Restaurer",
     "comments-header": "Commentaires ({{count}})",

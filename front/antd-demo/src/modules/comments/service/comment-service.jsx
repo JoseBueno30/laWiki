@@ -39,8 +39,20 @@ const CommentService = () =>{
         }
     }
 
+    const deleteComment = async (commentId) =>{
+        try{
+            const url = `/v1/comments/${commentId}`
+
+            const response = await APIGateway.delete(url)
+            return response
+        }catch(error){
+            console.error("CommentService.DeleteComment:", error)
+            return Promise.reject(error)
+        }
+    }
+
     return {
-        getArticleComments, postComment
+        getArticleComments, postComment, deleteComment
     }
 }
 

@@ -15,6 +15,7 @@
 from fastapi import FastAPI
 
 from openapi_server.apis.default_api import router as DefaultApiRouter
+from openapi_server.apis.default_api_v2 import router as DefaultApiRouterV2
 
 app = FastAPI(
     title="RatingsAPI",
@@ -23,3 +24,4 @@ app = FastAPI(
 )
 
 app.include_router(DefaultApiRouter)
+app.include_router(DefaultApiRouterV2)

@@ -10,7 +10,7 @@ from openapi_server.apis.v1_public_api_base import BaseV1PublicApi
 mongodb_client = AsyncIOMotorClient(
         "mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 
-mongodb = mongodb_client.get_database("laWikiDB")
+mongodb = mongodb_client.get_database("laWikiV2BD")
 class PublicManagerV1(BaseV1PublicApi):
 
     def __init__(self):
@@ -51,7 +51,8 @@ class PublicManagerV1(BaseV1PublicApi):
                                 "name": "$$article.name"
                             }
                         }
-                    }
+                    },
+                    "translations": 0
                 }
             }
         ]
@@ -93,7 +94,8 @@ class PublicManagerV1(BaseV1PublicApi):
                                 "name": "$$article.name"
                             }
                         }
-                    }
+                    },
+                    "translations": 0
                 }
             },
             {
@@ -145,7 +147,8 @@ class PublicManagerV1(BaseV1PublicApi):
                                 "name": "$$article.name"
                             }
                         }
-                    }
+                    },
+                    "translations": 0
                 }
             }
         ]

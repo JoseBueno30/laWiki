@@ -3,9 +3,6 @@ from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
-from openapi_server.impl import api_calls_v2
-
-from openapi_server.apis.v2_public_api import get_wiki_tags_v2
 
 mongodb_client = AsyncIOMotorClient(
         "mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")

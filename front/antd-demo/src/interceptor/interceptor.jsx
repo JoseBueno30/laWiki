@@ -1,16 +1,16 @@
 import axios from 'axios';
 
 const APIGateway = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://localhost:3000/',
   timeout: 180000,
 });
 
 APIGateway.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem('authToken'); 
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem('authToken'); 
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     // console.log('Request:', config);
     return config;
   },

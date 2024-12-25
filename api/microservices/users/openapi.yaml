@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  description: Microservice that manages authentication and user info related endpoints
+  title: UsersAPI
+  version: 1.0.0
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/ADRIANTORREMOCHA_1/UsersAPI/1.0.0
+paths:
+  /v1/verify_token:
+    put:
+      description: Returns user info from the user oauth token
+      operationId: put-verify_token
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponse'
+          description: OK
+        "401":
+          description: "Unauthorized, invalid token"
+      summary: Verify user token
+      tags:
+      - v1/internal
+  /v1/users/{user_id}:
+    get:
+      description: Retrieves user info by the unique account email
+      operationId: get-user-info
+      parameters:
+      - description: User unique id
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUserInfo'
+          description: OK
+        "403":
+          description: Forbidden
+        "404":
+          description: User not found
+      summary: Get user info
+      tags:
+      - v1/public
+  /v1/users/{user_id}/rating:
+    put:
+      description: Update the given user's rating
+      operationId: put-user-rating
+      parameters:
+      - description: Unique user id
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              format: double
+              type: number
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Update user rating
+      tags:
+      - v1/internal
+components:
+  schemas:
+    VerifyResponse:
+      description: Info obtained retrieved by the oath token
+      example:
+        iat_date: 0
+        user_info:
+          image: https://openapi-generator.tech
+          rating: 1.4658129
+          admin: true
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          email: email
+          username: username
+        exp_date: 6
+        auth_token: auth_token
+      properties:
+        auth_token:
+          title: auth_token
+          type: string
+        iat_date:
+          description: '"Issued at Time" in Epoch format'
+          format: int64
+          title: iat_date
+          type: integer
+          x-stoplight:
+            id: ia0ekjj8q67mr
+        exp_date:
+          description: '"Expiration date" in Epoch format'
+          format: int64
+          title: exp_date
+          type: integer
+          x-stoplight:
+            id: 1d2fs5uy6gz7l
+        user_info:
+          $ref: '#/components/schemas/UserInfo'
+      required:
+      - auth_token
+      - exp_date
+      - iat_date
+      - user_info
+      title: VerifyResponse
+      type: object
+    NewUserInfo:
+      description: Model used to update an existing user information
+      properties:
+        username:
+          type: string
+        image:
+          format: uri
+          type: string
+          x-stoplight:
+            id: ptmzghhypmriv
+      required:
+      - image
+      - username
+      title: NewUserInfo
+      type: object
+    UserInfo:
+      description: User account info
+      example:
+        image: https://openapi-generator.tech
+        rating: 1.4658129
+        admin: true
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        email: email
+        username: username
+      properties:
+        id:
+          format: uuid
+          title: id
+          type: string
+          x-stoplight:
+            id: e1vqsebcaho7l
+        email:
+          format: email
+          title: email
+          type: string
+        username:
+          title: username
+          type: string
+          x-stoplight:
+            id: sh3aj3mio7e8l
+        image:
+          format: uri
+          title: image
+          type: string
+          x-stoplight:
+            id: 0jftg3etfaj30
+        rating:
+          format: float
+          title: rating
+          type: number
+          x-stoplight:
+            id: a2nfvlfpcj6h4
+        admin:
+          description: "True if it is an admin user, False otherwise"
+          title: admin
+          type: boolean
+          x-stoplight:
+            id: lsmdrl1l781vi
+      required:
+      - admin
+      - email
+      - id
+      - image
+      - rating
+      - username
+      title: User Info
+      type: object
+    PublicUserInfo:
+      description: ""
+      example:
+        image: https://openapi-generator.tech
+        rating: 0.8008281904610115
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        email: email
+        username: username
+      properties:
+        id:
+          format: uuid
+          title: id
+          type: string
+        email:
+          format: email
+          title: email
+          type: string
+          x-stoplight:
+            id: 4b9wb37kpwp0o
+        username:
+          title: username
+          type: string
+          x-stoplight:
+            id: 5uju42mzuimmv
+        image:
+          format: uri
+          title: image
+          type: string
+          x-stoplight:
+            id: f9z9p6if8b0s4
+        rating:
+          format: double
+          title: rating
+          type: number
+          x-stoplight:
+            id: s4c9nz6ai0xb7
+      required:
+      - id
+      - image
+      - rating
+      - username
+      title: PublicUserInfo
+      type: object
+  securitySchemes: {}

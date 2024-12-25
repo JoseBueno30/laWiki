@@ -8,9 +8,6 @@ from openapi_server.impl.utils.functions import mongodb
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
-ARTICLE_URL = "localhost"
-ARTICLE_PORT = 8080
-
 class InternalArticleAPIV2(BaseV2InternalApi):
 
     def __init__(self, **kwargs):
@@ -85,7 +82,6 @@ class InternalArticleAPIV2(BaseV2InternalApi):
         id_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         for article_id in id_list:
-            async with httpx.AsyncClient() as client:
-                await client.delete(f"http://{ARTICLES_URL}:{ARTICLES_PORT}/articles/{str(article_id)}")
+            await BaseV2InternalApi.subclasses[0]().delete_articles_from_wiki(article_id)
 
         return None

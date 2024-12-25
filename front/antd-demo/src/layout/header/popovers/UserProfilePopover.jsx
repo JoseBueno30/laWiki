@@ -33,18 +33,6 @@ const UserProfilePopover = () => {
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu
-        key="3"
-        title={t('header.notifications-menu', {notifications: notifications == "Email" ? t('header.notifications-email') : t('header.notifications-afterlogin')})}
-        icon={<BellOutlined />}
-      >
-        <Menu.Item key="3-1" onClick={() => setNotifications("Email")}>
-          {t('header.notifications-email')}
-        </Menu.Item>
-        <Menu.Item key="3-2" onClick={() => setNotifications("After login")}>
-          {t('header.notifications-afterlogin')}
-        </Menu.Item>
-      </Menu.SubMenu>
-      <Menu.SubMenu
         key="4"
         title={t('header.language-menu', {language: locale == "en" ? t('header.language-en') : locale == "es" ? t('header.language-es') : t('header.language-fr')})}
         icon={<GlobalOutlined />}

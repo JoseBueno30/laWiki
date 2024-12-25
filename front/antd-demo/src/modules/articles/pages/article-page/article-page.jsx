@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import {useNavigate, useLocation } from "react-router-dom";
-import {Button, Flex, Grid, Select, Spin} from "antd";
+import {Button, Flex, Grid, Select, Spin, Tag} from "antd";
 import { EditOutlined, ReloadOutlined} from '@ant-design/icons';
 import CommentList from '../../../comments/components/comment-list/comment-list';
 import RatingsSection from '../../../ratings/components/ratings-section';
@@ -19,13 +19,6 @@ import MapView from '../../components/map-view/map-view';
 
 const {useBreakpoint} = Grid
 
-
-const quislantArticle =
-  {
-    author:{
-      image: "https://i.imgur.com/5CAdhgd.jpeg"
-    }
-  };
   const user = {
     name: "Adriduty",
     image: "",
@@ -67,16 +60,20 @@ const quislantArticle =
   }
 
   const fetchArticleVersion = async () =>{
-    let articleName
-    console.log("articulo", article)
-    if(article){
-      articleName = article.title[locale]
-    }else{
-      articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
-    }
-    const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
+    try{
+      let articleName
+      console.log("articulo", article)
+      if(article){
+        articleName = article.title[locale]
+      }else{
+        articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
+      }
 
-    setArticleVersion(version_response)
+      const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
+      setArticleVersion(version_response)
+    }catch(error){
+      navigate(location.pathname.split("/articles")[0] + "/article_not_found");
+    }
   }
 
   // useEffect (() =>{
@@ -189,6 +186,11 @@ const quislantArticle =
     fetchArticleComments()
   }
 
+  const deleteComment = async (commentId) =>{
+    await CommentService().deleteComment(commentId)
+    fetchArticleComments()
+  }
+
   const controlCommentsPaginationAndFilters = async (newOffset, order,creation_date) =>{
 
     const comments_response = await CommentService().getArticleComments(articleVersion.article_id, newOffset, 3, order,creation_date)
@@ -219,9 +221,17 @@ const quislantArticle =
     :
     (<section className='article-page'>
       <Flex align='center' justify='space-between'>
-        <Title>
-          {articleVersion.title[locale]}
-        </Title>
+        <Flex vertical>
+          <Title>
+            {articleVersion.title[locale]}
+          </Title>
+          <Flex gap={2}>
+            {articleVersion.tags.map(tag =>(
+                <Tag color='geekblue'>{tag.tag[locale]}</Tag>
+            ))}
+          </Flex>
+        </Flex>
+       
         <Flex gap={screen.md ? "3dvw" : 10} vertical={screen.md ? false : true} align='center'  style={screen.md ? {paddingTop: 25}:{paddingTop: 15}}>
           <Button color='default' variant='text'>
             <UserAvatar image={articleVersion.author.image} username={articleVersion.author.name}></UserAvatar>
@@ -248,8 +258,8 @@ const quislantArticle =
         jsx={((articleVersion.body).replaceAll("<p><mapview", "<MapView").replaceAll("</mapview></p>", "</MapView>").replaceAll("'{[{", "{[{").replaceAll("]}'","]}"))}/>
       </div>
 
-      <Flex className={screen.sm ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.sm ? false : true} align={screen.sm ? "start" : "center"}>
-        <CommentList uploadFunc={uploadComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
+      <Flex className={screen.md ? '' : 'reversed'} style={{padding: "10px"}} vertical={screen.md ? false : true} align={screen.md ? "start" : "center"}>
+        <CommentList uploadFunc={uploadComment} deleteFunc={deleteComment} commentsObject={comments} user={user} fetchFunc={controlCommentsPaginationAndFilters}></CommentList>  
 
         <RatingsSection ratings={ratings.ratings} avg_rating={ratings.average} 
           total_ratings={ratings.total} 
