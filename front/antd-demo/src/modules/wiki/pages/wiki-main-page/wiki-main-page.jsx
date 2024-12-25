@@ -82,20 +82,26 @@ const WikiMainPage = () => {
             {ratedArticles && ratedArticles.articles ? (
             <ArticleList articleList={ratedArticles.articles ?? []} />)
             : (
-              <Spin></Spin>
+              <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
+                <Spin></Spin>
+              </Flex>
             )}
             <h2>{t('article.recent-articles')}</h2>
             {recentArticles && recentArticles.articles ? (
             <ArticleList articleList={recentArticles.articles ?? []} />)
             : (
-              <Spin></Spin>
+              <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
+                <Spin></Spin>
+              </Flex>
             )}
           </Col>
         </Row>
       </Flex>
       ) : (
         <div className='spinner'>
-          <Spin></Spin>
+          <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
+            <Spin></Spin>
+          </Flex>
         </div>
       )}
       
