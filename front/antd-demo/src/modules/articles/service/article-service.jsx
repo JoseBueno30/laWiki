@@ -82,11 +82,20 @@ const ArticleService = () =>{
             return Promise.reject(error)
         }
     }
-        
     
     const searchArticlesWithParams = async (queryParams) => {
         try {
             return await APIGateway.get("v1/articles", {
+                params: queryParams,
+            });
+        } catch (error) {
+            return Promise.reject(error)
+        }
+    };
+    
+    const searchArticlesByAuthor = async (author_id,queryParams) => {
+        try {
+            return await APIGateway.get(`http://localhost:3000/v1/articles/author/${author_id}`, {
                 params: queryParams,
             });
         } catch (error) {
@@ -164,8 +173,9 @@ const ArticleService = () =>{
         getArticleVersionsByArticleID,
         getArticleVersionByID,
         restoreArticleVersion,
-        getArticleById, 
+        getArticleById,
         searchArticlesWithParams,
+        searchArticlesByAuthor,
         searchArticlesWithPaginationURL, 
         uploadImage, 
         getWikiTags, 
