@@ -26,7 +26,13 @@
     "create-button": "Créer {{type}}",
     "loading-button": "Chargement",
     "creating-button": "création d'un {{type}}",
-    "saving-button": "Sauver {{type}}"
+    "saving-button": "Sauver {{type}}",
+
+    "back-to-previous-page": "Retour à la page précédente",
+    "back-to-wiki-main-page": "Page principale du Wiki",
+    "back-to-main-page": "Page principale",
+    "article-not-found": "L'article n'existe pas, il aurait pu être supprimé",
+    "wiki-not-found": "Le wiki n'existe pas, il aurait pu être supprimé"
   },
 
   "header": {

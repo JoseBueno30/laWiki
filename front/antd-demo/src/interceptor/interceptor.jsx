@@ -7,10 +7,10 @@ const APIGateway = axios.create({
 
 APIGateway.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem('authToken'); 
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem('authToken'); 
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     // console.log('Request:', config);
     return config;
   },

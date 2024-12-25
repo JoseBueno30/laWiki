@@ -1,12 +1,15 @@
 import { Result } from "antd";
 import "./not-found.css";
+import { useTranslation } from 'react-i18next';
 
 const NotFound = ({status_code, error_message = "", resource_type = "Resource"}) => {
+    const {t} = useTranslation();
+
     let error_type = "", error_explanation = "", final_status_code;
     if (status_code == 404) {
         error_type = " - Not Found";
         final_status_code = 404;
-        error_explanation = resource_type + " does not exist, it might have been deleted.";
+        error_explanation = resource_type=="Article"? t("common.article-not-found"):t("common.wiki-not-found");
     } else if (status_code >= 500) {
         error_type = " - Internal Server Error";
         final_status_code = 500;

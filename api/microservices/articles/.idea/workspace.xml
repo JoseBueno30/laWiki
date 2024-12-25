@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/articles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/articles.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v3_editors_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v3_editors_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v3_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v3_internal_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v3_public_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v3_public_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_internal_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_internal_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v2_apis_impl/v2_public_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_internal_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_internal_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_public_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_public_article_api.py" afterDir="false" />
-    </list>
+    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,7 +85,7 @@
       <workItem from="1735054388425" duration="82000" />
       <workItem from="1735054897881" duration="31000" />
       <workItem from="1735058753444" duration="609000" />
-      <workItem from="1735134048754" duration="2667000" />
+      <workItem from="1735134048754" duration="2883000" />
     </task>
     <servers />
   </component>

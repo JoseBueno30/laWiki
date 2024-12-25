@@ -60,16 +60,20 @@ const {useBreakpoint} = Grid
   }
 
   const fetchArticleVersion = async () =>{
-    let articleName
-    console.log("articulo", article)
-    if(article){
-      articleName = article.title[locale]
-    }else{
-      articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
-    }
-    const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
+    try{
+      let articleName
+      console.log("articulo", article)
+      if(article){
+        articleName = article.title[locale]
+      }else{
+        articleName = window.location.toString().split("/").pop().replaceAll("_", " ")
+      }
 
-    setArticleVersion(version_response)
+      const version_response = await ArticleService().getArticleVersionByName(wiki.wiki_info.id, articleName, (article ? locale: null)) 
+      setArticleVersion(version_response)
+    }catch(error){
+      navigate(location.pathname.split("/articles")[0] + "/article_not_found");
+    }
   }
 
   // useEffect (() =>{
