@@ -22,10 +22,9 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.models_v2.extra_models import TokenModel  # noqa: F401
 from pydantic import Field, StrictBool, StrictStr
 from typing import Any, List, Optional
-from typing_extensions import Annotated
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
@@ -117,7 +116,7 @@ async def delete_articles_from_wiki_v3(
 )
 async def unassign_article_tags_v3(
     id: StrictStr = Path(..., description=""),
-    ids: Annotated[List[StrictStr], Field(max_length=50, description="List of Tag IDs")] = Query(None, description="List of Tag IDs", alias="ids"),
+    ids: List[str] = Query(None, description="List of Tag IDs", alias="ids"),
     user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
 ) -> None:

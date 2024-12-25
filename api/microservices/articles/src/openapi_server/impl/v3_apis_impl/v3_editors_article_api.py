@@ -1,8 +1,18 @@
-from typing import Optional
+import copy, mwparserfromhell, pypandoc
+import json
+from datetime import datetime
+from typing import List, Optional
 
-from pydantic import StrictStr, StrictBool
+from bson import ObjectId
+import re
+
+from pydantic.v1 import StrictStr, StrictBool
 
 from openapi_server.apis.v3_editors_api_base import BaseV3EditorsApi
+from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
+    check_if_tag_exists, check_if_wiki_exists, delete_article_comments
+from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
+    parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2
 from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
 from openapi_server.models.models_v2.new_article_v2 import NewArticleV2
@@ -133,7 +143,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         id: StrictStr,
         user_id: StrictStr,
         admin: StrictBool,
-        new_article_version_v2: Optional[NewArticleVersionV2],
+        new_article_version_v2: NewArticleVersionV2,
     ) -> ArticleVersionV2:
         #   Loads the ArticleVersion json
         new_article_version_json = new_article_version_v2.to_dict()

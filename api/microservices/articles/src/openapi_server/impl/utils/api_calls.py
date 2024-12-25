@@ -17,7 +17,7 @@ async def get_user_comments(usr_id : str, order : str=None, limit : int=None, of
         if offset and offset != 0:
             query_params['offset'] = offset
 
-        comments_response = await client.get(f"http://{COMMENTS_API_URL}/comments/users/{usr_id}",
+        comments_response = await client.get(f"http://{COMMENTS_API_URL}/v1/comments/users/{usr_id}",
                                               params=query_params)
         if comments_response.status_code != 200:
             raise Exception(comments_response.text)
@@ -37,7 +37,7 @@ async def check_if_tag_exists(tag_id : str):
 
 async def delete_article_comments(article_id : str):
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/comments/articles/{article_id}")
+        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/v1/comments/articles/{article_id}")
         return delete_response.status_code == 204
 
 async def delete_article_ratings(article_id : str):

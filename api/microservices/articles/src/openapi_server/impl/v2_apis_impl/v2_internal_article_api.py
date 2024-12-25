@@ -82,7 +82,6 @@ class InternalArticleAPIV2(BaseV2InternalApi):
         id_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         for article_id in id_list:
-            async with httpx.AsyncClient() as client:
-                await client.delete(f"http://{ARTICLES_URL}:{ARTICLES_PORT}/articles/{str(article_id)}")
+            await BaseV2InternalApi.subclasses[0]().delete_articles_from_wiki(article_id)
 
         return None

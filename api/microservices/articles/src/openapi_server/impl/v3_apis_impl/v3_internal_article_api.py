@@ -1,8 +1,11 @@
 from typing import Optional, List
-from typing_extensions import Annotated
+from xml.dom import NotFoundErr
 
+from bson import ObjectId
 from pydantic import StrictStr, StrictBool, Field
+
 from openapi_server.apis.v3_internal_api_base import BaseV3InternalApi
+from openapi_server.impl.utils.functions import mongodb
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
 
@@ -39,7 +42,7 @@ class InternalArticleAPIV3(BaseV3InternalApi):
     async def unassign_article_tags_v3(
         self,
         id: StrictStr,
-        ids: Annotated[List[StrictStr], Field(max_length=50, description="List of Tag IDs")],
+        ids: List[StrictStr],
         user_id: StrictStr,
         admin: StrictBool,
     ) -> None:
@@ -102,7 +105,7 @@ class InternalArticleAPIV3(BaseV3InternalApi):
         id_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         for article_id in id_list:
-            async with httpx.AsyncClient() as client:
-                await client.delete(f"http://{ARTICLES_URL}:{ARTICLES_PORT}/articles/{str(article_id)}")
+            await BaseV3InternalApi.subclasses[0]().delete_articles_from_wiki(article_id, user_id, admin)
+
 
         return None

@@ -5,7 +5,7 @@ import mwparserfromhell, pypandoc
 from typing import List
 
 from openapi_server.apis.v3_public_api_base import BaseV3PublicApi
-from openapi_server.impl.utils.api_calls import translate_body_to_lan
+from openapi_server.impl.utils.api_calls import translate_body_to_lan, get_user_comments
 from openapi_server.impl.utils.functions import transform_article_ids_pipeline, mongodb, transform_version_ids_pipeline, \
     get_total_number_of_documents, get_model_list_pipeline
 from openapi_server.models.models_v2.article_list_v2 import ArticleListV2
