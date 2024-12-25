@@ -3,7 +3,7 @@ import "./wiki-recommendation-page.css";
 import "../../../../assets/css/pages.css";
 import WikiCardGrid from "../../components/wiki-card-grid/wiki-card-grid";
 import apiClient from "../../../../interceptor/interceptor";
-import { Spin } from "antd";
+import { Flex, Spin } from "antd";
 import { useTranslation } from 'react-i18next';
 import WikiService from "../../service/wiki-service";
 const { getRatedWikis } = WikiService();
@@ -32,7 +32,9 @@ const WikiRecommendationPage = () => {
           <h1>{t('wikis.highest-rated-wikis')}</h1>
         </div>
         {loading ? (
-          <Spin></Spin>
+          <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
+            <Spin></Spin>
+          </Flex>
         ) : (
           <WikiCardGrid wikiList={wikiList} />
         )}

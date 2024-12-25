@@ -11,6 +11,7 @@ import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 import NotFoundPage from "../modules/wiki/pages/wiki-not-found/wiki-not-found";
 import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results-page/wiki-search-results-page";
+import UserPage from "../modules/users/pages/UserPage";
 
 // The structure of the application's routes
 
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <WikiRecommendationPage /> }, // Página principal
       // { path: "", element: <WikiRecommendationPage /> }, // Página principal
+      { path: "user_not_found", element: <NotFoundPage status_code={404} resource_type="User" /> }, // Usuario no encontrado
       { path: "wiki_not_found", element: <NotFoundPage status_code={404} resource_type="Wiki" /> },
       {
         path: "wikis",
@@ -62,6 +64,12 @@ const router = createBrowserRouter([
             path: "*", element: <Navigate to="not_found" relative replace/>,
           }
         ],
+      },
+      {
+        path: "users",
+        children: [
+          { path: ":user_id", element: <UserPage /> }, // Página de usuario
+        ]
       },
       { path: "testing", element: <TestRoute /> }, // Ruta de testing
     ],
