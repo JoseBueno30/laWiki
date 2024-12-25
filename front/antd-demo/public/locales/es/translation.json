@@ -36,6 +36,7 @@
   },
 
   "header": {
+    "login-link": "Iniciar sesión",
     "profile-link": "Ver perfil",
     "theme-menu": "Tema: {{theme}}",
     "theme-light": "Claro",

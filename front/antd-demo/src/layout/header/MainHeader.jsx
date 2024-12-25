@@ -40,6 +40,7 @@ const WikiHeader = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const toggleSearchHeader = () => {
     setSearchHeader(!showSearchHeader);
@@ -106,7 +107,7 @@ const WikiHeader = () => {
               overlayStyle={{ width: 270 }}
             >
               <Flex className="icon-container">
-                <Avatar size="large" icon={<UserOutlined />} />
+                <Avatar size="large" src={user ? user.photo: undefined} icon={user ? "":<UserOutlined />} />
               </Flex>
             </Popover>
           </div>

@@ -36,6 +36,7 @@
   },
 
   "header": {
+    "login-link": "Sign in",
     "profile-link": "View profile",
     "theme-menu": "Theme: {{theme}}",
     "theme-light": "Light",

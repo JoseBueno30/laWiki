@@ -1,24 +1,61 @@
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import { Menu } from "antd";
 import {
   BulbOutlined,
   BellOutlined,
   GlobalOutlined,
   EnterOutlined,
+  GoogleCircleFilled,
 } from "@ant-design/icons";
 import SettingsContext from "../../../context/settings-context";
 import { useTranslation } from "react-i18next";
+import { auth, provider, sendToBackend, signInWithPopup } from "../../../utils/firebase-config";
 
 const UserProfilePopover = () => {
   const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
-  const [notifications, setNotifications] = useState("Email");
+  let user = localStorage.getItem("user");
+  console.log("User", user);
   const { t } = useTranslation();
+
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      user = result.user;
+      console.log("User logged in", user);
+      localStorage.setItem("user", JSON.stringify({name: user.displayName, email: user.email, photo: user.photoURL}));
+      localStorage.setItem("authToken", user.accessToken);
+      // const response = await sendToBackend();
+      // console.log("Response from backend", response);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during login", error);
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      localStorage.removeItem("user");
+      window.location.reload();
+    }
+    catch (error) {
+      console.error("Error during logout", error);
+    }
+  }
+
 
   return (
     <Menu className="user-profile-menu" mode="inline">
-      <Menu.Item key="1" className="profile-item">
+      {user ? 
+        <Menu.Item key="1" className="profile-item">
         <strong>{t('header.profile-link')}</strong>
+        </Menu.Item>
+        :
+        <Menu.Item key="1" onClick={handleLogin} icon={<GoogleCircleFilled/>} className="profile-item">
+        <strong>{t('header.login-link')}</strong>
       </Menu.Item>
+      }
+      
       <Menu.Divider />
       <Menu.SubMenu
         key="2"
@@ -48,9 +85,13 @@ const UserProfilePopover = () => {
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.Divider />
-      <Menu.Item key="5" danger icon={<EnterOutlined />}>
-        {t('header.logout-link')}
-      </Menu.Item>
+      {user ?
+        <Menu.Item key="5" onClick={handleLogout} danger icon={<EnterOutlined />}>
+          {t('header.logout-link')}
+        </Menu.Item>
+        :""
+      }
+     
     </Menu>
   );
 };
