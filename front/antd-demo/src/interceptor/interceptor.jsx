@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const APIGateway = axios.create({
-  baseURL: 'https://lawiki.up.railway.app/',
+  baseURL: 'http://localhost:3000/',
   timeout: 180000,
 });
 

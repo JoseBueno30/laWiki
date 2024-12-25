@@ -26,7 +26,7 @@ from openapi_server.apis.v2_apis.v2_public_api import router as V2PublicApiRoute
 app = FastAPI(
     title="laWiki API Gateway",
     description="The Articles API provides endpoints for managing and retrieving articles and article versions within the wiki application. It supports core CRUD (Create, Read, Update, Delete) operations, search functionality, and versioning.",
-    version="1.0",
+    version="2.0",
 )
 
 app.add_middleware(

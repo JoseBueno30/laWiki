@@ -20,11 +20,14 @@ from openapi_server.apis.v1_public_api import router as V1PublicApiRouter
 from openapi_server.apis.v2_editors_api import router as V2EditorsApiRouter
 from openapi_server.apis.v2_internal_api import router as V2InternalApiRouter
 from openapi_server.apis.v2_public_api import router as V2PublicApiRouter
+from openapi_server.apis.v3_editors_api import router as V3EditorsApiRouter
+from openapi_server.apis.v3_internal_api import router as V3InternalApiRouter
+from openapi_server.apis.v3_public_api import router as V3PublicApiRouter
 
 app = FastAPI(
     title="ArticlesAPI",
     description="The Articles API provides endpoints for managing and retrieving articles and article versions within the wiki application. It supports core CRUD (Create, Read, Update, Delete) operations, search functionality, and versioning.",
-    version="2.0",
+    version="3.0",
 )
 
 app.include_router(V1EditorsApiRouter)
@@ -33,3 +36,6 @@ app.include_router(V1PublicApiRouter)
 app.include_router(V2EditorsApiRouter)
 app.include_router(V2InternalApiRouter)
 app.include_router(V2PublicApiRouter)
+app.include_router(V3EditorsApiRouter)
+app.include_router(V3InternalApiRouter)
+app.include_router(V3PublicApiRouter)
