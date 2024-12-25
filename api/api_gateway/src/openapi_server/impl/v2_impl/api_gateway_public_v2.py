@@ -1,7 +1,7 @@
 from typing import List
 
 from openapi_server.apis.v2_apis.v2_public_api_base import BaseV2PublicApi
-from openapi_server.impl.utils import ARTICLES_API_URL,COMMENTS_API_URL,RATINGS_API_URL,TAGS_API_URL,WIKIS_API_URL
+from openapi_server.impl.utils import ARTICLES_API_URL,COMMENTS_API_URL,RATINGS_API_URL,TAGS_API_URL, USERS_API_URL,WIKIS_API_URL
 from openapi_server.models.article import Article
 from openapi_server.models.article_list import ArticleList
 from openapi_server.models.article_version import ArticleVersion
@@ -339,6 +339,7 @@ class APIGatewayPublicV2(BaseV2PublicApi):
         user_id: str,
     ) -> PublicUserInfo:
         """Retrieves user info by the unique account email"""
+        return await forward_request(method="GET", url=f"{USERS_API_URL}/v1/users/{user_id}")
 
     async def get_current_user_info(
         self,
