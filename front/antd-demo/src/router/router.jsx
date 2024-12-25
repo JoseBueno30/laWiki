@@ -35,6 +35,7 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <WikiRecommendationPage /> }, // Página principal
       // { path: "", element: <WikiRecommendationPage /> }, // Página principal
+      { path: "user_not_found", element: <NotFoundPage status_code={404} resource_type="User" /> }, // Usuario no encontrado
       {
         path: "wikis",
         children: [
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
       {
         path: "users",
         children: [
-          { path: ":user_name", element: <UserPage /> }, // Página de usuario
+          { path: ":user_id", element: <UserPage /> }, // Página de usuario
         ]
       },
       { path: "testing", element: <TestRoute /> }, // Ruta de testing
