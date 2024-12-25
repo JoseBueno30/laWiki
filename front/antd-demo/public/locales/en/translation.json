@@ -27,12 +27,15 @@
     "loading-button": "Loading",
     "creating-button": "Creating {{type}}",
     "saving-button": "Saving {{type}}",
-
+  
+    "not-found": "Not Found",
     "back-to-previous-page": "Back to previous page",
     "back-to-wiki-main-page": "Wiki main page",
     "back-to-main-page": "Main page",
     "article-not-found": "Article does not exist, it might have been deleted",
-    "wiki-not-found": "Wiki does not exist, it might have been deleted"
+    "wiki-not-found": "Wiki does not exist, it might have been deleted",
+    "user-not-found": "User does not exist",
+    "page-not-found": "Page Not Found"
   },
 
   "header": {

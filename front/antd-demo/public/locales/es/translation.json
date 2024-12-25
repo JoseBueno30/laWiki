@@ -28,11 +28,14 @@
     "creating-button": "Creando {{type}}",
     "saving-button": "Guardando {{type}}",
 
+    "not-found": "No Encotrado",
     "back-to-previous-page": "Volver a la página anterior",
     "back-to-wiki-main-page": "Página principal de la Wiki",
     "back-to-main-page": "Página principal",
     "article-not-found": "El artículo no existe, podría haberse borrado",
-    "wiki-not-found": "La wiki no existe, podría haberse borrado"
+    "wiki-not-found": "La wiki no existe, podría haberse borrado",
+    "user-not-found": "El usuario no existe",
+    "page-not-found": "Página No Encontrada"
   },
 
   "header": {
