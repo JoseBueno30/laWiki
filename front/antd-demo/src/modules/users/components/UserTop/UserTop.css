@@ -1,5 +1,6 @@
 .userAvatar {
     max-width: 16.8vw;
+    min-width: 100px;
     clip-path: circle();
 }
 

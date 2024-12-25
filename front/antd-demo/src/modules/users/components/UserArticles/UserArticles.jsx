@@ -91,7 +91,7 @@ const UserArticles = ({
 
     return (
         <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
-            {loading || response == null ? (
+            {loading ? (
                 <Spin size="large" style={{ paddingTop: "40vh" }} />
             ) : (
                 <>

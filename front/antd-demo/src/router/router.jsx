@@ -11,6 +11,7 @@ import WikiEditPage from "../modules/wiki/pages/wiki-edit-page/wiki-edit-page";
 import WikiCreatePage from "../modules/wiki/pages/wiki-create-page/wiki-create-page";
 import NotFoundPage from "../modules/wiki/pages/wiki-not-found/wiki-not-found";
 import WikiSearchResultsPage from "../modules/wiki/pages/wiki-search-results-page/wiki-search-results-page";
+import UserPage from "../modules/users/pages/UserPage";
 
 // The structure of the application's routes
 
@@ -62,6 +63,12 @@ const router = createBrowserRouter([
             path: "*", element: <Navigate to="not_found" relative replace/>,
           }
         ],
+      },
+      {
+        path: "users",
+        children: [
+          { path: ":user_name", element: <UserPage /> }, // Página de usuario
+        ]
       },
       { path: "testing", element: <TestRoute /> }, // Ruta de testing
     ],
