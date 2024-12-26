@@ -10,6 +10,7 @@ const RatingsSection = ({ratings, total_ratings, avg_rating, updateRatingFunc, u
     const screen = useBreakpoint()
     const { t } = useTranslation();
     const [rating, setRating] = useState(user_value);
+    const user = JSON.parse(localStorage.getItem("user"));
     
     // const ratings = [5,10,0,20,0];
     // const total_ratings = 35;
@@ -27,11 +28,13 @@ const RatingsSection = ({ratings, total_ratings, avg_rating, updateRatingFunc, u
     return (
         
         <Flex vertical style={{ maxWidth: "300px", minWidth: (screen.md ? "26dvw": (screen.md ? "200px" : "100%")), margin: "1em" }}>
-            <Space direction="vertical" size='small'>
-                <Title level={4}>{t('article.user-rating-header')}</Title>
-                {/* {console.log("USERRATING ?",rating, "vs",user_value)} */}
-                <Rate value={rating} onChange={updateRating}/>
-            </Space>
+            {!user ? <></> :
+                <Space direction="vertical" size='small'>
+                    <Title level={4}>{t('article.user-rating-header')}</Title>
+                    {/* {console.log("USERRATING ?",rating, "vs",user_value)} */}
+                    <Rate value={rating} onChange={updateRating}/>
+                </Space>
+            }
             <RatingsList avg_rating={avg_rating} total_ratings={total_ratings} ratings={ratings} />
         </Flex>
     );

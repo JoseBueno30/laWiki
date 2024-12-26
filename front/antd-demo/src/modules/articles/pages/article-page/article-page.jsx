@@ -321,7 +321,7 @@ const ArticlePage = () => {
             defaultValue={versions[0].id}
             onChange={loadVersion}
           ></Select>
-          {articleVersion.id == versions[0].id ? (
+          {user ? articleVersion.id == versions[0].id ? (
             <Button
               icon={<EditOutlined />}
               iconPosition="start"
@@ -332,7 +332,7 @@ const ArticlePage = () => {
             >
               {t("article.edit-article-button")}
             </Button>
-          ) : (
+          ) : user.id == article.author.id ? (
             <Button
               icon={<ReloadOutlined />}
               iconPosition="start"
@@ -343,7 +343,7 @@ const ArticlePage = () => {
             >
               {t("article.restore-button")}
             </Button>
-          )}
+          ) : <></> : <></>}
         </Flex>
       </Flex>
 

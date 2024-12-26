@@ -97,9 +97,12 @@ const WikiHeader = () => {
               }
               searchFunction={searchHandler}
             />
-            <Link to="/wikis/new">
-              <CreateButton text={t("wikis.new-wiki")} />
-            </Link>
+            {!user ? <></> :
+              <Link to="/wikis/new">
+                <CreateButton text={t("wikis.new-wiki")} />
+              </Link>
+            }
+
             <Popover
               content={<UserProfilePopover />}
               trigger="click"

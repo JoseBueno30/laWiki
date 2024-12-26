@@ -72,8 +72,8 @@ const CommentList = ({commentsObject, user, fetchFunc, uploadFunc, deleteFunc}) 
           <CommentOutlined className='icon'></CommentOutlined>
           <Text strong>{t('article.comments-header', {count: commentsObject.total})}</Text>
         </Space>
-
-        <CommentInput user={user} uploadFunc={uploadFunc}></CommentInput>
+        {!user ? <></> : <CommentInput user={user} uploadFunc={uploadFunc}></CommentInput>}
+        
 
         <div className='comment-list-options'>
           <Space className='comment-list-title comment-list-son'>

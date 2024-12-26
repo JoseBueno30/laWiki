@@ -130,9 +130,11 @@ const WikiHeader = ({ wiki_name, wiki }) => {
               }
               searchFunction={searchHandler}
             />
-            <Link to={`/wikis/${wiki_name}/articles/new`}>
-              <CreateButton text={t("wikis.new-article")} />
-            </Link>
+            {!user ? <></> :
+              <Link to={`/wikis/${wiki_name}/articles/new`}>
+                <CreateButton text={t("wikis.new-article")} />
+              </Link>
+            }
             
             <Popover
               content={<UserProfilePopover />}

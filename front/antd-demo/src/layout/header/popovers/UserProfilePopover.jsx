@@ -27,7 +27,7 @@ const UserProfilePopover = () => {
       const response = await getCurrentUserDetails();
       localStorage.setItem("user", JSON.stringify(response));
       console.log("Response from backend", response);
-      window.location.reload();
+      location.pathname = ""
     } catch (error) {
       console.error("Error during login", error);
     }
@@ -38,7 +38,7 @@ const UserProfilePopover = () => {
       localStorage.removeItem("user");
       localStorage.removeItem("authToken");
       await auth.signOut();
-      window.location.reload();
+      location.pathname = ""  
     }
     catch (error) {
       console.error("Error during logout", error);
