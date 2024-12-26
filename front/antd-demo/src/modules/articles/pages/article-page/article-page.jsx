@@ -96,6 +96,7 @@ const ArticlePage = () => {
       );
       setArticleVersion(version_response);
     } catch (error) {
+      console.error(error)
       navigate(location.pathname.split("/articles")[0] + "/article_not_found");
     }
   };
@@ -107,7 +108,7 @@ const ArticlePage = () => {
   // })
 
   useEffect(() => {
-    if (wiki) {
+    if (wiki.wiki_info) {
       fetchArticleVersion();
     }
   }, [wiki, location]);
