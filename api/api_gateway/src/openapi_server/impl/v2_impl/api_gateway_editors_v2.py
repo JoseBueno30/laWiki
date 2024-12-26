@@ -38,8 +38,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> None:
         """Assigns a list of tags, given their IDs, to an article."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="PUT", url=f"{TAGS_API_URL}/v3/tags/articles/{id}", json=tag_id_list.to_dict(), headers_params=headers_params)
 
@@ -50,8 +50,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> Article:
         """Create a new Article in a given wiki"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v3/articles", json=new_article.to_dict(), headers_params=headers_params)
 
@@ -64,8 +64,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> ArticleVersion:
         """Create an ArticleVersion for a given Article and adds it to the list of versions of the Article."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="POST", url=f"{ARTICLES_API_URL}/v3/articles/{id}/versions", json=new_article_version.to_dict(), headers_params=headers_params)
 
@@ -77,8 +77,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> None:
         """Delete an Article identified by it&#39;s unique ID"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v3/articles/{id}", headers_params=headers_params)
 
@@ -90,8 +90,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> None:
         """Delete an ArticleVersion identified by it&#39;s unique ID"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="DELETE", url=f"{ARTICLES_API_URL}/v3/articles/versions/{id}", headers_params=headers_params)
 
@@ -104,8 +104,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> None:
         """Restore an older ArticleVersion of an Article."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="PUT", url=f"{ARTICLES_API_URL}/v3/articles/{article_id}/versions/{version_id}", headers_params=headers_params)
 
@@ -118,8 +118,8 @@ class APIGatewayEditorsV2(BaseV2EditorsApi):
     ) -> None:
         """Unassigns a list of tags, given their IDs to an article."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         query_params = {"ids":ids}
         return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v3/tags/articles/{id}", query_params=query_params, headers_params=headers_params)

@@ -90,7 +90,8 @@ const WikiEditPage = () => {
       await updateWiki(wiki.wiki_info.id, updatedData);
 
       message.success(t("wikis.wiki-edit-success"));
-      navigate(`/wikis/${updatedData.name.replace(/ /g, "_")}`);
+      location.pathname = `/wikis/${updatedData.name.replace(/ /g, "_")}`
+      // navigate(`/wikis/${updatedData.name.replace(/ /g, "_")}`);
     } catch (error) {
       console.error("Error saving wiki data:", error);
       message.error(t("wikis.wiki-edit-failure"));

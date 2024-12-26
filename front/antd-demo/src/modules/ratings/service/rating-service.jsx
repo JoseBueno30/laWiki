@@ -5,7 +5,7 @@ const RatingService = () =>{
     const getArticleRatings = async (articleId) =>{
         try{
 
-            const url = `/v1/ratings/articles/${articleId}/average`
+            const url = `/ratings/articles/${articleId}/average`
 
             const response = await APIGateway.get(url)
             return response;
@@ -17,7 +17,7 @@ const RatingService = () =>{
 
     const getUserRatingInArticle = async (userId, articleId) =>{
         try{
-            const url = `/v1/ratings/articles/${articleId}/users/${userId}`
+            const url = `/ratings/articles/${articleId}/users/${userId}`
 
             const response = await APIGateway.get(url)
             return response
@@ -33,7 +33,7 @@ const RatingService = () =>{
                 author_id: authorId,
                 value: value
             };
-            const url = `/v1/ratings/articles/${articleId}`
+            const url = `/ratings/articles/${articleId}`
 
             const response = await APIGateway.put(url, params)
             return response
@@ -49,7 +49,7 @@ const RatingService = () =>{
                 author_id: authorId,
                 value: value
             };
-            const url = `/v1/ratings/articles/${articleId}`
+            const url = `/ratings/articles/${articleId}`
 
             const response = await APIGateway.post(url, params)
             return response
@@ -61,7 +61,7 @@ const RatingService = () =>{
 
     const deleteRating = async (ratingId) =>{
         try{
-            const url = `/v1/ratings/${ratingId}`
+            const url = `/ratings/${ratingId}`
         
             const response = await APIGateway.delete(url)
             return response

@@ -17,7 +17,7 @@ const provider = new GoogleAuthProvider();
 
 const getCurrentUserDetails = async () => {
   try {
-    const response = await APIGateway.get("/v2/users/me");
+    const response = await APIGateway.get("/users/me");
     return response;
   } catch (error) {
     console.error("Error sending token to backend", error);

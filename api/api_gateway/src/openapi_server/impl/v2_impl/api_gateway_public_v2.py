@@ -35,8 +35,8 @@ class APIGatewayPublicV2(BaseV2PublicApi):
     ) -> None:
         """Deletes an article&#39;s comment"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request("DELETE", f"{COMMENTS_API_URL}/v2/comments/{comment_id}", headers_params=headers_params)
 
@@ -48,8 +48,8 @@ class APIGatewayPublicV2(BaseV2PublicApi):
     ) -> None:
         """Delete the rating associated with the selected ID"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request("DELETE", f"{RATINGS_API_URL}/v2/ratings/{id}", headers_params=headers_params)
 
@@ -62,8 +62,8 @@ class APIGatewayPublicV2(BaseV2PublicApi):
     ) -> Rating:
         """Update the value of an already existing Rating"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="PUT", url=f"{RATINGS_API_URL}/v2/ratings/articles/{id}", json=new_rating.to_dict(), headers_params=headers_params)
 
@@ -274,8 +274,8 @@ class APIGatewayPublicV2(BaseV2PublicApi):
     ) -> Comment:
         """Posts a new comment in an article"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="POST", url=f"{COMMENTS_API_URL}/v2/comments/articles/{article_id}", json=new_comment.to_dict(), headers_params=headers_params)
 
@@ -288,8 +288,8 @@ class APIGatewayPublicV2(BaseV2PublicApi):
     ) -> Rating:
         """Create a rating for a given Article"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="POST", url=f"{RATINGS_API_URL}/v2/ratings/articles/{id}", json=new_rating.to_dict(), headers_params=headers_params)
 

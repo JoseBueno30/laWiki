@@ -12,7 +12,7 @@ const CommentService = () =>{
                 params.append("creation_date", creationDate)
             }
 
-            const url = `/v1/comments/articles/${articleId}?${params.toString()}`
+            const url = `/comments/articles/${articleId}?${params.toString()}`
             
             const response = await APIGateway.get(url);
             return response
@@ -29,7 +29,7 @@ const CommentService = () =>{
                 body: body
             }
     
-            const url = `/v1/comments/articles/${articleId}`
+            const url = `/comments/articles/${articleId}`
     
             const response = await APIGateway.post(url, params)
             return response
@@ -41,7 +41,7 @@ const CommentService = () =>{
 
     const deleteComment = async (commentId) =>{
         try{
-            const url = `/v1/comments/${commentId}`
+            const url = `/comments/${commentId}`
 
             const response = await APIGateway.delete(url)
             return response

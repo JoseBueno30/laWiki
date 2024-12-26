@@ -6,7 +6,7 @@ const WikiService = () => {
   const getWiki = async (wiki_name) => {
     try {
       const params = new URLSearchParams({ lang: localStorage.getItem("locale") });
-      const url = `/v1/wikis/${wiki_name}?${params.toString()}`;
+      const url = `/wikis/${wiki_name}?${params.toString()}`;
 
       const response = await APIGateway.get(url);
       response.rating = parseFloat(response.rating.toFixed(2))
@@ -25,7 +25,7 @@ const WikiService = () => {
   const getRatedWikis = async () => {
     try {
         const params = new URLSearchParams({ lang: localStorage.getItem("locale") });
-        const url = `/v1/wikis/?${params.toString()}`;
+        const url = `/wikis/?${params.toString()}`;
         let response = await APIGateway.get(url);
         const wikisWithImages = await Promise.all(
           response.wikis.map(async (wiki) => {
@@ -47,7 +47,7 @@ const WikiService = () => {
   const searchWikisWithPaginationURL = async (paginationURL, locale) => {
     try {
       const url = paginationURL + "&lang=" + locale;
-      return await APIGateway.get("http://localhost:3000/v1" + url);
+      return await APIGateway.get(url);
     }catch (error) {
       console.error("WikiService.searchWikis:", error);
       return Promise.reject(error);
@@ -56,7 +56,7 @@ const WikiService = () => {
 
   const searchWikisWithParams = async (queryParams) => {
     try {
-      return await APIGateway.get("http://localhost:3000/v1/wikis", {
+      return await APIGateway.get("/wikis", {
         params: queryParams,
       });
     }catch (error) {
@@ -67,7 +67,7 @@ const WikiService = () => {
 
   const createWikiTag = async (wikiId, tag, lang) => {
     try {
-      const url = `/v1/tags/wikis/${wikiId}`;
+      const url = `/tags/wikis/${wikiId}`;
       const payload = {
         tag: tag,
         translation: true,
@@ -83,7 +83,7 @@ const WikiService = () => {
 
   const deleteWikiTag = async (tagId) => {
     try {
-      const url = `/v1/tags/${tagId}`;
+      const url = `/tags/${tagId}`;
       const response = await APIGateway.delete(url);
       return response;
     } catch (error) {
@@ -94,7 +94,7 @@ const WikiService = () => {
 
   const createWiki = async (data) => {
     try {
-      const response = await APIGateway.post("/v1/wikis", data);
+      const response = await APIGateway.post("/wikis", data);
       return response;
     } catch (error) {
       console.error("WikiService.createWiki:", error);
@@ -104,7 +104,7 @@ const WikiService = () => {
 
   const updateWiki = async (wikiId, data) => {
     try {
-      const url = `/v1/wikis/${wikiId}`;
+      const url = `/wikis/${wikiId}`;
       const response = await APIGateway.put(url, data);
       return response;
     } catch (error) {
@@ -115,7 +115,7 @@ const WikiService = () => {
 
   const deleteWiki = async (wikiId) => {
     try {
-      const url = `/v1/wikis/${wikiId}`;
+      const url = `/wikis/${wikiId}`;
       const response = await APIGateway.delete(url);
       return response;
     } catch (error) {

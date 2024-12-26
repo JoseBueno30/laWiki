@@ -29,6 +29,7 @@ const WikiCreatePage = () => {
   const [creatingWiki, setCreatingWiki] = useState(false);
   const { locale } = useContext(SettingsContext);
   const { t } = useTranslation();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const createTags = async (wikiId) => {
     try {
@@ -49,7 +50,7 @@ const WikiCreatePage = () => {
       const newWiki = {
         name: wikiData.title,
         description: wikiData.description,
-        author: "DefaultAuthor",
+        author: user.username,
         lang: locale,
         image: image,
         translate: true,
