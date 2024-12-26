@@ -1,4 +1,5 @@
 import os
+from typing import Union
 
 import httpx
 from fastapi import HTTPException
@@ -10,7 +11,7 @@ TAGS_API_URL = os.getenv("TAGS_API_URL", "http://tags_api:8083")
 WIKIS_API_URL = os.getenv("WIKIS_API_URL", "http://wikis_api:8084")
 USERS_API_URL = os.getenv("USERS_API_URL", "http://users_api:8085")
 
-async def forward_request(method: str, url: str, query_params: dict = None, json: dict = None, headers_params: dict = None, content: bytes = None):
+async def forward_request(method: str, url: str, query_params: dict = None, json: Union[str,dict] = None, headers_params: dict = None, content: bytes = None):
     params = None
     headers = None
 
@@ -23,6 +24,6 @@ async def forward_request(method: str, url: str, query_params: dict = None, json
         response = await client.request(method = method, url = url, params = params, headers = headers, json = json, content = content, timeout=httpx.Timeout(180))
 
         if response.status_code >= 400:
-            raise HTTPException(status_code=response.status_code, detail=response.text)
+            raise HTTPException(status_code=response.status_code, detail=response["detail"])
 
         return response.json()
