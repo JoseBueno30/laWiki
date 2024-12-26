@@ -35,9 +35,9 @@ const UserProfilePopover = () => {
 
   const handleLogout = async () => {
     try {
-      await auth.signOut();
       localStorage.removeItem("user");
       localStorage.removeItem("authToken");
+      await auth.signOut();
       window.location.reload();
     }
     catch (error) {
