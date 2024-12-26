@@ -312,6 +312,7 @@ const ArticlePage = () => {
             <UserAvatar
               image={articleVersion.author.image}
               username={articleVersion.author.name}
+              id={articleVersion.author.id}
             ></UserAvatar>
           </Button>
 

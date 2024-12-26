@@ -16,7 +16,7 @@ const Article = ({ article }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const clickArticle = () =>{
+  const clickArticle = (e) =>{
     navigate(location.pathname.split("/search")[0] + "/articles/" + article.title[locale].replaceAll(" ", "_"), {state: article});
   }
 
@@ -47,7 +47,8 @@ const Article = ({ article }) => {
         title={article.author.name}
         className="article-author"
       >
-        <UserAvatar username={article.author.name} justify={"center"} />
+        <UserAvatar username={article.author.name} justify={"center"}
+              id={article.author.id} />
       </Col>
       <Col
         md={4}

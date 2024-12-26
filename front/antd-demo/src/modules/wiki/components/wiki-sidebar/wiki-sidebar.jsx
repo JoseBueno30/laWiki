@@ -30,7 +30,7 @@ const WikiSidebar = (wiki) => {
           <span className='wiki-description'>{wiki.description}</span>
           {user && (user.id == wiki.author.id || user.admin) ? <Button size='small' icon={<EditOutlined />} iconPosition='start' onClick={() => navigate(location.pathname + "/edit")} className='wiki-description'>{t('wikis.edit-wiki-button')}</Button> :  <></>}
           <div className='user-container'>
-            <RoleAvatar image={wiki.author.image} username={wiki.author.name} role='Author'/>
+            <RoleAvatar image={wiki.author.image} id={wiki.author.id} username={wiki.author.name} role='Author'/>
           </div>
         </Flex>
       </Sider>
