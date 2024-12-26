@@ -26,7 +26,7 @@ const CommentInput = ({user, uploadFunc}) => {
   return (
     <Flex className='comment-input comment-list-son'>
       <Flex>
-        <Avatar className='comment-avatar' src={user.image} alt={user.name} />
+        <Avatar className='comment-avatar' src={user ? user.image : null} alt={user ? user.image : null} />
       </Flex>
       <div style={{width: "100%"}}>
         <Space style={{width: "100%"}} direction="vertical">
