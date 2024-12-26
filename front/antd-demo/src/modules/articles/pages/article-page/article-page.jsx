@@ -351,10 +351,16 @@ const ArticlePage = () => {
         <JsxParser
           components={{ MapView }}
           jsx={articleVersion.body
-            .replaceAll("<p><mapview", "<MapView")
-            .replaceAll("</mapview></p>", "</MapView>")
-            .replaceAll("'{[{", "{[{")
-            .replaceAll("]}'", "]}")}
+            .replaceAll("<mapview", "<MapView")
+            // .replaceAll("</mapview></p>", "</MapView>")
+            .replaceAll("</mapview>", "</MapView>")
+            // .replaceAll("'{[{", "{[{")
+            // .replaceAll("]}'", "]}")
+            .replaceAll('"{[', '{[')
+            .replaceAll(']}"', ']}')
+            .replaceAll('"{[{', '{[{')
+            .replaceAll(']}"', ']}')
+          }
         />
       </div>
 
