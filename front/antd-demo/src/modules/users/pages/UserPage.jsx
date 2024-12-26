@@ -42,7 +42,7 @@ const UserPage = () => {
 
 
     return(
-        <Flex vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
+        <Flex className="userMain" vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
         {loading ? (
           <Spin size="large" style={{ paddingTop: "40vh" }} />
         ) : (
