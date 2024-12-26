@@ -24,6 +24,6 @@ async def forward_request(method: str, url: str, query_params: dict = None, json
         response = await client.request(method = method, url = url, params = params, headers = headers, json = json, content = content, timeout=httpx.Timeout(180))
 
         if response.status_code >= 400:
-            raise HTTPException(status_code=response.status_code, detail=response["detail"])
+            raise HTTPException(status_code=response.status_code, detail=response.text)
 
         return response.json()
