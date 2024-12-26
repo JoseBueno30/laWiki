@@ -423,7 +423,6 @@ class WikiApiAdmins(BaseAdminsV3Api):
         else:
             name = id
 
-        check_user_equals_author_or_admin(user_id, new_wiki.author, admin)
         await check_wiki_has_author_equals_user(user_id, id, admin)
 
         user = get_user_by_id(user_id)
