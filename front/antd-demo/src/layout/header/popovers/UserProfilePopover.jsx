@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import SettingsContext from "../../../context/settings-context";
 import { useTranslation } from "react-i18next";
-import { auth, provider, sendToBackend, signInWithPopup } from "../../../utils/firebase-config";
+import { auth, provider, getCurrentUserDetails, signInWithPopup } from "../../../utils/firebase-config";
 
 const UserProfilePopover = () => {
   const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
@@ -22,10 +22,11 @@ const UserProfilePopover = () => {
       const result = await signInWithPopup(auth, provider);
       user = result.user;
       console.log("User logged in", user);
-      localStorage.setItem("user", JSON.stringify({name: user.displayName, email: user.email, photo: user.photoURL}));
       localStorage.setItem("authToken", user.accessToken);
-      // const response = await sendToBackend();
-      // console.log("Response from backend", response);
+
+      const response = await getCurrentUserDetails();
+      localStorage.setItem("user", JSON.stringify(response));
+      console.log("Response from backend", response);
       window.location.reload();
     } catch (error) {
       console.error("Error during login", error);

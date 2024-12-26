@@ -107,7 +107,7 @@ const WikiHeader = () => {
               overlayStyle={{ width: 270 }}
             >
               <Flex className="icon-container">
-                <Avatar size="large" src={user ? user.photo: undefined} icon={user ? "":<UserOutlined />} />
+                <Avatar size="large" src={user ? user.image: undefined} icon={user ? "":<UserOutlined />} />
               </Flex>
             </Popover>
           </div>
