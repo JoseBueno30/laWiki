@@ -32,7 +32,7 @@ const Comment = ({comment, user, deleteFunc}) => {
           </Space>
         </div>
 
-        {user.id == comment.author.id ? 
+        {user && user.id == comment.author.id ? 
           <Button onClick={deleteComment} className='delete-comment-button' danger icon={<DeleteOutlined/>}></Button>
           :
           ""
