@@ -332,7 +332,7 @@ const ArticlePage = () => {
             >
               {t("article.edit-article-button")}
             </Button>
-          ) : user.id == article.author.id ? (
+          ) : user.id == article.author.id || user.author ? (
             <Button
               icon={<ReloadOutlined />}
               iconPosition="start"

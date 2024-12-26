@@ -28,7 +28,7 @@ const WikiSidebar = (wiki) => {
           </div>
           <h2>{wiki.title}</h2>
           <span className='wiki-description'>{wiki.description}</span>
-          {user && user.id == wiki.author.id ? <Button size='small' icon={<EditOutlined />} iconPosition='start' onClick={() => navigate(location.pathname + "/edit")} className='wiki-description'>{t('wikis.edit-wiki-button')}</Button> :  <></>}
+          {user && (user.id == wiki.author.id || user.author) ? <Button size='small' icon={<EditOutlined />} iconPosition='start' onClick={() => navigate(location.pathname + "/edit")} className='wiki-description'>{t('wikis.edit-wiki-button')}</Button> :  <></>}
           <div className='user-container'>
             <RoleAvatar image={wiki.author.image} username={wiki.author.name} role='Author'/>
           </div>
