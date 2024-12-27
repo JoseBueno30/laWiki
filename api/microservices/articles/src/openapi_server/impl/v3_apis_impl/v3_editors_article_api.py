@@ -10,7 +10,7 @@ from pydantic.v1 import StrictStr, StrictBool
 
 from openapi_server.apis.v3_editors_api_base import BaseV3EditorsApi
 from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
-    check_if_tag_exists, check_if_wiki_exists, delete_article_comments
+    check_if_tag_exists, check_if_wiki_exists, delete_article_comments, get_wiki_author
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
 from openapi_server.models.models_v2.article_v2 import ArticleV2
@@ -235,7 +235,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
     ) -> None:
         article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
 
-        if not admin and user_id != article_result["author"]["id"]:
+        if not admin and user_id != str(article_result["author"]["_id"]):
             raise Exception("User can't delete this article")
 
         if article_result is None:
@@ -257,9 +257,6 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         admin: StrictBool,
     ) -> None:
 
-        if not admin and not user_id:
-            raise Exception("User can't delete this article version")
-
         result = await mongodb["article_version"].delete_one({"_id": ObjectId(id)})
         if result.deleted_count == 0:
             raise Exception("Article Not Found")
@@ -274,13 +271,17 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         admin: StrictBool,
     ) -> None:
 
-        if not admin and not user_id:
+        article = await mongodb["article"].find_one({"_id": ObjectId(article_id)},
+                                                    {"versions._id": 1, "versions.modification_date": 1, "wiki_id": 1})
+
+        wiki_author = await get_wiki_author(str(article["wiki_id"]))
+
+        if not admin and user_id != wiki_author["id"] and user_id != str(article["author"]["_id"]):
             raise Exception("User can't restore this article version")
 
         """Restore an older ArticleVersion of an Article."""
         restored_version = await mongodb["article_version"].find_one({"_id": ObjectId(version_id)})
-        article = await mongodb["article"].find_one({"_id": ObjectId(article_id)},
-                                                    {"versions._id": 1, "versions.modification_date": 1})
+
 
         if restored_version is None:
             raise Exception("ArticleVersion Not Found")

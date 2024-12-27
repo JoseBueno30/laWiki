@@ -13,14 +13,13 @@ const UserAvatar = ({ id, image, username, justify }) => {
   };
 
   return (
-    <Flex gap="small" align="center" justify={justify}>
+    <Flex gap="small" align="center" justify={justify} onClick={goToUser}>
         <Avatar
           icon={image ? null : <UserOutlined />} // Si no hay imagen, muestra el icono de usuario
           src={image} // Ajusta el tamaño del avatar
           alt={`${username ? username : "Username"}'s avatar`}
-          onClick={() => goToUser()}
         />
-      <Text onClick={goToUser}>{username ? username : "Username"}</Text>
+      <Text>{username ? username : "Username"}</Text>
     </Flex>
   );
 };
