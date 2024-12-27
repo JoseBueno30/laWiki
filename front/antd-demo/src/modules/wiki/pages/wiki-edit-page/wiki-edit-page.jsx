@@ -149,7 +149,7 @@ const WikiEditPage = () => {
 
   useEffect(() => {
     loadWikiData();
-  }, [wiki]);
+  }, [wiki, locale]);
 
   return (
     <section className="edit-wiki-section">

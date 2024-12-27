@@ -33,7 +33,7 @@ class NewTagV2(BaseModel):
     """ # noqa: E501
     tag: StrictStr = Field(description="The name of the tag.")
     translation: StrictBool = Field(description="It indicates if the translation is needed.")
-    language: StrictStr = Field(description="The original language of the tag.")
+    lan: StrictStr = Field(description="The original language of the tag.")
     __properties: ClassVar[List[str]] = ["tag", "translation", "language"]
 
     model_config = {

@@ -117,7 +117,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
 
         #   Waits for the ArticleVersion object
         article_version = await (
-            self.create_article_version_v2(
+            self.create_article_version_v3(
                 str(article_result.inserted_id),
                 user_id,
                 admin,
@@ -242,7 +242,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
             raise Exception("Article Not Found")
 
         for version in article_result["versions"]:
-            await self.delete_article_version_by_id_v2(str(version["_id"]))
+            await self.delete_article_version_by_id_v3(str(version["_id"]))
 
         #   Commented until it's launched
         await delete_article_comments(id)

@@ -125,6 +125,7 @@ async def post_wiki_tag_v3(
     except KeyError:
         raise HTTPException(status_code=404, detail="Wiki not found")
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
