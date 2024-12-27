@@ -92,7 +92,8 @@ const ArticlePage = () => {
       const version_response = await ArticleService().getArticleVersionByName(
         wiki.wiki_info.id,
         articleName,
-        article ? locale : null
+        locale
+        // article ? locale : null
       );
       setArticleVersion(version_response);
     } catch (error) {
