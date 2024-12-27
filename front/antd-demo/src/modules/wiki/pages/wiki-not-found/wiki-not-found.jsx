@@ -11,7 +11,7 @@ const NotFoundPage = ({status_code, error_message = "", resource_type = "Resourc
     const return_to_main = () => {
         if (resource_type=="Article"){
             //Article Not Found returns to Wiki Main Page
-            navigate(location.pathname.split("/articles")[0]);
+            navigate(location.pathname.split("/article_not_found")[0]);
         }else{
             navigate("/");
         }

@@ -27,6 +27,7 @@ const WikiEditPage = () => {
     tags: [],
     image: DEFAULT_IMAGE,
   });
+  const user = JSON.parse(localStorage.getItem("user"));
   const [tags, setTags] = useState([]);
   const [originalTags, setOriginalTags] = useState([]);
   const [newTag, setNewTag] = useState("");
@@ -84,7 +85,7 @@ const WikiEditPage = () => {
       const updatedData = {
         name: wikiData.title,
         description: wikiData.description,
-        author: "DefaultAuthor",
+        author: user.username,
         lang: locale,
         image: image,
         translate: true,

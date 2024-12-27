@@ -37,6 +37,8 @@ const EditArticlePage = () => {
   const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
   const { locale } = useContext(SettingsContext);
+  const user = JSON.parse(localStorage.getItem("user"));
+
 
   const [title, setTitle] = useState("");
   const [translateTitle, setTransalateTitle] = useState(true);
@@ -153,10 +155,9 @@ const EditArticlePage = () => {
       const newArticleVersion = {
         title: title,
         author: {
-          //fake data until users are implemented
-          id: "672901e41a1c2dc79c930dee",
-          name: "Kirito",
-          image: "image_url",
+          id: user.id,
+          name: user.username,
+          image: user.image,
         },
         tags: tags,
         body: body,
@@ -172,6 +173,7 @@ const EditArticlePage = () => {
       });
     } finally {
       setLoading(false);
+      console.log((location.pathname.split("/articles")[0]+"/articles/" + title.replaceAll(" ", "_")))
       navigate((location.pathname.split("/articles")[0]+"/articles/" + title.replaceAll(" ", "_")));
 
     }
