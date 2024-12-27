@@ -5,7 +5,7 @@ const UserService = () => {
     const getUser = async (user_id) => {
         try{
 
-            const url = `/v2/users/${user_id}`
+            const url = `/users/${user_id}`
 
             const response = await APIGateway.get(url)
             return response;

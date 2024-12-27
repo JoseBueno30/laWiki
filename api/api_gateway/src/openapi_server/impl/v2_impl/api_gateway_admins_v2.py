@@ -20,8 +20,8 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
     ) -> Wiki:
         """Create a new Wiki"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="POST", url=f"{WIKIS_API_URL}/v3/wikis", json=new_wiki.to_dict(), headers_params=headers_params)
 
@@ -33,8 +33,8 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
     ) -> None:
         """Delete a wiki tag."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="DELETE", url=f"{TAGS_API_URL}/v3/tags/{id}", headers_params=headers_params)
 
@@ -47,8 +47,8 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
     ) -> Tag:
         """Create a new tag in a given wiki."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="POST", url=f"{TAGS_API_URL}/v3/tags/wikis/{id}", json=new_tag.to_dict(), headers_params=headers_params)
 
@@ -60,8 +60,8 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
     ) -> None:
         """Remove Wiki with the matching ID."""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="DELETE", url=f"{WIKIS_API_URL}/v3/wikis/{id_name}", headers_params=headers_params)
 
@@ -74,7 +74,7 @@ class APIGatewayEditorsV2(BaseV2AdminsApi):
     ) -> Wiki:
         """Update Wiki with wiki the matching ID"""
         headers_params = {
-            "user-id": decoded_token.user_info["id"],
-            "admin": decoded_token.user_info["admin"]
+            "user-id": decoded_token.user_info.id,
+            "admin": str(decoded_token.user_info.admin)
         }
         return await forward_request(method="Put", url=f"{WIKIS_API_URL}/v3/wikis/{id_name}", json=new_wiki.to_dict(), headers_params=headers_params)

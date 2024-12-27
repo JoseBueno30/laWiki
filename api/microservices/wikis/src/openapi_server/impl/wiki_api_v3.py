@@ -24,16 +24,6 @@ from datetime import datetime, timedelta
 client = AsyncIOMotorClient("mongodb+srv://lawiki:lawiki@lawiki.vhgmr.mongodb.net/")
 
 mongodb = client.get_database("laWikiV2BD")
-
-def check_user_equals_author_or_admin(user_id: str, author_name: str, admin: bool):
-    user_result = None
-    if not admin:
-        print(user_id)
-        print(author_name)
-        user_result = get_user_by_id(user_id)
-        if user_result["username"] != author_name:
-            raise RequestValidationError("User is not the author of the wiki")
-    return user_result
     
 async def check_wiki_has_author_equals_user(wiki_author: str, wiki_id: str, admin: bool):
     author_result = None
@@ -214,7 +204,6 @@ class WikiApi(BaseDefaultV3Api):
         return result
     
     async def create_wiki_v3(self, user_id: StrictStr, admin: StrictBool, new_wiki_v2: NewWikiV2) -> WikiV2:
-        check_user_equals_author_or_admin(user_id, new_wiki_v2.author, admin)
         
         user = get_user_by_id(user_id)
 
@@ -423,7 +412,6 @@ class WikiApiAdmins(BaseAdminsV3Api):
         else:
             name = id
 
-        check_user_equals_author_or_admin(user_id, new_wiki.author, admin)
         await check_wiki_has_author_equals_user(user_id, id, admin)
 
         user = get_user_by_id(user_id)

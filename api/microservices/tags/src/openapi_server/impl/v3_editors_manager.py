@@ -79,8 +79,8 @@ class EditorManagerV3(BaseV3EditorsApi):
         wiki_id = tag.get("wiki_id")
 
         # Checks if the user is authorized to execute the operation
-        wiki = api_calls_v2.get_wiki(wiki_id)
-        if not admin and wiki['author']['_id'] != ObjectId(user_id):
+        wiki = await api_calls_v2.get_wiki(wiki_id)
+        if not admin and wiki['author']['id'] != user_id:
             raise HTTPException(status_code=403, detail="Unauthorized")
 
         articles = tag.get("articles")
@@ -105,10 +105,9 @@ class EditorManagerV3(BaseV3EditorsApi):
     ) -> TagV2:
         """Create a new tag in a given wiki."""
         wiki_id = ObjectId(id)
-
         # Checks if the user is authorized to execute the operation
-        wiki = api_calls_v2.get_wiki(id)
-        if not admin and wiki['author']['_id'] != ObjectId(user_id):
+        wiki = await api_calls_v2.get_wiki(id)
+        if not admin and wiki['author']['id'] != user_id:
             raise HTTPException(status_code=403, detail="Unauthorized")
 
         if not await api_calls_v2.check_wiki(id):

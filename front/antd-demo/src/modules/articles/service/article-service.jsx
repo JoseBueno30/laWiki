@@ -6,7 +6,7 @@ const ArticleService = () =>{
             const params = new URLSearchParams({wiki: wiki_id})
             if (lan) params.append("lan", lan)
             
-            const url = `v1/articles/versions/by-name/${name}?${params.toString()}`
+            const url = `/articles/versions/by-name/${name}?${params.toString()}`
 
             const response = await APIGateway.get(url)
             return response
@@ -21,7 +21,7 @@ const ArticleService = () =>{
             const params = new URLSearchParams({
                 order: order
             })
-            const url = `v1/articles/${article_id}/versions?${params.toString()}`
+            const url = `/articles/${article_id}/versions?${params.toString()}`
             const response = await APIGateway.get(url)
             return response
         }catch(error){
@@ -33,7 +33,7 @@ const ArticleService = () =>{
     const getArticleVersionByID = async (articleVersionId, lan) =>{
         try{
             const params = new URLSearchParams({lan: lan})
-            const url = `v1/articles/versions/${articleVersionId}?${params.toString()}`
+            const url = `/articles/versions/${articleVersionId}?${params.toString()}`
 
             const response = await APIGateway.get(url)
             return response
@@ -45,7 +45,7 @@ const ArticleService = () =>{
 
     const restoreArticleVersion = async (articleId, versionId) =>{
         try{
-            const url = `v1/articles/${articleId}/versions/${versionId}`
+            const url = `/articles/${articleId}/versions/${versionId}`
 
             const response = await APIGateway.put(url)
             return response
@@ -57,7 +57,7 @@ const ArticleService = () =>{
 
     const getArticleById = async (articleId) =>{
         try{
-            const url = `v1/articles/${articleId}`
+            const url = `/articles/${articleId}`
             const response = await APIGateway.get(url)
             return response
         }catch(error){
@@ -71,7 +71,7 @@ const ArticleService = () =>{
             const formData = new FormData();
             formData.append('file', file);
     
-            const response = await APIGateway.post("http://localhost:3000/v1/upload-image", formData, {
+            const response = await APIGateway.post("/upload-image", formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                 },
@@ -85,7 +85,7 @@ const ArticleService = () =>{
     
     const searchArticlesWithParams = async (queryParams) => {
         try {
-            return await APIGateway.get("v1/articles", {
+            return await APIGateway.get("/articles", {
                 params: queryParams,
             });
         } catch (error) {
@@ -95,7 +95,7 @@ const ArticleService = () =>{
     
     const searchArticlesByAuthor = async (author_id,queryParams) => {
         try {
-            return await APIGateway.get(`http://localhost:3000/v1/articles/author/${author_id}`, {
+            return await APIGateway.get(`/articles/author/${author_id}`, {
                 params: queryParams,
             });
         } catch (error) {
@@ -105,7 +105,7 @@ const ArticleService = () =>{
     
     const searchArticlesWithPaginationURL = async (paginationURL) => {
         try {
-            return await APIGateway.get("http://localhost:3000/v1" + paginationURL);
+            return await APIGateway.get(paginationURL);
         } catch (error) {
             return Promise.reject(error)
         }
@@ -114,12 +114,12 @@ const ArticleService = () =>{
     const getWikiTags = async(wikiId) =>{
         try {
     
-            var response = await APIGateway.get("http://localhost:3000/v1/tags/wikis/" + wikiId);
+            var response = await APIGateway.get("/tags/wikis/" + wikiId);
     
             var tagList = response.articles; //Misspelling of the API, it is a list of tags
     
             while (response.next != null){
-                response = await APIGateway.get("http://localhost:3000/v1" + response.next);
+                response = await APIGateway.get(response.next);
                 tagList = [...tagList, ...response.articles];
             }
     
@@ -137,7 +137,7 @@ const ArticleService = () =>{
     const createArticleVersion = async(articleId, newArticleVersion) =>{
         try {
     
-            return await APIGateway.post("http://localhost:3000/v1/articles/" + articleId + "/versions", newArticleVersion);
+            return await APIGateway.post("/articles/" + articleId + "/versions", newArticleVersion);
     
         } catch (error) {
             return Promise.reject(error)
@@ -147,7 +147,7 @@ const ArticleService = () =>{
     const createArticle = async(newArticle) =>{
         try {
     
-            return await APIGateway.post("http://localhost:3000/v1/articles", newArticle);
+            return await APIGateway.post("/articles", newArticle);
     
         } catch (error) {
             return Promise.reject(error)
@@ -161,7 +161,7 @@ const ArticleService = () =>{
                 lan: lan
             }
     
-            return await APIGateway.get("http://localhost:3000/v1/articles/versions/"+ articleId + "/body", {params:params});
+            return await APIGateway.get("/articles/versions/"+ articleId + "/body", {params:params});
     
         } catch (error) {
             return Promise.reject(error)

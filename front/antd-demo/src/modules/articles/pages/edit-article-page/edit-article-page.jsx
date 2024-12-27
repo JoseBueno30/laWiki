@@ -39,7 +39,7 @@ const EditArticlePage = () => {
   const { locale } = useContext(SettingsContext);
 
   const [title, setTitle] = useState("");
-  const [translateTitle, setTransalateTitle] = useState(true);""
+  const [translateTitle, setTransalateTitle] = useState(true);
   const [availableTags, setAvailableTags] = useState([]);
   const [tags, setTags] = useState([]);
   const [body, setBody] = useState("");

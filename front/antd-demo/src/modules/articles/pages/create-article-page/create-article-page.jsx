@@ -34,6 +34,7 @@ const CreateArticlePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const articleData = location.state;
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
@@ -139,10 +140,9 @@ const CreateArticlePage = () => {
         wiki_id: wiki.wiki_info.id,
         title: title,
         author: {
-          //fake data until users are implemented
-          id: "672901e41a1c2dc79c930dee",
-          name: "Kirito",
-          image: "image_url",
+          id: user.id,
+          name: user.username,
+          image: user.image,
         },
         tags: tags,
         body: body,

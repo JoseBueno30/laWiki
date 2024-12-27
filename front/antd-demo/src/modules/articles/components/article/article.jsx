@@ -5,8 +5,10 @@ import { Grid, Flex, Rate, Row, Col } from "antd";
 import UserAvatar from "../../../wiki/components/avatar/user-avatar";
 import SettingsContext from "../../../../context/settings-context";
 import { useTranslation } from 'react-i18next';
+import WikiService from "../../../wiki/service/wiki-service";
 
 const { useBreakpoint } = Grid;
+const { getWiki } = WikiService();
 
 const Article = ({ article }) => {
   const { locale } = useContext(SettingsContext);
@@ -16,8 +18,14 @@ const Article = ({ article }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const clickArticle = () =>{
-    navigate(location.pathname.split("/search")[0] + "/articles/" + article.title[locale].replaceAll(" ", "_"), {state: article});
+  const clickArticle = (e) =>{
+    if (location.pathname.includes("/users")) {
+      getWiki(article.wiki_id).then((response) => {
+        navigate(location.pathname.split("/users")[0] + "/wikis/" + response.name[localStorage.getItem("locale")].replaceAll(" ", "_") + "/articles/" + article.title[locale].replaceAll(" ", "_"), {state: article});
+      });
+    } else {
+      navigate(location.pathname.split("/search")[0] + "/articles/" + article.title[locale].replaceAll(" ", "_"), {state: article});
+    }
   }
 
   return (
@@ -47,7 +55,8 @@ const Article = ({ article }) => {
         title={article.author.name}
         className="article-author"
       >
-        <UserAvatar username={article.author.name} justify={"center"} />
+        <UserAvatar username={article.author.name} justify={"center"}
+              id={article.author.id} />
       </Col>
       <Col
         md={4}
