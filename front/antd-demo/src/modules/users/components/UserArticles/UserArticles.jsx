@@ -90,7 +90,7 @@ const UserArticles = ({
     }, [searchParams]);
 
     return (
-        <Flex vertical align="center" style={{ marginBottom: 10 }}>
+        <Flex vertical align="center">
             {loading ? (
                 <Spin size="large" style={{ paddingTop: "40vh" }} />
             ) : (
@@ -98,7 +98,7 @@ const UserArticles = ({
                     {!articles?.length ? (
                         <Title level={3}>{t("search.search-noresults")}</Title>
                     ) : (
-                        <Flex vertical align="center">
+                        <Flex vertical align="center" style={{ width: "100%"}}>
                             <ArticleList articleList={articles}/>
                             <Row
                                 align="middle"

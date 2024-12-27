@@ -32,6 +32,8 @@ const ArticlePage = () => {
     article && (!location.state || article == location.state)
       ? article
       : location.state;
+
+    
   // console.log("LOCATION: ",article)
   // console.log("LOCATION: ",article)
 
@@ -79,20 +81,37 @@ const ArticlePage = () => {
     try {
       let articleName;
       console.log("articulo", article);
-      if (article) {
-        articleName = article.title[locale];
-      } else {
-        articleName = window.location
+      let urlArticleName = window.location
           .toString()
           .split("/")
           .pop()
           .replaceAll("_", " ");
+      if (article) {
+        articleName = article.title[locale];
       }
+
+      if (urlArticleName != articleName) articleName = urlArticleName;
 
       const version_response = await ArticleService().getArticleVersionByName(
         wiki.wiki_info.id,
         articleName,
-        article ? locale : null
+        locale
+        // article ? locale : null
+      );
+      
+      setArticleVersion(version_response);
+    } catch (error) {
+      console.error(error)
+      navigate(location.pathname.split("/articles")[0] + "/article_not_found");
+    }
+  };
+
+
+  const fetchArticleVersionById = async () => {
+    try {
+      const version_response = await ArticleService().getArticleVersionByID(
+        articleVersion.id,
+        locale
       );
       setArticleVersion(version_response);
     } catch (error) {
@@ -108,14 +127,13 @@ const ArticlePage = () => {
   // })
 
   useEffect(() => {
-    if (wiki.wiki_info) {
+    if (wiki.wiki_info && !articleVersion) {
       fetchArticleVersion();
     }
   }, [wiki, location]);
 
   const fetchVersions = async () => {
-    //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
-    // console.log("Article ? ", article)
+    console.log("fetching Version");
     if (!article) {
       const versions_response =
         await ArticleService().getArticleVersionsByArticleID(
@@ -150,7 +168,8 @@ const ArticlePage = () => {
     };
 
     if (articleVersion) {
-      fetchVersions();
+      fetchUpdatedArticle();
+      // fetchVersions();
       fetchArticleComments();
       fetchArticleRatings();
       fetchUserRating();
@@ -168,8 +187,8 @@ const ArticlePage = () => {
       if (articleVersion) {
         await fetchUpdatedArticle();
         console.log("article", article);
-        fetchArticleVersion();
         changeURL();
+        fetchArticleVersionById();
       }
     };
     reloadVersionWithLocale();
@@ -274,6 +293,7 @@ const ArticlePage = () => {
   };
 
   const editArticle = () => {
+    article = null;
     navigate(location.pathname + "/edit", {
       state: { articleVersion: articleVersion, lan: articleVersion.lan },
     });
@@ -349,20 +369,21 @@ const ArticlePage = () => {
       </Flex>
 
       <div className="article-body-container">
+        {articleVersion?
         <JsxParser
-          components={{ MapView }}
-          jsx={articleVersion.body
-            .replaceAll("<mapview", "<MapView")
-            // .replaceAll("</mapview></p>", "</MapView>")
-            .replaceAll("</mapview>", "</MapView>")
-            // .replaceAll("'{[{", "{[{")
-            // .replaceAll("]}'", "]}")
-            .replaceAll('"{[', '{[')
-            .replaceAll(']}"', ']}')
-            .replaceAll('"{[{', '{[{')
-            .replaceAll(']}"', ']}')
-          }
-        />
+        components={{ MapView }}
+        jsx={articleVersion.body
+          .replaceAll("<mapview", "<MapView")
+          // .replaceAll("</mapview></p>", "</MapView>")
+          .replaceAll("</mapview>", "</MapView>")
+          .replaceAll("'{[{", "{[{")
+          .replaceAll("]}'", "]}")
+          .replaceAll('"{[', '{[')
+          .replaceAll(']}"', ']}')
+          .replaceAll('"{[{', '{[{')
+          .replaceAll(']}"', ']}')
+        }/>:<></>
+      }
       </div>
 
       <Flex

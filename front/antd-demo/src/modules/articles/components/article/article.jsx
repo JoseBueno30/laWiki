@@ -55,7 +55,7 @@ const Article = ({ article }) => {
         title={article.author.name}
         className="article-author"
       >
-        <UserAvatar username={article.author.name} justify={"center"}
+        <UserAvatar username={article.author.name} image={article.author.image} justify={"center"}
               id={article.author.id} />
       </Col>
       <Col

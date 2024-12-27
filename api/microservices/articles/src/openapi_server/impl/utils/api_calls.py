@@ -25,10 +25,17 @@ async def get_user_comments(usr_id : str, order : str=None, limit : int=None, of
 
         return comments_response.json()
 
+async def get_wiki_author(wiki_id : str):
+    async with httpx.AsyncClient() as client:
+        wiki_response = await client.get(f"http://{WIKIS_API_URL}/v3/wikis/{wiki_id}")
+        if wiki_response.status_code != 200:
+            raise Exception(wiki_response.text)
+
+        return wiki_response.json()["author"]
 
 async def check_if_wiki_exists(wiki_id : str):
     async with httpx.AsyncClient() as client:
-        wiki_response = await client.head(f"http://{WIKIS_API_URL}/v2/wikis/{wiki_id}")
+        wiki_response = await client.head(f"http://{WIKIS_API_URL}/v3/wikis/{wiki_id}")
         return wiki_response.status_code == 200
 
 async def check_if_tag_exists(tag_id : str):
@@ -43,7 +50,7 @@ async def delete_article_comments(article_id : str):
 
 async def delete_article_ratings(article_id : str):
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{RATINGS_API_URL}/ratings/articles/{article_id}")
+        delete_response = await client.delete(f"http://{RATINGS_API_URL}/v2/ratings/articles/{article_id}")
         return delete_response.status_code == 204
 
 async def translate_body_to_lan(body, lan):

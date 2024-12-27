@@ -90,6 +90,7 @@
     "comments-header": "Comentarios ({{count}})",
     "post-comment-button": "Publicar comentario",
     "recent-articles": "Artículos recientes",
+    "restore-button": "Restaurar",
     "highest-rated-articles": "Artículos mejor valorados",
     "user-rating-header": "Tu valoración",
     "global-rating-value": "{{value}} de 5",
@@ -102,7 +103,6 @@
   "edit": {
     "edit-header": "Editar información de {{type}}",
     "edit-article-header": "Editar información del Artículo",
-    "restore-button": "Restaurar",
     "title-label": "Título",
     "translate-title": "Traducir Título",
     "translate-wiki": "Traducir Wiki",
