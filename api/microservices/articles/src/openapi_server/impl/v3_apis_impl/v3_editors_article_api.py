@@ -235,7 +235,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
     ) -> None:
         article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
 
-        if not admin and user_id != article_result["author"]["id"]:
+        if not admin and user_id != str(article_result["author"]["_id"]):
             raise Exception("User can't delete this article")
 
         if article_result is None:
@@ -272,11 +272,11 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
     ) -> None:
 
         article = await mongodb["article"].find_one({"_id": ObjectId(article_id)},
-                                                    {"versions._id": 1, "versions.modification_date": 1})
+                                                    {"versions._id": 1, "versions.modification_date": 1, "wiki_id": 1})
 
-        wiki_author = await get_wiki_author(article["wiki_id"])
+        wiki_author = await get_wiki_author(str(article["wiki_id"]))
 
-        if not admin and user_id != wiki_author["id"] and user_id != article["author"]["id"]:
+        if not admin and user_id != wiki_author["id"] and user_id != str(article["author"]["_id"]):
             raise Exception("User can't restore this article version")
 
         """Restore an older ArticleVersion of an Article."""
