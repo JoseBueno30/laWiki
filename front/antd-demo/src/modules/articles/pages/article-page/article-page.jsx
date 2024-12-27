@@ -349,20 +349,21 @@ const ArticlePage = () => {
       </Flex>
 
       <div className="article-body-container">
+        {articleVersion?
         <JsxParser
-          components={{ MapView }}
-          jsx={articleVersion.body
-            .replaceAll("<mapview", "<MapView")
-            // .replaceAll("</mapview></p>", "</MapView>")
-            .replaceAll("</mapview>", "</MapView>")
-            // .replaceAll("'{[{", "{[{")
-            // .replaceAll("]}'", "]}")
-            .replaceAll('"{[', '{[')
-            .replaceAll(']}"', ']}')
-            .replaceAll('"{[{', '{[{')
-            .replaceAll(']}"', ']}')
-          }
-        />
+        components={{ MapView }}
+        jsx={articleVersion.body
+          .replaceAll("<mapview", "<MapView")
+          // .replaceAll("</mapview></p>", "</MapView>")
+          .replaceAll("</mapview>", "</MapView>")
+          .replaceAll("'{[{", "{[{")
+          .replaceAll("]}'", "]}")
+          .replaceAll('"{[', '{[')
+          .replaceAll(']}"', ']}')
+          .replaceAll('"{[{', '{[{')
+          .replaceAll(']}"', ']}')
+        }/>:<></>
+      }
       </div>
 
       <Flex
