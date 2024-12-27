@@ -42,12 +42,12 @@ const UserPage = () => {
 
 
     return(
-        <Flex className="userMain" vertical align="center" style={{ width: "100%", marginBottom: 10 }}>
+        <Flex className="userMain" vertical align="center">
         {loading ? (
           <Spin size="large" style={{ paddingTop: "40vh" }} />
         ) : (
           
-            <div className="userPage">
+            <div className="userPage" style={{ width: "90%"}}>
             <UserTop
             user_picture={userImage}
             user_name={userName}
