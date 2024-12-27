@@ -32,6 +32,8 @@ const ArticlePage = () => {
     article && (!location.state || article == location.state)
       ? article
       : location.state;
+
+    
   // console.log("LOCATION: ",article)
   // console.log("LOCATION: ",article)
 
@@ -86,8 +88,6 @@ const ArticlePage = () => {
           .replaceAll("_", " ");
       if (article) {
         articleName = article.title[locale];
-      } else {
-        await fetchUpdatedArticle();
       }
 
       if (urlArticleName != articleName) articleName = urlArticleName;
@@ -98,6 +98,7 @@ const ArticlePage = () => {
         locale
         // article ? locale : null
       );
+      
       setArticleVersion(version_response);
     } catch (error) {
       console.error(error)
@@ -132,8 +133,7 @@ const ArticlePage = () => {
   }, [wiki, location]);
 
   const fetchVersions = async () => {
-    //TODO: FETC THE ARTCILE. IT HAS A LIST OF SIMPLIFIED VERSIONS, WHEN ONE VERSION IS SELECTED THEN FETCH THAT ARTICLE VERSION
-    // console.log("Article ? ", article)
+    console.log("fetching Version");
     if (!article) {
       const versions_response =
         await ArticleService().getArticleVersionsByArticleID(
@@ -168,7 +168,8 @@ const ArticlePage = () => {
     };
 
     if (articleVersion) {
-      fetchVersions();
+      fetchUpdatedArticle();
+      // fetchVersions();
       fetchArticleComments();
       fetchArticleRatings();
       fetchUserRating();
@@ -292,6 +293,7 @@ const ArticlePage = () => {
   };
 
   const editArticle = () => {
+    article = null;
     navigate(location.pathname + "/edit", {
       state: { articleVersion: articleVersion, lan: articleVersion.lan },
     });
