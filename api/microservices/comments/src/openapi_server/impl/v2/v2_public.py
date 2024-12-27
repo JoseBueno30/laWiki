@@ -62,16 +62,16 @@ class V2PublicComments(BaseV2PublicApi):
         body_new_comment = f"""
         <html>
         <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #007bff; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0;">New Comment on Your Article!</h1>
+            <div style="background-color: #66b2ff; color: white; padding: 20px; text-align: center;">
+            <h1 style="margin: 0; color: white;">New Comment on Your Article!</h1>
             <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has left a comment on one of your articles.</p>
             </div>
             
-            <div style="padding: 20px; background-color: #ffffff;">
-            <h2 style="color: #007bff;">Comment Details</h2>
+            <div style="padding: 20px; background-color: #ffffff; color: black;">
+            <h2 style="color: #66b2ff;">Comment Details</h2>
             <p><strong>Commented Article:</strong> <em>{article['title']['en']}</em></p>
             <p><strong>Comment:</strong></p>
-            <blockquote style="background-color: #f0f0f0; padding: 10px; border-left: 4px solid #007bff;">
+            <blockquote style="background-color: #f0f0f0; padding: 10px; border-left: 4px solid #66b2ff;">
                 "{new_comment.body}"
             </blockquote>
             </div>
