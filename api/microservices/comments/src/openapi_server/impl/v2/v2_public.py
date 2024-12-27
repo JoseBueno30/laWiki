@@ -57,7 +57,7 @@ class V2PublicComments(BaseV2PublicApi):
         author = await api_calls.get_user(new_comment.author_id)
         user = await api_calls.get_user(user_id)
         article = await api_calls.get_article(article_id)
-        article_author = await api_calls.get_user(article['author']['_id'])
+        article_author = await api_calls.get_user(article['author']['id'])
 
         body_new_comment = f"""
         <html>
