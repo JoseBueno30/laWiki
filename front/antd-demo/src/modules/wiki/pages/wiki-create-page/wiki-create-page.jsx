@@ -7,6 +7,8 @@ import "./wiki-create-page.css";
 import WikiService from "../../service/wiki-service";
 import SettingsContext from "../../../../context/settings-context";
 import ArticleService from "../../../articles/service/article-service";
+import { transform } from "ol/proj";
+import { translate } from "ol/transform";
 const { uploadImage } = ArticleService();
 
 const { createWiki, createWikiTag } = WikiService();
@@ -30,11 +32,12 @@ const WikiCreatePage = () => {
   const { locale } = useContext(SettingsContext);
   const { t } = useTranslation();
   const user = JSON.parse(localStorage.getItem("user"));
+  const [translate, setTransalate] = useState(true);
 
   const createTags = async (wikiId) => {
     try {
       const tagCreationPromises = tags.map((tag) =>
-        createWikiTag(wikiId, tag.tag, locale)
+        createWikiTag(wikiId, tag.tag, locale, translate)
       );
       await Promise.all(tagCreationPromises);
       message.success(t("wikis.tags-create-success"));
@@ -108,11 +111,26 @@ const WikiCreatePage = () => {
       <div className="create-wiki-container">
         <h1>{t("wikis.new-wiki")}</h1>
         <div className="create-wiki-item">
-          <label htmlFor="create-wiki-title" className="create-wiki-label">
-            {t("edit.title-label")}
-          </label>
+                      
+          <Flex justify="space-between" style={{ width: "100%" }}>
+            <label htmlFor="create-wiki-title" className="create-wiki-label">
+              {t("edit.title-label")}
+            </label>
+            <div>
+              {t("edit.translate-wiki")}
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                checked={translateTitle}
+                onClick={() => {
+                  setTransalateTitle(!translateTitle);
+                }}
+                style={{ marginLeft: 10 }}
+              />
+            </div>
+          </Flex>
           <Input
-            id="create-wiki-title"
+            id="edit-wiki-title"
             value={wikiData.title}
             onChange={(e) => updateField("title", e.target.value)}
           />

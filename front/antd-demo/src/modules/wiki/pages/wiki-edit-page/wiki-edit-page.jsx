@@ -35,6 +35,8 @@ const WikiEditPage = () => {
   const { t } = useTranslation();
   const { wiki } = useContext(WikiContext);
   const { locale } = useContext(SettingsContext);
+  const [translate, setTransalate] = useState(true);
+  
 
   const loadWikiData = async () => {
     setLoading(true);
@@ -70,7 +72,7 @@ const WikiEditPage = () => {
       );
 
       const tagCreationPromises = newTags.map((tag) =>
-        createWikiTag(wiki.wiki_info.id, tag.tag, locale)
+        createWikiTag(wiki.wiki_info.id, tag.tag, locale, translate)
       );
       await Promise.all(tagCreationPromises);
 
@@ -158,9 +160,24 @@ const WikiEditPage = () => {
           <>
             <h1>{t("wikis.edit-wiki")}</h1>
             <div className="edit-wiki-item">
-              <label htmlFor="edit-wiki-title" className="edit-wiki-label">
-                {t("edit.title-label")}
-              </label>
+              
+              <Flex justify="space-between" style={{ width: "100%" }}>
+                <label htmlFor="edit-wiki-title" className="edit-wiki-label">
+                  {t("edit.title-label")}
+                </label>
+                <div>
+                  {t("edit.translate-wiki")}
+                  <Switch
+                    checkedChildren={<CheckOutlined />}
+                    unCheckedChildren={<CloseOutlined />}
+                    checked={translateTitle}
+                    onClick={() => {
+                      setTransalateTitle(!translateTitle);
+                    }}
+                    style={{ marginLeft: 10 }}
+                  />
+                </div>
+              </Flex>
               <Input
                 id="edit-wiki-title"
                 value={wikiData.title}

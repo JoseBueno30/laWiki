@@ -65,12 +65,12 @@ const WikiService = () => {
     }
   }
 
-  const createWikiTag = async (wikiId, tag, lang) => {
+  const createWikiTag = async (wikiId, tag, lang, translate) => {
     try {
       const url = `/tags/wikis/${wikiId}`;
       const payload = {
         tag: tag,
-        translation: true,
+        translation: translate,
         lan: lang,
       };
       const response = await APIGateway.post(url, payload);
