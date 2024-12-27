@@ -150,7 +150,7 @@ const EditArticlePage = () => {
     } else {
       setLoading(true);
     }
-
+    let articleTitle
     try {
       const newArticleVersion = {
         title: title,
@@ -166,6 +166,7 @@ const EditArticlePage = () => {
       };
 
       const response = await createArticleVersion(articleData.article_id, newArticleVersion);
+      articleTitle = response.title[locale]
     } catch (error) {
       messageApi.open({
         type: "error",
@@ -173,8 +174,8 @@ const EditArticlePage = () => {
       });
     } finally {
       setLoading(false);
-      console.log((location.pathname.split("/articles")[0]+"/articles/" + title.replaceAll(" ", "_")))
-      navigate((location.pathname.split("/articles")[0]+"/articles/" + title.replaceAll(" ", "_")));
+      console.log((location.pathname.split("/articles")[0]+"/articles/" + articleTitle.replaceAll(" ", "_")))
+      navigate((location.pathname.split("/articles")[0]+"/articles/" + articleTitle.replaceAll(" ", "_")));
 
     }
   };

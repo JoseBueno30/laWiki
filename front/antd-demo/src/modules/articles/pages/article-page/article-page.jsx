@@ -79,21 +79,38 @@ const ArticlePage = () => {
     try {
       let articleName;
       console.log("articulo", article);
-      if (article) {
-        articleName = article.title[locale];
-      } else {
-        articleName = window.location
+      let urlArticleName = window.location
           .toString()
           .split("/")
           .pop()
           .replaceAll("_", " ");
+      if (article) {
+        articleName = article.title[locale];
+      } else {
+        await fetchUpdatedArticle();
       }
+
+      if (urlArticleName != articleName) articleName = urlArticleName;
 
       const version_response = await ArticleService().getArticleVersionByName(
         wiki.wiki_info.id,
         articleName,
         locale
         // article ? locale : null
+      );
+      setArticleVersion(version_response);
+    } catch (error) {
+      console.error(error)
+      navigate(location.pathname.split("/articles")[0] + "/article_not_found");
+    }
+  };
+
+
+  const fetchArticleVersionById = async () => {
+    try {
+      const version_response = await ArticleService().getArticleVersionByID(
+        articleVersion.id,
+        locale
       );
       setArticleVersion(version_response);
     } catch (error) {
@@ -109,7 +126,7 @@ const ArticlePage = () => {
   // })
 
   useEffect(() => {
-    if (wiki.wiki_info) {
+    if (wiki.wiki_info && !articleVersion) {
       fetchArticleVersion();
     }
   }, [wiki, location]);
@@ -169,8 +186,8 @@ const ArticlePage = () => {
       if (articleVersion) {
         await fetchUpdatedArticle();
         console.log("article", article);
-        fetchArticleVersion();
         changeURL();
+        fetchArticleVersionById();
       }
     };
     reloadVersionWithLocale();
