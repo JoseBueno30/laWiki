@@ -10,12 +10,18 @@ import {
 import SettingsContext from "../../../context/settings-context";
 import { useTranslation } from "react-i18next";
 import { auth, provider, getCurrentUserDetails, signInWithPopup } from "../../../utils/firebase-config";
+import { useNavigate } from "react-router-dom";
 
 const UserProfilePopover = () => {
   const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
   let user = localStorage.getItem("user");
   console.log("User", user);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const goToUser = () => {
+    navigate("/users/" + JSON.parse(user).id);
+  }
 
   const handleLogin = async () => {
     try {
@@ -49,7 +55,7 @@ const UserProfilePopover = () => {
   return (
     <Menu className="user-profile-menu" mode="inline">
       {user ? 
-        <Menu.Item key="1" className="profile-item">
+        <Menu.Item key="1" onClick={goToUser} className="profile-item">
         <strong>{t('header.profile-link')}</strong>
         </Menu.Item>
         :
