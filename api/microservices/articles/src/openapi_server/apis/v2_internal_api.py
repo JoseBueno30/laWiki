@@ -141,7 +141,7 @@ async def update_rating_v2(
         raise HTTPException(status_code=500, detail="Not implemented")
     try:
         if await BaseV2InternalApi.subclasses[0]().update_rating_v2(id, id_ratings_body_v2) is None:
-            return JSONResponse(status_code=204, content={"detail":"No Content, tags assigned"})
+            return
     except (InvalidId, TypeError):
         raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")
     except NotFoundErr:

@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_editors_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v1_impl/api_gateway_editors_v1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_editors_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../api_gateway/src/openapi_server/impl/v2_impl/api_gateway_editors_v2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v2_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v2_internal_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/openapi_server/apis/v3_internal_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/apis/v3_internal_api.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +92,7 @@
       <workItem from="1735134048754" duration="2883000" />
       <workItem from="1735250462275" duration="121000" />
       <workItem from="1735299184333" duration="4364000" />
+      <workItem from="1735399999926" duration="684000" />
     </task>
     <servers />
   </component>

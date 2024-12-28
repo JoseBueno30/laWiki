@@ -3,6 +3,9 @@
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
+from xml.dom import NotFoundErr
+
+from bson.errors import InvalidId
 
 from openapi_server.apis.v3_internal_api_base import BaseV3InternalApi
 import openapi_server.impl.v3_apis_impl
@@ -147,4 +150,10 @@ async def update_rating_v3(
     """Update the rating of an Article give its unique ID and a rating"""
     if not BaseV3InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseV3InternalApi.subclasses[0]().update_rating_v3(id, user_id, admin, id_ratings_body_v2)
+    try:
+        if await BaseV3InternalApi.subclasses[0]().update_rating_v3(id, id_ratings_body_v2) is None:
+            return
+    except (InvalidId, TypeError):
+        raise HTTPException(status_code=400, detail="Bad Request, invalid parameter format")
+    except NotFoundErr:
+        raise HTTPException(status_code=404, detail="ArticleVersion Not Found")
