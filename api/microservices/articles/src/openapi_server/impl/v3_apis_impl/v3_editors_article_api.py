@@ -380,7 +380,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
     ) -> None:
 
         article = await mongodb["article"].find_one({"_id": ObjectId(article_id)},
-                                                    {"versions._id": 1, "versions.modification_date": 1, "wiki_id": 1})
+                                                    {"versions._id": 1, "versions.modification_date": 1, "wiki_id": 1, "author": 1})
 
         wiki_author = await get_wiki_author(str(article["wiki_id"]))
 
