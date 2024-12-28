@@ -10,9 +10,10 @@ from pydantic.v1 import StrictStr, StrictBool
 
 from openapi_server.apis.v3_editors_api_base import BaseV3EditorsApi
 from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate_text_to_lan, delete_article_ratings, \
-    check_if_tag_exists, check_if_wiki_exists, delete_article_comments, get_wiki_author
+    check_if_tag_exists, check_if_wiki_exists, delete_article_comments, get_wiki_author, get_user
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
+from openapi_server.impl.utils import emails_service
 from openapi_server.models.models_v2.article_v2 import ArticleV2
 from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
 from openapi_server.models.models_v2.new_article_v2 import NewArticleV2
@@ -150,7 +151,11 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
 
         if user_id != new_article_version_json["author"]["id"]:
             raise Exception("User ID does not match the author ID")
-
+        
+        article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
+        article_author = await get_user(article_result["author"]["_id"])
+        user = await get_user(user_id)
+        
         if not _is_valid_name(new_article_version_json["title"]) and ObjectId.is_valid(
                 new_article_version_json["title"]):
             raise Exception(f"Invalid article title: {new_article_version_json['title']}")
@@ -222,6 +227,10 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
                       "tags": article_tags}},
         )
 
+        body_new_article_version = emails_service.generate_email_body_new_article_version(user['email'], article_result['title']['en'], new_article_version_json["title"]['en'])
+
+        emails_service.send_email(article_author['email'], "A New Version of Your Article Has Been Created!", body_new_article_version)
+
         #   Generates the returning ArticleVersion value
         article_version = ArticleVersionV2.from_dict(new_article_version_json)
 
@@ -234,6 +243,8 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         admin: StrictBool,
     ) -> None:
         article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
+        article_author = await get_user(article_result["author"]["_id"])
+        user = await get_user(user_id)
 
         if not admin and user_id != str(article_result["author"]["_id"]):
             raise Exception("User can't delete this article")
@@ -244,11 +255,21 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         for version in article_result["versions"]:
             await self.delete_article_version_by_id_v3(str(version["_id"]))
 
+            version_author = await get_user(version["author"]["_id"])
+            
+            body_article_version_author = emails_service.generate_email_body_version_deleted(user['email'], version['title']['en'])
+            if version_author['email'] != article_author['email']:
+                emails_service.send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
+
         #   Commented until it's launched
         await delete_article_comments(id)
         await delete_article_ratings(id)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
+
+        body_deletion_article = emails_service.generate_email_body_deletion_article(user['email'], article_result['title']['en'])
+
+        emails_service.send_email(article_author['email'], "Your Article Has Been Deleted!", body_deletion_article)
 
     async def delete_article_version_by_id_v3(
         self,
@@ -256,12 +277,25 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         user_id: StrictStr,
         admin: StrictBool,
     ) -> None:
+        
+        article_version = await mongodb["article_version"].find_one({"_id": ObjectId(id)})
+        article = await mongodb["article"].find_one({"_id": ObjectId(article_version["article_id"])})
+        article_version_author = await get_user(article_version["author"]["_id"])
+        article_author = await get_user(article["author"]["_id"])
+        user = await get_user(user_id)
 
         result = await mongodb["article_version"].delete_one({"_id": ObjectId(id)})
         if result.deleted_count == 0:
             raise Exception("Article Not Found")
 
         await _delete_article_translation(id)
+        body_article_version_author = emails_service.generate_email_body_version_deleted(user['email'], article_version['title']['en'])
+        emails_service.send_email(article_version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
+
+        body_article_author = emails_service.generate_email_body_version_deleted_author(user['email'], article['title']['en'], article_version['title']['en'])
+
+        if article_version_author['email'] != article_author['email']:
+            emails_service.send_email(article_author['email'], "A Version of Your Article Has Been Deleted!", body_article_author)
 
     async def restore_article_version_v3(
         self,
@@ -272,7 +306,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
     ) -> None:
 
         article = await mongodb["article"].find_one({"_id": ObjectId(article_id)},
-                                                    {"versions._id": 1, "versions.modification_date": 1, "wiki_id": 1})
+                                                    {"versions._id": 1, "versions.modification_date": 1, "wiki_id": 1, "author": 1})
 
         wiki_author = await get_wiki_author(str(article["wiki_id"]))
 
@@ -280,8 +314,9 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
             raise Exception("User can't restore this article version")
 
         """Restore an older ArticleVersion of an Article."""
+        user = await get_user(user_id)
         restored_version = await mongodb["article_version"].find_one({"_id": ObjectId(version_id)})
-
+        article_author = await get_user(article["author"]["_id"])
 
         if restored_version is None:
             raise Exception("ArticleVersion Not Found")
@@ -305,5 +340,8 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
 
         for id_version in version_ids_to_delete:
             await _delete_article_translation(id_version)
+        
+        body_restore_article_version = emails_service.generate_email_body_restore_version(user['email'], restored_version["title"]['en'], restored_version['author']['name'])
+        emails_service.send_email(article_author['email'], "Your Article Has Been Restored!", body_restore_article_version)
 
         return None

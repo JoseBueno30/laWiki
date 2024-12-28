@@ -11,6 +11,11 @@ async def check_article(article_id: str) -> bool:
         response = await client.head(f"http://{ARTICLES_API_URL}/v3/articles/{article_id}")
         return response.status_code == 200
 
+async def get_article(article_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"http://{ARTICLES_API_URL}/v3/articles/{article_id}")
+        return response.json()
+
 async def check_user(user_id : str, user_email: str) -> int:
     async with httpx.AsyncClient() as client:
         response = await client.head(f"http://{USERS_API_URL}/v1/users/{user_id}?user_email={user_email}")

@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Input, Button, message, Upload } from "antd";
+import { Flex,Tag, Input, Button, message, Upload, Switch} from "antd";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import "./wiki-create-page.css";
 import WikiService from "../../service/wiki-service";
 import SettingsContext from "../../../../context/settings-context";
 import ArticleService from "../../../articles/service/article-service";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { transform } from "ol/proj";
 import { translate } from "ol/transform";
 const { uploadImage } = ArticleService();
@@ -121,9 +122,9 @@ const WikiCreatePage = () => {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
-                checked={translateTitle}
+                checked={translate}
                 onClick={() => {
-                  setTransalateTitle(!translateTitle);
+                  setTransalateTitle(!translate);
                 }}
                 style={{ marginLeft: 10 }}
               />

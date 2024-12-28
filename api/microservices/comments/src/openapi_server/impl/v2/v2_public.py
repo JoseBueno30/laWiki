@@ -5,6 +5,7 @@ from fastapi import HTTPException
 
 from openapi_server.apis.v2.v2_public_api_base import BaseV2PublicApi
 from openapi_server.impl import api_calls
+from openapi_server.impl import emails_service
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -54,6 +55,11 @@ class V2PublicComments(BaseV2PublicApi):
             raise HTTPException(status_code=404, detail="Article not found")
 
         author = await api_calls.get_user(new_comment.author_id)
+        user = await api_calls.get_user(user_id)
+        article = await api_calls.get_article(article_id)
+        article_author = await api_calls.get_user(article['author']['id'])
+
+        body_new_comment = emails_service.generate_email_body_new_comment(user['email'], article['title']['en'],new_comment.body)
 
         today = datetime.today()
 
@@ -74,6 +80,10 @@ class V2PublicComments(BaseV2PublicApi):
             comment_dic['article_id'] = str(comment_dic['article_id'])
             comment_dic['author']['id'] = str(comment_dic['author']['_id'])
             comment_dic['creation_date'] = date(today.year, today.month, today.day)
+
+            # Send email to the author of the article
+            emails_service.send_email(article_author['email'], "New Comment on Your Article!", body_new_comment)
+            
             return Comment.from_dict(comment_dic)
         else:
             raise HTTPException(status_code=400, detail="Bad Request, wrong content structure")
