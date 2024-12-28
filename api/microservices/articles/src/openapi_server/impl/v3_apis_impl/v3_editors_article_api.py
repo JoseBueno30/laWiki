@@ -288,7 +288,8 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
             </body>
             </html>
             """
-            send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_version_deletion)
+            if version_author['email'] != article_author['email']:
+                send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_version_deletion)
 
         #   Commented until it's launched
         await delete_article_comments(id)
@@ -366,7 +367,9 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         """
 
         send_email(article_version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
-        send_email(article_author['email'], "Your Article Version Has Been Deleted!", body_article_author)
+
+        if article_version_author['email'] != article_author['email']:
+            send_email(article_author['email'], "A Version of Your Article Has Been Deleted!", body_article_author)
 
     async def restore_article_version_v3(
         self,
