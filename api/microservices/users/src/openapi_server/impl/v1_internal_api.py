@@ -45,7 +45,7 @@ class V1InternalAPI(BaseV1InternalApi):
                 'username': token_username,
                 'image': token_image,
                 'rating': 0,
-                'admin': False
+                'admin': True if token_email == "pruebaparaingweb@gmail.com" else False
             }
             res = await mongodb['user'].insert_one(new_user)
             user_info = UserInfo(**{**new_user, 'id': str(res.inserted_id)})
