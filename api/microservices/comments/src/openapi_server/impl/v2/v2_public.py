@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 from openapi_server.apis.v2.v2_public_api_base import BaseV2PublicApi
 from openapi_server.impl import api_calls
-from openapi_server.impl.emails_service import send_email
+from openapi_server.impl import emails_service
 from openapi_server.models.comment import Comment
 from openapi_server.models.comment_list_response import CommentListResponse
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -59,25 +59,7 @@ class V2PublicComments(BaseV2PublicApi):
         article = await api_calls.get_article(article_id)
         article_author = await api_calls.get_user(article['author']['id'])
 
-        body_new_comment = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #66b2ff; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0; color: white;">New Comment on Your Article!</h1>
-            <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has left a comment on one of your articles.</p>
-            </div>
-            
-            <div style="padding: 20px; background-color: #ffffff; color: black;">
-            <h2 style="color: #66b2ff;">Comment Details</h2>
-            <p><strong>Commented Article:</strong> <em>{article['title']['en']}</em></p>
-            <p><strong>Comment:</strong></p>
-            <blockquote style="background-color: #f0f0f0; padding: 10px; border-left: 4px solid #66b2ff;">
-                "{new_comment.body}"
-            </blockquote>
-            </div>
-        </body>
-        </html>
-        """
+        body_new_comment = emails_service.generate_email_body_new_comment(user['email'], article['title']['en'],new_comment.body)
 
         today = datetime.today()
 
@@ -100,7 +82,7 @@ class V2PublicComments(BaseV2PublicApi):
             comment_dic['creation_date'] = date(today.year, today.month, today.day)
 
             # Send email to the author of the article
-            send_email(article_author['email'], "New Comment on Your Article!", body_new_comment)
+            emails_service.send_email(article_author['email'], "New Comment on Your Article!", body_new_comment)
             
             return Comment.from_dict(comment_dic)
         else:

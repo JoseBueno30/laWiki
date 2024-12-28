@@ -13,7 +13,7 @@ from openapi_server.impl.utils.api_calls import translate_body_to_lan, translate
     check_if_tag_exists, check_if_wiki_exists, delete_article_comments, get_wiki_author, get_user
 from openapi_server.impl.utils.functions import mongodb, article_version_to_simplified_article_version, \
     parse_title_to_title_dict, get_total_number_of_documents
-from openapi_server.impl.utils.emails_service import send_email
+from openapi_server.impl.utils import emails_service
 from openapi_server.models.models_v2.article_v2 import ArticleV2
 from openapi_server.models.models_v2.article_version_v2 import ArticleVersionV2
 from openapi_server.models.models_v2.new_article_v2 import NewArticleV2
@@ -227,25 +227,9 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
                       "tags": article_tags}},
         )
 
-        body_new_article_version = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #28a745; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0;">A New Version of Your Article Has Been Created!</h1>
-            <p style="margin: 10px 0;">Your article has been updated with a new version created by <strong>{user['email']}</strong>.</p>
-            </div>
-            
-            <div style="padding: 20px; background-color: #ffffff;">
-            <h2 style="color: #28a745;">Article Details</h2>
-            <p><strong>Article Title:</strong> <em>{article_result['title']['en']}</em></p>
-            <p><strong>New Version Title:</strong> <em>{new_article_version_json["title"]['en']}</em></p>
-            <p><strong>Summary of Changes:</strong> A new version of your article has been created. Please review the latest changes to ensure they align with your expectations.</p>
-            </div>
-        </body>
-        </html>
-        """
+        body_new_article_version = emails_service.generate_email_body_new_article_version(user['email'], article_result['title']['en'], new_article_version_json["title"]['en'])
 
-        send_email(article_author['email'], "A New Version of Your Article Has Been Created!", body_new_article_version)
+        emails_service.send_email(article_author['email'], "A New Version of Your Article Has Been Created!", body_new_article_version)
 
         #   Generates the returning ArticleVersion value
         article_version = ArticleVersionV2.from_dict(new_article_version_json)
@@ -273,23 +257,9 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
 
             version_author = await get_user(version["author"]["_id"])
             
-            body_version_deletion = f"""
-            <html>
-            <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-                <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center;">
-                <h1 style="margin: 0;">Your Article Version Has Been Deleted!</h1>
-                <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has deleted one of your article versions.</p>
-                </div>
-                
-                <div style="padding: 20px; background-color: #ffffff;">
-                <h2 style="color: #dc3545;">Deletion Details</h2>
-                <p><strong>Deleted Article Version:</strong> <em>{version['title']['en']}</em></p>
-                </div>
-            </body>
-            </html>
-            """
+            body_article_version_author = emails_service.generate_email_body_version_deleted(user['email'], version['title']['en'])
             if version_author['email'] != article_author['email']:
-                send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_version_deletion)
+                emails_service.send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
 
         #   Commented until it's launched
         await delete_article_comments(id)
@@ -297,23 +267,9 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 
-        body_deletion_article = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0;">Your Article Has Been Deleted!</h1>
-            <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has deleted one of your articles.</p>
-            </div>
-            
-            <div style="padding: 20px; background-color: #ffffff;">
-            <h2 style="color: #dc3545;">Deletion Details</h2>
-            <p><strong>Deleted Article:</strong> <em>{article_result['title']['en']}</em></p>
-            </div>
-        </body>
-        </html>
-        """
+        body_deletion_article = emails_service.generate_email_body_deletion_article(user['email'], article_result['title']['en'])
 
-        send_email(article_author['email'], "Your Article Has Been Deleted!", body_deletion_article)
+        emails_service.send_email(article_author['email'], "Your Article Has Been Deleted!", body_deletion_article)
 
     async def delete_article_version_by_id_v3(
         self,
@@ -333,43 +289,13 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
             raise Exception("Article Not Found")
 
         await _delete_article_translation(id)
-        body_article_version_author = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0;">Your Article Version Has Been Deleted!</h1>
-            <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has deleted your article version.</p>
-            </div>
-            
-            <div style="padding: 20px; background-color: #ffffff;">
-            <h2 style="color: #dc3545;">Deletion Details</h2>
-            <p><strong>Deleted Article Version:</strong> <em>{article_version['title']['en']}</em></p>
-            </div>
-        </body>
-        </html>
-        """
+        body_article_version_author = emails_service.generate_email_body_version_deleted(user['email'], article_version['title']['en'])
+        emails_service.send_email(article_version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
 
-        body_article_author = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center;">
-                <h1 style="margin: 0;">A Version of Your Article Has Been Deleted!</h1>
-                <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has deleted a version of your article.</p>
-            </div>
-            
-            <div style="padding: 20px; background-color: #ffffff;">
-                <h2 style="color: #dc3545;">Deletion Details</h2>
-                <p><strong>Article Title:</strong> <em>{article['title']['en']}</em></p>
-                <p><strong>Deleted Version Title:</strong> <em>{article_version['title']['en']}</em></p>
-            </div>
-        </body>
-        </html>
-        """
-
-        send_email(article_version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
+        body_article_author = emails_service.generate_email_body_version_deleted_author(user['email'], article['title']['en'], article_version['title']['en'])
 
         if article_version_author['email'] != article_author['email']:
-            send_email(article_author['email'], "A Version of Your Article Has Been Deleted!", body_article_author)
+            emails_service.send_email(article_author['email'], "A Version of Your Article Has Been Deleted!", body_article_author)
 
     async def restore_article_version_v3(
         self,
@@ -391,25 +317,6 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         user = await get_user(user_id)
         restored_version = await mongodb["article_version"].find_one({"_id": ObjectId(version_id)})
         article_author = await get_user(article["author"]["_id"])
-
-        body_restore_article_version = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-            <div style="background-color: #ffc107; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0;">Your Article Has Been Restored!</h1>
-            <p style="margin: 10px 0;">The user with email <strong>{user['email']}</strong> has restored an older version of your article.</p>
-            </div>
-            
-            <div style="padding: 20px; background-color: #ffffff;">
-            <h2 style="color: #ffc107;">Restoration Details</h2>
-            <p><strong>Restored Article Version:</strong> <em>{restored_version["title"]}</em></p>
-            <p><strong>Restored Article Version Author:</strong> <em>{restored_version['author']['name']}</em></p>
-            <p>Please review the restored content to ensure it meets your expectations.</p>
-            </div>
-        </body>
-        </html>
-        """
-
 
         if restored_version is None:
             raise Exception("ArticleVersion Not Found")
@@ -434,6 +341,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         for id_version in version_ids_to_delete:
             await _delete_article_translation(id_version)
         
-        send_email(article_author['email'], "Your Article Has Been Restored!", body_restore_article_version)
+        body_restore_article_version = emails_service.generate_email_body_restore_version(user['email'], restored_version["title"]['en'], restored_version['author']['name'])
+        emails_service.send_email(article_author['email'], "Your Article Has Been Restored!", body_restore_article_version)
 
         return None
