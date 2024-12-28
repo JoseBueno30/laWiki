@@ -103,7 +103,7 @@ class RatingsManager (BaseDefaultApiV2):
             result[0]['creation_date'] = result[0]['creation_date'].date()
             return result[0]
         else:
-            return await self.rate_article(id, new_rating)
+            return await self.rate_article(id, new_rating, user_id, admin)
 
 
     async def get_article_average_rating(self, id: str):
@@ -246,6 +246,30 @@ class RatingsManager (BaseDefaultApiV2):
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
         except Exception as err:
             raise HTTPException(status_code=500, detail="Error connecting to the wiki service")
+        
+        author = article["author"]["id"]
+        try:
+            article_list_from_author = requests.get(self.ARTICLES_API_URL + "/v3/articles/author/" + author)
+            article_list_from_author.raise_for_status()
+            article_list_from_author = article_list_from_author.json()
+
+        except requests.exceptions.HTTPError as http_err:
+            raise HTTPException(status_code=article_list.status_code, detail=str(http_err))
+        except Exception as err:
+            raise HTTPException(status_code=500, detail="Error connecting to the articles on getting the article list")
+        try:
+            total = 0;
+            for articles in article_list_from_author['articles']:
+                total += articles['rating']
+            update_user = requests.put(self.USERS_API_URL + "/v1/users/" + author + "/rating", json = total / len(article_list_from_author['articles']))
+            update_user.raise_for_status()
+        except requests.exceptions.HTTPError as http_err:
+            print(http_err)
+            raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
+        except Exception as err:
+            print(err)
+            raise HTTPException(status_code=500, detail="Error connecting to the user service")   
+
 
     async def _check_user_has_no_rating(self, id: str, author_id: str):
         result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(author_id)}).to_list(length=None)
