@@ -5,7 +5,7 @@ import os
 COMMENTS_API_URL = os.getenv("COMMENTS_API_URL", "comments_api:8080")
 WIKIS_API_URL = os.getenv("WIKIS_API_URL", "wikis_api:8084")
 RATINGS_API_URL = os.getenv("RATINGS_API_URL", "ratings_api:8082")
-LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSALTE_API_URL", "host.docker.internal:5000")
+LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSLATE_API_URL", "http://host.docker.internal:5000")
 USERS_API_URL = os.getenv("USERS_API_URL", "users_api:8085")
 
 async def get_user_comments(usr_id : str, order : str=None, limit : int=None, offset : int=None):
@@ -61,7 +61,7 @@ async def translate_body_to_lan(body, lan):
             "target": lan,
             "format": "html"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=body_params, timeout=httpx.Timeout(500))
+        translation = await client.post(f"{LIBRETRANSLATE_API_URL}/translate", params=body_params, timeout=httpx.Timeout(500))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
@@ -73,7 +73,8 @@ async def translate_text_to_lan(text, lan):
             "target": lan,
             "format": "text"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=text_params, timeout=httpx.Timeout(500))
+        print(f"{LIBRETRANSLATE_API_URL}/translate")
+        translation = await client.post(f"{LIBRETRANSLATE_API_URL}/translate", params=text_params, timeout=httpx.Timeout(500))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
