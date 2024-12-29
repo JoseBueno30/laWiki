@@ -418,8 +418,6 @@ class WikiApiAdmins(BaseAdminsV3Api):
             name = id
 
         await check_wiki_has_author_equals_user(user_id, id, admin)
-
-        user = get_user_by_id(user_id)
         
         discriminate_name(new_wiki.name)
 
@@ -435,9 +433,6 @@ class WikiApiAdmins(BaseAdminsV3Api):
                                                 "$set": {
                                                     "name" : translated_name,
                                                     "description": new_wiki.description,
-                                                    "author.name": user["username"],
-                                                    "author.image": user["image"],
-                                                    "author._id": ObjectId(user["id"]),
                                                     "image": new_wiki.image,
                                                     "lang": new_wiki.lang
                                                 }
