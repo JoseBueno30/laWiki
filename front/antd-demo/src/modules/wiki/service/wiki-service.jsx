@@ -25,7 +25,7 @@ const WikiService = () => {
   const getRatedWikis = async () => {
     try {
         const params = new URLSearchParams({ lang: localStorage.getItem("locale") });
-        const url = `/wikis/?${params.toString()}`;
+        const url = `/wikis?${params.toString()}`;
         let response = await APIGateway.get(url);
         const wikisWithImages = await Promise.all(
           response.wikis.map(async (wiki) => {
