@@ -71,7 +71,9 @@ const WikiHeader = ({ wiki_name, wiki }) => {
     searchParams.append("name", searchQuery.replaceAll(" ", "_"));
     searchParams.append("order", filters.order);
     if (filters.tags.length > 0)
-      searchParams.append("tags", filters.tags.join(","));
+      filters.tags.forEach((tag) => {
+        searchParams.append("tags", tag);
+      });
     if (isQueryValid(filters.author))
       searchParams.append("author_name", filters.author);
     if (isQueryValid(filters.editor))
@@ -98,7 +100,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
       {showSearchHeader ? (
         <>
           <div className="header-title-container">
-            <Link to="/" >
+            <Link to="/">
               <Title level={3} className="header-title wiki-title">
                 LaWiki
               </Title>
@@ -108,7 +110,7 @@ const WikiHeader = ({ wiki_name, wiki }) => {
             <Title level={3} className="header-title">
               /
             </Title>
-            <Link to={`/wikis/${wiki_name}`} >
+            <Link to={`/wikis/${wiki_name}`}>
               <Title level={3} className="header-title wiki-title">
                 {wiki.name[locale]}
               </Title>
@@ -130,12 +132,14 @@ const WikiHeader = ({ wiki_name, wiki }) => {
               }
               searchFunction={searchHandler}
             />
-            {!user ? <></> :
+            {!user ? (
+              <></>
+            ) : (
               <Link to={`/wikis/${wiki_name}/articles/new`}>
                 <CreateButton text={t("wikis.new-article")} />
               </Link>
-            }
-            
+            )}
+
             <Popover
               content={<UserProfilePopover />}
               trigger="click"
@@ -143,7 +147,11 @@ const WikiHeader = ({ wiki_name, wiki }) => {
               overlayStyle={{ width: 270 }}
             >
               <Flex className="icon-container">
-                <Avatar size="large" src={user ? user.image: undefined} icon={user ? "":<UserOutlined />} />
+                <Avatar
+                  size="large"
+                  src={user ? user.image : undefined}
+                  icon={user ? "" : <UserOutlined />}
+                />
               </Flex>
             </Popover>
           </div>

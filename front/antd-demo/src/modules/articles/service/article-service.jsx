@@ -1,6 +1,17 @@
 import APIGateway from "../../../interceptor/interceptor"
 
 const ArticleService = () =>{
+
+    function serializeParams(params) {
+        return Object.entries(params)
+          .map(([key, value]) => 
+            Array.isArray(value) 
+              ? value.map(val => `${key}=${encodeURIComponent(val)}`).join('&') 
+              : `${key}=${encodeURIComponent(value)}`
+          )
+          .join('&');
+      }
+
     const getArticleVersionByName = async (wiki_id, name, lan) =>{
         try{
             const params = new URLSearchParams({wiki: wiki_id})
@@ -85,9 +96,7 @@ const ArticleService = () =>{
     
     const searchArticlesWithParams = async (queryParams) => {
         try {
-            return await APIGateway.get("/articles", {
-                params: queryParams,
-            });
+            return await APIGateway.get(`/articles?${serializeParams(queryParams)}`);
         } catch (error) {
             return Promise.reject(error)
         }
