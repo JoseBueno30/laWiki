@@ -1,6 +1,7 @@
 import { Avatar, Flex, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import "./user-avatar.css";
 
 const { Text } = Typography;
 
@@ -14,12 +15,14 @@ const UserAvatar = ({ id, image, username, justify }) => {
 
   return (
     <Flex gap="small" align="center" justify={justify} onClick={goToUser}>
+      <Flex>
         <Avatar
           icon={image ? null : <UserOutlined />} // Si no hay imagen, muestra el icono de usuario
           src={image} // Ajusta el tamaño del avatar
           alt={`${username ? username : "Username"}'s avatar`}
         />
-      <Text>{username ? username : "Username"}</Text>
+      </Flex>
+      <Text className="avatar-text">{username ? username : "Username"}</Text>
     </Flex>
   );
 };

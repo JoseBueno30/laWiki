@@ -1,6 +1,7 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Flex, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import './role-avatar.css';
 
 const { Text } = Typography;
 
@@ -22,7 +23,7 @@ const RoleAvatar = ({ id, image, username, role }) => {
         onClick={goToUser}
       />
       <Flex vertical>
-        <Text onClick={goToUser} style={{fontSize: '20px', fontWeight: 'bold',cursor: 'pointer'}}>{username ? username : "Username"}</Text>
+        <Text onClick={goToUser} className='role-avatar-text'>{username ? username : "Username"}</Text>
         <Text >{role ? role : "User Role"}</Text>
       </Flex>
     </Flex>
