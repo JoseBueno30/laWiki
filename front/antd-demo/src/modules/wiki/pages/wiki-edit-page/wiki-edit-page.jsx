@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Input, Button, message, Spin, Upload } from "antd";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { Tag, Input, Button, message, Spin, Upload, Flex, Switch } from "antd";
+import { PlusOutlined, UploadOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 import "./wiki-edit-page.css";
@@ -171,9 +171,9 @@ const WikiEditPage = () => {
                   <Switch
                     checkedChildren={<CheckOutlined />}
                     unCheckedChildren={<CloseOutlined />}
-                    checked={translateTitle}
+                    checked={translate}
                     onClick={() => {
-                      setTransalateTitle(!translateTitle);
+                      setTransalate(!translate);
                     }}
                     style={{ marginLeft: 10 }}
                   />

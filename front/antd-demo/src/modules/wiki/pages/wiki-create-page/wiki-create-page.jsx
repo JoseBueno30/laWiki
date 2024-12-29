@@ -124,7 +124,7 @@ const WikiCreatePage = () => {
                 unCheckedChildren={<CloseOutlined />}
                 checked={translate}
                 onClick={() => {
-                  setTransalateTitle(!translate);
+                  setTransalate(!translate);
                 }}
                 style={{ marginLeft: 10 }}
               />
