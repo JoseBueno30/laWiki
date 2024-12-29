@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 import SettingsContext from "../../../../context/settings-context";
@@ -23,10 +23,11 @@ import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import "./edit-article-page.css";
 import MapConfigurator from "../../components/map-configurator/map-configurator";
 import ArticleService from "../../service/article-service";
+import { popup } from "leaflet";
 const { createArticleVersion,
   getArticleWikiTextBody,
   getWikiTags,
-  uploadImage } = ArticleService();
+  uploadImage, deleteArticleByID } = ArticleService();
 
 
 const EditArticlePage = () => {
@@ -190,6 +191,15 @@ const EditArticlePage = () => {
     onClick: addTag,
   };
 
+  const handleDeleteArticle = async () => {
+    try {
+      const response = await deleteArticleByID(articleData.article_id);
+      navigate(("/wikis/" + wiki.wiki_info.name[locale].replaceAll(" ", "_")));
+    }catch(error){
+      popup("error", "Error deleting article", error.message);
+    }
+  }
+
   return (
     <section className="edit-article-section">
       {contextHolder}
@@ -326,11 +336,13 @@ const EditArticlePage = () => {
               <Button>{t("edit.cancel-button")}</Button>
             </Popconfirm>
             
-
-            {/* TODO: Only allow the author of the article to delete it */}
-            {/* <Button danger className="right-button">
-              Delete article
-            </Button> */}
+            {user.admin || user.id === articleData.author.id || user.id === wiki.wiki_info.author.id ?
+              <Button onClick={handleDeleteArticle} danger className="right-button">
+                Delete article
+              </Button> :
+              ""
+            }
+            
           </div>
         </div>
       )}

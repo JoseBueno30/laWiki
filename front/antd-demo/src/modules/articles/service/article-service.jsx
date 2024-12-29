@@ -168,6 +168,14 @@ const ArticleService = () =>{
         }
     }
 
+    const deleteArticleByID = async(articleId) =>{
+        try {
+            return await APIGateway.delete("/articles/"+ articleId);
+        } catch (error) {
+            return Promise.reject(error)
+        }
+    }
+
     return {
         getArticleVersionByName,
         getArticleVersionsByArticleID,
@@ -181,7 +189,8 @@ const ArticleService = () =>{
         getWikiTags, 
         createArticleVersion, 
         createArticle, 
-        getArticleWikiTextBody
+        getArticleWikiTextBody,
+        deleteArticleByID
     }
 }
 

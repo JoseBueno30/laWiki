@@ -244,16 +244,17 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
     ) -> None:
         article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
         article_author = await get_user(article_result["author"]["_id"])
+        wiki_author = await get_wiki_author(str(article_result["wiki_id"]))
         user = await get_user(user_id)
 
-        if not admin and user_id != str(article_result["author"]["_id"]):
+        if not admin and user_id != str(article_result["author"]["_id"]) and user_id != wiki_author["id"]:
             raise Exception("User can't delete this article")
 
         if article_result is None:
             raise Exception("Article Not Found")
 
         for version in article_result["versions"]:
-            await self.delete_article_version_by_id_v3(str(version["_id"]))
+            await self.delete_article_version_by_id_v3(str(version["_id"]), user_id, admin)
 
             version_author = await get_user(version["author"]["_id"])
             

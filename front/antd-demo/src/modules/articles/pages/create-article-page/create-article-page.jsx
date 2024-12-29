@@ -134,7 +134,7 @@ const CreateArticlePage = () => {
     } else {
       setLoading(true);
     }
-
+    let response
     try {
       const newArticle = {
         wiki_id: wiki.wiki_info.id,
@@ -150,7 +150,7 @@ const CreateArticlePage = () => {
         translate_title: translateTitle,
       };
 
-      const response = await createArticle(newArticle);
+      response = await createArticle(newArticle);
     } catch (error) {
       messageApi.open({
         type: "error",
@@ -158,7 +158,7 @@ const CreateArticlePage = () => {
       });
     } finally {
       setLoading(false);
-      navigate(location.pathname.replace("/new", "/"+title).replaceAll(" ", "_"));
+      navigate(location.pathname.replace("/new", "/"+response.title[locale]).replaceAll(" ", "_"));
     }
   };
 
