@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 const UserProfilePopover = () => {
   const {colorTheme, locale, toggleTheme, changeLocale} = useContext(SettingsContext);
   let user = localStorage.getItem("user");
-  console.log("User", user);
   const { t } = useTranslation();
   const navigate = useNavigate();
 

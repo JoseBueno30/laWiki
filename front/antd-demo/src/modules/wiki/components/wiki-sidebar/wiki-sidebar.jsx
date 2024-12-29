@@ -16,7 +16,6 @@ const WikiSidebar = (wiki) => {
   const user = JSON.parse(localStorage.getItem("user"));
   wiki = wiki.wiki;
   const { t } = useTranslation();
-  console.log('wiki :>> ', wiki.image);
 
   return (
     <Sider className='wiki-sidebar'>

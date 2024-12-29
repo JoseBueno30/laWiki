@@ -42,7 +42,11 @@ export const WikiProvider = ({ children }) => {
       // wiki y actualiza el estado
       fetchWiki();
     }
-  }, [wiki_name, locale]);
+  }, [wiki_name]);
+
+  useEffect(() => {
+    fetchWiki();
+  }, [locale]);
 
   return (
     <WikiContext.Provider value={{wiki}}>
