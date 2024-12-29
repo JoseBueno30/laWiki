@@ -8,8 +8,6 @@ import WikiService from "../../service/wiki-service";
 import SettingsContext from "../../../../context/settings-context";
 import ArticleService from "../../../articles/service/article-service";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { transform } from "ol/proj";
-import { translate } from "ol/transform";
 const { uploadImage } = ArticleService();
 
 const { createWiki, createWikiTag } = WikiService();
@@ -57,7 +55,7 @@ const WikiCreatePage = () => {
         author: user.username,
         lang: locale,
         image: image,
-        translate: true,
+        translate: translate,
       };
 
       const response = await createWiki(newWiki);

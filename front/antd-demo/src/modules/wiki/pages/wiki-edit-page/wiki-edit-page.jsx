@@ -88,7 +88,7 @@ const WikiEditPage = () => {
         author: user.username,
         lang: locale,
         image: image,
-        translate: true,
+        translate: translate,
       };
       await updateWiki(wiki.wiki_info.id, updatedData);
 
