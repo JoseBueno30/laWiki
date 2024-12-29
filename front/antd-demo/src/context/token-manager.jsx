@@ -9,7 +9,7 @@ export const TokenProvider = ({ children }) => {
   const checkAndUpdateToken = () => {
     console.log("AUTH LOGGED IN",auth.currentUser != null);
     if (token && auth.currentUser) {
-      auth.currentUser.getIdToken(false).then((newToken) => {
+      auth.currentUser.getIdToken(true).then((newToken) => {
         console.log("Token updated", newToken);
         localStorage.setItem("authToken", newToken);
       });
@@ -25,7 +25,7 @@ export const TokenProvider = ({ children }) => {
       });
 
     console.log("Periodic token check started");
-    const intervalID = setInterval(checkAndUpdateToken, 50 * 60 * 1000);
+    const intervalID = setInterval(checkAndUpdateToken, 30 * 60 * 1000);
     return () => clearInterval(intervalID);
   }, []);
 
