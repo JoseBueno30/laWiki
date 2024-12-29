@@ -110,7 +110,7 @@ const EditArticlePage = () => {
     try {
       const imageUrl = await uploadImage(file);
 
-      const wikiTextImage = `[[File:${imageUrl}|title=""]]`;
+      const wikiTextImage = `[[File:${imageUrl}]]`;
 
       setBody(`${body}\n${wikiTextImage}`);
 
