@@ -3,10 +3,19 @@ from xml.dom import NotFoundErr
 from bson import ObjectId
 from typing import List
 
+from openapi_server.apis.v2_editors_api_base import BaseV2EditorsApi
 from openapi_server.apis.v2_internal_api_base import BaseV2InternalApi
 from openapi_server.impl.utils.functions import mongodb
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
+
+import importlib
+import pkgutil
+import openapi_server.impl.v2_apis_impl
+
+ns_pkg = openapi_server.impl.v2_apis_impl
+for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
+    importlib.import_module(name)
 
 class InternalArticleAPIV2(BaseV2InternalApi):
 
@@ -65,7 +74,7 @@ class InternalArticleAPIV2(BaseV2InternalApi):
         self,
         id: str
     ) -> None:
-
+        # print("ID WIKI  : ", id)
         pipeline = [
             {
                 "$match":{
@@ -82,6 +91,6 @@ class InternalArticleAPIV2(BaseV2InternalApi):
         id_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         for article_id in id_list:
-            await BaseV2InternalApi.subclasses[0]().delete_articles_from_wiki(article_id)
+            await BaseV2EditorsApi.subclasses[0]().delete_article_by_idv2(str(article_id["_id"]))
 
         return None

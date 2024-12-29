@@ -18,8 +18,15 @@ def get_user_by_id(user_id : str):
 
 
 def delete_articles_from_wiki(id_name : str, user_id : str, admin : bool):
-    headers = {"user-id": user_id, "admin": str(admin)}
-    delete_articles_response = httpx.delete(HTTP_REQUEST_FORMAT.format(url=ARTICLES_API_URL,method=REMOVE_ALL_ARTICLES.format(id=id_name)),headers=headers)
+    headers = {}
+    if user_id and admin is not None:
+        headers = {"user-id": user_id, "admin": str(admin)}
+        # print(headers)
+    delete_articles_response = (
+        httpx.delete(HTTP_REQUEST_FORMAT.format(url=ARTICLES_API_URL,
+                                                method=REMOVE_ALL_ARTICLES.format(id=id_name)),
+                                            headers=headers,timeout=httpx.Timeout(500)))
+
     if delete_articles_response.status_code in range(400,500):
         raise LookupError("Could not delete articles, recieved " + str(delete_articles_response.status_code))
     elif delete_articles_response.status_code not in range(200,300):

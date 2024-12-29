@@ -4,10 +4,19 @@ from xml.dom import NotFoundErr
 from bson import ObjectId
 from pydantic import StrictStr, StrictBool, Field
 
+from openapi_server.apis.v3_editors_api_base import BaseV3EditorsApi
 from openapi_server.apis.v3_internal_api_base import BaseV3InternalApi
 from openapi_server.impl.utils.functions import mongodb
 from openapi_server.models.models_v2.id_ratings_body_v2 import IdRatingsBodyV2
 from openapi_server.models.models_v2.id_tags_body_v2 import IdTagsBodyV2
+
+import importlib
+import pkgutil
+import openapi_server.impl.v3_apis_impl
+
+ns_pkg = openapi_server.impl.v3_apis_impl
+for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
+    importlib.import_module(name)
 
 
 class InternalArticleAPIV3(BaseV3InternalApi):
@@ -85,13 +94,9 @@ class InternalArticleAPIV3(BaseV3InternalApi):
         user_id: StrictStr,
         admin: StrictBool,
     ) -> None:
-        
-        print(id)
-        print(user_id)
-        print(admin)
 
-        if not admin:
-            raise Exception("Unauthorized")
+        # if not admin:
+        #     raise Exception("Unauthorized")
 
         pipeline = [
             {
@@ -109,7 +114,7 @@ class InternalArticleAPIV3(BaseV3InternalApi):
         id_list = await mongodb["article"].aggregate(pipeline).to_list(None)
 
         for article_id in id_list:
-            await BaseV3InternalApi.subclasses[0]().delete_articles_from_wiki(article_id, user_id, admin)
+            await BaseV3EditorsApi.subclasses[0]().delete_article_by_idv3(str(article_id["_id"]), user_id, admin)
 
 
         return None

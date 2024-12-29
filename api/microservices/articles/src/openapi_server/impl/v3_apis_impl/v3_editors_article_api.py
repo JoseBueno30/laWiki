@@ -240,15 +240,17 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         self,
         id: StrictStr,
         user_id: StrictStr,
-        admin: StrictBool,
+        admin: StrictBool
     ) -> None:
         article_result = await mongodb["article"].find_one({"_id": ObjectId(id)})
         article_author = await get_user(article_result["author"]["_id"])
-        wiki_author = await get_wiki_author(str(article_result["wiki_id"]))
+
         user = await get_user(user_id)
 
-        if not admin and user_id != str(article_result["author"]["_id"]) and user_id != wiki_author["id"]:
-            raise Exception("User can't delete this article")
+        if not admin:
+            wiki_author = await get_wiki_author(str(article_result["wiki_id"]))
+            if  user_id != str(article_result["author"]["_id"]) and user_id != wiki_author["id"]:
+                raise Exception("User can't delete this article")
 
         if article_result is None:
             raise Exception("Article Not Found")
@@ -257,14 +259,14 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
             await self.delete_article_version_by_id_v3(str(version["_id"]), user_id, admin)
 
             version_author = await get_user(version["author"]["_id"])
-            
+
             body_article_version_author = emails_service.generate_email_body_version_deleted(user['email'], version['title']['en'])
             if version_author['email'] != article_author['email']:
                 emails_service.send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
 
         #   Commented until it's launched
-        await delete_article_comments(id)
-        await delete_article_ratings(id)
+        delete_article_comments(id)
+        delete_article_ratings(id)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 

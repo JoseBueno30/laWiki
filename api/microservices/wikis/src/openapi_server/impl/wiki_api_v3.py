@@ -399,7 +399,7 @@ class WikiApiAdmins(BaseAdminsV3Api):
         await check_wiki_has_author_equals_user(user_id, id_name, admin)
 
         print(id_name)
-        
+
         delete_articles_from_wiki(id_name,user_id,True)
 
         delete_tags_from_wiki(id_name)

@@ -27,7 +27,7 @@ async def get_user_comments(usr_id : str, order : str=None, limit : int=None, of
 
 async def get_wiki_author(wiki_id : str):
     async with httpx.AsyncClient() as client:
-        wiki_response = await client.get(f"http://{WIKIS_API_URL}/v3/wikis/{wiki_id}")
+        wiki_response = await client.get(f"http://{WIKIS_API_URL}/v3/wikis/{wiki_id}", timeout=httpx.Timeout(200))
         if wiki_response.status_code != 200:
             raise Exception(wiki_response.text)
 
@@ -45,12 +45,12 @@ async def check_if_tag_exists(tag_id : str):
 
 async def delete_article_comments(article_id : str):
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/v1/comments/articles/{article_id}")
+        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/v1/comments/articles/{article_id}", timeout=httpx.Timeout(200))
         return delete_response.status_code == 204
 
 async def delete_article_ratings(article_id : str):
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{RATINGS_API_URL}/v2/ratings/articles/{article_id}")
+        delete_response = await client.delete(f"http://{RATINGS_API_URL}/v2/ratings/articles/{article_id}", timeout=httpx.Timeout(200))
         return delete_response.status_code == 204
 
 async def translate_body_to_lan(body, lan):
@@ -73,13 +73,13 @@ async def translate_text_to_lan(text, lan):
             "target": lan,
             "format": "text"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=text_params)
+        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=text_params, timeout=httpx.Timeout(500))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
 async def get_user(user_id : str) -> dict:
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"http://{USERS_API_URL}/v1/users/{user_id}")
+        response = await client.get(f"http://{USERS_API_URL}/v1/users/{user_id}", timeout=httpx.Timeout(200))
 
         if response.status_code == 401:
             raise HTTPException(status_code=403, detail="Forbidden")

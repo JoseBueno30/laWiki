@@ -100,9 +100,16 @@ async def delete_articles_from_wiki_v3(
     user_id: StrictStr = Header(..., description=""),
     admin: StrictBool = Header(..., description=""),
 ) -> None:
+    # print("hey")
     if not BaseV3InternalApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseV3InternalApi.subclasses[0]().delete_articles_from_wiki_v3(id, user_id, admin)
+    # except Exception as e:
+    #     # print("ID: ", id, "User ID: ", user_id, "Admin: ", admin)
+    #     # print("ID TYPE: ", type(id), "User ID TYPE: ", type(user_id), "Admin TYPE: ", type(admin))
+    #     print(e)
+    #     raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @router.delete(
