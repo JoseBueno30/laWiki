@@ -21,6 +21,7 @@ const WikiEditPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadingImage, setLoadingImage] = useState(false);
   const [savingWiki, setSavingWiki] = useState(false);
+  const [deletingWiki, setDeletingWiki] = useState(false);
   const [wikiData, setWikiData] = useState({
     title: "",
     description: "",
@@ -136,6 +137,7 @@ const WikiEditPage = () => {
   };
 
   const deleteWikiFunction = async () => {
+    setDeletingWiki(true);
     try {
       await deleteWiki(wiki.wiki_info.id);
       message.success(t("wikis.wiki-delete-success"));
@@ -145,6 +147,7 @@ const WikiEditPage = () => {
       message.error(t("wikis.wiki-delete-failure"));
     } finally {
       setLoading(false);
+      setDeletingWiki(false);
     }
   };
 
@@ -272,6 +275,8 @@ const WikiEditPage = () => {
               </Button>
               <Button
                 danger
+                loading={deletingWiki}
+                iconPosition={"end"}
                 className="right-button"
                 onClick={deleteWikiFunction}
               >

@@ -55,6 +55,7 @@
   },
 
   "wikis": {
+    "wiki": "Wiki",
     "wikis": "Wikis",
     "new-wiki": "New Wiki",
     "edit-wiki": "Edit Wiki",
@@ -79,6 +80,7 @@
   },
 
   "article": {
+    "article": "Article",
     "articles": "Articles",
     "last-modified": "Last modified: ",
     "table-title": "Title",

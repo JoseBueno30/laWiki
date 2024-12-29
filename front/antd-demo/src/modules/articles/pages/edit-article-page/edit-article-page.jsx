@@ -48,6 +48,7 @@ const EditArticlePage = () => {
   const [body, setBody] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [deletingArticle, setDeletingArticle] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -192,11 +193,14 @@ const EditArticlePage = () => {
   };
 
   const handleDeleteArticle = async () => {
+    setDeletingArticle(true);
     try {
       const response = await deleteArticleByID(articleData.article_id);
       navigate(("/wikis/" + wiki.wiki_info.name[locale].replaceAll(" ", "_")));
     }catch(error){
       popup("error", "Error deleting article", error.message);
+    }finally{
+      setDeletingArticle(false);
     }
   }
 
@@ -337,8 +341,8 @@ const EditArticlePage = () => {
             </Popconfirm>
             
             {user.admin || user.id === articleData.author.id || user.id === wiki.wiki_info.author.id ?
-              <Button onClick={handleDeleteArticle} danger className="right-button">
-                Delete article
+              <Button onClick={handleDeleteArticle} danger className="right-button" loading={deletingArticle} iconPosition="end">
+                {t("edit.delete-button", { type: t("article.article") })}
               </Button> :
               ""
             }
