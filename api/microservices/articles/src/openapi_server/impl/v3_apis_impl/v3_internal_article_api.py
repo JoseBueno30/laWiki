@@ -85,6 +85,10 @@ class InternalArticleAPIV3(BaseV3InternalApi):
         user_id: StrictStr,
         admin: StrictBool,
     ) -> None:
+        
+        print(id)
+        print(user_id)
+        print(admin)
 
         if not admin:
             raise Exception("Unauthorized")

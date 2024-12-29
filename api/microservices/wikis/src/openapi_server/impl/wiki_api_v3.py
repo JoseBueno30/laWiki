@@ -130,7 +130,10 @@ async def translate_wiki(languages : List[str], wiki_lang: str, name: Dict[str, 
     for lang in [x for x in languages if x != wiki_lang]:
         translation = {}
         translation["wiki_id"] = target_wiki
-        translation["description"] = await translate_text_to_lan(description, lang)
+        if not description:
+            translation["description"] = ""
+        else:
+            translation["description"] = await translate_text_to_lan(description, lang)
         translation["lang"] = lang
         translation["name"] = name[lang]
         upd_result = await mongodb["wiki_translation"].replace_one({"wiki_id" : target_wiki, "lang" : lang}, translation,upsert=True)
@@ -394,8 +397,10 @@ class WikiApiAdmins(BaseAdminsV3Api):
             id_name = await get_id(id_name)
         
         await check_wiki_has_author_equals_user(user_id, id_name, admin)
+
+        print(id_name)
         
-        delete_articles_from_wiki(id_name)
+        delete_articles_from_wiki(id_name,user_id,True)
 
         delete_tags_from_wiki(id_name)
 
