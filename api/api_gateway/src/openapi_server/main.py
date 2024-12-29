@@ -29,9 +29,14 @@ app = FastAPI(
     version="2.0",
 )
 
+origins = [
+    "https://la-wiki-web.vercel.app",  # Dominio del frontend en producción
+    "http://localhost:5173",       # Dominio del frontend en desarrollo local
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
