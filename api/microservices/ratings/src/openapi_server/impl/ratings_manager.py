@@ -147,7 +147,7 @@ class RatingsManager (BaseDefaultApi):
         return result[0]
 
     async def delete_ratings_articles_id(self, id: str):
-        await self._check_article_exists(id)
+        #await self._check_article_exists(id)
         await self.mongodb["rating"].delete_many({'article_id': self._convert_id_into_ObjectId(id)})
         await self._update_article_and_wiki_average(id)
         return None;

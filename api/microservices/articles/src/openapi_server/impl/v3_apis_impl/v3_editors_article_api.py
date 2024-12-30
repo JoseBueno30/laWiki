@@ -265,8 +265,9 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
                 emails_service.send_email(version_author['email'], "Your Article Version Has Been Deleted!", body_article_version_author)
 
         #   Commented until it's launched
-        delete_article_comments(id)
-        delete_article_ratings(id)
+        print("BORRAMOS COMMENTS\n")
+        await delete_article_comments(id, user_id, True)
+        await delete_article_ratings(id, user_id, True)
 
         await mongodb["article"].delete_one({"_id": ObjectId(id)})
 

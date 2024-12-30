@@ -1,4 +1,5 @@
 import httpx
+import asyncio
 import json
 import os
 
@@ -43,15 +44,31 @@ async def check_if_tag_exists(tag_id : str):
         #   It's not implemented in tags api
         return True
 
-async def delete_article_comments(article_id : str):
+async def delete_article_comments(article_id : str, user_id: str = None, admin: bool = None):
+    headers = {}
+    if admin and user_id:
+        headers["user-id"] = user_id
+        headers["admin"] = str(admin)
+    print("ANTES DE BORRAR: ", headers)
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/v1/comments/articles/{article_id}", timeout=httpx.Timeout(200))
+        delete_response = await client.delete(f"http://{COMMENTS_API_URL}/v2/comments/articles/{article_id}", timeout=httpx.Timeout(200), headers=headers)
+        print("DESPUES DE BORRAR: ", delete_response)
+
         return delete_response.status_code == 204
 
-async def delete_article_ratings(article_id : str):
+async def delete_article_ratings(article_id : str, user_id: str = None, admin: bool = None):
+    headers = {}
+    if admin and user_id:
+        headers["user-id"] = user_id
+        headers["admin"] = str(admin)
+
+    print("ANTES DE BORRAR")
     async with httpx.AsyncClient() as client:
-        delete_response = await client.delete(f"http://{RATINGS_API_URL}/v2/ratings/articles/{article_id}", timeout=httpx.Timeout(200))
-        return delete_response.status_code == 204
+        delete_response = await client.delete(f"http://{RATINGS_API_URL}/v2/ratings/articles/{article_id}", timeout=httpx.Timeout(200), headers=headers)
+        print("DESPUES DE BORRAR: ", delete_response)
+
+
+        return delete_response
 
 async def translate_body_to_lan(body, lan):
     async with httpx.AsyncClient() as client:

@@ -159,7 +159,7 @@ class RatingsManager (BaseDefaultApiV2):
         return result[0]
 
     async def delete_ratings_articles_id(self, id: str):
-        await self._check_article_exists(id)
+        # await self._check_article_exists(id)
         await self.mongodb["rating"].delete_many({'article_id': self._convert_id_into_ObjectId(id)})
         await self._update_article_and_wiki_average(id)
         return None;
@@ -268,8 +268,7 @@ class RatingsManager (BaseDefaultApiV2):
             raise HTTPException(status_code=updateArticle.status_code, detail=str(http_err))
         except Exception as err:
             print(err)
-            raise HTTPException(status_code=500, detail="Error connecting to the user service")   
-
+            raise HTTPException(status_code=500, detail="Error connecting to the user service")
 
     async def _check_user_has_no_rating(self, id: str, author_id: str):
         result = await self.mongodb["rating"].find({'article_id': self._convert_id_into_ObjectId(id), 'author._id': self._convert_id_into_ObjectId(author_id)}).to_list(length=None)
