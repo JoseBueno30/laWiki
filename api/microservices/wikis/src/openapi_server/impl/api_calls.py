@@ -3,7 +3,7 @@ from openapi_server.impl.misc import *
 import json
 import os
 
-LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSALTE_API_URL", "host.docker.internal:5000")
+LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSLATE_API_URL", "http://host.docker.internal:5000")
 ARTICLES_API_URL = os.getenv("ARTICLES_API_URL", "articles_api:8081")
 TAGS_API_URL = os.getenv("TAGS_API_URL", "tags_api:8083")
 USERS_API_URL = os.getenv("USERS_API_URL", "users_api:8085")
@@ -49,7 +49,7 @@ async def translate_body_to_lan(body, lan):
             "target": lan,
             "format": "html"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=body_params, timeout=httpx.Timeout(10))
+        translation = await client.post(f"{LIBRETRANSLATE_API_URL}/translate", params=body_params, timeout=httpx.Timeout(10))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]
 
@@ -61,6 +61,6 @@ async def translate_text_to_lan(text, lan):
             "target": lan,
             "format": "text"
         }
-        translation = await client.post(f"http://{LIBRETRANSLATE_API_URL}/translate", params=text_params, timeout=httpx.Timeout(10))
+        translation = await client.post(f"{LIBRETRANSLATE_API_URL}/translate", params=text_params, timeout=httpx.Timeout(10))
         translated_text = json.loads(translation.content.decode())
         return translated_text["translatedText"]

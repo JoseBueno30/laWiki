@@ -5,7 +5,7 @@ import os
 
 ARTICLES_API_URL = os.getenv("ARTICLES_API_URL", "articles_api:8081")
 WIKIS_API_URL = os.getenv("WIKIS_API_URL", "wikis_api:8084")
-LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSALTE_API_URL", "host.docker.internal:5000")
+LIBRETRANSLATE_API_URL = os.getenv("LIBRETRANSLATE_API_URL", "http://host.docker.internal:5000")
 
 
 # Article microservice api calls
@@ -66,7 +66,7 @@ async def translate(text: str, source: str, target: str) -> str:
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"http://{LIBRETRANSLATE_API_URL}/translate",
+            f"{LIBRETRANSLATE_API_URL}/translate",
             data=data
         )
 
