@@ -119,7 +119,7 @@ const ArticlesSearchResultPage = () => {
       ) : (
         <>
           <Title level={3} className="article-search-results-title">
-            {t("search.search-results", {query: (searchParams.get("edit.name") || "").replaceAll("_", " ")})}
+            {t("search.search-results", {query: (searchParams.get("name") || "").replaceAll("_", " ")})}
           </Title>
           <Title level={4} className="article-search-results-info">
             {t("search.search-description", {total: response.total, filters: filters})}
