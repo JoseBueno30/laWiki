@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/articles.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/articles.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/utils/api_calls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_editors_article_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ratings/src/openapi_server/impl/ratings_manager_v2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../front/antd-demo/src/interceptor/interceptor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../front/antd-demo/src/interceptor/interceptor.jsx" afterDir="false" />
-    </list>
+    <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +93,7 @@
       <workItem from="1735466759147" duration="3592000" />
       <workItem from="1735476860611" duration="6154000" />
       <workItem from="1735503082071" duration="3299000" />
-      <workItem from="1735551518294" duration="4882000" />
+      <workItem from="1735551518294" duration="5054000" />
     </task>
     <servers />
   </component>

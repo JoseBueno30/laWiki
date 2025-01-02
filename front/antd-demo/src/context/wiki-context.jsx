@@ -25,7 +25,6 @@ export const WikiProvider = ({ children }) => {
       const formattedWikiName = convertUnderscoreToSpace(wiki_name);
       const wikiData = await getWiki(formattedWikiName);
 
-      console.log(wikiData);
       setWiki({ wiki_name: wiki_name, wiki_info: wikiData });
       
     } catch (error) {
@@ -34,7 +33,7 @@ export const WikiProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!wiki_name) {
+    if (!wiki_name || wiki_name===undefined) {
       // Si no hay wiki_name, resetea el estado
       setWiki({ wiki_name: "", wiki_info: null });
     } else if (wiki_name !== wiki.wiki_name) {
@@ -45,7 +44,14 @@ export const WikiProvider = ({ children }) => {
   }, [wiki_name]);
 
   useEffect(() => {
-    fetchWiki();
+    if (!wiki_name || wiki_name===undefined) {
+      // Si no hay wiki_name, resetea el estado
+      setWiki({ wiki_name: "", wiki_info: null });
+    } else {
+      // Si el wiki_name es diferente al actual, busca la nueva
+      // wiki y actualiza el estado
+      fetchWiki();
+    }
   }, [locale]);
 
   return (
