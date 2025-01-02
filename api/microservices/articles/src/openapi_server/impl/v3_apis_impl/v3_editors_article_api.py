@@ -275,6 +275,8 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
 
         emails_service.send_email(article_author['email'], "Your Article Has Been Deleted!", body_deletion_article)
 
+        return None
+
     async def delete_article_version_by_id_v3(
         self,
         id: StrictStr,

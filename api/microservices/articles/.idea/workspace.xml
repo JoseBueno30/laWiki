@@ -7,6 +7,9 @@
     <list default="true" id="eb79e396-d060-4af2-8d14-075f81e226d7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_editors_article_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/openapi_server/impl/v3_apis_impl/v3_editors_article_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/api_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/api_calls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/wiki_api_v2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/wiki_api_v2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/wiki_api_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wikis/src/openapi_server/impl/wiki_api_v3.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +100,7 @@
       <workItem from="1735476860611" duration="6154000" />
       <workItem from="1735503082071" duration="3299000" />
       <workItem from="1735551518294" duration="5054000" />
-      <workItem from="1735841398486" duration="809000" />
+      <workItem from="1735841398486" duration="2868000" />
     </task>
     <servers />
   </component>

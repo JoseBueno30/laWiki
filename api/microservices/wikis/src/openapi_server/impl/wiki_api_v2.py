@@ -385,9 +385,9 @@ class WikiApiAdmins(BaseAdminsV2Api):
         if not ObjectId.is_valid(id_name): # Si es nombre se cambia por id
             id_name = await get_id(id_name)
         
-        delete_articles_from_wiki(id_name)
+        await delete_articles_from_wiki(id_name)
 
-        delete_tags_from_wiki(id_name)
+        await delete_tags_from_wiki(id_name)
 
         await delete_translations(id_name)
 

@@ -400,9 +400,9 @@ class WikiApiAdmins(BaseAdminsV3Api):
 
         print(id_name)
 
-        delete_articles_from_wiki(id_name,user_id,True)
+        await delete_articles_from_wiki(id_name,user_id,True)
 
-        delete_tags_from_wiki(id_name)
+        await delete_tags_from_wiki(id_name)
 
         await delete_translations(id_name)
 
