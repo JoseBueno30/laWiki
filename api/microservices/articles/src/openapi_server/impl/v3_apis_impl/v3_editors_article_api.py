@@ -82,7 +82,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
         if not await check_if_wiki_exists(new_article_json["wiki_id"]):
             raise Exception("Wiki does not exist")
         for tag in new_article_json["tags"]:
-            if not check_if_tag_exists(tag["id"]):
+            if not await check_if_tag_exists(tag["id"]):
                 raise Exception("Tag does not exist")
 
         if new_article_json["translate_title"]:
@@ -161,7 +161,7 @@ class EditorsArticleAPIV3(BaseV3EditorsApi):
             raise Exception(f"Invalid article title: {new_article_version_json['title']}")
 
         for tag in new_article_version_json["tags"]:
-            if not check_if_tag_exists(tag["id"]):
+            if not await check_if_tag_exists(tag["id"]):
                 raise Exception("Tag does not exist")
 
         if new_article_version_json["translate_title"]:
