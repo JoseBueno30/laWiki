@@ -36,7 +36,7 @@ const WikiCreatePage = () => {
   const createTags = async (wikiId) => {
     try {
       const tagCreationPromises = tags.map((tag) =>
-        createWikiTag(wikiId, tag.tag, locale, translate)
+        createWikiTag(wikiId, tag.tag, locale, true)
       );
       await Promise.all(tagCreationPromises);
       message.success(t("wikis.tags-create-success"));

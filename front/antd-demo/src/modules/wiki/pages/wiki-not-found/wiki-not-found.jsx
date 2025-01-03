@@ -18,7 +18,7 @@ const NotFoundPage = ({status_code, error_message = "", resource_type = "Resourc
     }
 
     const go_back = () => {
-        navigate(-1);
+        navigate(-2);
     }
 
     return (

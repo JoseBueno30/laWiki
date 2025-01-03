@@ -74,7 +74,7 @@ const WikiEditPage = () => {
       );
 
       const tagCreationPromises = newTags.map((tag) =>
-        createWikiTag(wiki.wiki_info.id, tag.tag, locale, translate)
+        createWikiTag(wiki.wiki_info.id, tag.tag, locale, true)
       );
       await Promise.all(tagCreationPromises);
 
