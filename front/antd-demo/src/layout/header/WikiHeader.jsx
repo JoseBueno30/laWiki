@@ -62,11 +62,6 @@ const WikiHeader = ({ wiki_name, wiki }) => {
   };
 
   const searchHandler = () => {
-    if (!isQueryValid(searchQuery)) {
-      console.log("Invalid search query");
-      return;
-    }
-
     const searchParams = new URLSearchParams();
     searchParams.append("name", searchQuery.replaceAll(" ", "_"));
     searchParams.append("order", filters.order);

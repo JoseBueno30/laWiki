@@ -17,7 +17,7 @@ const RatingsList = ({ avg_rating, total_ratings, ratings }) => {
       <Title level={4}>{t('article.global-rating-header')}</Title>
       <Space align="center">
         <Rate disabled value={avg_rating} />
-        <span>{t('article.global-rating-value', {value: avg_rating})}</span>
+        <span>{t('article.global-rating-value', {value: avg_rating.toFixed(2)})}</span>
       </Space>
       <Text type="secondary">{t('article.global-rating-count', {count:total_ratings})}</Text>
       <Flex vertical gap="small" style={{ marginTop: "10px" }}>

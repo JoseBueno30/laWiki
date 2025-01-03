@@ -70,7 +70,7 @@ const ArticlePage = () => {
     const comments_response = await CommentService().getArticleComments(
       articleVersion.article_id,
       0,
-      3,
+      5,
       "recent",
       null
     );
@@ -263,6 +263,13 @@ const ArticlePage = () => {
     fetchArticleComments();
   };
 
+  const redirectToSearch = (tag) => {
+    const search_path = "/search?tags=" + tag ;
+    const url = location.pathname.split("/articles")[0] + search_path;
+
+    navigate(url);
+  };
+
   const controlCommentsPaginationAndFilters = async (
     newOffset,
     order,
@@ -317,7 +324,7 @@ const ArticlePage = () => {
           <Title>{articleVersion.title[locale]}</Title>
           <Flex gap={2}>
             {articleVersion.tags.map((tag) => (
-              <Tag color="geekblue">{tag.tag[locale]}</Tag>
+              <Tag color="geekblue" className="article-tag" id={tag.id} onClick={() => redirectToSearch(tag.id)}>{tag.tag[locale]}</Tag>
             ))}
           </Flex>
         </Flex>
