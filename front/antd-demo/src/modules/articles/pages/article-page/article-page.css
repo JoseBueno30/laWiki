@@ -9,6 +9,10 @@
   text-overflow: ellipsis;
 }
 
+.article-tag{
+  cursor: pointer;
+}
+
 .reversed{
   flex-direction: column-reverse;
 }

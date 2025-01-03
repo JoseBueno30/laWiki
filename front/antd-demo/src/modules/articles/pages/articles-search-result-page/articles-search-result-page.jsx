@@ -91,8 +91,8 @@ const ArticlesSearchResultPage = () => {
       }
 
       setArticles(HTTPResponse.articles);
-      setPrevPageURL(HTTPResponse.previous);
-      setNextPageURL(HTTPResponse.next);
+      setPrevPageURL(HTTPResponse.previous ? HTTPResponse.previous.replace(/^v2\//, '') : null);
+      setNextPageURL(HTTPResponse.next ? HTTPResponse.next.replace(/^v2\//, '') : null);
       setResponse(HTTPResponse);
 
       formatFilters(queryParams);
