@@ -70,7 +70,7 @@ const ArticlePage = () => {
     const comments_response = await CommentService().getArticleComments(
       articleVersion.article_id,
       0,
-      3,
+      5,
       "recent",
       null
     );

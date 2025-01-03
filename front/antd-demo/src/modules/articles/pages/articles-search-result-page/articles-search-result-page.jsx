@@ -15,7 +15,7 @@ const { searchArticlesWithParams, searchArticlesWithPaginationURL } = ArticleSer
 
 const { Title, Text } = Typography;
 
-const searchLimit = 3;
+const searchLimit = 10;
 
 const ArticlesSearchResultPage = () => {
   const navigate = useNavigate();
