@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { WikiContext } from "../../../../context/wiki-context";
 import { Typography } from "antd";
 import ArticleService from "../../service/article-service";
+import SettingsContext from "../../../../context/settings-context";
 const { searchArticlesWithParams, searchArticlesWithPaginationURL } = ArticleService();
 
 const { Title, Text } = Typography;
@@ -20,6 +21,7 @@ const searchLimit = 10;
 const ArticlesSearchResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { locale } = useContext(SettingsContext);
   const paginationURL = location.state;
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,18 +46,28 @@ const ArticlesSearchResultPage = () => {
     navigate(location.pathname + "?" + newSearchParams, {state: url});
   };
 
+  const getTagsNamesFromIds = (tagIds, wikiTags) => {
+    return wikiTags.filter(tag => tagIds.includes(tag.id)).map(tag => tag.tag[locale]);
+  }
+
   const formatFilters = (queryParams) => {
+
     delete queryParams.wiki_id;
     delete queryParams.name;
     delete queryParams.offset;
     delete queryParams.limit;
+
+    queryParams.tags = getTagsNamesFromIds(queryParams.tags, wiki.wiki_info.tags);
 
     let filterParams = new URLSearchParams(queryParams)
       .toString()
       .replaceAll("&", " | ")
       .replaceAll("=", " : ")
       .replaceAll("_", " ")
-      .replaceAll("%2F", "/");
+      .replaceAll("%2F", "/")
+      .replaceAll("%2C", ", ")
+      .replaceAll("+", " ");
+
 
     setFilters(filterParams);
   };
